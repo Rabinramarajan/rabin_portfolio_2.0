@@ -1,0 +1,113 @@
+import type { ProcessStep } from '@/content/types';
+
+export const processIntro = {
+  index: '06',
+  label: 'My Process',
+  headingLines: ['From idea', 'to production.'],
+  lede: 'Every project starts with a question, then moves through clarity, design, engineering and continuous refinement.',
+  closingLines: ['Shipping is not', 'the end of the process.'],
+  closingSecondary: "It's where the next iteration starts.",
+  ctaHeading: 'Ready to build?',
+  ctaLede: "Let's turn your idea into something production-ready.",
+} as const;
+
+export const processSteps: ProcessStep[] = [
+  {
+    id: 'discover',
+    number: '01',
+    label: 'Discover',
+    title: 'Understand before building',
+    purpose: 'Understand the product, users, business goals and constraints.',
+    description:
+      'Every strong product starts with understanding. I learn how the business makes money, who the product is for, and what the real constraints are — before a single line of code is written.',
+    happens: ['Stakeholder conversations', 'Product and competitor review', 'Constraint mapping'],
+    deliverables: ['Research', 'Requirements', 'User flows'],
+    output: 'Research notes · Requirement set · Flow diagrams',
+    outcome: 'A shared, written understanding of what is actually being built and why.',
+    visual: 'discover',
+  },
+  {
+    id: 'define',
+    number: '02',
+    label: 'Define',
+    title: 'Turn ambiguity into direction',
+    purpose: 'Turn ambiguity into a clear technical direction.',
+    description:
+      'Requirements become a plan. Scope is agreed, the architecture is chosen, and the trade-offs are made deliberately rather than discovered halfway through the build.',
+    happens: ['Information architecture', 'Technical decisions', 'Scope and sequencing'],
+    deliverables: ['Architecture', 'Scope', 'Technical decisions'],
+    output: 'System architecture · Feature priorities · Roadmap',
+    outcome: 'A clear technical direction before development begins.',
+    visual: 'define',
+  },
+  {
+    id: 'design',
+    number: '03',
+    label: 'Design',
+    title: 'Design the experience',
+    purpose: 'Translate requirements into intuitive interfaces.',
+    description:
+      'Structure becomes something people can use. Layout, hierarchy, states and motion are decided as one system, so the interface stays consistent as the product grows.',
+    happens: ['Layout and hierarchy', 'Component and state design', 'Responsive behaviour'],
+    deliverables: ['UX', 'UI', 'Design system', 'Responsive behaviour'],
+    output: 'UI direction · Component library · Motion direction',
+    outcome: 'An interface system that scales instead of being redrawn every sprint.',
+    visual: 'design',
+  },
+  {
+    id: 'build',
+    number: '04',
+    label: 'Build',
+    title: 'Engineer the product',
+    purpose: 'Turn the system into production-ready software.',
+    description:
+      'Design becomes a real application — typed, componentised and built on modern architecture. Integration and state are handled early so features compose instead of collide.',
+    happens: ['Component implementation', 'State and data flow', 'API integration'],
+    deliverables: ['Components', 'Integration', 'State', 'API', 'Responsive UI'],
+    output: 'Angular 22 · Signals · TypeScript · SSR · REST · PostgreSQL',
+    outcome: 'Working software you can review, not a prototype you have to imagine.',
+    visual: 'build',
+  },
+  {
+    id: 'test',
+    number: '05',
+    label: 'Test',
+    title: 'Make it reliable',
+    purpose: 'Validate quality, performance and accessibility.',
+    description:
+      'The product is verified against real devices, real browsers and the journeys that matter. Performance and accessibility are treated as requirements, not afterthoughts.',
+    happens: ['End-to-end journeys', 'Performance budgets', 'Accessibility audit'],
+    deliverables: ['Testing', 'Performance', 'Accessibility', 'Cross-browser validation'],
+    output: 'Playwright E2E · Core Web Vitals · WCAG checks',
+    outcome: 'Confidence that the product holds up outside your own machine.',
+    visual: 'test',
+  },
+  {
+    id: 'launch',
+    number: '06',
+    label: 'Launch',
+    title: 'Ship with confidence',
+    purpose: 'Ship a stable, production-ready product.',
+    description:
+      'Deployment is a controlled step, not an event. Environments, monitoring and search visibility are configured before release so launch day is uneventful.',
+    happens: ['Environment configuration', 'Deployment pipeline', 'Monitoring and SEO'],
+    deliverables: ['Deployment', 'Monitoring', 'SEO', 'Production readiness'],
+    output: 'Production build · CI/CD · Analytics · Error monitoring',
+    outcome: 'A live product with the instrumentation to prove it is healthy.',
+    visual: 'launch',
+  },
+  {
+    id: 'evolve',
+    number: '07',
+    label: 'Evolve',
+    title: 'Launch is the beginning',
+    purpose: 'Improve the product after launch.',
+    description:
+      'Real usage produces better decisions than any planning session. The product keeps improving through measurement, optimisation and new capability.',
+    happens: ['Analytics review', 'Performance optimisation', 'Iterative releases'],
+    deliverables: ['Optimization', 'Iteration', 'Analytics', 'New capabilities'],
+    output: 'Maintenance · Improvements · Technical support',
+    outcome: 'A product that compounds in value instead of decaying after launch.',
+    visual: 'evolve',
+  },
+];
