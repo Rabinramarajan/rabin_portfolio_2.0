@@ -80,9 +80,32 @@ This deploys to your production domain.
 
 Add these to your Vercel project (Settings → Environment Variables):
 
+### Required for Contact Form & Chatbot:
 ```
-NEXT_PUBLIC_SITE_URL=https://your-custom-domain.com
+SMTP_HOST=your-smtp-host.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@example.com
+SMTP_PASS=your-app-password
+SMTP_FROM=noreply@your-domain.com
+CONTACT_TO=rabinr2607@gmail.com
+GEMINI_API_KEY=your-google-gemini-api-key
+NEXT_PUBLIC_SITE_URL=https://www.rabinr.in
 ```
+
+### Setup Instructions:
+1. **SMTP Configuration**: Set up with your email provider (Gmail, Outlook, etc.)
+   - Use App Passwords for Gmail (not your actual password)
+   - For other providers, generate application-specific credentials
+
+2. **Gemini API**: Get your API key from https://ai.google.dev
+   - This powers the AI chatbot functionality
+   - Free tier available for testing
+
+3. In Vercel Dashboard:
+   - Go to Settings → Environment Variables
+   - Add each variable (production environment)
+   - Redeploy after adding variables
 
 ## Automatic Deployments
 
