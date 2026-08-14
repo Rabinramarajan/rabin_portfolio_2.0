@@ -1,16 +1,13 @@
-import { type VercelConfig, routes } from '@vercel/config/v1';
-
-export const config: VercelConfig = {
+export default {
   framework: 'nextjs',
   buildCommand: 'next build',
   devCommand: 'next dev',
   outputDirectory: '.next',
 
-  // Web Analytics and Speed Insights configuration
-  // These are automatically enabled on Vercel deployments
-  // Configure them via the Vercel dashboard for granular control
+  // Web Analytics and Speed Insights are automatically enabled on Vercel
+  // Configure them via: https://vercel.com/dashboard → Analytics
 
-  // Environment variables for production
+  // Environment variables
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
