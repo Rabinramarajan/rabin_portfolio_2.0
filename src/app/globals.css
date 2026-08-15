@@ -57,7 +57,7 @@
   --gutter: clamp(1.25rem, 3.6vw, 4rem);
   --container-max: 1360px;
   --col-gap: clamp(1rem, 2vw, 1.5rem);
-  --section-y: clamp(5rem, 2.5rem + 9vw, 12rem);
+  --section-y: clamp(3.5rem, 2rem + 5vw, 7rem);
   --header-h: 72px;
 
   /* --- radius --- */
@@ -588,7 +588,11 @@ code {
 
 .hero {
   position: relative;
-  padding: calc(var(--header-h) + 2rem) 0 0;
+  min-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--header-h) + 0.5rem) 0 1.5rem;
   overflow: clip;
 }
 .hero::before {
@@ -610,7 +614,7 @@ code {
   .hero__grid {
     grid-template-columns: 1.35fr 0.65fr;
     gap: 4.5rem;
-    min-height: calc(100dvh - var(--header-h) - 4rem);
+    align-items: center;
   }
 }
 .hero__status {
@@ -866,6 +870,13 @@ code {
   position: relative;
   max-width: 440px;
 }
+@media (min-width: 960px) {
+  .about__visual {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+    align-self: start;
+  }
+}
 @media (max-width: 959px) {
   .about__visual {
     order: -1;
@@ -876,6 +887,9 @@ code {
 .about__visual .shot {
   border-radius: var(--radius-md);
   border: 1px solid var(--color-line);
+}
+.about__visual .image-reveal {
+  aspect-ratio: 4 / 5;
 }
 .about__caption {
   margin-top: 0.9rem;
@@ -2506,6 +2520,123 @@ code {
   color: var(--color-text-faint);
 }
 
+/* --- zigzag project timeline (infographic-style overview) --- */
+.pzt {
+  position: relative;
+  margin-top: clamp(3rem, 7vw, 6rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 4vw, 2.5rem);
+}
+.pzt__spine {
+  position: absolute;
+  left: 26px;
+  top: 26px;
+  bottom: 26px;
+  width: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--color-line-strong) 0 6px,
+    transparent 6px 12px
+  );
+}
+.pzt__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  align-items: start;
+  gap: clamp(1rem, 3vw, 1.75rem);
+}
+.pzt__node {
+  position: relative;
+  z-index: 1;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-line-strong);
+}
+.pzt__glyph {
+  width: 22px;
+  height: 22px;
+  stroke: var(--color-text-muted);
+}
+.pzt__row[data-side="right"] .pzt__node,
+.pzt__row:nth-child(4n + 1) .pzt__node {
+  border-color: var(--color-accent);
+}
+.pzt__row:nth-child(4n + 1) .pzt__glyph {
+  stroke: var(--color-accent);
+}
+.pzt__card {
+  padding-top: 0.35rem;
+}
+.pzt__k {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+}
+.pzt__num {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--color-accent);
+}
+.pzt__label {
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.pzt__title {
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 560;
+  color: var(--color-text);
+}
+.pzt__desc {
+  margin-top: 0.4rem;
+  max-width: 46ch;
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+@media (min-width: 860px) {
+  .pzt__spine {
+    left: 50%;
+    transform: translateX(-0.5px);
+  }
+  .pzt__row {
+    grid-template-columns: 1fr 52px 1fr;
+  }
+  .pzt__row[data-side="left"] .pzt__card {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: right;
+  }
+  .pzt__row[data-side="left"] .pzt__node {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .pzt__row[data-side="right"] .pzt__card {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .pzt__row[data-side="right"] .pzt__node {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .pzt__row[data-side="left"] .pzt__k {
+    justify-content: flex-end;
+  }
+  .pzt__row[data-side="left"] .pzt__desc {
+    margin-left: auto;
+  }
+}
+
 /* --- journey shell --- */
 .pj {
   position: relative;
@@ -3012,8 +3143,8 @@ code {
 
 /* --- completion moment --- */
 .pr__close {
-  margin-top: clamp(4rem, 10vw, 8rem);
-  padding-top: clamp(2.5rem, 5vw, 4rem);
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
   border-top: 1px solid var(--color-line);
 }
 .pr__close-k {
@@ -3535,7 +3666,7 @@ code {
 
 /* --- full-width typographic statement --- */
 .abt-quote {
-  padding: clamp(4rem, 9vw, 8rem) 0;
+  padding: clamp(3rem, 5vw, 5rem) 0;
   border-top: 1px solid var(--color-line);
 }
 .abt-quote__text {
@@ -4030,7 +4161,7 @@ code {
 
 .wrk-list {
   display: grid;
-  gap: clamp(4rem, 9vw, 8rem);
+  gap: clamp(3rem, 5vw, 5rem);
 }
 .wrk-item {
   display: grid;

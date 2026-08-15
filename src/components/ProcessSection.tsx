@@ -2,6 +2,7 @@ import { processIntro, processSteps } from "@/content/process";
 import { SectionKicker, Btn } from "@/components/ui";
 import { ProcessJourney } from "@/components/process/ProcessJourney";
 import { ProcessOverture } from "@/components/process/ProcessOverture";
+import { ProcessTimeline } from "@/components/process/ProcessTimeline";
 import { LineReveal } from "@/components/process/LineReveal";
 
 /**
@@ -33,6 +34,10 @@ export function ProcessSection() {
             </li>
           ))}
         </ol>
+      </div>
+
+      <div className="shell">
+        <ProcessTimeline steps={processSteps} />
       </div>
 
       <div className="shell">
