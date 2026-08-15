@@ -11,10 +11,10 @@ import { PageHero } from "./PageHero";
 import { PageCta } from "./PageCta";
 import { PageSectionHead } from "./PageSectionHead";
 import { ArrowLink } from "./ArrowLink";
-import { ServiceHeroVisual, ServiceVisual } from "./ServiceVisual";
+import { ServiceHeroVisual, ServiceMediaVisual } from "./ServiceVisual";
 
 const DESKTOP_QUERY = "(min-width: 960px)";
-const STEP_MS = 0.55;
+const STEP_MS = 0.22;
 
 export function ServicesPage() {
   const reduce = useReducedMotionSafe();
@@ -26,7 +26,14 @@ export function ServicesPage() {
         label="Services"
         title={["ENGINEERING", "THAT MOVES", "PRODUCTS FORWARD."]}
         lede="From complex frontend systems to polished digital experiences — each service is one stage of a journey from problem to production."
-        visual={<ServiceHeroVisual reduce={reduce} />}
+        visual={
+          <>
+            <div className="svc-hero-media" aria-hidden>
+              <img src="/media/service/hero.png" alt="Services hero — engineering journey from idea to production" loading="eager" />
+            </div>
+            <ServiceHeroVisual reduce={reduce} />
+          </>
+        }
         meta={[
           { label: "Stack", value: "Angular · React · Next.js" },
           { label: "Output", value: "Production web & mobile" },
@@ -122,73 +129,75 @@ function ServicesJourney({ reduce }: { reduce: boolean }) {
 
       {/* ---------- desktop: sticky journey ---------- */}
       <div className="svc__sticky">
-        <nav className="svc__rail" aria-label="Services">
-          <div className="svc__rail-line" aria-hidden>
-            <motion.span className="svc__rail-fill" style={{ scaleY: reduce ? 1 : draw }} />
-          </div>
-          {services.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              className="svc__step"
-              data-state={i === active ? "on" : i < active ? "past" : "next"}
-              onClick={() => goTo(i)}
-              aria-current={i === active ? "true" : undefined}
-            >
-              <span className="svc__step-num">{s.number}</span>
-              <span className="svc__step-label">{s.title}</span>
-            </button>
-          ))}
-        </nav>
+        <div className="shell svc__sticky-inner">
+          <nav className="svc__rail" aria-label="Services">
+            <div className="svc__rail-line" aria-hidden>
+              <motion.span className="svc__rail-fill" style={{ scaleY: reduce ? 1 : draw }} />
+            </div>
+            {services.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                className="svc__step"
+                data-state={i === active ? "on" : i < active ? "past" : "next"}
+                onClick={() => goTo(i)}
+                aria-current={i === active ? "true" : undefined}
+              >
+                <span className="svc__step-num">{s.number}</span>
+                <span className="svc__step-label">{s.title}</span>
+              </button>
+            ))}
+          </nav>
 
-        <div className="svc__content">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={service.id}
-              className="svc__content-inner"
-              initial={reduce ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
-              animate={reduce ? { opacity: 1 } : { clipPath: "inset(0 0 0% 0)" }}
-              exit={reduce ? { opacity: 0 } : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
-              transition={{ duration: reduce ? duration.micro : STEP_MS, ease }}
-            >
-              <p className="svc__num">{service.number}</p>
-              <h3 className="svc__title">{service.title}</h3>
-              <p className="svc__prop">{service.proposition}</p>
-              <dl className="svc__meta">
-                <div className="svc__meta-item">
-                  <dt>Deliverables</dt>
-                  <dd>{service.deliverables.join(" · ")}</dd>
-                </div>
-                <div className="svc__meta-item">
-                  <dt>Technologies</dt>
-                  <dd>{service.technologies.join(" · ")}</dd>
-                </div>
-                <div className="svc__meta-item">
-                  <dt>Ideal for</dt>
-                  <dd>{service.idealFor}</dd>
-                </div>
-              </dl>
-              <ArrowLink className="svc__cta" href={`/contact?intent=${service.id}`} label={`Discuss ${service.title}`}>
-                Discuss {service.title}
-              </ArrowLink>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="svc__aside">
-          <div className="svc__visual" aria-hidden>
+          <div className="svc__content">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={`v-${service.id}`}
-                className="svc__visual-inner"
-                initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 1.02 }}
-                animate={{ opacity: 1, scale: 1 }}
+                key={service.id}
+                className="svc__content-inner"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: reduce ? duration.micro : 0.4, ease }}
+                transition={{ duration: reduce ? duration.micro : STEP_MS, ease }}
               >
-                <ServiceVisual id={service.id} reduce={reduce} />
+                <p className="svc__num">{service.number}</p>
+                <h3 className="svc__title">{service.title}</h3>
+                <p className="svc__prop">{service.proposition}</p>
+                <dl className="svc__meta">
+                  <div className="svc__meta-item">
+                    <dt>Deliverables</dt>
+                    <dd>{service.deliverables.join(" · ")}</dd>
+                  </div>
+                  <div className="svc__meta-item">
+                    <dt>Technologies</dt>
+                    <dd>{service.technologies.join(" · ")}</dd>
+                  </div>
+                  <div className="svc__meta-item">
+                    <dt>Ideal for</dt>
+                    <dd>{service.idealFor}</dd>
+                  </div>
+                </dl>
+                <ArrowLink className="svc__cta" href={`/contact?intent=${service.id}`} label={`Discuss ${service.title}`}>
+                  Discuss {service.title}
+                </ArrowLink>
               </motion.div>
             </AnimatePresence>
+          </div>
+
+          <div className="svc__aside">
+            <div className="svc__visual" aria-hidden>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={`v-${service.id}`}
+                  className="svc__visual-inner"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: reduce ? duration.micro : STEP_MS, ease }}
+                >
+                  <ServiceMediaVisual service={service} reduce={reduce} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
@@ -231,7 +240,7 @@ function ServicesJourney({ reduce }: { reduce: boolean }) {
                 <h3 className="svc__m-title">{s.title}</h3>
                 <p className="svc__m-prop">{s.proposition}</p>
                 <div className="svc__m-visual" aria-hidden>
-                  <MobileVisual id={s.id} reduce={reduce} />
+                  <MobileVisual service={s} reduce={reduce} />
                 </div>
                 <dl className="svc__meta">
                   <div className="svc__meta-item">
@@ -259,7 +268,7 @@ function ServicesJourney({ reduce }: { reduce: boolean }) {
   );
 }
 
-function MobileVisual({ id, reduce }: { id: (typeof services)[number]["id"]; reduce: boolean }) {
+function MobileVisual({ service, reduce }: { service: (typeof services)[number]; reduce: boolean }) {
   const [shown, setShown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -281,7 +290,7 @@ function MobileVisual({ id, reduce }: { id: (typeof services)[number]["id"]; red
 
   return (
     <div ref={ref}>
-      {shown || reduce ? <ServiceVisual id={id} reduce={reduce} /> : <div className="pv pv--idle" />}
+      {shown || reduce ? <ServiceMediaVisual service={service} reduce={reduce} /> : <div className="pv pv--idle" />}
     </div>
   );
 }

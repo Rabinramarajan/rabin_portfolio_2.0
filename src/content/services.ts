@@ -10,7 +10,12 @@ export const services: Service[] = [
     deliverables: ["Component architecture", "Production-ready interfaces", "Design-system implementation"],
     technologies: ["TypeScript", "Angular", "React", "Next.js"],
     idealFor: "Product teams that need a senior frontend owner.",
-    image: { src: "/media/working/projects-flatlay.jpg", alt: "Component library and code editor across two monitors and a laptop" },
+    image: { src: "/media/service/service_1.png", alt: "Frontend engineering component architecture diagram" },
+    media: {
+      type: "image",
+      src: "/media/service/service_1.png",
+      alt: "Frontend engineering component architecture showcase",
+    },
   },
   {
     id: "angular",
@@ -21,7 +26,13 @@ export const services: Service[] = [
     deliverables: ["Modern Angular applications", "Legacy migrations", "State and data-flow design"],
     technologies: ["Angular 17–22", "Signals", "Standalone APIs", "RxJS"],
     idealFor: "Government, insurance, and enterprise platforms.",
-    image: { src: "/media/working/services-whiteboard.jpg", alt: "Rabin at a whiteboard explaining a system architecture" },
+    image: { src: "/media/service/service_2.png", alt: "Angular enterprise application architecture" },
+    media: {
+      type: "video",
+      src: "/media/service/angular.mp4",
+      poster: "/media/service/service_2.png",
+      alt: "Enterprise Angular portal workflow walkthrough",
+    },
   },
   {
     id: "react",
@@ -32,7 +43,13 @@ export const services: Service[] = [
     deliverables: ["App Router architecture", "Typed content models", "Performance-minded UI"],
     technologies: ["React 19", "Next.js", "TypeScript", "Tailwind CSS"],
     idealFor: "Marketing sites, product surfaces, and editorial web apps.",
-    image: { src: "/media/working/skills-keyboard.jpg", alt: "Hands on a mechanical keyboard with a laptop and editor beyond" },
+    image: { src: "/media/service/service_3.png", alt: "React Next.js server-first application preview" },
+    media: {
+      type: "video",
+      src: "/media/service/react_application.mp4",
+      poster: "/media/service/service_3.png",
+      alt: "React Next.js digital experience preview",
+    },
   },
   {
     id: "ui",
@@ -43,7 +60,12 @@ export const services: Service[] = [
     deliverables: ["Accessible markup", "Interaction states", "Cross-browser consistency"],
     technologies: ["SCSS", "Tailwind CSS", "WCAG 2.1 AA", "Motion"],
     idealFor: "Teams who care how the product feels after launch day.",
-    image: { src: "/media/working/experience-collaboration.jpg", alt: "Walking through code on a dual-monitor setup" },
+    image: { src: "/media/service/service_4.png", alt: "UI engineering accessible interface showcase" },
+    media: {
+      type: "image",
+      src: "/media/service/service_4.png",
+      alt: "UI engineering design system component card",
+    },
   },
   {
     id: "performance",
@@ -54,7 +76,13 @@ export const services: Service[] = [
     deliverables: ["Core Web Vitals pass", "Bundle reduction", "Runtime profiling"],
     technologies: ["Lighthouse", "Code splitting", "SSR", "Image strategy"],
     idealFor: "Products that already work, but feel heavy.",
-    image: { src: "/media/working/divider-night-desk.jpg", alt: "A lit desk with two monitors in an otherwise dark room" },
+    image: { src: "/media/service/service_5.png", alt: "Performance optimization analytics dashboard" },
+    media: {
+      type: "video",
+      src: "/media/service/performance.mp4",
+      poster: "/media/service/service_5.png",
+      alt: "Performance profiling and Core Web Vitals demonstration",
+    },
   },
   {
     id: "ionic",
@@ -65,7 +93,13 @@ export const services: Service[] = [
     deliverables: ["iOS & Android apps", "Capacitor integration", "Release support"],
     technologies: ["Ionic", "Angular", "Capacitor", "Native APIs"],
     idealFor: "Member apps and field tools that must live on a phone.",
-    image: { src: "/media/vnpf_mobile/composite-thumb.png", alt: "Cross-platform member application screens" },
+    image: { src: "/media/service/service_6.png", alt: "Cross-platform mobile application screens" },
+    media: {
+      type: "gif",
+      src: "/media/service/angular.gif",
+      poster: "/media/service/service_6.png",
+      alt: "Cross-platform Ionic mobile application demo",
+    },
   },
   {
     id: "design-systems",
@@ -76,6 +110,11 @@ export const services: Service[] = [
     deliverables: ["Component architecture", "Design tokens", "Documentation", "Implementation support"],
     technologies: ["TypeScript", "Tailwind CSS", "Storybook", "Angular", "React"],
     idealFor: "Growing teams building multiple products or platforms.",
-    image: { src: "/media/working/projects-flatlay.jpg", alt: "Component library documentation and design system components" },
+    image: { src: "/media/service/service_7.png", alt: "Design system component ecosystem" },
+    media: {
+      type: "image",
+      src: "/media/service/service_7.png",
+      alt: "Design system component layout and documentation",
+    },
   },
 ];

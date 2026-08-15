@@ -73,6 +73,12 @@ export interface Service {
   technologies: string[];
   idealFor: string;
   image: MediaRef;
+  media?: {
+    type: "image" | "video" | "gif";
+    src: string;
+    poster?: string;
+    alt: string;
+  };
 }
 
 export interface Project {

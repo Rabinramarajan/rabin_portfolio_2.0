@@ -446,3 +446,54 @@ export function ServiceVisual({ id, reduce = false }: { id: ServiceVisualId; red
   if (!Component) return null;
   return <Component reduce={reduce} />;
 }
+
+export function ServiceMediaVisual({ service, reduce = false }: { service: Service; reduce?: boolean }) {
+  const media = service.media;
+  if (!media) {
+    return <ServiceVisual id={service.id} reduce={reduce} />;
+  }
+
+  if (media.type === "video") {
+    return (
+      <div className="svc-media-frame">
+        <video
+          src={media.src}
+          poster={media.poster}
+          autoPlay={!reduce}
+          loop
+          muted
+          playsInline
+          aria-label={media.alt}
+          className="svc-media-element"
+        />
+        <div className="svc-media-badge mono">VIDEO</div>
+      </div>
+    );
+  }
+
+  if (media.type === "gif") {
+    return (
+      <div className="svc-media-frame">
+        <img
+          src={media.src}
+          alt={media.alt}
+          loading="lazy"
+          className="svc-media-element"
+        />
+        <div className="svc-media-badge mono">GIF</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="svc-media-frame">
+      <img
+        src={media.src}
+        alt={media.alt}
+        loading="lazy"
+        className="svc-media-element"
+      />
+      <div className="svc-media-badge mono">IMAGE</div>
+    </div>
+  );
+}
