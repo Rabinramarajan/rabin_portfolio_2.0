@@ -7,6 +7,7 @@ import { projects } from "@/content/projects";
 import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
 import { cn } from "@/lib/cn";
+import { ImageReveal, TextReveal } from "@/components/motion";
 
 export function WorkSection({ limit }: { limit?: number }) {
   const reduce = useReducedMotion();
@@ -23,7 +24,7 @@ export function WorkSection({ limit }: { limit?: number }) {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: reduce ? duration.micro : duration.section, ease }}
         >
-          <h2 className="sec-title">Proof lives in the product.</h2>
+          <TextReveal lines={["Proof lives in", "the product."]} className="sec-title" as="h2" />
           <p className="sec-lede">
             Government platforms, member portals, and insurance consoles — the work that has to be right.
           </p>
@@ -43,7 +44,7 @@ export function WorkSection({ limit }: { limit?: number }) {
                 transition={{ duration: reduce ? duration.micro : duration.section, ease }}
               >
                 <div className="work-item__media">
-                  <figure className="shot">
+                  <ImageReveal parallax={20}>
                     <Image
                       src={p.cover.src}
                       alt={p.cover.alt}
@@ -52,7 +53,7 @@ export function WorkSection({ limit }: { limit?: number }) {
                       sizes="(max-width: 900px) 100vw, 55vw"
                       loading={i === 0 ? "eager" : "lazy"}
                     />
-                  </figure>
+                  </ImageReveal>
                 </div>
                 <div>
                   <p className="work-item__num">{p.number}</p>
@@ -81,7 +82,13 @@ export function WorkSection({ limit }: { limit?: number }) {
         </div>
 
         {limit ? (
-          <div className="work-item__more">
+          <motion.div
+            className="work-item__more"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: reduce ? duration.micro : duration.section, ease }}
+          >
             <Link href="/work" className="btn btn--line">
               <span className="btn__label">
                 View all work
@@ -90,7 +97,7 @@ export function WorkSection({ limit }: { limit?: number }) {
                 </svg>
               </span>
             </Link>
-          </div>
+          </motion.div>
         ) : null}
       </div>
     </section>

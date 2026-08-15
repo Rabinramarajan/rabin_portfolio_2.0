@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { services } from "@/content/services";
 import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
+import { Parallax, TimelineProgress } from "@/components/motion";
 
 export function ServicesSection() {
   const reduce = useReducedMotion();
@@ -33,6 +34,7 @@ export function ServicesSection() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
+          <TimelineProgress className="services__timeline-rail" />
           {services.map((service, idx) => (
             <motion.div
               key={service.id}
@@ -51,9 +53,25 @@ export function ServicesSection() {
                 ease,
               }}
             >
+              <motion.span
+                className="services__timeline-marker"
+                aria-hidden
+                initial={reduce ? false : { scale: 1, backgroundColor: "#0a0a0c" }}
+                whileInView={{ scale: 1.25, backgroundColor: "#c9f24d" }}
+                viewport={{ once: true, amount: 0.8 }}
+                transition={{ duration: duration.interaction, ease }}
+              />
               <span className="services__timeline-num">{service.number}</span>
-              <h3 className="services__timeline-title">{service.title}</h3>
-              <div className="services__timeline-body">
+              <motion.h3
+                className="services__timeline-title"
+                initial={reduce ? false : { color: "var(--color-text-muted)" }}
+                whileInView={{ color: "var(--color-text)" }}
+                viewport={{ once: true, amount: 0.8 }}
+                transition={{ duration: duration.section, ease }}
+              >
+                {service.title}
+              </motion.h3>
+              <Parallax speed={0.06} range={44} className="services__timeline-body">
                 <p className="services__timeline-desc">{service.proposition}</p>
                 <div className="services__timeline-meta">
                   <span>{service.deliverables.join(" · ")}</span>
@@ -69,7 +87,7 @@ export function ServicesSection() {
                     <path d="M2 8h11M9 4l4 4-4 4" />
                   </svg>
                 </Link>
-              </div>
+              </Parallax>
             </motion.div>
           ))}
         </motion.div>

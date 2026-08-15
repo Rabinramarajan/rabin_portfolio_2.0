@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { coreStack, skillGroups } from "@/content/skills";
 import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
+import { TextReveal } from "@/components/motion";
 
 export function SkillsSection() {
   const reduce = useReducedMotion();
@@ -22,7 +23,11 @@ export function SkillsSection() {
             ease,
           }}
         >
-          <h2 className="sec-title">Angular first. The rest is the system around it.</h2>
+          <TextReveal
+            lines={["Angular first.", "The rest is the", "system around it."]}
+            className="sec-title"
+            as="h2"
+          />
           <p className="sec-lede">Core expertise is named, not scored. The architecture below represents how I structure knowledge and deliver solutions.</p>
         </motion.div>
 

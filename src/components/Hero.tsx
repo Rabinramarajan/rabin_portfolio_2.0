@@ -1,13 +1,43 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { hero, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Btn } from "@/components/ui";
+import { Magnetic, useMouseParallax } from "@/components/motion";
 
 export function Hero() {
   const reduce = useReducedMotion();
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const sync = () => setIsDesktop(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  /* Scroll-linked depth — the visual recedes as the hero leaves the viewport */
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const k = isDesktop ? 1 : 0.4;
+  const portraitScroll = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -34 * k]);
+  const gridScroll = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -14 * k]);
+  const uiScroll = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -20 * k]);
+
+  /* Desktop-only mouse parallax across the visual's layers */
+  const { sx, sy, handlers } = useMouseParallax({ strength: 6 });
+  const portraitX = useTransform(sx, (v) => v * 2);
+  const portraitY = useTransform([portraitScroll, sy], (latest) => Number(latest[0]) + Number(latest[1]) * 2);
+  const gridX = useTransform(sx, (v) => v * 4);
+  const gridY = useTransform([gridScroll, sy], (latest) => Number(latest[0]) + Number(latest[1]) * 4);
+  const uiX = useTransform(sx, (v) => v * 6);
+  const uiY = useTransform([uiScroll, sy], (latest) => Number(latest[0]) + Number(latest[1]) * 6);
+  const metaX = useTransform(sx, (v) => v * 8);
+  const metaY = useTransform([uiScroll, sy], (latest) => Number(latest[0]) + Number(latest[1]) * 5);
 
   const t = (delay: number) => ({
     duration: reduce ? duration.micro : duration.section,
@@ -18,7 +48,7 @@ export function Hero() {
   const headline = hero.headlineLines;
 
   return (
-    <section id="hero" className="hero" aria-labelledby="hero-heading">
+    <section id="hero" ref={sectionRef} className="hero" aria-labelledby="hero-heading">
       <div className="shell">
         <div className="hero__grid">
           {/* LEFT — editorial column */}
@@ -76,16 +106,19 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={t(0.62)}
             >
-              <Btn href={hero.primaryCta.href}>{hero.primaryCta.label}</Btn>
+              <Magnetic strength={8}>
+                <Btn href={hero.primaryCta.href}>{hero.primaryCta.label}</Btn>
+              </Magnetic>
               <Btn href={hero.secondaryCta.href} variant="line">
                 {hero.secondaryCta.label}
               </Btn>
             </motion.div>
           </div>
 
-          {/* RIGHT — premium visual */}
+          {/* RIGHT — premium visual with layered parallax */}
           <motion.div
             className="hero-visual"
+            {...handlers}
             initial={reduce ? { opacity: 0 } : { clipPath: "inset(12% 6% 12% 6% round 16px)", opacity: 0 }}
             animate={{ clipPath: "inset(0% 0% 0% 0% round 16px)", opacity: 1 }}
             transition={{
@@ -96,23 +129,25 @@ export function Hero() {
           >
             <div className="hero-visual__frame">
               <div className="hero-visual__media">
-                <Image
-                  src={hero.portrait.src}
-                  alt={hero.portrait.alt}
-                  width={960}
-                  height={1200}
-                  priority
-                  sizes="(max-width: 1024px) min(82vw, 380px), 30vw"
-                />
-                <div className="hero-visual__grid-overlay" aria-hidden />
-                <span className="hero-visual__tag" aria-hidden>
+                <motion.div className="hero-visual__portrait" style={{ x: portraitX, y: portraitY }}>
+                  <Image
+                    src={hero.portrait.src}
+                    alt={hero.portrait.alt}
+                    width={960}
+                    height={1200}
+                    priority
+                    sizes="(max-width: 1024px) min(82vw, 380px), 30vw"
+                  />
+                </motion.div>
+                <motion.div className="hero-visual__grid-overlay" style={{ x: gridX, y: gridY }} />
+                <motion.span className="hero-visual__tag" style={{ x: uiX, y: uiY }}>
                   {hero.role.split(" ")[0].toUpperCase()}
-                </span>
-                <div className="hero-visual__meta" aria-hidden>
+                </motion.span>
+                <motion.div className="hero-visual__meta" style={{ x: metaX, y: metaY }}>
                   <span className="muted">{hero.role}</span>
                   <span className="hero-visual__line" />
                   <span>{profile.focus}</span>
-                </div>
+                </motion.div>
               </div>
             </div>
             <div className="hero-visual__caption" aria-hidden>

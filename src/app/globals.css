@@ -254,7 +254,11 @@ code {
   font-weight: 500;
   transition: color var(--duration-ui) var(--ease-out-expo),
     background var(--duration-ui) var(--ease-out-expo),
-    border-color var(--duration-ui) var(--ease-out-expo);
+    border-color var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-micro) var(--ease-out-expo);
+}
+.btn:active {
+  transform: scale(0.97);
 }
 .btn--solid {
   padding: 0.8rem 1.4rem;
@@ -289,7 +293,7 @@ code {
   transition: transform var(--duration-ui) var(--ease-out-expo);
 }
 .btn:hover .btn__arrow {
-  transform: translateX(4px);
+  transform: translateX(6px);
 }
 
 /* --- image frame --- */
@@ -741,6 +745,16 @@ code {
   height: 100%;
   object-fit: cover;
 }
+.hero-visual__portrait {
+  position: absolute;
+  inset: -12% 0;
+  will-change: transform;
+}
+.hero-visual__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .hero-visual__grid-overlay {
   position: absolute;
   inset: 0;
@@ -926,8 +940,34 @@ code {
    ============================================================ */
 
 .services__timeline {
+  position: relative;
   margin-top: var(--space-8);
   border-top: 1px solid var(--color-line);
+  padding-left: 1.75rem;
+}
+@media (min-width: 1024px) {
+  .services__timeline {
+    padding-left: 2.5rem;
+  }
+}
+.services__timeline-rail {
+  left: 0;
+}
+.services__timeline-marker {
+  position: absolute;
+  left: calc(-1.75rem - 4px);
+  top: calc(var(--space-8) + 0.5rem);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-line-strong);
+  background: var(--color-bg);
+  z-index: 1;
+}
+@media (min-width: 1024px) {
+  .services__timeline-marker {
+    left: calc(-2.5rem - 4px);
+  }
 }
 .services__timeline-item {
   display: grid;
@@ -1129,10 +1169,10 @@ code {
   }
 }
 .work-item__media .shot img {
-  transition: transform 0.8s var(--ease-out-expo), opacity 0.4s var(--ease-out-expo);
+  transition: transform 0.35s var(--ease-out-expo), opacity 0.4s var(--ease-out-expo);
 }
 .work-item__media .shot:hover img {
-  transform: scale(1.04);
+  transform: scale(1.025) translateX(4px);
 }
 .work-item__more {
   display: flex;
@@ -1255,6 +1295,9 @@ code {
     font-size: 1.05rem;
     margin-top: -0.15rem;
   }
+  .xp__year-wrap {
+    grid-column: 2;
+  }
   .xp__marker {
     grid-row: 1 / 3;
     margin-top: 0.35rem;
@@ -1293,10 +1336,12 @@ code {
   color: var(--color-text);
   font-weight: 500;
   cursor: default;
-  transition: color var(--duration-ui) var(--ease-out-expo);
+  transition: color var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-ui) var(--ease-out-expo);
 }
 .sk-core-item:hover {
   color: var(--color-accent);
+  transform: translateY(-2px);
 }
 .sk-categories {
   margin-top: var(--space-8);
@@ -1335,12 +1380,21 @@ code {
   font-family: var(--font-display);
   font-size: var(--text-lg);
   color: var(--color-text-muted);
-  transition: color var(--duration-ui) var(--ease-out-expo);
+  transition: color var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-ui) var(--ease-out-expo);
   cursor: default;
   letter-spacing: -0.01em;
 }
 .sk-item:hover {
   color: var(--color-accent);
+  transform: translateY(-1px);
+}
+/* Relationship: hovering a category lights up its members, and vice versa */
+.sk-cat:hover .sk-cat__label {
+  color: var(--color-accent);
+}
+.sk-cat:hover .sk-item:not(:hover) {
+  color: var(--color-text);
 }
 @media (max-width: 700px) {
   .sk-cat {
@@ -2234,6 +2288,75 @@ code {
 }
 
 /* ============================================================
+   MOTION SYSTEM — shared primitives
+   Reveal / Parallax / TextReveal / ImageReveal / TimelineProgress
+   ============================================================ */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transform-origin: 0 50%;
+  z-index: 380;
+  pointer-events: none;
+}
+
+/* --- masked line reveal --- */
+.tr__mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.tr__line {
+  color: var(--color-text);
+  will-change: transform;
+}
+.tr__line--accent {
+  color: var(--color-accent);
+}
+
+/* --- image reveal + inner parallax --- */
+.image-reveal {
+  position: relative;
+  overflow: hidden;
+}
+.image-reveal__inner {
+  position: absolute;
+  inset: -10% 0;
+  will-change: transform;
+}
+.image-reveal__inner > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- scroll-linked rail fill --- */
+.timeline-progress {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--color-line-strong);
+}
+.timeline-progress__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform-origin: top;
+}
+
+/* --- magnetic CTA wrapper --- */
+.magnetic {
+  display: inline-block;
+}
+
+/* ============================================================
    REDUCED MOTION
    ============================================================ */
 
@@ -2257,6 +2380,9 @@ code {
     animation: none;
   }
   .loader {
+    display: none;
+  }
+  .scroll-progress {
     display: none;
   }
   .hero__pulse {

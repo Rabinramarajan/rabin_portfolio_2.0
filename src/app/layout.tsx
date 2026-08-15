@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { PageLoader } from "@/components/PageLoader";
+import { ScrollProgress } from "@/components/motion";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <JsonLd />
         <PageLoader />
+        <ScrollProgress />
         <Navbar />
         <main id="main">{children}</main>
         <Footer />

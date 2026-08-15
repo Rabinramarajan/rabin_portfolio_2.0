@@ -6,6 +6,7 @@ import { about } from "@/content/about";
 import { profile } from "@/content/profile";
 import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
+import { ImageReveal, TextReveal } from "@/components/motion";
 
 export function AboutSection() {
   const reduce = useReducedMotion();
@@ -24,13 +25,12 @@ export function AboutSection() {
         <motion.article {...view(0)}>
           <SectionKicker index="01" label="About" />
 
-          <h2 className="sec-title about__heading">
-            {(about.headingLines ?? [about.heading]).map((line) => (
-              <span key={line} style={{ display: "block" }}>
-                {line}
-              </span>
-            ))}
-          </h2>
+          <TextReveal
+            lines={about.headingLines ?? [about.heading]}
+            className="sec-title about__heading"
+            as="h2"
+            delay={0.05}
+          />
 
           <div className="about__paragraphs">
             {about.paragraphs.map((p, i) => (
@@ -55,19 +55,26 @@ export function AboutSection() {
           </div>
 
           <div className="about__milestones">
-            {about.milestones.map((m) => (
-              <div className="about__milestone" key={m.year}>
+            {about.milestones.map((m, i) => (
+              <motion.div
+                className="about__milestone"
+                key={m.year}
+                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : i * 0.06, ease }}
+              >
                 <span className="about__milestone-year">{m.year}</span>
                 <h3>{m.title}</h3>
                 <p>{m.body}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.article>
 
         {/* Right: portrait */}
         <motion.div className="about__visual" {...view(0.12)}>
-          <figure className="shot">
+          <ImageReveal parallax={18}>
             <Image
               src={about.portrait.src}
               alt={about.portrait.alt}
@@ -76,7 +83,7 @@ export function AboutSection() {
               sizes="(max-width: 959px) 90vw, 40vw"
               priority
             />
-          </figure>
+          </ImageReveal>
           <p className="about__caption">
             <span className="acc">/_ RABIN R</span>
             <span>Chennai · India</span>

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { experience } from "@/content/experience";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker } from "@/components/ui";
+import { Parallax, TextReveal } from "@/components/motion";
 
 export function ExperienceSection() {
   const reduce = useReducedMotion();
@@ -25,23 +26,25 @@ export function ExperienceSection() {
             ease,
           }}
         >
-          <h2 className="sec-title">A career, read as a timeline.</h2>
+          <TextReveal lines={["A career, read", "as a timeline."]} className="sec-title" as="h2" />
           <p className="sec-lede">Experience structured chronologically. Technical depth and scope visible at a glance.</p>
         </motion.div>
         <ol className="xp__list" ref={ref}>
           <div className="xp__rail" aria-hidden>
             <motion.span className="xp__fill" style={{ scaleY: reduce ? 1 : fill }} />
           </div>
-          {experience.map((role) => (
+          {experience.map((role, i) => (
             <motion.li
               className="xp__item"
               key={role.id}
               initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: reduce ? duration.micro : duration.section, ease }}
+              transition={{ duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : i * 0.04, ease }}
             >
-              <p className="xp__year">{role.start}</p>
+              <Parallax speed={i % 2 === 0 ? 0.08 : -0.08} range={40} className="xp__year-wrap">
+                <p className="xp__year">{role.start}</p>
+              </Parallax>
               <motion.span
                 className="xp__marker"
                 aria-hidden

@@ -5,6 +5,7 @@ import { profile } from "@/content/profile";
 import { ContactForm } from "@/components/ContactForm";
 import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
+import { TextReveal } from "@/components/motion";
 
 export function ContactSection() {
   const reduce = useReducedMotion();
@@ -21,9 +22,12 @@ export function ContactSection() {
       <div className="shell contact-grid">
         <motion.div {...view(0)}>
           <SectionKicker index="08" label="Contact" />
-          <h2 className="contact__heading">
-            Let&apos;s build something <span className="hl--accent">worth shipping.</span>
-          </h2>
+          <TextReveal
+            lines={["Let's build something", "worth shipping."]}
+            className="contact__heading"
+            as="h2"
+            accentIndex={1}
+          />
           <p className="contact__lede">
             Tell me the product, the constraint, and the timeline. I reply within one business day.
           </p>

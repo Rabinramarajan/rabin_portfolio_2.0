@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { navigation, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Logo } from "@/components/Logo";
+import { Magnetic } from "@/components/motion";
 import { cn } from "@/lib/cn";
 
 /** Sections on the single-page route that get a scroll-spy active state. */
@@ -125,14 +126,16 @@ export function Navbar() {
             </ul>
           </motion.nav>
           <motion.div className="hd__cta" {...fade(0.22)}>
-            <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }}>
-              <span className="btn__label">
-                Let&apos;s Work Together
-                <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
-                  <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </span>
-            </Link>
+            <Magnetic strength={8}>
+              <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }}>
+                <span className="btn__label">
+                  Let&apos;s Work Together
+                  <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
+                    <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+                  </svg>
+                </span>
+              </Link>
+            </Magnetic>
           </motion.div>
           <button
             className="hd__toggle"

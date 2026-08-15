@@ -1,8 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { duration, ease } from "@/lib/motion";
+
+const noopSubscribe = () => () => {};
 
 const R1_STEM = "M10 6 V38";
 const R1_BOWL = "M10 6 H26 L32 12 V20 L26 26 H10";
@@ -13,17 +15,26 @@ const R2_LEG = "M34 26 L54 42";
 
 export function PageLoader() {
   const reduce = useReducedMotion();
-  const [visible, setVisible] = useState(() => {
-    if (typeof window !== "undefined") {
+  const [phase, setPhase] = useState(0);
+  const [forceHidden, setForceHidden] = useState(false);
+
+  /* Hydration-safe read of the repeat-visit flag: the server snapshot (false)
+     matches the server-rendered loader, so hydration never mismatches; the
+     client snapshot then hides the loader before paint. */
+  const gated = useSyncExternalStore(
+    noopSubscribe,
+    () => {
       try {
-        if (sessionStorage.getItem("rr-loaded") === "1") return false;
+        return sessionStorage.getItem("rr-loaded") === "1";
       } catch {
         /* ignore */
       }
-    }
-    return true;
-  });
-  const [phase, setPhase] = useState(0);
+      return false;
+    },
+    () => false
+  );
+
+  const visible = !reduce && !gated && !forceHidden;
 
   useEffect(() => {
     if (reduce || !visible) return;
@@ -32,7 +43,7 @@ export function PageLoader() {
     const a = window.setTimeout(() => setPhase(1), 160);
     const b = window.setTimeout(() => setPhase(2), 420);
     const done = window.setTimeout(() => {
-      setVisible(false);
+      setForceHidden(true);
       try {
         sessionStorage.setItem("rr-loaded", "1");
       } catch {
@@ -46,8 +57,6 @@ export function PageLoader() {
       window.clearTimeout(done);
     };
   }, [reduce, visible]);
-
-  if (reduce) return null;
 
   const pathProps = {
     fill: "none",
@@ -63,7 +72,7 @@ export function PageLoader() {
           aria-hidden
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: duration.interaction, ease }}
+          transition={{ duration: reduce ? 0 : duration.interaction, ease }}
         >
           <div className="loader__mark">
             <svg viewBox="0 0 64 48" fill="none" aria-hidden>
