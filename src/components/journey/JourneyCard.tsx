@@ -54,7 +54,7 @@ export function JourneyCard({ milestone, isActive, isPast, hovered }: JourneyCar
             initial={reduce ? { opacity: 1 } : { opacity: 0, y: 8, scale: 0.9 }}
             animate={!reduce ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.2 + i * 0.06, ease }}
-            whileHover={!reduce && { scale: 1.04, y: -2, transition: { duration: 0.15 } }}
+            whileHover={reduce ? undefined : { scale: 1.04, y: -2, transition: { duration: 0.15 } }}
           >
             {tech}
           </motion.li>

@@ -14,7 +14,7 @@ import { duration, ease } from "@/lib/motion";
 const MILESTONE_POSITIONS = [0.08, 0.28, 0.5, 0.72, 0.92];
 
 export function JourneyRoute() {
-  const reduce = useReducedMotion();
+  const reduce = !!useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -31,8 +31,8 @@ export function JourneyRoute() {
     restDelta: 0.001,
   });
 
-  // Particle position along the route
-  const particleProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  // Particle position along the route, as a percentage string
+  const particleProgress = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   // Track visibility for triggering animations
   useEffect(() => {
@@ -66,12 +66,8 @@ export function JourneyRoute() {
           <motion.div
             className="jnr__particle"
             style={{ left: particleProgress }}
-            animate={{
-              left: particleProgress,
-              opacity: [0, 1, 1, 0],
-              scale: [0.5, 1, 1, 0.5],
-            }}
-            transition={{ duration: 0.01 }} // Driven by scroll, not time
+            animate={{ opacity: [0, 1, 1, 0], scale: [0.5, 1, 1, 0.5] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
           >
             <div className="jnr__particle-core" />
             <div className="jnr__particle-glow" />

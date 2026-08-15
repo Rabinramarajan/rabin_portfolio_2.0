@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { TextReveal } from "@/components/motion";
 import { Parallax } from "@/components/motion";
 import { journeyMilestones, backgroundCoordinates } from "@/content/journey";
@@ -26,7 +26,7 @@ import { SectionKicker } from "@/components/ui";
 
 export function JourneySection() {
   const reduce = useReducedMotion();
-  const sectionRef = useRef<HTMLSectionElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   return (
     <section ref={sectionRef} id="journey" className="jnr" aria-labelledby="journey-heading">
@@ -46,8 +46,6 @@ export function JourneySection() {
           viewport={{ once: true, amount: 0.3, margin: "-10%" }}
           transition={{ duration: reduce ? duration.micro : duration.section, ease }}
         >
-          <p className="jnr__eyebrow" aria-hidden>05 / EXPERIENCE</p>
-          
           <h1 id="journey-heading" className="jnr__heading">
             <TextReveal
               lines={["Experience the", "Journey."]}
@@ -110,12 +108,12 @@ function JourneyBackgroundCoordinates() {
         <motion.span
           key={coord}
           className="jnr__bg-coord"
-          style={{
-            "--coord-x": `${5 + Math.random() * 90}%`,
-            "--coord-y": `${10 + Math.random() * 80}%`,
-            "--coord-delay": `${Math.random() * 4}s`,
-            "--coord-duration": `${12 + Math.random() * 8}s`,
-          }}
+          style={
+            {
+              "--coord-x": `${5 + Math.random() * 90}%`,
+              "--coord-y": `${10 + Math.random() * 80}%`,
+            } as CSSProperties
+          }
           initial={{ opacity: 0 }}
           animate={{ opacity: [0.02, 0.06, 0.02] }}
           transition={{ duration: 12 + Math.random() * 8, delay: Math.random() * 4, repeat: Infinity, ease: "easeInOut" }}
@@ -156,7 +154,7 @@ function JourneyEndTransition() {
           initial={reduce ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: reduce ? 0 : 1.2, ease }}
-          whileHover={!reduce && { x: 8, transition: { duration: 0.3, ease } }}
+          whileHover={reduce ? undefined : { x: 8, transition: { duration: 0.3, ease } }}
         >
           → NEXT CHAPTER
         </motion.span>

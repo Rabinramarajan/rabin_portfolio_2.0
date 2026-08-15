@@ -15,7 +15,7 @@ import { duration, ease } from "@/lib/motion";
 const MILESTONE_POSITIONS = [0.08, 0.28, 0.5, 0.72, 0.92];
 
 export function JourneyMilestones() {
-  const reduce = useReducedMotion();
+  const reduce = !!useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(-1);
   const [visibleIndices, setVisibleIndices] = useState<Set<number>>(new Set());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -115,7 +115,7 @@ function JourneyMilestoneItem({
     <motion.div
       ref={cardRef}
       className={`jnr__milestone-item ${milestone.type} ${isActive ? "jnr__milestone--active" : ""} ${isPast ? "jnr__milestone--past" : ""}`}
-      style={{ left: `calc(${position * 100}% - ${milestone.type === "current" ? "50%" : "40%"})` }}
+      style={{ left: `${position * 100}%` }}
       data-index={index}
       initial={reduce ? { opacity: 1, y: 0, filter: "none" } : { opacity: 0, y: 40, filter: "blur(12px)" }}
       animate={isVisible && !reduce ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 1, y: 0, filter: "none" }}
@@ -124,10 +124,7 @@ function JourneyMilestoneItem({
         delay: reduce ? 0 : 0.15 + index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
-      whileHover={!reduce && {
-        y: -6,
-        transition: { duration: 0.3, ease },
-      }}
+      whileHover={reduce ? undefined : { y: -6, transition: { duration: 0.3, ease } }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
