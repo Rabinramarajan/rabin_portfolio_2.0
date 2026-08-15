@@ -1,39 +1,162 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
-import { useRef } from "react";
-import { careerLead, formatRoleDates, getCareerTimeline } from "@/content/experience";
-import type { ExperienceRole } from "@/content/types";
+import { getCareerTimeline } from "@/content/experience";
 import { profile } from "@/content/profile";
-import { duration, ease } from "@/lib/motion";
-import { Parallax } from "@/components/motion";
+import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
+import { TextReveal } from "@/components/motion";
 import { PageHero } from "./PageHero";
 import { PageCta } from "./PageCta";
 import { PageSectionHead } from "./PageSectionHead";
+import { CareerArchitectureVisual } from "@/components/experience/CareerArchitectureVisual";
+import { CareerTimeline } from "@/components/experience/CareerTimeline";
+import { TechnologyEvolution } from "@/components/experience/StackEvolution";
+import { CapabilityEvolution } from "@/components/experience/CapabilityEvolution";
+import { MilestoneList } from "@/components/experience/MilestoneList";
+import { CurrentChapter } from "@/components/experience/CurrentChapter";
+import { EngineeringMap } from "@/components/experience/EngineeringMap";
+import { NextChapter } from "@/components/experience/NextChapter";
+import { ExperienceNav } from "@/components/experience/ExperienceNav";
 
+/**
+ * EXPERIENCE — career architecture.
+ *
+ * Not a resume with animation on it. The page is one continuous structure:
+ * the rail that opens the timeline carries through the stack evolution, turns
+ * into the engineering map, and finally leaves the page toward the CTA. Each
+ * section has its own reveal gesture — clip, line-draw, node activation,
+ * typographic reveal, marker progression, parallax, SVG drawing, extension —
+ * so the page never settles into one repeated fade-up.
+ */
 export function ExperiencePage() {
+  const reduce = useReducedMotionSafe();
   const roles = getCareerTimeline();
 
   return (
     <>
+      <ExperienceNav />
+
       <PageHero
         index="04"
         label="Experience"
-        title={["YEARS OF BUILDING,", "LEARNING AND", "SHIPPING."]}
-        lede="A career in production frontend — from first builds in 2021 to consulting on AI-driven analytics products in 2026."
+        title={["THE EVOLUTION", "OF AN", "ENGINEER."]}
+        lede="From first builds in 2021 to Angular architecture and AI-driven analytics in 2026 — a career measured in what it taught, not in how long it ran."
+        visual={<CareerArchitectureVisual reduce={reduce} />}
         meta={[
-          { label: "Years", value: profile.yearsExperienceLabel + "+" },
-          { label: "Countries", value: "3" },
-          { label: "Users served", value: "10,000+" },
-          { label: "Status", value: "Open to select projects" },
+          { label: "Experience", value: profile.yearsExperienceLabel + " years" },
+          { label: "Discipline", value: "Frontend engineering" },
+          { label: "Core stack", value: "Angular · TypeScript" },
+          { label: "Also building with", value: "React · Next.js" },
         ]}
+        className="xhero"
       />
 
-      <CareerTimeline roles={roles} />
+      {/* ---------- the journey ---------- */}
+      <section className="pf-section xsec" id="journey">
+        <div className="shell">
+          <PageSectionHead index="01" label="The journey" />
+          <TextReveal
+            lines={["EVERY ROLE CHANGED", "HOW I BUILD."]}
+            as="h2"
+            className="xsec__statement"
+            accentIndex={1}
+          />
+          <p className="xsec__lede">
+            Five stages, in order. Each one is a real engagement — the labels describe what changed, not a title
+            anyone handed out.
+          </p>
+
+          <CareerTimeline roles={roles} />
+        </div>
+      </section>
+
+      {/* ---------- the stack evolved ---------- */}
+      <section className="pf-section xsec" id="stack">
+        <div className="shell">
+          <PageSectionHead
+            index="02"
+            label="The stack evolved"
+            title="The toolkit changed with the problems."
+            lede="Not a proficiency chart. Each stream starts the year the technology verifiably entered the work."
+          />
+          <TechnologyEvolution />
+        </div>
+      </section>
+
+      {/* ---------- what changed ---------- */}
+      <section className="pf-section xsec" id="capabilities">
+        <div className="shell">
+          <PageSectionHead
+            index="03"
+            label="What changed"
+            title="The work itself evolved."
+            lede="Years are a weak measure. This is what the responsibility actually became."
+          />
+          <CapabilityEvolution />
+        </div>
+      </section>
+
+      {/* ---------- milestones ---------- */}
+      <section className="pf-section xsec" id="milestones">
+        <div className="shell">
+          <PageSectionHead
+            index="04"
+            label="Milestones"
+            title="The turning points."
+            lede="Dated, real, and each one changed what came after it."
+          />
+          <MilestoneList />
+        </div>
+      </section>
+
+      {/* ---------- current chapter ---------- */}
+      <section className="pf-section xsec xsec--current" id="current">
+        <div className="shell">
+          <PageSectionHead
+            index="05"
+            label="Current chapter"
+            title="Where the work is now."
+            lede="Two engagements running concurrently in 2026 — consulting on Angular architecture, and building the interface for an AI-driven analytics product."
+          />
+          <CurrentChapter />
+        </div>
+      </section>
+
+      {/* ---------- the engineering map ---------- */}
+      <section className="pf-section xsec" id="map">
+        <div className="shell">
+          <PageSectionHead
+            index="06"
+            label="The engineering map"
+            title="How the pieces relate."
+            lede="The shape of the toolkit today — frontend at the centre, everything else earned around it."
+          />
+          <EngineeringMap />
+        </div>
+      </section>
+
+      {/* ---------- closing statement ---------- */}
+      <section className="pf-section xsec xsec--quote">
+        <div className="shell">
+          <TextReveal
+            lines={["THE EXPERIENCE ISN'T", "IN THE YEARS. IT'S IN", "WHAT THEY TAUGHT", "ME TO BUILD."]}
+            as="p"
+            className="xquote"
+            accentIndex={3}
+            lineDuration={0.7}
+          />
+        </div>
+      </section>
+
+      {/* ---------- next chapter ---------- */}
+      <section className="pf-section xsec xsec--next">
+        <div className="shell">
+          <NextChapter />
+        </div>
+      </section>
 
       <PageCta
         kicker="04 / EXPERIENCE"
-        headline={["THE NEXT CHAPTER", "IS STILL BEING", "BUILT."]}
+        headline={["THE STORY", "CONTINUES."]}
         lede="The work is the argument. Let's make the next one count."
         actions={[
           { label: "View Selected Work", href: "/work", variant: "line" },
@@ -41,133 +164,5 @@ export function ExperiencePage() {
         ]}
       />
     </>
-  );
-}
-
-function CareerTimeline({ roles }: { roles: ExperienceRole[] }) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.55"] });
-  const fill = useSpring(useTransform(scrollYProgress, [0, 1], [0, 1]), { stiffness: 80, damping: 24 });
-  const current = roles.length - 1;
-
-  return (
-    <section className="pf-section xpp">
-      <div className="shell">
-        <PageSectionHead
-          index="04"
-          label="Career timeline"
-          title="A career read as a timeline."
-          lede="Chronological, from the first build to the current engagement. Each stage is real — no invented roles."
-        />
-
-        <ol className="xpp__timeline" ref={ref}>
-          <div className="xpp__rail" aria-hidden>
-            <motion.span className="xpp__fill" style={{ scaleY: reduce ? 1 : fill }} />
-          </div>
-
-          {/* foundation node before the first role */}
-          <li className="xpp__lead">
-            <Parallax speed={0.1} range={36} className="xpp__year-wrap">
-              <p className="xpp__year">{careerLead.year}</p>
-            </Parallax>
-            <motion.span
-              className="xpp__marker"
-              aria-hidden
-              initial={reduce ? false : { scale: 0.7 }}
-              whileInView={{ scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: duration.ui, ease }}
-            />
-            <div className="xpp__cell">
-              <p className="xpp__milestone">{careerLead.label}</p>
-              <p className="xpp__note">{careerLead.note}</p>
-            </div>
-          </li>
-
-          {roles.map((role, i) => {
-            const isCurrent = i === current;
-            return (
-              <motion.li
-                className="xpp__item"
-                data-current={isCurrent ? "true" : undefined}
-                key={role.id}
-                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : i * 0.06, ease }}
-              >
-                <Parallax speed={0.1} range={36} className="xpp__year-wrap">
-                  <p className="xpp__year">{role.start}</p>
-                </Parallax>
-                <motion.span
-                  className="xpp__marker"
-                  aria-hidden
-                  initial={reduce ? false : { scale: 0.7 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: duration.ui, ease }}
-                />
-                <div className="xpp__cell">
-                  {role.milestone ? <p className="xpp__milestone">{role.milestone}</p> : null}
-                  <h3 className="xpp__role">
-                    {role.role}
-                    {isCurrent ? <span className="xpp__now">Current</span> : null}
-                  </h3>
-                  <p className="xpp__company">
-                    {role.company} · {role.type}
-                    <span className="xpp__loc"> · {role.location}</span>
-                  </p>
-                  <p className="xpp__period">{formatRoleDates(role)}</p>
-                  <p className="xpp__desc">{role.description}</p>
-
-                  {role.impact.length ? (
-                    <div>
-                      <p className="xpp__k">Impact</p>
-                      <ul className="xpp__contribs">
-                        {role.impact.map((t) => (
-                          <li key={t}>{t}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-
-                  {role.responsibilities.length ? (
-                    <div>
-                      <p className="xpp__k">Key contributions</p>
-                      <ul className="xpp__contribs">
-                        {role.responsibilities.map((t) => (
-                          <li key={t}>{t}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-
-                  <Parallax speed={0.16} range={30} className="xpp__tech-wrap">
-                    <ul className="xpp__tech">
-                      {role.technologies.map((t, j) => (
-                        <motion.li
-                          key={t}
-                          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 6 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.5 }}
-                          transition={{
-                            duration: reduce ? duration.micro : 0.38,
-                            delay: reduce ? 0 : 0.12 + j * 0.05,
-                            ease,
-                          }}
-                        >
-                          {t}
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </Parallax>
-                </div>
-              </motion.li>
-            );
-          })}
-        </ol>
-      </div>
-    </section>
   );
 }

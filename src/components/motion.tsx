@@ -110,21 +110,36 @@ export function TextReveal({
   as?: "h1" | "h2" | "h3" | "p" | "span";
 }) {
   const reduce = useReducedMotion();
-  const Tag = as;
+  const Tag = motion[as];
+
+  /*
+   * The observer has to watch the heading, never the inner line. Each line
+   * starts translated fully outside its overflow-hidden mask, so an observer
+   * on the line itself reports an intersection ratio of ~0 and a viewport
+   * `amount` above 0 can never be satisfied — the reveal would never fire.
+   * Watching the unclipped wrapper and driving the lines through variants
+   * keeps the stagger without that trap.
+   */
   return (
-    <Tag className={className}>
+    <Tag
+      className={className}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.35, margin: "0px 0px -8% 0px" }}
+    >
       {lines.map((line, i) => (
         <span key={line} className="tr__mask">
           <motion.span
             className={cn("tr__line", i === accentIndex && "tr__line--accent")}
             style={{ display: "block" }}
-            initial={reduce ? { opacity: 0 } : { y: "112%" }}
-            whileInView={reduce ? { opacity: 1 } : { y: "0%" }}
-            viewport={{ once: true, amount: 0.7 }}
-            transition={{
-              duration: reduce ? duration.micro : lineDuration,
-              delay: reduce ? 0 : delay + i * 0.08,
-              ease,
+            variants={{
+              hidden: reduce ? { opacity: 0 } : { y: "112%" },
+              show: reduce
+                ? { opacity: 1, transition: { duration: duration.micro } }
+                : {
+                    y: "0%",
+                    transition: { duration: lineDuration, delay: delay + i * 0.08, ease },
+                  },
             }}
           >
             {line}
@@ -320,15 +335,33 @@ export function ClipReveal({
       : from === "right"
         ? "inset(0 0 0 100%)"
         : "inset(0 0 100% 0)";
+
+  /*
+   * The wrapper is what gets observed. Chromium clips a target's intersection
+   * rect by the target's own clip-path, so observing the clipped element
+   * directly would report a ratio of 0 and the reveal would never fire.
+   */
   return (
     <motion.div
       className={className}
-      initial={reduce ? { opacity: 0 } : { clipPath: start }}
-      whileInView={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
-      viewport={{ once: true, amount: 0.3, margin: "-8%" }}
-      transition={{ duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : delay, ease }}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.3, margin: "0px 0px -8% 0px" }}
     >
-      {children}
+      <motion.div
+        variants={{
+          hidden: reduce ? { opacity: 0 } : { clipPath: start, opacity: 0 },
+          show: reduce
+            ? { opacity: 1, transition: { duration: duration.micro } }
+            : {
+                opacity: 1,
+                clipPath: "inset(0% 0% 0% 0%)",
+                transition: { duration: duration.section, delay, ease },
+              },
+        }}
+      >
+        {children}
+      </motion.div>
     </motion.div>
   );
 }

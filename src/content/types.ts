@@ -99,6 +99,12 @@ export interface Project {
   seo: { title: string; description: string };
 }
 
+/** Abstract visual identity rendered beside each career stage. */
+export type RoleVisualId = "foundation" | "interface" | "projects" | "enterprise" | "ecosystem";
+
+/** One movement of the career narrative. Labels the stage, never invents it. */
+export type CareerChapter = "BEGIN" | "BUILD" | "DEEPEN" | "CONSULT" | "EXTEND";
+
 export interface ExperienceRole {
   id: string;
   company: string;
@@ -113,6 +119,54 @@ export interface ExperienceRole {
   technologies: string[];
   /** Narrative editorial marker shown above the role on the career timeline. */
   milestone?: string;
+  /** Which movement of the story this role belongs to. */
+  chapter?: CareerChapter;
+  /** Which abstract scene renders alongside the role. */
+  visual?: RoleVisualId;
+}
+
+/**
+ * One technology stream in the stack evolution. `enteredAt` is the first year
+ * the technology is verifiably present in the career record; `source` names
+ * where that evidence comes from so nothing is implied without support.
+ */
+export interface StackTrack {
+  id: string;
+  label: string;
+  /** Year the technology verifiably enters the record. */
+  enteredAt: string;
+  /** Where the evidence comes from — a role id, or "foundation" / "toolkit". */
+  source: string;
+  /** Still in active use. */
+  active: boolean;
+}
+
+/** An editorial statement about how the work itself changed. */
+export interface CapabilityStep {
+  number: string;
+  key: string;
+  title: string;
+  description: string;
+  /** Small technical metadata line — grounded in a real role. */
+  evidence: string;
+  /** Which direction this block reveals from, so no two repeat. */
+  from: "left" | "right" | "bottom";
+}
+
+/** A real, dated turning point in the career. */
+export interface CareerMilestone {
+  id: string;
+  year: string;
+  event: string;
+  /** Why it mattered — the consequence, not a claim. */
+  why: string;
+}
+
+/** One branch of the engineering map. */
+export interface EngineeringMapBranch {
+  id: string;
+  label: string;
+  items: string[];
 }
 
 export interface SkillGroup {

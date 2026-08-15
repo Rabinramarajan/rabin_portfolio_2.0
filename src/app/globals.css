@@ -1207,13 +1207,17 @@ code {
 }
 .xp__item {
   display: grid;
-  grid-template-columns: 6rem 2.5rem 1fr;
-  gap: 1rem;
+  grid-template-columns: 5rem auto 1fr;
+  gap: 1.2rem 1.6rem;
   padding-bottom: var(--space-12);
   position: relative;
+  align-items: flex-start;
 }
 .xp__item:last-child {
   padding-bottom: 0;
+}
+.xp__year-wrap {
+  grid-column: 1;
 }
 .xp__year {
   font-family: var(--font-display);
@@ -1234,6 +1238,8 @@ code {
   position: relative;
   z-index: 1;
   box-shadow: 0 0 0 4px var(--color-bg);
+  grid-column: 2;
+  justify-self: center;
 }
 .xp__now {
   display: inline-block;
@@ -1285,22 +1291,16 @@ code {
     left: 0.4rem;
   }
   .xp__item {
-    grid-template-columns: 1.4rem 1fr;
-    gap: 0.9rem;
+    grid-template-columns: 3rem auto 1fr;
+    gap: 0.8rem 1rem;
     padding-left: 0;
   }
   .xp__year {
-    grid-column: 2;
-    text-align: left;
+    text-align: right;
     font-size: 1.05rem;
-    margin-top: -0.15rem;
-  }
-  .xp__year-wrap {
-    grid-column: 2;
   }
   .xp__marker {
-    grid-row: 1 / 3;
-    margin-top: 0.35rem;
+    margin-top: 0.3rem;
   }
 }
 
@@ -4074,207 +4074,1154 @@ code {
 }
 
 /* ============================================================
-   PAGE 04 — EXPERIENCE (progression)
+   PAGE 04 — EXPERIENCE (career architecture)
+   One continuous structure: the hero architecture becomes the
+   career rail, becomes the stack stream, becomes the engineering
+   map, and finally leaves the page toward the CTA.
+   Every reveal here is transform / opacity / clip-path only.
    ============================================================ */
 
-.xpp {
+/* ---------- shared blueprint visual language ---------- */
+.xv {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 300 / 200;
+}
+.xv__ground line {
+  stroke: var(--color-line);
+  stroke-width: 1;
+}
+.xv__bracket {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+  fill: none;
+}
+.xv__stroke {
+  stroke: var(--color-text-faint);
+  stroke-width: 1.2;
+  fill: none;
+}
+.xv__dim-stroke {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+  fill: none;
+}
+.xv__accent-stroke {
+  stroke: var(--color-accent);
+  stroke-width: 1.4;
+  fill: none;
+}
+.xv__fill {
+  fill: var(--color-text-faint);
+}
+.xv__accent-fill {
+  fill: var(--color-accent);
+}
+
+/* ---------- hero ---------- */
+.xhero {
+  overflow: clip;
+}
+/* the longest line is "THE EVOLUTION" — size it so no line ever wraps */
+.xhero .pf-title {
+  font-size: clamp(2.2rem, 5.4vw, 4.6rem);
+}
+@media (min-width: 960px) {
+  .xhero .pf-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  }
+}
+.xca {
+  position: relative;
+  width: 100%;
+}
+.xca__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 460 / 340;
+  overflow: visible;
+}
+.xca__ground line {
+  stroke: var(--color-line);
+  stroke-width: 1;
+}
+.xca__spine {
+  stroke: var(--color-line-strong);
+  stroke-width: 1.2;
+}
+.xca__link {
+  stroke: var(--color-text-faint);
+  stroke-width: 1.1;
+}
+.xca__link--accent {
+  stroke: var(--color-accent);
+  stroke-width: 1.3;
+}
+.xca__frame {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+  fill: none;
+}
+.xca__frame--accent {
+  stroke: var(--color-accent);
+}
+.xca__node {
+  fill: var(--color-text-faint);
+}
+.xca__node--accent {
+  fill: var(--color-accent);
+}
+.xca__rail text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  fill: var(--color-text-faint);
+}
+
+/* ---------- section frame ---------- */
+.xsec {
   position: relative;
 }
-.xpp__timeline {
+.xsec__statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 3.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: 500;
+  max-width: 18ch;
+  margin-top: -0.5rem;
+}
+.xsec__lede {
+  margin-top: 1.3rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  max-width: 38rem;
+}
+
+/* ---------- section index (desktop side navigation) ---------- */
+.xnav {
+  display: none;
+}
+@media (min-width: 1180px) {
+  .xnav {
+    display: block;
+    position: fixed;
+    left: clamp(1rem, 2vw, 1.75rem);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 120;
+  }
+  .xnav__list {
+    display: grid;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--color-line);
+  }
+  .xnav__item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 30px;
+    padding: 0 0.4rem 0 0;
+    color: var(--color-text-faint);
+    transition: color var(--duration-ui) var(--ease-out-expo);
+  }
+  .xnav__tick {
+    width: 0.85rem;
+    height: 1px;
+    background: var(--color-line-strong);
+    transform-origin: left center;
+    transition:
+      transform var(--duration-ui) var(--ease-out-expo),
+      background var(--duration-ui) var(--ease-out-expo);
+  }
+  .xnav__label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition:
+      opacity var(--duration-ui) var(--ease-out-expo),
+      transform var(--duration-ui) var(--ease-out-expo);
+  }
+  .xnav__item[data-state="now"] {
+    color: var(--color-accent);
+  }
+  .xnav__item[data-state="now"] .xnav__tick {
+    background: var(--color-accent);
+    transform: scaleX(1.7);
+  }
+  .xnav__item[data-state="now"] .xnav__label,
+  .xnav:hover .xnav__label,
+  .xnav__item:focus-visible .xnav__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .xnav__item:hover,
+  .xnav__item:focus-visible {
+    color: var(--color-text);
+  }
+}
+
+/* ============================================================
+   THE CAREER TIMELINE
+   ============================================================ */
+
+.xtl {
+  --xtl-mark-center: 0.75rem;
   position: relative;
   list-style: none;
-  margin: 0;
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
   padding: 0;
 }
-.xpp__rail {
+.xtl__rail {
   position: absolute;
-  left: 10.45rem;
-  top: 0.2rem;
-  bottom: 0.2rem;
+  left: var(--xtl-mark-center);
+  top: 0.4rem;
+  bottom: 0.4rem;
   width: 1px;
   background: var(--color-line-strong);
+  transform: translateX(-0.5px);
 }
-.xpp__fill {
+.xtl__fill {
   position: absolute;
   inset: 0;
   background: var(--color-accent);
   transform-origin: top;
+  will-change: transform;
 }
-.xpp__item,
-.xpp__lead {
-  display: grid;
-  grid-template-columns: 8rem 2.5rem minmax(0, 1fr);
-  gap: 1.2rem;
-  padding-bottom: clamp(3rem, 7vw, 5rem);
+
+.xtl__item {
   position: relative;
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  grid-template-areas:
+    "mark year"
+    ".    cell"
+    ".    vis";
+  column-gap: 0;
+  row-gap: 0;
+  padding-bottom: clamp(3rem, 7vw, 5.5rem);
 }
-.xpp__item:last-child {
+.xtl__item:last-child {
   padding-bottom: 0;
 }
-.xpp__year-wrap {
-  text-align: right;
+
+.xtl__year-col {
+  grid-area: year;
+  padding-left: 0.9rem;
 }
-.xpp__year {
+.xtl__chapter {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  transition: color var(--duration-interaction) var(--ease-out-expo);
+}
+.xtl__year {
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem);
   letter-spacing: -0.03em;
-  text-align: right;
-  color: var(--color-text-muted);
   line-height: 1.1;
   font-weight: 500;
+  color: var(--color-text-faint);
+  transition: color var(--duration-interaction) var(--ease-out-expo);
 }
-.xpp__marker {
-  width: 11px;
-  height: 11px;
+
+.xtl__marker {
+  grid-area: mark;
+  justify-self: center;
+  align-self: start;
+  width: 9px;
+  height: 9px;
+  margin-top: 0.5rem;
   border-radius: 50%;
-  border: 2px solid var(--color-line-strong);
+  border: 1px solid var(--color-line-strong);
   background: var(--color-bg);
-  margin-top: 0.35rem;
-  margin-inline: auto;
   position: relative;
   z-index: 1;
+  transition:
+    transform var(--duration-interaction) var(--ease-out-expo),
+    border-color var(--duration-interaction) var(--ease-out-expo),
+    background var(--duration-interaction) var(--ease-out-expo);
 }
-.xpp__item[data-current="true"] .xpp__marker {
+
+/* active + completed stages — no pulsing, no glow, just state */
+.xtl__item[data-state="now"] .xtl__year,
+.xtl__item[data-state="past"] .xtl__year {
+  color: var(--color-text);
+}
+.xtl__item[data-state="now"] .xtl__chapter {
+  color: var(--color-accent);
+}
+.xtl__item[data-state="now"] .xtl__marker {
+  border-color: var(--color-accent);
+  transform: scale(1.35);
+}
+.xtl__item[data-state="past"] .xtl__marker {
+  border-color: var(--color-accent-dim);
+  background: var(--color-accent-dim);
+}
+.xtl__item[data-current="true"] .xtl__marker {
   border-color: var(--color-accent);
   background: var(--color-accent);
 }
-.xpp__cell {
-  min-width: 0;
+/*
+ * Stages you have already passed recede rather than disappear. The floor is
+ * 0.88: muted body text is ~7:1 at full strength, and anything below this
+ * pushes it under the 4.5:1 minimum. Recession is a hint, never a readability
+ * cost — every stage stays fully legible at any scroll position.
+ */
+.xtl__item[data-state="past"] .xtl__cell {
+  opacity: 0.88;
+  transition: opacity var(--duration-section) var(--ease-out-expo);
 }
-.xpp__milestone {
+.xtl__item[data-state="next"] .xtl__cell {
+  opacity: 0.95;
+  transition: opacity var(--duration-section) var(--ease-out-expo);
+}
+
+.xtl__cell {
+  grid-area: cell;
+  min-width: 0;
+  padding-left: 0.9rem;
+  padding-top: 0.9rem;
+}
+.xtl__milestone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-accent-dim);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
   margin-bottom: 0.8rem;
 }
-.xpp__milestone::before {
+.xtl__milestone::before {
   content: "";
   width: 1.6rem;
   height: 1px;
   background: var(--color-accent-dim);
 }
-.xpp__note {
-  color: var(--color-text-faint);
+.xtl__note {
+  color: var(--color-text-muted);
   font-size: var(--text-sm);
-  line-height: 1.6;
+  line-height: 1.7;
   max-width: 34rem;
 }
-.xpp__role {
+.xtl__role {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   letter-spacing: -0.03em;
+  line-height: 1.08;
   font-weight: 550;
   display: flex;
   align-items: baseline;
   gap: 0.9rem;
   flex-wrap: wrap;
 }
-.xpp__now {
+.xtl__role-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.xtl__role-mask > span {
+  display: block;
+}
+.xtl__now {
   font-family: var(--font-mono);
-  font-size: 0.56rem;
+  font-size: 0.54rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-accent);
   border: 1px solid rgb(201 242 77 / 35%);
   padding: 0.22rem 0.5rem;
   font-weight: 700;
+  white-space: nowrap;
 }
-.xpp__company {
-  margin-top: 0.45rem;
+.xtl__company {
+  margin-top: 0.5rem;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
-.xpp__company .xpp__loc {
+.xtl__loc {
   color: var(--color-text-faint);
 }
-.xpp__period {
+.xtl__period {
   margin-top: 0.3rem;
   font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
 }
-.xpp__desc {
+.xtl__desc {
   margin-top: 1rem;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  line-height: 1.7;
+  line-height: 1.72;
   max-width: 44rem;
 }
-.xpp__k {
-  margin-top: 1.3rem;
+.xtl__block {
+  margin-top: 1.35rem;
+}
+.xtl__k {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.xtl__list {
+  margin-top: 0.6rem;
+  display: grid;
+  gap: 0.45rem;
+  max-width: 44rem;
+  list-style: none;
+  padding: 0;
+}
+.xtl__list li {
+  position: relative;
+  padding-left: 1rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+}
+.xtl__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 0.45rem;
+  height: 1px;
+  background: var(--color-accent-dim);
+}
+.xtl__tech {
+  margin-top: 1.25rem;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  max-width: 44rem;
+}
+
+.xtl__visual {
+  grid-area: vis;
+  padding: 1.6rem 0 0 0.9rem;
+  max-width: 17rem;
+}
+.xtl__visual-slot {
+  aspect-ratio: 300 / 200;
+}
+
+@media (min-width: 760px) {
+  .xtl {
+    --xtl-mark-center: 9rem;
+  }
+  .xtl__item {
+    grid-template-columns: 7.5rem 3rem minmax(0, 1fr);
+    grid-template-areas:
+      "year mark cell"
+      ".    .    vis";
+  }
+  .xtl__year-col {
+    text-align: right;
+    padding: 0.35rem 1.25rem 0 0;
+  }
+  .xtl__cell {
+    padding: 0 0 0 0.5rem;
+  }
+  .xtl__marker {
+    margin-top: 0.6rem;
+  }
+  .xtl__visual {
+    padding: 1.75rem 0 0 0.5rem;
+  }
+}
+
+@media (min-width: 1240px) {
+  .xtl__item {
+    grid-template-columns: 7.5rem 3rem minmax(0, 1fr) 14rem;
+    grid-template-areas: "year mark cell vis";
+    align-items: start;
+  }
+  .xtl__visual {
+    padding: 0.4rem 0 0 2rem;
+    max-width: none;
+  }
+}
+
+/* ============================================================
+   THE STACK EVOLVED — horizontal technical stream
+   ============================================================ */
+
+.xstk {
+  --xstk-label: 8.5rem;
+  --xstk-meta: 0;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.xstk__years {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-left: var(--xstk-label);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-line);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+.xstk__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.xstk__row {
+  display: grid;
+  grid-template-columns: var(--xstk-label) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.xstk__label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding-right: 0.75rem;
+}
+.xstk__row[data-active="true"] .xstk__label {
+  color: var(--color-text);
+}
+.xstk__track {
+  position: relative;
+  display: block;
+  height: 1px;
+  width: 100%;
+}
+.xstk__stream {
+  position: absolute;
+  left: var(--start);
+  top: 0;
+  width: var(--width);
+  height: 1px;
+  background: var(--color-line-strong);
+  transform-origin: left center;
+  display: block;
+}
+.xstk__row[data-active="true"] .xstk__stream {
+  background: var(--color-accent-dim);
+}
+.xstk__node {
+  position: absolute;
+  left: var(--start);
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--color-text-faint);
+  display: block;
+}
+.xstk__row[data-active="true"] .xstk__node {
+  background: var(--color-accent);
+}
+.xstk__meta {
+  display: none;
+}
+@media (min-width: 900px) {
+  .xstk {
+    --xstk-label: 11rem;
+  }
+  .xstk__row {
+    grid-template-columns: var(--xstk-label) minmax(0, 1fr) 10rem;
+  }
+  .xstk__years {
+    margin-right: 10rem;
+  }
+  .xstk__meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    padding-left: 1rem;
+  }
+  .xstk__entered {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+.xstk__foot {
+  margin-top: 1.5rem;
+  color: var(--color-text-faint);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  max-width: 40rem;
+}
+
+/* ============================================================
+   WHAT CHANGED — capability evolution
+   ============================================================ */
+
+.xcap {
+  list-style: none;
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+  padding: 0;
+  /*
+   * Rows reveal from alternating directions, so a row still waiting below the
+   * fold sits translated sideways. `clip` (not `hidden`) contains that without
+   * creating a scroll container or trapping the rows' focus styles.
+   */
+  overflow-x: clip;
+}
+.xcap__row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding: clamp(2rem, 4vw, 3rem) 0;
+  border-top: 1px solid var(--color-line);
+}
+.xcap__row:last-child {
+  border-bottom: 1px solid var(--color-line);
+}
+.xcap__num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--color-accent);
+  padding-top: 0.5rem;
+}
+.xcap__body {
+  min-width: 0;
+}
+.xcap__title-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.xcap__key {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5.5vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-weight: 500;
+}
+.xcap__rule {
+  display: block;
+  height: 1px;
+  width: 100%;
+  max-width: 26rem;
+  margin: 1.1rem 0 1.3rem;
+  background: var(--color-line-strong);
+  transform-origin: left center;
+}
+.xcap__lead {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.xcap__desc {
+  margin-top: 0.7rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.72;
+  max-width: 40rem;
+}
+.xcap__evidence {
+  margin-top: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+@media (min-width: 900px) {
+  .xcap__row {
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: 0 2.5rem;
+  }
+}
+
+/* ============================================================
+   MILESTONES
+   ============================================================ */
+
+.xms {
+  list-style: none;
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+  padding: 0;
+  position: relative;
+  border-left: 1px solid var(--color-line);
+}
+.xms__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.35rem;
+  padding: 1.4rem 0 1.4rem 1.6rem;
+  outline: none;
+}
+.xms__marker {
+  position: absolute;
+  left: -4.5px;
+  top: 1.95rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-bg);
+  transition:
+    transform var(--duration-ui) var(--ease-out-expo),
+    border-color var(--duration-ui) var(--ease-out-expo),
+    background var(--duration-ui) var(--ease-out-expo);
+}
+.xms__year {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.xms__body {
+  min-width: 0;
+  transition: transform var(--duration-ui) var(--ease-out-expo);
+}
+.xms__event {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+.xms__why {
+  margin-top: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  max-width: 42rem;
+}
+.xms__row:hover .xms__marker {
+  transform: scale(1.15);
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+.xms__row:hover .xms__body {
+  transform: translateX(6px);
+}
+.xms__row:hover .xms__year {
+  color: var(--color-accent);
+}
+@media (min-width: 900px) {
+  .xms__row {
+    grid-template-columns: 7rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0 2rem;
+    padding-left: 2.5rem;
+  }
+  .xms__year {
+    padding-top: 0.35rem;
+  }
+}
+
+/* ============================================================
+   CURRENT CHAPTER
+   ============================================================ */
+
+.xsec--current {
+  position: relative;
+  overflow: clip;
+}
+.xcur {
+  position: relative;
+  padding-top: clamp(1rem, 2vw, 2rem);
+}
+.xcur__grid {
+  position: absolute;
+  inset: -6% -4%;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(70% 60% at 50% 45%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 45%, #000 20%, transparent 78%);
+}
+.xcur__inner {
+  position: relative;
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+@media (min-width: 1024px) {
+  .xcur__inner {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+}
+.xcur__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-accent);
+  margin-bottom: 1.6rem;
 }
-.xpp__contribs {
-  margin-top: 0.6rem;
+.xcur__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.xcur__roles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  gap: 0.4rem;
-  max-width: 44rem;
+  gap: clamp(2.5rem, 5vw, 3.5rem);
 }
-.xpp__contribs li {
+.xcur__role {
+  border-top: 1px solid var(--color-line-strong);
+  padding-top: 1.6rem;
+}
+.xcur__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 4vw, 2.7rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+.xcur__company {
+  margin-top: 0.6rem;
+  color: var(--color-accent-dim);
+  font-size: var(--text-sm);
+}
+.xcur__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-line);
+}
+.xcur__facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+.xcur__facts dd {
+  margin: 0.35rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+.xcur__desc {
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.72;
+  max-width: 42rem;
+}
+.xcur__resp {
+  margin-top: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  max-width: 42rem;
+}
+.xcur__resp li {
   position: relative;
-  padding-left: 1rem;
+  padding-left: 1.1rem;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-  line-height: 1.6;
+  line-height: 1.65;
 }
-.xpp__contribs li::before {
+.xcur__resp li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.65em;
-  width: 0.45rem;
+  top: 0.68em;
+  width: 0.5rem;
   height: 1px;
   background: var(--color-accent-dim);
 }
-.xpp__tech-wrap {
-  margin-top: 1.1rem;
-}
-.xpp__tech {
+.xcur__tech {
+  margin-top: 1.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-line);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 1rem;
+  gap: 0.4rem 1.1rem;
+  list-style: none;
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-text-faint);
 }
-@media (max-width: 760px) {
-  .xpp__rail {
-    left: 0.7rem;
+.xcur__aside {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  align-content: start;
+}
+.xcur__arch {
+  max-width: 22rem;
+}
+.xcur__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 260 / 220;
+}
+.xcur__meta {
+  display: grid;
+  gap: 1.1rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 1.3rem;
+}
+.xcur__meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+.xcur__meta dd {
+  margin: 0.35rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+/* ============================================================
+   THE ENGINEERING MAP
+   ============================================================ */
+
+.xmap {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.xmap__svg {
+  display: none;
+}
+.xmap__spine {
+  stroke: var(--color-line-strong);
+  stroke-width: 1.2;
+}
+.xmap__core {
+  fill: var(--color-accent);
+}
+.xmap__branch {
+  stroke: var(--color-text-faint);
+  stroke-width: 1.2;
+}
+.xmap__twig {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+}
+.xmap__leaf {
+  fill: var(--color-text-faint);
+}
+.xmap__branch-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  fill: var(--color-accent);
+}
+.xmap__leaf-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: var(--color-text);
+}
+.xmap__text {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--color-line);
+}
+.xmap__text > li {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.6rem;
+}
+.xmap__text-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.xmap__text-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+@media (min-width: 1024px) {
+  .xmap__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 620 / 470;
+    max-width: 62rem;
+    margin-inline: auto;
   }
-  .xpp__item,
-  .xpp__lead {
-    grid-template-columns: 1.4rem minmax(0, 1fr);
-    gap: 0.9rem;
-    padding-left: 0;
+  .xmap__text {
+    /* the SVG carries it visually; the list stays for assistive tech */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
-  .xpp__year-wrap {
-    grid-column: 2;
-    text-align: left;
+}
+
+/* ============================================================
+   CLOSING STATEMENT + NEXT CHAPTER
+   ============================================================ */
+
+.xsec--quote {
+  border-top: 1px solid var(--color-line);
+}
+.xquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5.6vw, 4.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+  font-weight: 500;
+  max-width: 20ch;
+}
+
+.xsec--next {
+  overflow: clip;
+}
+.xnext {
+  position: relative;
+}
+.xnext__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.4rem;
+}
+.xnext__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+  font-weight: 500;
+  max-width: 16ch;
+}
+.xnext__lede {
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.72;
+  max-width: 40rem;
+}
+/* the rail leaves the page — the journey does not end at the fold */
+.xnext__line {
+  position: relative;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  height: 1px;
+  width: calc(100% + var(--gutter));
+}
+.xnext__line-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--color-accent), rgb(201 242 77 / 0%));
+  transform-origin: left center;
+  display: block;
+}
+.xnext__line-node {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  display: block;
+}
+
+/* ============================================================
+   REDUCED MOTION — the page must read completely without motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /*
+   * The side index stays. Reduced motion means less animation, not fewer
+   * ways to navigate — its smooth scroll already falls back to an instant
+   * jump in the component itself.
+   */
+  .xtl__fill,
+  .xstk__stream,
+  .xcap__rule,
+  .xnext__line-fill {
+    transform: none !important;
   }
-  .xpp__year {
-    text-align: left;
-    font-size: 1.05rem;
+  .xtl__item[data-state="past"] .xtl__cell,
+  .xtl__item[data-state="next"] .xtl__cell {
+    opacity: 1;
   }
-  .xpp__marker {
-    grid-column: 1;
-    grid-row: 2;
-    margin-top: 0.25rem;
+  .xtl__item[data-state="now"] .xtl__marker {
+    transform: none;
   }
-  .xpp__cell {
-    grid-column: 2;
+  .xms__row:hover .xms__body,
+  .xms__row:hover .xms__marker {
+    transform: none;
+  }
+  .xca__svg,
+  .xcur__svg,
+  .xmap__svg {
+    opacity: 1;
   }
 }
 
