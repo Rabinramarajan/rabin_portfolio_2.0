@@ -7,25 +7,25 @@ import { TextReveal } from "@/components/motion";
 import { PageHero } from "./PageHero";
 import { PageCta } from "./PageCta";
 import { PageSectionHead } from "./PageSectionHead";
-import { CareerArchitectureVisual } from "@/components/experience/CareerArchitectureVisual";
-import { CareerTimeline } from "@/components/experience/CareerTimeline";
+import { CareerTraceHero } from "@/components/experience/CareerTraceHero";
+import { CareerTrace } from "@/components/experience/CareerTrace";
 import { TechnologyEvolution } from "@/components/experience/StackEvolution";
 import { CapabilityEvolution } from "@/components/experience/CapabilityEvolution";
-import { MilestoneList } from "@/components/experience/MilestoneList";
+import { MilestoneTrace } from "@/components/experience/MilestoneTrace";
 import { CurrentChapter } from "@/components/experience/CurrentChapter";
 import { EngineeringMap } from "@/components/experience/EngineeringMap";
 import { NextChapter } from "@/components/experience/NextChapter";
 import { ExperienceNav } from "@/components/experience/ExperienceNav";
 
 /**
- * EXPERIENCE — career architecture.
+ * EXPERIENCE — one continuous career signal.
  *
- * Not a resume with animation on it. The page is one continuous structure:
- * the rail that opens the timeline carries through the stack evolution, turns
- * into the engineering map, and finally leaves the page toward the CTA. Each
- * section has its own reveal gesture — clip, line-draw, node activation,
- * typographic reveal, marker progression, parallax, SVG drawing, extension —
- * so the page never settles into one repeated fade-up.
+ * The page reads as a single unbroken trace. The hero shows the whole signal
+ * with every year on it; the journey follows it as a zigzag of panels around a
+ * line that draws itself; the stack reads as frequency bands; milestones spike
+ * up from a baseline; the current chapter is the live end of the trace. Each
+ * section keeps its own reveal gesture so the page never settles into one
+ * repeated fade-up.
  */
 export function ExperiencePage() {
   const reduce = useReducedMotionSafe();
@@ -40,7 +40,7 @@ export function ExperiencePage() {
         label="Experience"
         title={["THE EVOLUTION", "OF AN", "ENGINEER."]}
         lede="From first builds in 2021 to Angular architecture and AI-driven analytics in 2026 — a career measured in what it taught, not in how long it ran."
-        visual={<CareerArchitectureVisual reduce={reduce} />}
+        visual={<CareerTraceHero reduce={reduce} />}
         meta={[
           { label: "Experience", value: profile.yearsExperienceLabel + " years" },
           { label: "Discipline", value: "Frontend engineering" },
@@ -65,7 +65,7 @@ export function ExperiencePage() {
             anyone handed out.
           </p>
 
-          <CareerTimeline roles={roles} />
+          <CareerTrace roles={roles} />
         </div>
       </section>
 
@@ -104,7 +104,7 @@ export function ExperiencePage() {
             title="The turning points."
             lede="Dated, real, and each one changed what came after it."
           />
-          <MilestoneList />
+          <MilestoneTrace />
         </div>
       </section>
 
