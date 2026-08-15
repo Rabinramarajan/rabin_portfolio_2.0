@@ -2828,6 +2828,52 @@ code {
 .chat-panel__choices button:hover {
   color: var(--color-accent);
 }
+.chat-panel__cursor {
+  display: inline-block;
+  margin-left: 0.1em;
+  color: var(--color-accent);
+  animation: chat-cursor-blink 0.9s steps(1) infinite;
+}
+@keyframes chat-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.chat-panel__form {
+  display: flex;
+  gap: 0.4rem;
+}
+.chat-panel__form input {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 0.6rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 0.85rem;
+}
+.chat-panel__form input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+.chat-panel__form button {
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+.chat-panel__form button:not(:disabled):hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.chat-panel__form button:disabled {
+  opacity: 0.5;
+}
 
 /* ============================================================
    MOTION SYSTEM — shared primitives

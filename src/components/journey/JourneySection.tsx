@@ -46,7 +46,7 @@ export function JourneySection() {
           viewport={{ once: true, amount: 0.3, margin: "-10%" }}
           transition={{ duration: reduce ? duration.micro : duration.section, ease }}
         >
-          <h1 id="journey-heading" className="jnr__heading">
+          <div id="journey-heading" className="jnr__heading">
             <TextReveal
               lines={["Experience the", "Journey."]}
               as="h1"
@@ -55,7 +55,7 @@ export function JourneySection() {
               lineDuration={0.7}
               delay={0.1}
             />
-          </h1>
+          </div>
 
           <p className="jnr__lede">
             From writing my first production components to engineering scalable frontend systems —
@@ -96,6 +96,14 @@ export function JourneySection() {
   );
 }
 
+/** Deterministic [0,1) pseudo-random generator, seeded by index — stable across server/client renders. */
+function seededRandom(index: number) {
+  return (salt: number) => {
+    const x = Math.sin(index * 97 + salt * 17.31) * 10000;
+    return x - Math.floor(x);
+  };
+}
+
 /** Subtle technical coordinate labels in the background */
 function JourneyBackgroundCoordinates() {
   const reduce = useReducedMotion();
@@ -104,23 +112,27 @@ function JourneyBackgroundCoordinates() {
 
   return (
     <div className="jnr__bg-coordinates" aria-hidden>
-      {backgroundCoordinates.map((coord, i) => (
-        <motion.span
-          key={coord}
-          className="jnr__bg-coord"
-          style={
-            {
-              "--coord-x": `${5 + Math.random() * 90}%`,
-              "--coord-y": `${10 + Math.random() * 80}%`,
-            } as CSSProperties
-          }
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.02, 0.06, 0.02] }}
-          transition={{ duration: 12 + Math.random() * 8, delay: Math.random() * 4, repeat: Infinity, ease: "easeInOut" }}
-        >
-          {coord}
-        </motion.span>
-      ))}
+      {backgroundCoordinates.map((coord, i) => {
+        // Deterministic pseudo-random values seeded by index so server and client render identically.
+        const seed = seededRandom(i);
+        return (
+          <motion.span
+            key={coord}
+            className="jnr__bg-coord"
+            style={
+              {
+                "--coord-x": `${5 + seed(1) * 90}%`,
+                "--coord-y": `${10 + seed(2) * 80}%`,
+              } as CSSProperties
+            }
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.02, 0.06, 0.02] }}
+            transition={{ duration: 12 + seed(3) * 8, delay: seed(4) * 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {coord}
+          </motion.span>
+        );
+      })}
     </div>
   );
 }
@@ -131,7 +143,7 @@ function JourneyEndTransition() {
 
   return (
     <div className="jnr__transition">
-      <p className="jnr__transition-text">
+      <div className="jnr__transition-text">
         <TextReveal
           lines={["THE STORY IS", "STILL BEING", "WRITTEN."]}
           as="p"
@@ -139,7 +151,7 @@ function JourneyEndTransition() {
           lineDuration={0.8}
           delay={0.1}
         />
-      </p>
+      </div>
 
       <div className="jnr__transition-line" aria-hidden>
         <motion.span
