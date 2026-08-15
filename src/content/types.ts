@@ -49,7 +49,20 @@ export interface AboutContent {
   milestones: { year: string; title: string; body: string }[];
   metrics: Metric[];
   portrait: Required<MediaRef>;
+  /** About page hero — editorial frame. */
+  hero: {
+    headline: string[];
+    statement: string;
+  };
+  /** "WHAT I BUILD" editorial rows. */
+  capabilities: { number: string; title: string; description: string }[];
+  /** Full-width typographic statement (line by line). */
+  quote: string[];
+  /** Closing CTA band. */
+  cta: { headline: string[]; label: string; href: string };
 }
+
+export type ProjectFilter = "web" | "mobile" | "enterprise";
 
 export interface Service {
   id: string;
@@ -73,6 +86,7 @@ export interface Project {
   technologies: string[];
   featured: boolean;
   layout: "large" | "medium" | "full";
+  filter: ProjectFilter;
   cover: Required<MediaRef>;
   gallery: Required<MediaRef>[];
   problem: string;
@@ -97,6 +111,8 @@ export interface ExperienceRole {
   responsibilities: string[];
   impact: string[];
   technologies: string[];
+  /** Narrative editorial marker shown above the role on the career timeline. */
+  milestone?: string;
 }
 
 export interface SkillGroup {

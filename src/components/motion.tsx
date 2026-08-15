@@ -75,6 +75,11 @@ export function Parallax({
   );
 }
 
+/* ------------------------------------------------------------------
+   ParallaxElement — alias of Parallax for the shared motion vocabulary.
+------------------------------------------------------------------ */
+export const ParallaxElement = Parallax;
+
 /** Hook form of Parallax for non-div targets. */
 export function useParallax(speed = 0.15, range = 60) {
   const reduce = useReducedMotion();
@@ -291,6 +296,41 @@ export function useMouseParallax({ strength = 8 } = {}) {
       };
 
   return { sx, sy, handlers, strength };
+}
+
+/* ------------------------------------------------------------------
+   ClipReveal — a masked clip-path wipe for blocks of content.
+   The wipe direction animates only clip-path + opacity (no layout).
+------------------------------------------------------------------ */
+export function ClipReveal({
+  children,
+  className,
+  delay = 0,
+  from = "bottom",
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+  from?: "bottom" | "left" | "right";
+}) {
+  const reduce = useReducedMotion();
+  const start =
+    from === "left"
+      ? "inset(0 100% 0 0)"
+      : from === "right"
+        ? "inset(0 0 0 100%)"
+        : "inset(0 0 100% 0)";
+  return (
+    <motion.div
+      className={className}
+      initial={reduce ? { opacity: 0 } : { clipPath: start }}
+      whileInView={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
+      viewport={{ once: true, amount: 0.3, margin: "-8%" }}
+      transition={{ duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : delay, ease }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 /* ------------------------------------------------------------------

@@ -88,7 +88,9 @@ export function Navbar() {
   }, [pathname]);
 
   const isActive = (item: (typeof navigation)[number]) => {
-    if (item.href === "/work") return pathname.startsWith("/work");
+    if (item.href.startsWith("/") && !item.href.includes("#")) {
+      return pathname === item.href || pathname.startsWith(item.href + "/");
+    }
     if (item.href === "/#contact" || item.href === "/contact") return pathname === "/contact";
     if (item.sectionId && pathname === "/" && activeSection === item.sectionId) return true;
     if (item.sectionId && pathname === `/${item.sectionId}`) return true;

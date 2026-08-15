@@ -1,25 +1,12 @@
 import type { Metadata } from "next";
-import { SectionKicker } from "@/components/ui";
-import { ServicesSection } from "@/components/ServicesSection";
+import { ServicesPage } from "@/components/pages/ServicesPage";
 
 export const metadata: Metadata = {
   title: "Services",
-  description: "Angular, React, Next.js, Ionic, UI engineering, performance and API integration.",
+  description:
+    "Frontend engineering, Angular development, React/Next.js, UI engineering, performance optimization, mobile/Ionic and design systems — from problem to production.",
 };
 
 export default function Page() {
-  return (
-    <>
-      <section className="page-hero">
-        <div className="shell">
-          <SectionKicker index="02" label="Services" />
-          <h1 className="page-hero__title">Engineering that moves products forward.</h1>
-          <p className="page-hero__lede">
-            From complex frontend systems to polished digital experiences, each service is part of a journey from problem to production.
-          </p>
-        </div>
-      </section>
-      <ServicesSection />
-    </>
-  );
+  return <ServicesPage />;
 }

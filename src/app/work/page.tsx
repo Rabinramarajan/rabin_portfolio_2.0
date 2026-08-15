@@ -1,4 +1,12 @@
 import type { Metadata } from "next";
-import { WorkSection } from "@/components/WorkSection";
-export const metadata: Metadata = { title: "Work", description: "Selected Angular and frontend case studies by Rabin R." };
-export default function Page() { return <WorkSection />; }
+import { WorkPage } from "@/components/pages/WorkPage";
+
+export const metadata: Metadata = {
+  title: "Selected Work",
+  description:
+    "Selected work by Rabin R — Fiji immigration platforms, pension portals, mobile apps and insurance consoles built for real products in production.",
+};
+
+export default function Page() {
+  return <WorkPage />;
+}
