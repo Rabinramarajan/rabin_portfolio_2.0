@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { engineeringMap } from "@/content/experience";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
@@ -136,7 +137,10 @@ export function EngineeringMap() {
             <p className="xmap__text-label">{branch.label}</p>
             <ul className="xmap__text-items">
               {branch.items.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className="xmap__text-item">
+                  <StackTechIcon label={item} className="xmap__text-icon" />
+                  <span>{item}</span>
+                </li>
               ))}
             </ul>
           </li>

@@ -12,6 +12,7 @@ import { PageSectionHead } from "./PageSectionHead";
 import { ArrowLink } from "./ArrowLink";
 import { ServiceMediaVisual } from "./ServiceVisual";
 import { ServicesGrid, ServicesHero } from "./ServicesShowcase";
+import { StackTechIcon } from "@/components/StackTechIcon";
 
 const DESKTOP_QUERY = "(min-width: 960px)";
 const STEP_MS = 0.22;
@@ -152,7 +153,16 @@ function ServicesJourney({ reduce }: { reduce: boolean }) {
                   </div>
                   <div className="svc__meta-item">
                     <dt>Technologies</dt>
-                    <dd>{service.technologies.join(" · ")}</dd>
+                    <dd className="svc__tech">
+                      <ul className="svc__tech-list">
+                        {service.technologies.map((t) => (
+                          <li key={t} className="svc__tech-chip">
+                            <StackTechIcon label={t} className="svc__tech-icon" />
+                            <span>{t}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
                   </div>
                   <div className="svc__meta-item">
                     <dt>Ideal for</dt>
@@ -232,7 +242,16 @@ function ServicesJourney({ reduce }: { reduce: boolean }) {
                   </div>
                   <div className="svc__meta-item">
                     <dt>Technologies</dt>
-                    <dd>{s.technologies.join(" · ")}</dd>
+                    <dd className="svc__tech">
+                      <ul className="svc__tech-list">
+                        {s.technologies.map((t) => (
+                          <li key={t} className="svc__tech-chip">
+                            <StackTechIcon label={t} className="svc__tech-icon" />
+                            <span>{t}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
                   </div>
                   <div className="svc__meta-item">
                     <dt>Ideal for</dt>

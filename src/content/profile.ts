@@ -50,6 +50,17 @@ export const hero: HeroContent = {
   availability: profile.availability.label,
   headline: "I engineer digital products that scale, perform and feel effortless.",
   headlineLines: ["I engineer digital products", "that scale, perform", "and feel effortless."],
+  displayLines: [
+    { text: "I Build" },
+    { text: "Digital", accent: true },
+    { text: "Experiences", accent: true },
+  ],
+  disciplines: ["Frontend Engineer", "Angular Specialist", "Product Engineering"],
+  quote: {
+    lines: ["Code is my craft.", "Impact is my goal."],
+    signature: profile.shortName,
+  },
+  reel: { src: "/media/hero/banner_v.mp4" },
   description:
     "Frontend engineer specializing in Angular and modern web application architecture, with a strong focus on performance, usability and product quality.",
   primaryCta: { label: "Let's Work Together", href: "/contact" },

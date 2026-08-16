@@ -4,6 +4,7 @@ import { motion, useMotionValue, useScroll, useSpring, useTransform } from "moti
 import { useEffect, useRef } from "react";
 import { formatRoleDates, getCurrentRoles } from "@/content/experience";
 import { profile } from "@/content/profile";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
@@ -92,7 +93,10 @@ export function CurrentChapter() {
                 </ul>
                 <ul className="xcur__tech">
                   {role.technologies.map((t) => (
-                    <li key={t}>{t}</li>
+                    <li key={t} className="xcur__tech-item">
+                      <StackTechIcon label={t} className="xcur__tech-icon" />
+                      <span>{t}</span>
+                    </li>
                   ))}
                 </ul>
               </motion.li>

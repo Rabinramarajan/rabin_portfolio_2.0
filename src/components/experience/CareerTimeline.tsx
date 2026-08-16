@@ -4,6 +4,7 @@ import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { careerHorizon } from "@/content/experience";
 import type { HorizonChapter } from "@/content/types";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { duration, ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
@@ -185,7 +186,10 @@ function Chapter({
 
         <ul className="ctl__tags">
           {chapter.tags.map((tag) => (
-            <li key={tag}>{tag}</li>
+            <li key={tag} className="ctl__tag">
+              <StackTechIcon label={tag} className="ctl__tag-icon" />
+              <span>{tag}</span>
+            </li>
           ))}
         </ul>
 

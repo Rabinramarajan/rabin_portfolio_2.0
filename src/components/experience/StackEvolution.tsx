@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { stackEvolution, stackSourceLabel, stackYears } from "@/content/experience";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
@@ -48,6 +49,7 @@ export function TechnologyEvolution() {
                 viewport={{ once: true, amount: 0.6 }}
                 transition={{ duration: reduce ? 0.2 : 0.42, delay: reduce ? 0 : i * 0.045, ease }}
               >
+                <StackTechIcon label={track.label} className="xstk__icon" />
                 {track.label}
               </motion.span>
 

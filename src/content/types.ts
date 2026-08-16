@@ -35,6 +35,14 @@ export interface HeroContent {
   availability: string;
   headline: string;
   headlineLines: string[];
+  /** Short, uppercase display lines for the cinematic hero. Last lines render accented. */
+  displayLines?: { text: string; accent?: boolean }[];
+  /** Discipline strip rendered under the display headline. */
+  disciplines?: string[];
+  /** Pull quote rendered beside the headline, with a script signature. */
+  quote?: { lines: string[]; signature: string };
+  /** Full-bleed background reel behind the hero. */
+  reel?: { src: string; poster?: string };
   description: string;
   primaryCta: Cta;
   secondaryCta: Cta;

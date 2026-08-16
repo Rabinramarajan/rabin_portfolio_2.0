@@ -7,6 +7,7 @@ import { Code2, Database, Infinity as InfinityIcon, PenTool, Rocket, Server, Use
 import { everydayTech, skillHero, skillShowcase, skillTraits } from "@/content/skills";
 import { profile } from "@/content/profile";
 import { TechIcon } from "@/components/about/TechIcon";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { SmartImage } from "@/components/SmartImage";
 import { duration, ease, stagger } from "@/lib/motion";
 import type { SectionHeadingLevel } from "@/components/ui";
@@ -120,7 +121,10 @@ export function SkillsSection({ headingLevel = "h2" }: { headingLevel?: SectionH
             <p className="sk2-cloud__label">Technologies I work with everyday</p>
             <ul className="sk2-cloud__list">
               {everydayTech.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} className="sk2-cloud__pill">
+                  <StackTechIcon label={item} className="sk2-cloud__icon" />
+                  <span>{item}</span>
+                </li>
               ))}
             </ul>
           </motion.div>
