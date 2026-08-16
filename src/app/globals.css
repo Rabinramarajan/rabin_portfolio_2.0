@@ -1392,13 +1392,14 @@ code {
   color: var(--color-text-muted);
   transition: border-color var(--duration-ui) ease, transform var(--duration-ui) ease;
 }
-.about-tools__tile svg {
-  width: 58%;
-  height: 58%;
-}
 .about-tools__tile .stack-tech-icon {
-  width: 58%;
-  height: 58%;
+  width: 68%;
+  height: 68%;
+}
+.about-tools__tile .stack-tech-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .about-tools__tile:hover {
   border-color: var(--color-line-strong);
@@ -1866,6 +1867,7 @@ code {
   display: grid;
   place-items: center;
   aspect-ratio: 1;
+  overflow: hidden;
   border-radius: 10px;
   background: #141416;
   border: 1px solid rgb(255 255 255 / 0.06);
@@ -1875,19 +1877,32 @@ code {
   border-color: rgb(201 242 77 / 0.28);
   transform: translateY(-2px);
 }
-.sk2-card__tools svg {
-  width: 52%;
-  height: 52%;
-}
 .sk2-card__tools .stack-tech-icon {
-  width: 52%;
-  height: 52%;
+  width: 70%;
+  height: 70%;
 }
-.sk2-card__tools span {
+.sk2-card__tools .stack-tech-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.sk2-card__tools .stack-tech-icon[data-stack-icon="expressjs"],
+.sk2-card__tools .stack-tech-icon[data-stack-icon="aws"],
+.sk2-card__tools .stack-tech-icon[data-stack-icon="php"],
+.sk2-card__tools .stack-tech-icon[data-stack-icon="mysql"],
+.sk2-card__tools .stack-tech-icon[data-stack-icon="docker"] {
+  width: 84%;
+  height: 84%;
+}
+.sk2-card__tools .stack-tech-icon[data-stack-icon="playwright"] {
+  filter: brightness(1.45);
+}
+.sk2-card__tools .stack-tech-icon[data-stack-icon="fallback"] {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
 }
 .sk2-card__explore {
   margin-top: auto;
@@ -1939,6 +1954,11 @@ code {
 .sk2-cloud__icon {
   width: 16px;
   height: 16px;
+}
+.sk2-cloud__icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 .sk2-quote {
   position: relative;

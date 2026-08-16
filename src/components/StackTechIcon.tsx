@@ -70,6 +70,7 @@ const TECH_ICON: Record<string, StackIconName> = {
   redux: "redux",
   vercel: "vercel",
   jest: "jest",
+  nx: "nx",
 };
 
 export function StackTechIcon({
