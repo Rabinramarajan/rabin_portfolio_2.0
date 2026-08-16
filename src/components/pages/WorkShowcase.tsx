@@ -98,13 +98,17 @@ export function WorkHero({
 
           <dl className="wx-stats">
             {STATS.map((s) => (
+              // The icon lives inside <dt> — a <dl> group may only contain
+              // dt/dd, so a sibling <span> here would be invalid markup.
               <div className="wx-stat" key={s.label}>
-                <span className="wx-stat__icon" aria-hidden>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
-                    <path d={STAT_GLYPH[s.icon]} />
-                  </svg>
-                </span>
-                <dt className="wx-stat__value">{s.value}</dt>
+                <dt className="wx-stat__value">
+                  <span className="wx-stat__icon" aria-hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+                      <path d={STAT_GLYPH[s.icon]} />
+                    </svg>
+                  </span>
+                  {s.value}
+                </dt>
                 <dd className="wx-stat__label">{s.label}</dd>
               </div>
             ))}

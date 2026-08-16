@@ -73,16 +73,18 @@ export function ServicesHero({
 
           <dl className="sx-stats">
             {STATS.map((s) => (
+              // The icon lives inside <dt> — a <dl> group may only contain
+              // dt/dd, so a sibling <span> or nested <div> would be invalid.
               <div className="sx-stat" key={s.label}>
-                <span className="sx-stat__icon" aria-hidden>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
-                    <path d={STAT_GLYPH[s.icon]} />
-                  </svg>
-                </span>
-                <div>
-                  <dt className="sx-stat__value">{s.value}</dt>
-                  <dd className="sx-stat__label">{s.label}</dd>
-                </div>
+                <dt className="sx-stat__value">
+                  <span className="sx-stat__icon" aria-hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round">
+                      <path d={STAT_GLYPH[s.icon]} />
+                    </svg>
+                  </span>
+                  {s.value}
+                </dt>
+                <dd className="sx-stat__label">{s.label}</dd>
               </div>
             ))}
           </dl>

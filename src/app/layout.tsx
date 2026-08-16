@@ -8,7 +8,6 @@ import { JsonLd } from "@/components/JsonLd";
 import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
-import { DevFps } from "@/components/DevFps";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import "./globals.css";
 
@@ -88,7 +87,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <ChatLauncher />
         <Toaster />
-        {process.env.NODE_ENV !== "production" ? <DevFps /> : null}
         <Analytics />
         <SpeedInsights />
       </body>
