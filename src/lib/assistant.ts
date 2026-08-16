@@ -2,6 +2,9 @@ import { profile } from "@/content/profile";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
 import { experience } from "@/content/experience";
+import { pricingPlans, pricingDisclaimer } from "@/content/pricing";
+import { skillGroups } from "@/content/skills";
+import { processIntro, processSteps } from "@/content/process";
 
 const choices = [
   { id: "frontend", label: "Frontend Development" },
@@ -12,12 +15,22 @@ const choices = [
   { id: "hire", label: "Hire Rabin" },
 ];
 
+export const assistantChoiceIds = choices.map((c) => c.id) as [string, ...string[]];
+
+/** Layer 2 — structured, typed portfolio content approved for the AI fallback (Layer 3) to read from. Never invented, never duplicated. */
 export function approvedContext() {
   return {
     profile,
     services: services.map((s) => ({ title: s.title, proposition: s.proposition })),
     projects: projects.map((p) => ({ title: p.title, tagline: p.tagline, year: p.year, role: p.role })),
     experience: experience.map((e) => ({ company: e.company, role: e.role, start: e.start, end: e.end ?? "Present" })),
+    skills: skillGroups.map((g) => ({ label: g.label, items: g.items })),
+    process: { summary: processIntro.lede, steps: processSteps.map((s) => ({ label: s.label, purpose: s.purpose })) },
+    pricing: {
+      disclaimer: pricingDisclaimer,
+      plans: pricingPlans.map((p) => ({ name: p.name, model: p.model, startingLabel: p.startingLabel, timeline: p.timeline, idealClient: p.idealClient })),
+      detailsPage: "/pricing",
+    },
   };
 }
 

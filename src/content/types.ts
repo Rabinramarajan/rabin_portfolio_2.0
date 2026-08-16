@@ -15,6 +15,8 @@ export interface Profile {
   location: string;
   locationShort: string;
   email: string;
+  phone: string;
+  phoneHours: string;
   yearsExperienceLabel: string;
   availability: { status: AvailabilityStatus; label: string; responseTime: string };
   focus: string;

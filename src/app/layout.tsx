@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Inter, Inter_Tight, JetBrains_Mono, Caveat } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
@@ -7,12 +7,14 @@ import { PageLoader } from "@/components/PageLoader";
 import { ScrollProgress } from "@/components/motion";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
+import { MuiProvider } from "@/components/MuiProvider";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const tight = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
+const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat", display: "swap", weight: ["500", "600"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,19 +37,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={[inter.variable, tight.variable, mono.variable].join(" ")}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={[inter.variable, tight.variable, mono.variable, caveat.variable].join(" ")}
+    >
       <body>
-        <a className="skip-link" href="#main">
-          Skip to content
-        </a>
-        <JsonLd />
-        <PageLoader />
-        <ScrollProgress />
-        <Navbar />
-        <main id="main">{children}</main>
-        <Footer />
-        <ChatLauncher />
-        <Toaster />
+        <MuiProvider>
+          <a className="skip-link" href="#main">
+            Skip to content
+          </a>
+          <JsonLd />
+          <PageLoader />
+          <ScrollProgress />
+          <Navbar />
+          <main id="main">{children}</main>
+          <Footer />
+          <ChatLauncher />
+          <Toaster />
+        </MuiProvider>
       </body>
     </html>
   );

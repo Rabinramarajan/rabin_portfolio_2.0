@@ -1,12 +1,35 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, Check, LoaderCircle, Mail, CircleAlert } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Calendar,
+  Check,
+  CircleAlert,
+  DollarSign,
+  LoaderCircle,
+  Mail,
+  Paperclip,
+  ShieldCheck,
+  Sparkles,
+  User,
+} from "lucide-react";
 import Link from "next/link";
+import {
+  Alert,
+  Box,
+  Button,
+  InputAdornment,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { contactSchema, type ContactInput } from "@/lib/contact-schema";
 import { profile } from "@/content/profile";
 import { services } from "@/content/services";
@@ -24,6 +47,7 @@ export function ContactForm({ defaultProjectType }: { defaultProjectType?: strin
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     setError,
@@ -32,7 +56,14 @@ export function ContactForm({ defaultProjectType }: { defaultProjectType?: strin
     resolver: zodResolver(contactSchema),
     mode: "onTouched",
     defaultValues: {
+      name: "",
+      email: "",
+      company: "",
       projectType: defaultProjectType && projectTypes.includes(defaultProjectType) ? defaultProjectType : "",
+      budget: "",
+      timeline: "",
+      message: "",
+      website: "",
     },
   });
 
@@ -110,178 +141,272 @@ export function ContactForm({ defaultProjectType }: { defaultProjectType?: strin
           animate={{ scaleX: 1 }}
           transition={{ duration: duration.section, ease, delay: 0.25 }}
         />
-        <h3 className="form-success__title">MESSAGE RECEIVED.</h3>
-        <p className="form-success__text">
+        <Typography variant="h5" component="h3" className="form-success__title" sx={{ fontWeight: 700, letterSpacing: "0.02em" }}>
+          MESSAGE RECEIVED.
+        </Typography>
+        <Typography className="form-success__text" color="text.secondary">
           Thanks for reaching out. Your project details are safely on their way — I will review them and get back to you.
-        </p>
-        <div className="form-success__actions">
-          <button
-            type="button"
-            className="btn btn--line"
+        </Typography>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5} className="form-success__actions" sx={{ mt: 2 }}>
+          <Button
+            variant="outlined"
+            color="primary"
             onClick={() => {
               reset();
               setSubmitState("idle");
             }}
           >
-            <span className="btn__label">Send another message</span>
-          </button>
-          <Link href="/work" className="btn btn--solid">
-            <span className="btn__label">
-              Back to portfolio
-              <ArrowRight className="btn__arrow" aria-hidden />
-            </span>
-          </Link>
-        </div>
+            Send another message
+          </Button>
+          <Button component={Link} href="/work" variant="contained" color="primary" endIcon={<ArrowRight size={18} aria-hidden />}>
+            Back to portfolio
+          </Button>
+        </Stack>
       </motion.div>
     );
   }
 
-  const inputProps = (name: keyof ContactInput) => ({
-    ...register(name),
-    "aria-invalid": errors[name] ? true : undefined,
-    "aria-describedby": errors[name] ? `${name}-error` : undefined,
-  });
-
   return (
-    <form className="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <Box component="form" className="contact-form-root" onSubmit={handleSubmit(onSubmit)} noValidate>
       {/* Honeypot */}
-      <div className="hp" aria-hidden>
+      <Box className="hp" aria-hidden sx={{ position: "absolute", left: "-9999px" }}>
         <label>
           Website
           <input tabIndex={-1} autoComplete="off" {...register("website")} />
         </label>
-      </div>
+      </Box>
 
-      <motion.div className="field" {...fieldReveal(0)}>
-        <label htmlFor="name">Full name</label>
-        <input id="name" autoComplete="name" {...inputProps("name")} />
-        {errors.name ? (
-          <p id="name-error" className="field-error" role="alert">
-            {errors.name.message}
-          </p>
-        ) : null}
-      </motion.div>
+      <Stack spacing={2.5}>
+        <Box className="form-row form-row--2">
+          <motion.div {...fieldReveal(0)}>
+            <TextField
+              id="name"
+              label="Full name"
+              placeholder="Your full name"
+              autoComplete="name"
+              fullWidth
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <User size={17} className="form-field__icon" aria-hidden />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              {...register("name")}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+            />
+          </motion.div>
 
-      <motion.div className="field" {...fieldReveal(1)}>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="email" autoComplete="email" {...inputProps("email")} />
-        {errors.email ? (
-          <p id="email-error" className="field-error" role="alert">
-            {errors.email.message}
-          </p>
-        ) : null}
-      </motion.div>
+          <motion.div {...fieldReveal(1)}>
+            <TextField
+              id="email"
+              type="email"
+              label="Email address"
+              placeholder="your.email@example.com"
+              autoComplete="email"
+              fullWidth
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Mail size={17} className="form-field__icon" aria-hidden />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              {...register("email")}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
+          </motion.div>
+        </Box>
 
-      <motion.div className="field" {...fieldReveal(2)}>
-        <label htmlFor="company">Company / organization</label>
-        <input id="company" autoComplete="organization" {...inputProps("company")} />
-        {errors.company ? (
-          <p id="company-error" className="field-error" role="alert">
-            {errors.company.message}
-          </p>
-        ) : null}
-      </motion.div>
+        <motion.div {...fieldReveal(2)}>
+          <TextField
+            id="company"
+            label="Company / Organization (Optional)"
+            placeholder="Your company or organization"
+            autoComplete="organization"
+            fullWidth
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Building2 size={17} className="form-field__icon" aria-hidden />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            {...register("company")}
+            error={!!errors.company}
+            helperText={errors.company?.message}
+          />
+        </motion.div>
 
-      <motion.div className="field" {...fieldReveal(3)}>
-        <label htmlFor="projectType">Project type</label>
-        <select id="projectType" {...inputProps("projectType")}>
-          <option value="">Select a type</option>
-          {projectTypes.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-        {errors.projectType ? (
-          <p id="projectType-error" className="field-error" role="alert">
-            {errors.projectType.message}
-          </p>
-        ) : null}
-      </motion.div>
+        <Box className="form-row form-row--2">
+          <motion.div {...fieldReveal(3)}>
+            <Controller
+              name="projectType"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  id="projectType"
+                  select
+                  label="Project type"
+                  fullWidth
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Sparkles size={17} className="form-field__icon" aria-hidden />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  error={!!errors.projectType}
+                  helperText={errors.projectType?.message}
+                >
+                  <MenuItem value="">Select project type</MenuItem>
+                  {projectTypes.map((t) => (
+                    <MenuItem key={t} value={t}>
+                      {t}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </motion.div>
 
-      <motion.div className="field" {...fieldReveal(4)}>
-        <label htmlFor="budget">Budget</label>
-        <select id="budget" {...inputProps("budget")}>
-          <option value="">Select a range</option>
-          {budgetRanges.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-        {errors.budget ? (
-          <p id="budget-error" className="field-error" role="alert">
-            {errors.budget.message}
-          </p>
-        ) : null}
-      </motion.div>
+          <motion.div {...fieldReveal(4)}>
+            <Controller
+              name="budget"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  id="budget"
+                  select
+                  label="Budget range"
+                  fullWidth
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <DollarSign size={17} className="form-field__icon" aria-hidden />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  error={!!errors.budget}
+                  helperText={errors.budget?.message}
+                >
+                  <MenuItem value="">Select budget range</MenuItem>
+                  {budgetRanges.map((t) => (
+                    <MenuItem key={t} value={t}>
+                      {t}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </motion.div>
+        </Box>
 
-      <motion.div className="field" {...fieldReveal(5)}>
-        <label htmlFor="timeline">Timeline</label>
-        <select id="timeline" {...inputProps("timeline")}>
-          <option value="">Select a timeline</option>
-          {timelines.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-        {errors.timeline ? (
-          <p id="timeline-error" className="field-error" role="alert">
-            {errors.timeline.message}
-          </p>
-        ) : null}
-      </motion.div>
-
-      <motion.div className="field field--full" {...fieldReveal(6)}>
-        <label htmlFor="message">Message</label>
-        <textarea
-          id="message"
-          rows={6}
-          placeholder="Tell me what you're building, what problem you're solving, and what you'd like help with..."
-          {...inputProps("message")}
-        />
-        {errors.message ? (
-          <p id="message-error" className="field-error" role="alert">
-            {errors.message.message}
-          </p>
-        ) : null}
-      </motion.div>
-
-      <motion.div className="form__submit" {...fieldReveal(7)}>
-        <button className="btn btn--solid" type="submit" disabled={submitState === "loading" || isSubmitting || isValidating}>
-          <span className="btn__label">
-            {submitState === "loading" || isSubmitting ? (
-              <>
-                SENDING...
-                <LoaderCircle className="btn__arrow form__spin" aria-hidden />
-              </>
-            ) : (
-              <>
-                Start a Conversation
-                <ArrowRight className="btn__arrow" aria-hidden />
-              </>
+        <motion.div {...fieldReveal(5)}>
+          <Controller
+            name="timeline"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                id="timeline"
+                select
+                label="Timeline"
+                fullWidth
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Calendar size={17} className="form-field__icon" aria-hidden />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                error={!!errors.timeline}
+                helperText={errors.timeline?.message}
+              >
+                <MenuItem value="">Select timeline</MenuItem>
+                {timelines.map((t) => (
+                  <MenuItem key={t} value={t}>
+                    {t}
+                  </MenuItem>
+                ))}
+              </TextField>
             )}
-          </span>
-        </button>
+          />
+        </motion.div>
 
-        {submitState === "err" ? (
-          <div className="form-status err" role="alert">
-            <CircleAlert aria-hidden />
+        <motion.div {...fieldReveal(6)}>
+          <TextField
+            id="message"
+            label="Your message"
+            placeholder="Tell me about your project, goals and requirements..."
+            multiline
+            minRows={6}
+            fullWidth
+            {...register("message")}
+            error={!!errors.message}
+            helperText={errors.message?.message}
+          />
+        </motion.div>
+
+        <motion.div {...fieldReveal(7)}>
+          <Box className="form-attach">
+            <Paperclip size={18} aria-hidden />
             <span>
-              {serverMessage || "Something went wrong while sending your message. Please try again or email me directly."}{" "}
-              <a href={emailHref}>Email me instead</a>
+              <strong>Attach brief (Optional)</strong>
+              <span>PDF, DOC, or any file</span>
             </span>
-          </div>
-        ) : (
-          <p className="form-note">
-            <Mail aria-hidden /> Prefer email?{" "}
-            <a className="form-note__link" href={emailHref}>
-              {profile.email}
-            </a>
-          </p>
-        )}
-      </motion.div>
-    </form>
+          </Box>
+        </motion.div>
+
+        <motion.div {...fieldReveal(8)}>
+          <Stack spacing={1.5}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              disabled={submitState === "loading" || isSubmitting || isValidating}
+              endIcon={
+                submitState === "loading" || isSubmitting ? (
+                  <LoaderCircle className="form__spin" size={18} aria-hidden />
+                ) : (
+                  <ArrowRight size={18} aria-hidden />
+                )
+              }
+            >
+              {submitState === "loading" || isSubmitting ? "Sending..." : "Start a Conversation"}
+            </Button>
+
+            {submitState === "err" ? (
+              <Alert severity="error" icon={<CircleAlert size={18} aria-hidden />}>
+                {serverMessage || "Something went wrong while sending your message. Please try again or email me directly."}{" "}
+                <a href={emailHref}>Email me instead</a>
+              </Alert>
+            ) : (
+              <Typography variant="body2" color="text.secondary" className="form-privacy">
+                <ShieldCheck size={15} aria-hidden /> Your information is safe with me. I&apos;ll never share your
+                details with anyone.
+              </Typography>
+            )}
+          </Stack>
+        </motion.div>
+      </Stack>
+    </Box>
   );
 }

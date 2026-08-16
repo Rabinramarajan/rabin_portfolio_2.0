@@ -11,6 +11,8 @@ export const profile: Profile = {
   location: "Chennai, Tamil Nadu, India",
   locationShort: "Chennai, India",
   email: "rabinr2607@gmail.com",
+  phone: "+91 6382 870 343",
+  phoneHours: "Mon - Sat, 10AM - 8PM",
   yearsExperienceLabel: "4+", // CALCULATED from experience.ts via calculateExperienceYears()
   availability: {
     status: "available",

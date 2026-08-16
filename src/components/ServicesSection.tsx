@@ -22,6 +22,7 @@ export function ServicesSection() {
     offset: ["start start", "end end"],
   });
   const routeProgress = useSpring(scrollYProgress, { stiffness: 60, damping: 22, restDelta: 0.001 });
+  const particleTop = useTransform(routeProgress, (v) => `${v * 100}%`);
 
   useEffect(() => {
     const observers = chapterRefs.current.map((el, idx) => {
@@ -94,9 +95,7 @@ export function ServicesSection() {
         <div className="svc2__rail" aria-hidden>
           <div className="svc2__rail-base" />
           <motion.div className="svc2__rail-fill" style={{ scaleY: reduce ? 1 : routeProgress }} />
-          {!reduce && (
-            <motion.span className="svc2__rail-particle" style={{ top: useTransform(routeProgress, (v) => `${v * 100}%`) }} />
-          )}
+          {!reduce && <motion.span className="svc2__rail-particle" style={{ top: particleTop }} />}
         </div>
 
         {/* --- chapters --- */}
