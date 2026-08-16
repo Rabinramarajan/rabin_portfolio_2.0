@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { insights } from "@/content/insights";
 import { SectionKicker } from "@/components/ui";
+import type { SectionHeadingLevel } from "@/components/ui";
 
-export function InsightsSection() {
+export function InsightsSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
+  const Heading = headingLevel;
   return (
     <section id="insights" className="section">
       <div className="shell">
         <SectionKicker index="09" label="Insights" />
-        <h2 className="sec-title">Notes from the work.</h2>
+        <Heading className="sec-title">Notes from the work.</Heading>
         <p className="sec-lede">Short engineering positions — not a blog farm.</p>
         <div style={{ marginTop: "1.5rem" }}>
           {insights.map((item) => (

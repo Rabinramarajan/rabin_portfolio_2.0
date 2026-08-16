@@ -49,7 +49,7 @@ export function JourneySection() {
           <div id="journey-heading" className="jnr__heading">
             <TextReveal
               lines={["Experience the", "Journey."]}
-              as="h1"
+              as="h2"
               className="jnr__heading-lines"
               accentIndex={1}
               lineDuration={0.7}

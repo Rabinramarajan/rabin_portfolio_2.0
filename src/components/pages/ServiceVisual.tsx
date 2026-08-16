@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
 import type { Service } from "@/content/types";
 import { ease } from "@/lib/motion";
@@ -474,10 +475,17 @@ export function ServiceMediaVisual({ service, reduce = false }: { service: Servi
   if (media.type === "gif") {
     return (
       <div className="svc-media-frame">
+        {/*
+          next/image would re-encode an animated GIF down to its first frame,
+          so this one stays a plain <img>. The frame is already sized, so the
+          missing intrinsic dimensions cost no layout shift.
+        */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={media.src}
           alt={media.alt}
           loading="lazy"
+          decoding="async"
           className="svc-media-element"
         />
         <div className="svc-media-badge mono">GIF</div>
@@ -487,11 +495,15 @@ export function ServiceMediaVisual({ service, reduce = false }: { service: Servi
 
   return (
     <div className="svc-media-frame">
-      <img
+      {/* Below the fold — served as AVIF/WebP at the right width, never eager. */}
+      <Image
         src={media.src}
         alt={media.alt}
+        fill
         loading="lazy"
+        sizes="(max-width: 960px) 100vw, 50vw"
         className="svc-media-element"
+        style={{ objectFit: "cover" }}
       />
       <div className="svc-media-badge mono">IMAGE</div>
     </div>

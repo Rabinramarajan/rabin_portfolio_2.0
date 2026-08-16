@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getNextProject, getProject, projects } from "@/content/projects";
 import { Btn, SectionKicker } from "@/components/ui";
+import { BreadcrumbJsonLd, ProjectJsonLd } from "@/components/JsonLd";
+import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -11,8 +14,15 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
-  if (!project) return { title: "Not found" };
-  return { title: project.seo.title, description: project.seo.description, alternates: { canonical: "/work/" + project.slug } };
+  if (!project) return { title: "Not found", robots: { index: false, follow: false } };
+  return pageMetadata({
+    title: project.seo.title,
+    description: project.seo.description,
+    path: "/work/" + project.slug,
+    type: "article",
+    keywords: project.technologies,
+    inheritOgImage: false,
+  });
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
@@ -23,6 +33,32 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <article className="section">
       <div className="shell">
+        <BreadcrumbJsonLd
+          trail={[
+            { name: "Home", path: "/" },
+            { name: "Work", path: "/work" },
+            { name: project.title, path: "/work/" + project.slug },
+          ]}
+        />
+        <ProjectJsonLd
+          name={project.title}
+          description={project.seo.description}
+          path={"/work/" + project.slug}
+          image={project.cover.src}
+          year={project.year}
+          technologies={project.technologies}
+        />
+        <nav className="crumbs" aria-label="Breadcrumb">
+          <ol>
+            <li>
+              <Link href="/">Home</Link>
+            </li>
+            <li>
+              <Link href="/work">Selected work</Link>
+            </li>
+            <li aria-current="page">{project.title}</li>
+          </ol>
+        </nav>
         <SectionKicker index={project.number} label={project.category} />
         <h1 className="sec-title">{project.title}</h1>
         <p className="sec-lede">{project.tagline}</p>

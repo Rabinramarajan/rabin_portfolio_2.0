@@ -1,11 +1,16 @@
-import type { Metadata } from "next";
 import { about } from "@/content/about";
 import { experience, formatRoleDates } from "@/content/experience";
 import { profile } from "@/content/profile";
 import { skillGroups } from "@/content/skills";
 import { PrintButton } from "@/components/PrintButton";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Resume", description: "Resume preview for Rabin R." };
+export const metadata = pageMetadata({
+  title: "Resume",
+  description:
+    "Resume of Rabin R — Frontend Software Engineer and Angular developer in Chennai, India, with roles, responsibilities and the full technology stack.",
+  path: "/resume",
+});
 
 export default function Page() {
   return (

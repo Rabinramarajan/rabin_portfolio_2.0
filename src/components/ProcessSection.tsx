@@ -1,5 +1,6 @@
 import { processIntro, processSteps } from "@/content/process";
 import { SectionKicker, Btn } from "@/components/ui";
+import type { SectionHeadingLevel } from "@/components/ui";
 import { ProcessJourney } from "@/components/process/ProcessJourney";
 import { ProcessOverture } from "@/components/process/ProcessOverture";
 import { ProcessTimeline } from "@/components/process/ProcessTimeline";
@@ -9,16 +10,17 @@ import { LineReveal } from "@/components/process/LineReveal";
  * Server component. Only the journey, the overture and the headline reveals are
  * client-side — the copy, structure and CTA are rendered on the server.
  */
-export function ProcessSection() {
+export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
+  const Heading = headingLevel;
   return (
     <section id="process" className="section pr" aria-labelledby="process-title">
       <div className="shell">
         <header className="pr__intro">
           <div className="pr__intro-copy">
             <SectionKicker index={processIntro.index} label={processIntro.label} />
-            <h2 className="pr__display" id="process-title">
+            <Heading className="pr__display" id="process-title">
               <LineReveal lines={processIntro.headingLines} />
-            </h2>
+            </Heading>
             <p className="pr__lede">{processIntro.lede}</p>
           </div>
           <div className="pr__intro-visual">

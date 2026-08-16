@@ -1,18 +1,14 @@
-import type { Metadata } from "next";
 import { ContactPage } from "@/components/ContactPage";
 import { services } from "@/content/services";
-import { SITE_URL } from "@/content/profile";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Contact",
-  description: "Start a conversation with Rabin R — tell me what you're building and I'll reply within one business day.",
-  alternates: { canonical: `${SITE_URL}/contact` },
-  openGraph: {
-    title: "Contact | Rabin R",
-    description: "Start a conversation with Rabin R — tell me what you're building.",
-    url: `${SITE_URL}/contact`,
-  },
-};
+  description:
+    "Contact Rabin R for Angular development, frontend engineering, consulting, performance optimization and product work. Replies usually within one business day.",
+  path: "/contact",
+  keywords: ["Hire Angular developer", "Contact frontend engineer Chennai"],
+});
 
 export default async function Page({
   searchParams,

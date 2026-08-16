@@ -6,6 +6,15 @@ import { navigation, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Logo } from "@/components/Logo";
 
+/** Routes that exist as their own page but are not in the primary nav. */
+const STANDALONE_ROUTES = [
+  { href: "/skills", label: "Skills" },
+  { href: "/process", label: "Process" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/insights", label: "Insights" },
+  { href: "/resume", label: "Résumé" },
+];
+
 export function Footer() {
   const reduce = useReducedMotion();
 
@@ -16,6 +25,11 @@ export function Footer() {
     transition: { duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : delay, ease },
   });
 
+  /*
+   * The primary nav points Skills/Process/Contact at homepage anchors, which
+   * left the standalone /skills, /process and /pricing routes orphaned — in the
+   * sitemap but reachable by no internal link. The footer is where they get one.
+   */
   return (
     <footer className="ft">
       <div className="shell">
@@ -37,9 +51,11 @@ export function Footer() {
                   <Link href={item.href}>{item.label}</Link>
                 </li>
               ))}
-              <li>
-                <Link href="/resume">Résumé</Link>
-              </li>
+              {STANDALONE_ROUTES.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.label}</Link>
+                </li>
+              ))}
             </ul>
           </motion.nav>
 
@@ -52,7 +68,10 @@ export function Footer() {
                   <li key={s.id}>
                     <a
                       href={s.href}
-                      {...(s.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      {...(s.href.startsWith("http")
+                        ? // rel="me" declares these as the same person's verified profiles.
+                          { target: "_blank", rel: "me noopener noreferrer" }
+                        : {})}
                     >
                       {s.label}
                     </a>
@@ -75,7 +94,8 @@ export function Footer() {
         <div className="ft__legal">
           <p>© 2026 Rabin R. All rights reserved.</p>
           <p>
-            <Link href="/work">Work</Link> · <Link href="/insights">Insights</Link> · Next.js · Motion
+            <Link href="/work">Selected work</Link> · <Link href="/services">Angular &amp; frontend services</Link>{" "}
+            · Built with Next.js and Motion
           </p>
         </div>
       </div>

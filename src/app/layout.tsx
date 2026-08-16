@@ -25,14 +25,34 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: SITE_URL,
+    url: SITE_URL + "/",
     siteName: profile.name,
     title: defaultSeo.title,
     description: defaultSeo.description,
   },
   twitter: { card: "summary_large_image", title: defaultSeo.title, description: defaultSeo.description },
-  robots: { index: true, follow: true },
-  alternates: { canonical: SITE_URL },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
+  alternates: { canonical: SITE_URL + "/" },
+  manifest: "/manifest.webmanifest",
+  category: "technology",
+  creator: profile.name,
+  publisher: profile.name,
+  /*
+   * Search Console / Bing tokens come from the environment so no placeholder
+   * ever ships as a real-looking verification value.
+   */
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : {}),
+    ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } }
+      : {}),
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

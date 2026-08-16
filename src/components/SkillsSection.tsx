@@ -5,8 +5,9 @@ import { coreStack, skillGroups } from "@/content/skills";
 import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
 import { TextReveal } from "@/components/motion";
+import type { SectionHeadingLevel } from "@/components/ui";
 
-export function SkillsSection() {
+export function SkillsSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
   const reduce = useReducedMotion();
 
   return (
@@ -26,7 +27,7 @@ export function SkillsSection() {
           <TextReveal
             lines={["Angular first.", "The rest is the", "system around it."]}
             className="sec-title"
-            as="h2"
+            as={headingLevel}
           />
           <p className="sec-lede">Core expertise is named, not scored. The architecture below represents how I structure knowledge and deliver solutions.</p>
         </motion.div>

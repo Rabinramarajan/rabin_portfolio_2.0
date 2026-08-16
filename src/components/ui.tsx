@@ -31,6 +31,9 @@ export function Btn({
   );
 }
 
+/** "h1" when the section is the whole route; "h2" inside the homepage stack. */
+export type SectionHeadingLevel = "h1" | "h2";
+
 export function SectionKicker({ index, label }: { index: string; label: string }) {
   return (
     <p className="sec-kicker">

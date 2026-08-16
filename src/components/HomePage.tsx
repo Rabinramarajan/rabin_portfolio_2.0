@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { AboutSection } from "@/components/about/AboutSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { WorkSection } from "@/components/WorkSection";
+import { FaqSection } from "@/components/FaqSection";
 
 /*
  * Below-the-fold sections are code-split so their JS (framer-motion driven
@@ -37,6 +38,7 @@ export function HomePage() {
       <SkillsSection />
       <ProcessSection />
       <PricingSection />
+      <FaqSection />
       <ContactSection />
     </>
   );

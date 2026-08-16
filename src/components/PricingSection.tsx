@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { Btn, SectionKicker } from "@/components/ui";
+import type { SectionHeadingLevel } from "@/components/ui";
 import { pricingDisclaimer, pricingPlans } from "@/content/pricing";
 import { duration, ease } from "@/lib/motion";
 import { TextReveal } from "@/components/motion";
@@ -12,7 +13,7 @@ const models = [
   { id: "contract" as const, title: "Contract", summary: "Embedded frontend engineering inside your team." },
 ];
 
-export function PricingSection() {
+export function PricingSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
   const reduce = useReducedMotion();
 
   const view = (delay = 0) => ({
@@ -27,7 +28,7 @@ export function PricingSection() {
       <div className="shell">
         <motion.div {...view(0)}>
           <SectionKicker index="07" label="Engagement" />
-          <TextReveal lines={["How the work", "is structured."]} className="sec-title" as="h2" />
+          <TextReveal lines={["How the work", "is structured."]} className="sec-title" as={headingLevel} />
           <p className="sec-lede">INR first. Indicative starting points — scope decides the rest.</p>
         </motion.div>
 
