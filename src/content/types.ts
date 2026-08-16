@@ -2,7 +2,12 @@ export type AvailabilityStatus = "available" | "limited" | "unavailable";
 
 export interface SocialLink { id: "github" | "linkedin" | "email" | "website"; label: string; href: string; }
 export interface NavItem { href: string; label: string; sectionId?: string; }
-export interface Metric { value: string; label: string; }
+/** Which glyph renders beside a metric. Maps to an icon in the consuming component. */
+export type MetricIcon = "projects" | "clients" | "experience" | "commitment";
+export interface Metric { value: string; label: string; icon?: MetricIcon; }
+
+/** A technology shown as a brand tile. `id` selects the mark in TechIcons. */
+export interface ToolRef { id: string; label: string; }
 export interface Cta { label: string; href: string; }
 export interface MediaRef { src: string; alt: string; width?: number; height?: number; }
 
@@ -45,6 +50,8 @@ export interface AboutContent {
   positioning: string;
   paragraphs: string[];
   philosophy: string;
+  /** Second line of the pull quote — accented tail rendered after `philosophy`. */
+  philosophyLines?: string[];
   industries: string[];
   workingStyle: string;
   principles: { id: string; title: string; body: string }[];
@@ -62,6 +69,12 @@ export interface AboutContent {
   quote: string[];
   /** Closing CTA band. */
   cta: { headline: string[]; label: string; href: string };
+  /** "What I Do" sidebar panel — three short capability rows. */
+  whatIDo: { title: string; body: string }[];
+  /** "Tools & Technologies" sidebar panel — rendered as brand tiles. */
+  tools: ToolRef[];
+  /** Values row beneath the intro block. */
+  values: { title: string; body: string }[];
 }
 
 export type ProjectFilter = "web" | "mobile" | "enterprise";

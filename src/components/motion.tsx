@@ -142,7 +142,19 @@ export function TextReveal({
                   },
             }}
           >
-            {line}
+            {/*
+             * `*…*` marks an accented run inside a line, so a heading can tint
+             * a phrase without the caller having to split it into its own line.
+             */}
+            {line.split("*").map((part, p) =>
+              p % 2 === 1 ? (
+                <span key={p} className="acc">
+                  {part}
+                </span>
+              ) : (
+                part
+              ),
+            )}
           </motion.span>
         </span>
       ))}

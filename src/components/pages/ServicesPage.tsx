@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import { services } from "@/content/services";
 import { engagementModels } from "@/content/engagement-models";
@@ -29,7 +30,14 @@ export function ServicesPage() {
         visual={
           <>
             <div className="svc-hero-media" aria-hidden>
-              <img src="/media/service/hero.png" alt="Services hero — engineering journey from idea to production" loading="eager" />
+              <Image
+                src="/media/service/hero.png"
+                alt="Services hero — engineering journey from idea to production"
+                fill
+                priority
+                sizes="100vw"
+                style={{ objectFit: "cover", objectPosition: "center" }}
+              />
             </div>
             <ServiceHeroVisual reduce={reduce} />
           </>

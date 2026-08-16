@@ -7,15 +7,17 @@ import type { AboutContent } from '@/content/types';
  */
 export const about: AboutContent = {
   label: 'About',
-  heading: 'I take the interface as seriously as the architecture.',
-  headingLines: ['I take the interface', 'as seriously as the architecture.'],
+  heading: 'I build digital experiences that are fast, scalable and built to last.',
+  // `*…*` marks the accented runs — see TextReveal.
+  headingLines: ['I build digital experiences', 'that are *fast, scalable* and', '*built to last.*'],
   positioning: 'Engineering digital products that are fast, scalable, accessible and thoughtfully designed.',
   paragraphs: [
-    'I am Rabin R, a Senior Frontend Engineer with 4+ years of experience engineering critical web and mobile systems for government and enterprise clients — including immigration platforms for Fiji and pension portals serving thousands of active users.',
-    'I work at the intersection of interface design and frontend architecture. My focus is building digital products that are visually precise, technically sound, and designed for maximum performance under real-world conditions.',
+    'I am Rabin R, a Frontend Angular Consultant with 4+ years of experience building high-performance web and mobile applications. I specialize in Angular (Zoneless + Signals), clean architecture, and creating seamless user experiences.',
+    'I help startups and enterprises turn ideas into scalable products with modern, maintainable and future-ready code.',
     'From high-consequence government case management to modern AI-driven analytics dashboards, I care deeply about the details users feel — speed, clarity, accessibility, fluid interaction, long-term scalability, and pixel precision.',
   ],
-  philosophy: 'Good frontend engineering is not just about making interfaces work. It is about making complexity feel simple.',
+  philosophy: 'Code is not just what I write,',
+  philosophyLines: ["it's how I solve problems and ", 'create impact.'],
   industries: [
     'Government case management',
     'Pension and member portals',
@@ -38,10 +40,10 @@ export const about: AboutContent = {
     { year: '2026', title: 'AI and Frontend Consultant', body: 'Applied AI/ML (IIT Patna) and Senior Angular Architecture Consultant.' },
   ],
   metrics: [
-    { value: '4+', label: 'Years experience' }, // CALCULATED from experience.ts
-    { value: '10K+', label: 'Users served' },
-    { value: '3', label: 'Countries served' },
-    { value: '100+', label: 'UI components built' },
+    { value: '30+', label: 'Projects Completed', icon: 'projects' },
+    { value: '20+', label: 'Happy Clients', icon: 'clients' },
+    { value: '4+', label: 'Years Experience', icon: 'experience' }, // CALCULATED from experience.ts
+    { value: '100%', label: 'Commitment', icon: 'commitment' },
   ],
   portrait: { src: '/media/working/about-portrait-900.webp', alt: 'Rabin at his desk, with an editor and an analytics dashboard on the monitors behind him', width: 900, height: 1125 },
   hero: {
@@ -57,4 +59,27 @@ export const about: AboutContent = {
   ],
   quote: ["THE BEST INTERFACES", "DON'T ASK FOR ATTENTION.", "THEY JUST WORK."],
   cta: { headline: ["LET'S BUILD", 'SOMETHING WORTH', 'SHIPPING.'], label: 'Start a Conversation', href: '/contact' },
+  whatIDo: [
+    { title: 'Build', body: 'I build responsive, accessible and high-performance applications.' },
+    { title: 'Optimize', body: 'I optimize for performance, scalability and best practices.' },
+    { title: 'Deliver', body: 'I deliver products that create real business impact.' },
+  ],
+  tools: [
+    { id: 'angular', label: 'Angular' },
+    { id: 'typescript', label: 'TypeScript' },
+    { id: 'rxjs', label: 'RxJS' },
+    { id: 'tailwind', label: 'Tailwind CSS' },
+    { id: 'nx', label: 'Nx' },
+    { id: 'node', label: 'Node.js' },
+    { id: 'postgres', label: 'PostgreSQL' },
+    { id: 'supabase', label: 'Supabase' },
+    { id: 'git', label: 'Git' },
+  ],
+  values: [
+    { title: 'User First', body: 'I design and build with empathy for real users.' },
+    { title: 'Clean Code', body: 'I write clean, maintainable and testable code.' },
+    { title: 'Continuous Growth', body: 'I learn, adapt and improve every single day.' },
+    { title: 'Collaboration', body: 'I believe great products are built together.' },
+    { title: 'Ownership', body: 'I take full ownership and deliver with commitment.' },
+  ],
 };
