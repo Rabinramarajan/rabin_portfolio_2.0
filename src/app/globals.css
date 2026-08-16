@@ -6965,3 +6965,304 @@ a.contact-method:hover {
 .plx__layer {
   will-change: transform;
 }
+
+/* ============================================================
+   SERVICES SHOWCASE — hero + offer grid + tech strip
+   Lime-on-near-black, matching the delivery-pipeline banner art.
+   ============================================================ */
+
+.sx-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.sx-eyebrow__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 12px rgb(201 242 77 / 55%);
+}
+.sx-accent {
+  color: var(--color-accent);
+}
+
+/* ---------- hero ---------- */
+.sx-hero {
+  padding: calc(var(--header-h) + clamp(1.5rem, 4vw, 3rem)) 0 clamp(2rem, 4vw, 3.5rem);
+  position: relative;
+  overflow: clip;
+}
+.sx-hero::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto 30%;
+  height: 70vh;
+  background: radial-gradient(closest-side, rgb(201 242 77 / 9%), transparent 70%);
+  pointer-events: none;
+}
+.sx-hero__grid {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: center;
+}
+@media (min-width: 960px) {
+  .sx-hero__grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+}
+.sx-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 650;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.04em;
+  margin-top: 1.1rem;
+  text-wrap: balance;
+}
+.sx-hero__lede {
+  margin-top: 1.25rem;
+  max-width: 34rem;
+  color: var(--color-text-muted);
+}
+
+.sx-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-top: clamp(1.75rem, 3vw, 2.5rem);
+}
+.sx-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.sx-stat + .sx-stat {
+  padding-left: clamp(1rem, 3vw, 2rem);
+  border-left: 1px solid var(--color-line);
+}
+.sx-stat__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-bg-elevated);
+  color: var(--color-accent);
+}
+.sx-stat__icon svg {
+  width: 20px;
+  height: 20px;
+}
+.sx-stat__value {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.sx-stat__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.sx-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: clamp(1.75rem, 3vw, 2.25rem);
+}
+.sx-hero__actions .btn--solid {
+  box-shadow: 0 0 32px rgb(201 242 77 / 28%);
+}
+
+.sx-hero__visual {
+  position: relative;
+}
+.sx-hero__visual img {
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- offer grid ---------- */
+.sx-offer__head {
+  display: grid;
+  gap: 1.25rem;
+  align-items: end;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+@media (min-width: 860px) {
+  .sx-offer__head {
+    grid-template-columns: 1fr auto;
+  }
+}
+.sx-offer__title {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: var(--leading-snug);
+  margin-top: 0.85rem;
+}
+.sx-offer__aside {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.sx-offer__aside p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.sx-cards {
+  display: grid;
+  gap: clamp(0.85rem, 1.6vw, 1.25rem);
+  list-style: none;
+  padding: 0;
+}
+@media (min-width: 640px) {
+  .sx-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1040px) {
+  .sx-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.sx-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: clamp(1.25rem, 2vw, 1.6rem);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: linear-gradient(160deg, var(--color-bg-elevated), var(--color-bg));
+  transition: border-color var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-ui) var(--ease-out-expo);
+}
+.sx-card:hover {
+  border-color: rgb(201 242 77 / 40%);
+  transform: translateY(-3px);
+}
+.sx-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.sx-card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 10px rgb(201 242 77 / 35%));
+}
+.sx-card__icon svg {
+  width: 30px;
+  height: 30px;
+}
+.sx-card__num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-faint);
+}
+.sx-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: var(--leading-snug);
+}
+.sx-card__body {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  flex: 1;
+}
+.sx-card__link {
+  margin-top: 0.4rem;
+  align-self: flex-start;
+  color: var(--color-accent);
+}
+
+/* ---------- technology strip ---------- */
+.sx-tech {
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+}
+.sx-tech__label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: 1rem;
+}
+.sx-tech__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem clamp(0.9rem, 2.4vw, 1.75rem);
+  list-style: none;
+  padding: 0;
+}
+.sx-tech__item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.sx-tech__item + .sx-tech__item {
+  padding-left: clamp(0.9rem, 2.4vw, 1.75rem);
+  border-left: 1px solid var(--color-line);
+}
+.sx-tech__icon {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+.sx-tech__item--more .sx-tech__icon {
+  color: var(--color-text-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sx-card:hover {
+    transform: none;
+  }
+}
+
+/* Offer section sits on its own rounded panel, as in the reference art. */
+.sx-offer {
+  width: min(100% - (var(--gutter) * 2), var(--container-max));
+  margin-inline: auto;
+  padding: clamp(1.75rem, 3.5vw, 3rem) clamp(1rem, 2.5vw, 2rem);
+  border: 1px solid var(--color-line);
+  border-radius: clamp(14px, 1.6vw, 22px);
+  background: radial-gradient(120% 90% at 50% 0%, rgb(201 242 77 / 5%), transparent 60%),
+    linear-gradient(180deg, #0d0d11, var(--color-bg));
+}
+.sx-offer > .shell {
+  width: 100%;
+}
+
+/* Inline variant: sits mid-page under another hero, so it drops the header offset. */
+.sx-hero--inline {
+  padding: clamp(2.5rem, 6vw, 5rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+}

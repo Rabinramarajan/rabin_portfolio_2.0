@@ -1,18 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import { services } from "@/content/services";
 import { engagementModels } from "@/content/engagement-models";
 import { pricingPlans } from "@/content/pricing";
 import { ease, duration } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
-import { PageHero } from "./PageHero";
 import { PageCta } from "./PageCta";
 import { PageSectionHead } from "./PageSectionHead";
 import { ArrowLink } from "./ArrowLink";
-import { ServiceHeroVisual, ServiceMediaVisual } from "./ServiceVisual";
+import { ServiceMediaVisual } from "./ServiceVisual";
+import { ServicesGrid, ServicesHero } from "./ServicesShowcase";
 
 const DESKTOP_QUERY = "(min-width: 960px)";
 const STEP_MS = 0.22;
@@ -22,33 +21,9 @@ export function ServicesPage() {
 
   return (
     <>
-      <PageHero
-        index="02"
-        label="Services"
-        title={["ENGINEERING", "THAT MOVES", "PRODUCTS FORWARD."]}
-        lede="From complex frontend systems to polished digital experiences — each service is one stage of a journey from problem to production."
-        visual={
-          <>
-            <div className="svc-hero-media" aria-hidden>
-              <Image
-                src="/media/service/hero.png"
-                alt="Services hero — engineering journey from idea to production"
-                fill
-                priority
-                sizes="100vw"
-                style={{ objectFit: "cover", objectPosition: "center" }}
-              />
-            </div>
-            <ServiceHeroVisual reduce={reduce} />
-          </>
-        }
-        meta={[
-          { label: "Stack", value: "Angular · React · Next.js" },
-          { label: "Output", value: "Production web & mobile" },
-          { label: "Focus", value: "Performance · Accessibility" },
-          { label: "Scale", value: "Government to startup" },
-        ]}
-      />
+      <ServicesHero />
+
+      <ServicesGrid />
 
       <ServicesJourney reduce={reduce} />
 
