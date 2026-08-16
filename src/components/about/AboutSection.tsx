@@ -88,7 +88,6 @@ function PortraitCard() {
             width={about.portrait.width}
             height={about.portrait.height}
             sizes="(max-width: 959px) 90vw, 34vw"
-            priority
           />
         </ImageReveal>
 

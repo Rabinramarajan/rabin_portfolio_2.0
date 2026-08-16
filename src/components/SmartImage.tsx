@@ -35,7 +35,7 @@ export function SmartImage({
     <Image
       {...rest}
       alt={alt}
-      className={cn("smart-image", loaded && "is-loaded", className)}
+      className={cn("smart-image", (loaded || rest.priority) && "is-loaded", className)}
       loading={rest.priority ? undefined : (rest.loading ?? "lazy")}
       decoding={rest.decoding ?? "async"}
       placeholder={placeholder}

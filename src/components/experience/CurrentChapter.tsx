@@ -62,7 +62,14 @@ export function CurrentChapter() {
                 }}
               >
                 <h3 className="xcur__title">{role.role}</h3>
-                <p className="xcur__company">{role.company}</p>
+                <div className="xcur__company-row">
+                  {role.logo ? (
+                    <img className="xcur__logo" src={role.logo} alt="" width={18} height={18} loading="lazy" />
+                  ) : role.type === "Freelance" ? (
+                    <FreelancerIcon className="xcur__logo" />
+                  ) : null}
+                  <p className="xcur__company">{role.company}</p>
+                </div>
                 <dl className="xcur__facts">
                   <div>
                     <dt>Type</dt>
@@ -215,6 +222,27 @@ function LiveArchitecture({ reduce }: { reduce: boolean }) {
           style={{ transformOrigin: `${n.x}px ${n.y}px` }}
         />
       ))}
+    </svg>
+  );
+}
+
+/** Generic independent-contractor mark shown for freelance engagements. */
+function FreelancerIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M9.5 21V9.5h5V21" />
+      <path d="M6.5 13.5h3M14.5 13.5h3" />
+      <path d="M12 9.5V7.25A2.25 2.25 0 0 1 14.25 5" />
+      <circle cx="14.25" cy="5" r="2" fill="currentColor" stroke="none" />
     </svg>
   );
 }

@@ -146,6 +146,8 @@ export interface ExperienceRole {
   chapter?: CareerChapter;
   /** Which abstract scene renders alongside the role. */
   visual?: RoleVisualId;
+  /** Employer logo image URL (favicon or mark), shown in the role header. */
+  logo?: string;
 }
 
 /** One column on the horizontal career horizon. */
@@ -177,6 +179,8 @@ export interface HorizonChapter {
   achievements?: string[];
   /** Two-letter mark for the chapter tile. Falls back to the org initials. */
   monogram?: string;
+  /** Employer logo image URL. When set it replaces the monogram tile. */
+  logo?: string;
   statuses?: string[];
   footer?: string;
   /** Which abstract scene renders alongside the chapter. */

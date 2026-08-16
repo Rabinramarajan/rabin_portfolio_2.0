@@ -37,6 +37,7 @@ export const experience: ExperienceRole[] = [
     milestone: 'Applied AI',
     chapter: 'EXTEND',
     visual: 'ecosystem',
+    logo: 'https://www.rstacksolutions.com/favicon.ico?favicon.154iv7xvjl_ae.ico',
   },
   {
     id: 'zellavora',
@@ -79,6 +80,7 @@ export const experience: ExperienceRole[] = [
     milestone: 'Deeper engineering',
     chapter: 'BUILD',
     visual: 'enterprise',
+    logo: 'https://itgalax.com/wp-content/uploads/2019/08/favicon.png',
   },
 ];
 
@@ -138,6 +140,7 @@ export const careerHorizon: HorizonChapter[] = [
     tone: "past",
     location: "Chennai, India",
     monogram: "IT",
+    logo: "https://itgalax.com/wp-content/uploads/2019/08/favicon.png",
     achievements: [
       "Turned designs into Angular components that behaved on every shipped device.",
       "Worked inside real release cycles rather than personal projects.",
@@ -157,6 +160,7 @@ export const careerHorizon: HorizonChapter[] = [
     tone: "past",
     location: "Chennai, India",
     monogram: "IT",
+    logo: "https://itgalax.com/wp-content/uploads/2019/08/favicon.png",
     achievements: [
       "Shipped the PRIMS pension portal and the VNPF mobile apps in one period.",
       "Delivered iOS and Android from a single Angular + Ionic codebase.",
@@ -176,6 +180,7 @@ export const careerHorizon: HorizonChapter[] = [
     tone: "past",
     location: "Chennai, India",
     monogram: "IT",
+    logo: "https://itgalax.com/wp-content/uploads/2019/08/favicon.png",
     achievements: [
       "Served 10,000+ active users across three countries.",
       "Cut API consumption by 40% through RxJS stream patterns.",

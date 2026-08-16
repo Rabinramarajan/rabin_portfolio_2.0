@@ -77,19 +77,9 @@ export function Hero() {
             <h1 id="hero-heading" className="hero__heading">
               {headline.map((line, i) => (
                 <span className="hero__line" key={line}>
-                  <motion.span
-                    className={i === headline.length - 1 ? "hl hl--accent" : "hl"}
-                    style={{ display: "block" }}
-                    initial={reduce ? { opacity: 0 } : { y: "112%", opacity: 0.4 }}
-                    animate={{ y: "0%", opacity: 1 }}
-                    transition={{
-                      duration: reduce ? duration.micro : duration.cinematic,
-                      delay: reduce ? 0 : 0.2 + i * 0.09,
-                      ease,
-                    }}
-                  >
+                  <span className={i === headline.length - 1 ? "hl hl--accent" : "hl"} style={{ display: "block" }}>
                     {line}
-                  </motion.span>
+                  </span>
                 </span>
               ))}
             </h1>
@@ -119,26 +109,17 @@ export function Hero() {
           </div>
 
           {/* RIGHT — premium visual with layered parallax */}
-          <motion.div
-            className="hero-visual"
-            {...handlers}
-            initial={reduce ? { opacity: 0 } : { clipPath: "inset(12% 6% 12% 6% round 16px)", opacity: 0 }}
-            animate={{ clipPath: "inset(0% 0% 0% 0% round 16px)", opacity: 1 }}
-            transition={{
-              duration: reduce ? duration.micro : duration.cinematic,
-              delay: reduce ? 0 : 0.34,
-              ease,
-            }}
-          >
+          <motion.div className="hero-visual" {...handlers}>
             <div className="hero-visual__frame">
               <div className="hero-visual__media">
                 <motion.div className="hero-visual__portrait" style={{ x: portraitX, y: portraitY }}>
                   <SmartImage
                     src={hero.portrait.src}
                     alt={hero.portrait.alt}
-                    width={960}
-                    height={1200}
+                    width={hero.portrait.width}
+                    height={hero.portrait.height}
                     priority
+                    fetchPriority="high"
                     sizes="(max-width: 1024px) min(82vw, 380px), 30vw"
                   />
                 </motion.div>

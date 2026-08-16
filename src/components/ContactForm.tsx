@@ -30,6 +30,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { MuiProvider } from "@/components/MuiProvider";
 import { contactSchema, type ContactInput } from "@/lib/contact-schema";
 import { profile } from "@/content/profile";
 import { services } from "@/content/services";
@@ -40,7 +41,7 @@ type SubmitState = "idle" | "loading" | "ok" | "err";
 
 const projectTypes = [...services.map((s) => s.title), "Other"];
 
-export function ContactForm({ defaultProjectType }: { defaultProjectType?: string }) {
+function ContactFormFields({ defaultProjectType }: { defaultProjectType?: string }) {
   const reduce = useReducedMotion();
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [serverMessage, setServerMessage] = useState("");
@@ -408,5 +409,13 @@ export function ContactForm({ defaultProjectType }: { defaultProjectType?: strin
         </motion.div>
       </Stack>
     </Box>
+  );
+}
+
+export function ContactForm({ defaultProjectType }: { defaultProjectType?: string }) {
+  return (
+    <MuiProvider>
+      <ContactFormFields defaultProjectType={defaultProjectType} />
+    </MuiProvider>
   );
 }

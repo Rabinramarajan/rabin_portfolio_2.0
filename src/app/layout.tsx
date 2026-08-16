@@ -5,19 +5,34 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
-import { PageLoader } from "@/components/PageLoader";
 import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
-import { MuiProvider } from "@/components/MuiProvider";
 import { DevFps } from "@/components/DevFps";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const tight = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
-const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat", display: "swap", weight: ["500", "600"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", adjustFontFallback: true });
+const tight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
+  display: "optional",
+  adjustFontFallback: true,
+  preload: true,
+});
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "optional",
+  preload: false,
+});
+const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-caveat",
+  display: "optional",
+  weight: ["500", "600"],
+  preload: false,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -66,19 +81,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={[inter.variable, tight.variable, mono.variable, caveat.variable].join(" ")}
     >
       <body>
-        <MuiProvider>
-          <JsonLd />
-          <PageLoader />
-          <ProgressSync />
-          <Navbar />
-          <main id="main">{children}</main>
-          <Footer />
-          <ChatLauncher />
-          <Toaster />
-          {process.env.NODE_ENV !== "production" ? <DevFps /> : null}
-          <Analytics />
-          <SpeedInsights />
-        </MuiProvider>
+        <JsonLd />
+        <ProgressSync />
+        <Navbar />
+        <main id="main">{children}</main>
+        <Footer />
+        <ChatLauncher />
+        <Toaster />
+        {process.env.NODE_ENV !== "production" ? <DevFps /> : null}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

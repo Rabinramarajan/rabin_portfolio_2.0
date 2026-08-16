@@ -58,7 +58,7 @@
   --gutter: clamp(1.25rem, 3.6vw, 4rem);
   --container-max: 1360px;
   --col-gap: clamp(1rem, 2vw, 1.5rem);
-  --section-y: clamp(3.5rem, 2rem + 5vw, 7rem);
+  --section-y: clamp(2.5rem, 1.25rem + 3vw, 4.5rem);
   --header-h: 72px;
 
   /* --- radius --- */
@@ -198,7 +198,7 @@ code {
   position: relative;
 }
 .section--tight {
-  padding: 0 0 var(--space-12);
+  padding: 0 0 var(--space-8);
 }
 .mono {
   font-family: var(--font-mono);
@@ -592,7 +592,7 @@ code {
 
 .hero {
   position: relative;
-  min-height: 88dvh;
+  min-height: 76dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -667,7 +667,7 @@ code {
   letter-spacing: -0.05em;
   max-width: 15ch;
   font-weight: 550;
-  text-wrap: balance;
+  min-height: calc(3 * var(--text-display) * var(--leading-tight));
 }
 .hero__line {
   display: block;
@@ -4757,6 +4757,12 @@ a.contact-method:hover {
   letter-spacing: 0.02em;
   color: var(--color-accent);
 }
+.ctl__logo-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 4px;
+}
 .ctl__role {
   font-family: var(--font-display);
   font-size: var(--text-xl);
@@ -5413,6 +5419,22 @@ a.contact-method:hover {
   margin-top: 0.6rem;
   color: var(--color-accent-dim);
   font-size: var(--text-sm);
+}
+.xcur__company-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+}
+.xcur__company-row .xcur__company {
+  margin-top: 0;
+}
+.xcur__logo {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  object-fit: contain;
+  color: var(--color-accent-dim);
 }
 .xcur__facts {
   display: grid;
@@ -6606,8 +6628,10 @@ a.contact-method:hover {
   opacity: 0;
   transition: opacity 0.5s ease;
 }
-.smart-image.is-loaded {
+.smart-image.is-loaded,
+.smart-image[fetchpriority="high"] {
   opacity: 1;
+  transition: none;
 }
 
 /* Animation-intensity toggle in the footer legal row. */
