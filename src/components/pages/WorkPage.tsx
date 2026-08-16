@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 import { projects } from "@/content/projects";
 import type { Project, ProjectFilter } from "@/content/types";
 import { duration, ease } from "@/lib/motion";
 import { ImageReveal } from "@/components/motion";
+import { HoverParallel } from "@/components/parallel";
+import { SmartImage } from "@/components/SmartImage";
 import { cn } from "@/lib/cn";
 import { PageHero } from "./PageHero";
 import { PageCta } from "./PageCta";
@@ -97,8 +98,9 @@ function WorkItem({ project: p, list, reduce }: { project: Project; list: Projec
   });
 
   return (
-    <motion.article
-      className={cn("wrk-item", featured && "wrk-item--featured", full && "wrk-item--full", flip && "wrk-item--flip")}
+    <HoverParallel
+      as="article"
+      className={cn("wrk-item hpar", featured && "wrk-item--featured", full && "wrk-item--full", flip && "wrk-item--flip")}
       initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.12 }}
@@ -106,14 +108,13 @@ function WorkItem({ project: p, list, reduce }: { project: Project; list: Projec
     >
       <div className="wrk-item__media">
         <ImageReveal parallax={20}>
-          <Image
+          <SmartImage
             src={p.cover.src}
             alt={p.cover.alt}
             width={p.cover.width}
             height={p.cover.height}
             sizes={full ? "(max-width: 900px) 100vw, 100vw" : "(max-width: 900px) 100vw, 55vw"}
             priority={featured}
-            loading={featured ? "eager" : "lazy"}
           />
         </ImageReveal>
       </div>
@@ -151,6 +152,6 @@ function WorkItem({ project: p, list, reduce }: { project: Project; list: Projec
           </ArrowLink>
         </motion.div>
       </div>
-    </motion.article>
+    </HoverParallel>
   );
 }

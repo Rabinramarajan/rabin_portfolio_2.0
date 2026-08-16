@@ -1,15 +1,18 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { hero, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Btn } from "@/components/ui";
 import { Magnetic, useMouseParallax } from "@/components/motion";
+import { useMotionTier } from "@/lib/motion-tier";
+import { SmartImage } from "@/components/SmartImage";
 
 export function Hero() {
   const reduce = useReducedMotion();
+  const { tier } = useMotionTier();
+  const quiet = reduce || tier === "basic";
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
@@ -24,9 +27,9 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
   const k = isDesktop ? 1 : 0.4;
-  const portraitScroll = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -34 * k]);
-  const gridScroll = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -14 * k]);
-  const uiScroll = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -20 * k]);
+  const portraitScroll = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [0, -34 * k]);
+  const gridScroll = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [0, -14 * k]);
+  const uiScroll = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [0, -20 * k]);
 
   /* Desktop-only mouse parallax across the visual's layers */
   const { sx, sy, handlers } = useMouseParallax({ strength: 6 });
@@ -130,7 +133,7 @@ export function Hero() {
             <div className="hero-visual__frame">
               <div className="hero-visual__media">
                 <motion.div className="hero-visual__portrait" style={{ x: portraitX, y: portraitY }}>
-                  <Image
+                  <SmartImage
                     src={hero.portrait.src}
                     alt={hero.portrait.alt}
                     width={960}

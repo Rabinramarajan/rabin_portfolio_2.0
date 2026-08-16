@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { projects } from "@/content/projects";
@@ -8,6 +7,7 @@ import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import { ImageReveal, TextReveal } from "@/components/motion";
+import { SmartImage } from "@/components/SmartImage";
 
 export function WorkSection({ limit }: { limit?: number }) {
   const reduce = useReducedMotion();
@@ -45,13 +45,13 @@ export function WorkSection({ limit }: { limit?: number }) {
               >
                 <div className="work-item__media">
                   <ImageReveal parallax={20}>
-                    <Image
+                    <SmartImage
                       src={p.cover.src}
                       alt={p.cover.alt}
                       width={p.cover.width}
                       height={p.cover.height}
                       sizes="(max-width: 900px) 100vw, 55vw"
-                      loading={i === 0 ? "eager" : "lazy"}
+                      priority={i === 0}
                     />
                   </ImageReveal>
                 </div>

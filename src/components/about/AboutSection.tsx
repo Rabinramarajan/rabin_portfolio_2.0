@@ -1,7 +1,6 @@
 "use client";
 
 import type { ComponentType } from "react";
-import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import {
   Code,
@@ -22,10 +21,12 @@ import { about } from "@/content/about";
 import { profile } from "@/content/profile";
 import { SectionKicker } from "@/components/ui";
 import { ImageReveal, TextReveal } from "@/components/motion";
+import { SmartImage } from "@/components/SmartImage";
 import { TechIcon } from "@/components/about/TechIcon";
 import { DottedWave, PortraitOrbits } from "@/components/about/AboutDecor";
 import type { MetricIcon } from "@/content/types";
 import { duration, ease } from "@/lib/motion";
+import { useCountUp } from "@/hooks/use-parallel";
 
 type Glyph = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 
@@ -58,6 +59,16 @@ function Badge({ icon: Icon, className }: { icon: Glyph; className: string }) {
   );
 }
 
+/** Stat value that counts up ("30+") once its card enters the viewport. */
+function StatValue({ value }: { value: string }) {
+  const { ref, display } = useCountUp(value);
+  return (
+    <span ref={ref} className="about-stat__value">
+      {display}
+    </span>
+  );
+}
+
 function PortraitCard() {
   return (
     <div className="about-card">
@@ -71,7 +82,7 @@ function PortraitCard() {
         </Pill>
 
         <ImageReveal parallax={18}>
-          <Image
+          <SmartImage
             src={about.portrait.src}
             alt={about.portrait.alt}
             width={about.portrait.width}
@@ -133,7 +144,7 @@ function Lead() {
           return (
             <li className="about-stat" key={metric.label}>
               {Icon ? <Icon className="about-stat__icon" size={18} strokeWidth={1.7} /> : null}
-              <span className="about-stat__value">{metric.value}</span>
+              <StatValue value={metric.value} />
               <span className="about-stat__label">{metric.label}</span>
             </li>
           );

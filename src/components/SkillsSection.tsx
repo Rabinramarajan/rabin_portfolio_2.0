@@ -5,6 +5,7 @@ import { coreStack, skillGroups } from "@/content/skills";
 import { SectionKicker } from "@/components/ui";
 import { duration, ease } from "@/lib/motion";
 import { TextReveal } from "@/components/motion";
+import { StaggerWave } from "@/components/parallel";
 import type { SectionHeadingLevel } from "@/components/ui";
 
 export function SkillsSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
@@ -45,24 +46,13 @@ export function SkillsSection({ headingLevel = "h2" }: { headingLevel?: SectionH
           }}
         >
           <p className="sk-section-label">Core</p>
-          <div className="sk-core-row">
-            {coreStack.map((item, i) => (
-              <motion.div
-                key={item}
-                className="sk-core-item"
-                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-10%" }}
-                transition={{
-                  duration: reduce ? duration.micro : duration.section,
-                  delay: reduce ? 0 : 0.15 + i * 0.05,
-                  ease,
-                }}
-              >
+          <StaggerWave direction="center-out" className="sk-core-row">
+            {coreStack.map((item) => (
+              <motion.div key={item} className="sk-core-item">
                 {item}
               </motion.div>
             ))}
-          </div>
+          </StaggerWave>
         </motion.div>
 
         {/* Skill Categories - Organized by domain */}

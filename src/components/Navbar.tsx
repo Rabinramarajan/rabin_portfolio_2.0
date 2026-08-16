@@ -6,19 +6,17 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { navigation, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
+import { useScrollSync } from "@/lib/scroll-sync";
 import { Logo } from "@/components/Logo";
 import { Magnetic } from "@/components/motion";
 import { cn } from "@/lib/cn";
 
-/** Sections on the single-page route that get a scroll-spy active state. */
-const SPY_SECTIONS = ["about", "services", "experience", "skills", "process", "contact"];
-
 export function Navbar() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  const { active: activeSection } = useScrollSync();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState<string | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -66,26 +64,6 @@ export function Navbar() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
-
-  /* Scroll-spy for the single-page sections */
-  useEffect(() => {
-    if (pathname !== "/") return;
-    const sections = SPY_SECTIONS.map((id) => document.getElementById(id)).filter(
-      (el): el is HTMLElement => Boolean(el),
-    );
-    if (!sections.length) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActiveSection(visible.target.id);
-      },
-      { rootMargin: "-38% 0px -52% 0px", threshold: [0, 0.2, 0.6] },
-    );
-    sections.forEach((s) => io.observe(s));
-    return () => io.disconnect();
-  }, [pathname]);
 
   const isActive = (item: (typeof navigation)[number]) => {
     if (item.href.startsWith("/") && !item.href.includes("#")) {

@@ -9,8 +9,9 @@ import {
   useTransform,
 } from "motion/react";
 import { useEffect, useRef, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
-import { duration, ease } from "@/lib/motion";
+import { duration, ease, stagger } from "@/lib/motion";
 import { cn } from "@/lib/cn";
+import { useMotionTier } from "@/lib/motion-tier";
 
 /* ============================================================
    CENTRAL MOTION SYSTEM
@@ -37,9 +38,11 @@ export function Parallax({
   style?: CSSProperties;
 }) {
   const reduce = useReducedMotion();
+  const { tier } = useMotionTier();
+  const quiet = reduce || tier === "basic";
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [range * speed, -range * speed]);
+  const y = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [range * speed, -range * speed]);
   return (
     <motion.div ref={ref} className={className} style={{ y, ...style }}>
       {children}
@@ -96,7 +99,7 @@ export function TextReveal({
                 ? { opacity: 1, transition: { duration: duration.micro } }
                 : {
                     y: "0%",
-                    transition: { duration: lineDuration, delay: delay + i * 0.08, ease },
+                    transition: { duration: lineDuration, delay: delay + i * stagger, ease },
                   },
             }}
           >
@@ -136,9 +139,11 @@ export function ImageReveal({
   delay?: number;
 }) {
   const reduce = useReducedMotion();
+  const { tier } = useMotionTier();
+  const quiet = reduce || tier === "basic";
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [-parallax, parallax]);
+  const y = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [-parallax, parallax]);
 
   const reveal = {
     duration: reduce ? duration.micro : duration.cinematic,
@@ -229,6 +234,8 @@ export function Magnetic({
 ------------------------------------------------------------------ */
 export function useMouseParallax({ strength = 8 } = {}) {
   const reduce = useReducedMotion();
+  const { tier } = useMotionTier();
+  const quiet = reduce || tier === "basic";
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 90, damping: 18, mass: 0.6 });
@@ -236,7 +243,7 @@ export function useMouseParallax({ strength = 8 } = {}) {
   const active = useRef(false);
 
   useEffect(() => {
-    if (reduce) return;
+    if (quiet) return;
     const mq = window.matchMedia("(pointer: fine)");
     const sync = () => {
       active.current = mq.matches;
@@ -244,9 +251,9 @@ export function useMouseParallax({ strength = 8 } = {}) {
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
-  }, [reduce]);
+  }, [quiet]);
 
-  const handlers = reduce
+  const handlers = quiet
     ? {}
     : {
         onPointerMove: (e: ReactPointerEvent<HTMLElement>) => {
@@ -262,16 +269,4 @@ export function useMouseParallax({ strength = 8 } = {}) {
       };
 
   return { sx, sy, handlers, strength };
-}
-
-/* ------------------------------------------------------------------
-   ScrollProgress — a thin accent bar that tracks page scroll.
-   Fixed, non-interactive, hidden under reduced motion.
------------------------------------------------------------------- */
-export function ScrollProgress() {
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 28, restDelta: 0.001 });
-  if (reduce) return null;
-  return <motion.div className="scroll-progress" style={{ scaleX }} aria-hidden />;
 }

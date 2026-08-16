@@ -4,10 +4,11 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { PageLoader } from "@/components/PageLoader";
-import { ScrollProgress } from "@/components/motion";
+import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
 import { MuiProvider } from "@/components/MuiProvider";
+import { DevFps } from "@/components/DevFps";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import "./globals.css";
 
@@ -69,12 +70,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </a>
           <JsonLd />
           <PageLoader />
-          <ScrollProgress />
+          <ProgressSync />
           <Navbar />
           <main id="main">{children}</main>
           <Footer />
           <ChatLauncher />
           <Toaster />
+          {process.env.NODE_ENV !== "production" ? <DevFps /> : null}
         </MuiProvider>
       </body>
     </html>

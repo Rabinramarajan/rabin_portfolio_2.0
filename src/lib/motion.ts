@@ -1,6 +1,9 @@
 /** Global motion language — one rhythm across the site. */
 export const ease = [0.16, 1, 0.3, 1] as const;
 
+/** Canonical stagger between sibling children — 80ms per item. */
+export const stagger = 0.08;
+
 export const duration = {
   /** Micro 150–250ms — hovers, presses, tiny state changes */
   micro: 0.18,

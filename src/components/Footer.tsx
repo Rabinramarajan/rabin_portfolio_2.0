@@ -4,7 +4,9 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { navigation, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
+import { useScrollSync } from "@/lib/scroll-sync";
 import { Logo } from "@/components/Logo";
+import { MotionToggle } from "@/components/MotionToggle";
 
 /** Routes that exist as their own page but are not in the primary nav. */
 const STANDALONE_ROUTES = [
@@ -17,6 +19,7 @@ const STANDALONE_ROUTES = [
 
 export function Footer() {
   const reduce = useReducedMotion();
+  const { percent } = useScrollSync();
 
   const view = (delay = 0) => ({
     initial: reduce ? { opacity: 0 } : { opacity: 0, y: 20 },
@@ -97,6 +100,8 @@ export function Footer() {
             <Link href="/work">Selected work</Link> · <Link href="/services">Angular &amp; frontend services</Link>{" "}
             · Built with Next.js and Motion
           </p>
+          <p className="ft__read">{percent}%</p>
+          <MotionToggle />
         </div>
       </div>
     </footer>

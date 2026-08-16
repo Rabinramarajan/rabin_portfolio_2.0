@@ -2282,7 +2282,6 @@ code {
 }
 .sk-core-item:hover {
   color: var(--color-accent);
-  transform: translateY(-2px);
 }
 .sk-categories {
   margin-top: var(--space-8);
@@ -7306,4 +7305,164 @@ a.contact-method:hover {
 .nf-links a:focus-visible {
   color: var(--color-text);
   border-bottom-color: currentColor;
+}
+
+/* ============================================================
+   PARALLEL MOTION SYSTEM
+   SectionDance / StaggerWave / ParallaxLayers / HoverParallel /
+   ProgressSync — the central-controller-driven primitives.
+   ============================================================ */
+
+/* --- SectionDance: header + content as grid columns, bg behind --- */
+.sdance {
+  position: relative;
+}
+.sdance__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sdance__header,
+.sdance__content {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+/* --- ParallaxLayers: one stack, several relative speeds --- */
+.plx {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.plx__layer {
+  position: absolute;
+  inset: -25%;
+}
+.plx-grid {
+  background-image: linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.5;
+  mask-image: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 100%);
+}
+.plx-glow {
+  background: radial-gradient(55% 55% at 50% 70%, rgba(201, 242, 77, 0.12), transparent 70%);
+}
+
+/* --- HoverParallel: card glow + arrow icon states via CSS --- */
+.hpar {
+  transition: box-shadow var(--duration-ui) var(--ease-out-expo);
+}
+.hpar .wrk-item__media .image-reveal {
+  transition: border-color var(--duration-ui) var(--ease-out-expo),
+    box-shadow var(--duration-ui) var(--ease-out-expo);
+}
+.hpar:hover .wrk-item__media .image-reveal {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent), 0 30px 80px -32px rgba(201, 242, 77, 0.28);
+}
+.hpar:hover .wrk-item__num {
+  text-shadow: 0 0 24px rgba(201, 242, 77, 0.5);
+}
+.hpar:hover .arrow-link svg {
+  transform: translateX(6px) rotate(-45deg);
+}
+
+/* --- Footer scroll readout --- */
+.ft__read {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+}
+.ft__read::before {
+  content: "READ ";
+  color: var(--color-text-faint);
+}
+
+/* --- Performance engineering ------------------------------------------------
+   Progressive motion tiers, blur-up images, containment, and the dev FPS HUD.
+   Everything here is additive — nothing below alters existing layout or the
+   full-motion visuals. ------------------------------------------------------------------------ */
+
+/* Blur-up: the tone placeholder paints immediately; the real frame fades in. */
+.smart-image {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.smart-image.is-loaded {
+  opacity: 1;
+}
+
+/* Animation-intensity toggle in the footer legal row. */
+.ft__motion {
+  font: inherit;
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  color: var(--color-text-faint);
+  background: none;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.2em 0.8em;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.ft__motion:hover,
+.ft__motion[aria-pressed="true"] {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* Dev-only frame-rate HUD — fixed bottom-left, monospace, dismissible by
+   absence in production builds (never shipped to users). */
+.dev-fps {
+  position: fixed;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 120;
+  display: flex;
+  gap: 0.75rem;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--color-accent);
+  background: rgba(10, 10, 12, 0.82);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  padding: 0.5rem 0.625rem;
+  pointer-events: none;
+  user-select: none;
+  backdrop-filter: blur(6px);
+}
+
+/* Containment: isolate animated subtrees so style/layout/paint work stays
+   scoped to the element instead of invalidating the whole document. */
+.sdance,
+.plx,
+.plx__layer,
+.work-item,
+.work-item__media,
+.image-reveal,
+.image-reveal__inner {
+  contain: layout style paint;
+}
+/* .hpar paints a hover box-shadow glow, so paint containment would clip it. */
+.hpar {
+  contain: layout style;
+}
+
+/* Sparing will-change: only the continuously-transformable layers earn a
+   compositor layer (transform runs on the GPU); .plx__layer is already
+   promoted via `transform` styles from Motion, keep it explicit for clarity. */
+.work-item,
+.image-reveal,
+.magnetic,
+.plx__layer {
+  will-change: transform;
 }
