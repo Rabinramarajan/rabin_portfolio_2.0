@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight, JetBrains_Mono, Caveat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
@@ -65,9 +66,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body>
         <MuiProvider>
-          <a className="skip-link" href="#main">
-            Skip to content
-          </a>
           <JsonLd />
           <PageLoader />
           <ProgressSync />
@@ -77,6 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <ChatLauncher />
           <Toaster />
           {process.env.NODE_ENV !== "production" ? <DevFps /> : null}
+          <Analytics />
         </MuiProvider>
       </body>
     </html>
