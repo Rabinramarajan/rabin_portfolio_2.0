@@ -16,15 +16,14 @@ import {
   TrendingUp,
   Users,
   ShieldCheck,
-  Send,
   Quote,
 } from "lucide-react";
 import { about } from "@/content/about";
 import { profile } from "@/content/profile";
-import { SectionKicker, Btn } from "@/components/ui";
+import { SectionKicker } from "@/components/ui";
 import { ImageReveal, TextReveal } from "@/components/motion";
 import { TechIcon } from "@/components/about/TechIcon";
-import { DottedWave, FlowLines, PortraitOrbits } from "@/components/about/AboutDecor";
+import { DottedWave, PortraitOrbits } from "@/components/about/AboutDecor";
 import type { MetricIcon } from "@/content/types";
 import { duration, ease } from "@/lib/motion";
 
@@ -217,7 +216,7 @@ export function AboutSection() {
   });
 
   return (
-    <section id="about" className="section">
+    <section id="about" className="section section--viewport">
       <div className="shell">
         <SectionKicker index="01" label="About" />
 
@@ -251,20 +250,6 @@ export function AboutSection() {
               </li>
             ))}
           </ul>
-        </motion.div>
-
-        <motion.div className="about-cta" {...rise(0.14)}>
-          <FlowLines />
-          <span className="about-cta__icon">
-            <Send size={20} fill="currentColor" aria-hidden />
-          </span>
-          <div className="about-cta__copy">
-            <h3>I&rsquo;m open to new opportunities and exciting projects.</h3>
-            <p>Let&rsquo;s build something extraordinary together.</p>
-          </div>
-          <Btn href={about.cta.href} className="about-cta__action">
-            {about.cta.label}
-          </Btn>
         </motion.div>
       </div>
     </section>

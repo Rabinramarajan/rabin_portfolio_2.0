@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { useRef, type CSSProperties } from "react";
 import { TextReveal } from "@/components/motion";
 import { Parallax } from "@/components/motion";
-import { journeyMilestones, backgroundCoordinates } from "@/content/journey";
+import { backgroundCoordinates } from "@/content/journey";
 import { JourneyRoute } from "./JourneyRoute";
 import { JourneyMilestones } from "./JourneyMilestones";
 import { JourneyParticles } from "./JourneyParticles";

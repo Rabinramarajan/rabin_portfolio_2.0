@@ -26,9 +26,3 @@ export const contactSchema = z.object({
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
-
-/** Field-level error shape returned by the API for client display. */
-export type ContactApiError = {
-  error?: string;
-  fieldErrors?: Record<string, string[]>;
-};

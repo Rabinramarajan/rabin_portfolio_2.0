@@ -87,12 +87,12 @@ function JourneyMilestoneItem({
   reduce: boolean;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [hovered, setHovered] = useState(false);
 
   // Connect card hover to route marker glow
   useEffect(() => {
     const routeContainer = document.querySelector(".jnr__route");
-    if (!routeContainer || !cardRef.current) return;
+    const card = cardRef.current;
+    if (!routeContainer || !card) return;
 
     const handleMouseEnter = () => {
       const marker = routeContainer.querySelectorAll(".jnr__marker")[index];
@@ -103,11 +103,11 @@ function JourneyMilestoneItem({
       if (marker) marker.classList.remove("jnr__marker--route-hover");
     };
 
-    cardRef.current.addEventListener("mouseenter", handleMouseEnter);
-    cardRef.current.addEventListener("mouseleave", handleMouseLeave);
+    card.addEventListener("mouseenter", handleMouseEnter);
+    card.addEventListener("mouseleave", handleMouseLeave);
     return () => {
-      cardRef.current?.removeEventListener("mouseenter", handleMouseEnter);
-      cardRef.current?.removeEventListener("mouseleave", handleMouseLeave);
+      card.removeEventListener("mouseenter", handleMouseEnter);
+      card.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [index]);
 
@@ -125,15 +125,8 @@ function JourneyMilestoneItem({
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={reduce ? undefined : { y: -6, transition: { duration: 0.3, ease } }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
-      <JourneyCard
-        milestone={milestone}
-        isActive={isActive}
-        isPast={isPast}
-        hovered={hovered}
-      />
+      <JourneyCard milestone={milestone} isPast={isPast} />
     </motion.div>
   );
 }

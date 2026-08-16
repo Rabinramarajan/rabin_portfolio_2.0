@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform, useReducedMotion, useSpring } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import { journeyMilestones } from "@/content/journey";
-import { duration, ease } from "@/lib/motion";
+import { ease } from "@/lib/motion";
 
 /**
  * JOURNEY ROUTE — The cinematic horizontal career path.

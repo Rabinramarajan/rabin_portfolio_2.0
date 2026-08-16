@@ -11,15 +11,3 @@ export const assistantRequestSchema = z
     question: z.string().trim().min(1).max(500).optional(),
   })
   .refine((v) => Boolean(v.choice || v.question), { message: "Provide a choice or a question." });
-
-export type AssistantRequest = z.infer<typeof assistantRequestSchema>;
-
-/** Deterministic (Layer 1) or content-grounded (Layer 2) response shape. */
-export type AssistantChoice = { id: string; label: string };
-
-export type AssistantReply = {
-  title?: string;
-  body?: string;
-  projects?: string[];
-  choices?: AssistantChoice[];
-};

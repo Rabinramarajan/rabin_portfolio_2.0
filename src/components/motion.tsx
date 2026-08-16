@@ -20,34 +20,6 @@ import { cn } from "@/lib/cn";
    ============================================================ */
 
 /* ------------------------------------------------------------------
-   Reveal — a single, consistent scroll-in for blocks of content.
------------------------------------------------------------------- */
-export function Reveal({
-  children,
-  className,
-  delay = 0,
-  y = 24,
-}: {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-  y?: number;
-}) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      className={className}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : delay, ease }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-/* ------------------------------------------------------------------
    Parallax — scroll-linked vertical drift. speed is the fraction of
    range (in px) that an element travels; 0.05 bg → 0.30 foreground.
 ------------------------------------------------------------------ */
@@ -73,20 +45,6 @@ export function Parallax({
       {children}
     </motion.div>
   );
-}
-
-/* ------------------------------------------------------------------
-   ParallaxElement — alias of Parallax for the shared motion vocabulary.
------------------------------------------------------------------- */
-export const ParallaxElement = Parallax;
-
-/** Hook form of Parallax for non-div targets. */
-export function useParallax(speed = 0.15, range = 60) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [range * speed, -range * speed]);
-  return { ref, y };
 }
 
 /* ------------------------------------------------------------------
@@ -212,25 +170,6 @@ export function ImageReveal({
 }
 
 /* ------------------------------------------------------------------
-   TimelineProgress — a scroll-driven fill for vertical rails.
-   Place inside a position:relative container that spans the range.
------------------------------------------------------------------- */
-export function TimelineProgress({ className, fillClassName }: { className?: string; fillClassName?: string }) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.4"] });
-  const scaleY = useSpring(useTransform(scrollYProgress, [0, 1], [0, 1]), { stiffness: 70, damping: 22 });
-  return (
-    <div ref={ref} className={cn("timeline-progress", className)} aria-hidden>
-      <motion.span
-        className={cn("timeline-progress__fill", fillClassName)}
-        style={{ scaleY: reduce ? 1 : scaleY }}
-      />
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------
    Magnetic — pointer-attracted wrapper for primary CTAs.
    Desktop / fine-pointer only; springs for a weighted feel.
 ------------------------------------------------------------------ */
@@ -323,59 +262,6 @@ export function useMouseParallax({ strength = 8 } = {}) {
       };
 
   return { sx, sy, handlers, strength };
-}
-
-/* ------------------------------------------------------------------
-   ClipReveal — a masked clip-path wipe for blocks of content.
-   The wipe direction animates only clip-path + opacity (no layout).
------------------------------------------------------------------- */
-export function ClipReveal({
-  children,
-  className,
-  delay = 0,
-  from = "bottom",
-}: {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-  from?: "bottom" | "left" | "right";
-}) {
-  const reduce = useReducedMotion();
-  const start =
-    from === "left"
-      ? "inset(0 100% 0 0)"
-      : from === "right"
-        ? "inset(0 0 0 100%)"
-        : "inset(0 0 100% 0)";
-
-  /*
-   * The wrapper is what gets observed. Chromium clips a target's intersection
-   * rect by the target's own clip-path, so observing the clipped element
-   * directly would report a ratio of 0 and the reveal would never fire.
-   */
-  return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.3, margin: "0px 0px -8% 0px" }}
-    >
-      <motion.div
-        variants={{
-          hidden: reduce ? { opacity: 0 } : { clipPath: start, opacity: 0 },
-          show: reduce
-            ? { opacity: 1, transition: { duration: duration.micro } }
-            : {
-                opacity: 1,
-                clipPath: "inset(0% 0% 0% 0%)",
-                transition: { duration: duration.section, delay, ease },
-              },
-        }}
-      >
-        {children}
-      </motion.div>
-    </motion.div>
-  );
 }
 
 /* ------------------------------------------------------------------

@@ -79,18 +79,6 @@ export const journeyMilestones: JourneyMilestone[] = [
   },
 ];
 
-/** Route configuration for the horizontal career path */
-export const routeConfig = {
-  startYear: "2021",
-  endYear: "2026",
-  milestones: journeyMilestones.map((m) => ({
-    id: m.id,
-    year: m.year,
-    label: m.label,
-    progress: 0, // Will be calculated based on position
-  })),
-};
-
 /** Background coordinate labels for the technical grid */
 export const backgroundCoordinates = [
   "LAT 13.0827",

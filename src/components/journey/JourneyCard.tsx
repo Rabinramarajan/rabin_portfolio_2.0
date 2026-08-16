@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { JourneyMilestone } from "@/content/journey";
-import { duration, ease } from "@/lib/motion";
+import { ease } from "@/lib/motion";
 
 /**
  * JOURNEY CARD — Individual milestone card content.
@@ -13,12 +13,10 @@ import { duration, ease } from "@/lib/motion";
 
 interface JourneyCardProps {
   milestone: JourneyMilestone;
-  isActive: boolean;
   isPast: boolean;
-  hovered: boolean;
 }
 
-export function JourneyCard({ milestone, isActive, isPast, hovered }: JourneyCardProps) {
+export function JourneyCard({ milestone, isPast }: JourneyCardProps) {
   const reduce = useReducedMotion();
   const isCurrent = milestone.current;
   const isNext = milestone.type === "next";
