@@ -146,6 +146,41 @@ export interface ExperienceRole {
   visual?: RoleVisualId;
 }
 
+/** One column on the horizontal career horizon. */
+export type HorizonTone = "past" | "current" | "live" | "next";
+
+export interface HorizonChapter {
+  id: string;
+  year: string;
+  phase: string;
+  /**
+   * Verified job title. Omitted where the year is not an employment year —
+   * 2021 is the B.Sc IT foundation, and the closing chapter has not happened
+   * yet, so neither may carry a role.
+   */
+  role?: string;
+  /** Company or institution the chapter is evidenced by. */
+  org?: string;
+  headline: string;
+  body: string;
+  tags: string[];
+  tone: HorizonTone;
+  /** Where the chapter was worked from — omitted when there is no workplace. */
+  location?: string;
+  /**
+   * What the chapter actually produced. Every line is lifted from the verified
+   * role record (`experience[].responsibilities` / `.impact`) — the timeline
+   * restates that record, it never adds to it.
+   */
+  achievements?: string[];
+  /** Two-letter mark for the chapter tile. Falls back to the org initials. */
+  monogram?: string;
+  statuses?: string[];
+  footer?: string;
+  /** Which abstract scene renders alongside the chapter. */
+  visual?: RoleVisualId;
+}
+
 /**
  * One technology stream in the stack evolution. `enteredAt` is the first year
  * the technology is verifiably present in the career record; `source` names

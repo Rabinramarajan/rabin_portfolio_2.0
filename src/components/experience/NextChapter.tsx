@@ -3,7 +3,6 @@
 import { motion } from "motion/react";
 import { ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
-import { TextReveal } from "@/components/motion";
 
 /**
  * THE NEXT CHAPTER — the timeline leaves the page.
@@ -12,6 +11,10 @@ import { TextReveal } from "@/components/motion";
  * past the right edge toward the CTA. It draws once and stops; there is no
  * looping animation here, because "ongoing" is communicated by where the line
  * goes, not by it never settling.
+ *
+ * The headline itself lives on the CTA immediately below, so the sentence
+ * "the next chapter is still being built" lands once, at the end, rather than
+ * twice in a row.
  */
 
 export function NextChapter() {
@@ -20,13 +23,6 @@ export function NextChapter() {
   return (
     <div className="xnext">
       <p className="xnext__kicker">Still being built</p>
-
-      <TextReveal
-        lines={["THE NEXT CHAPTER", "IS STILL BEING", "BUILT."]}
-        as="h2"
-        className="xnext__title"
-        accentIndex={2}
-      />
 
       <p className="xnext__lede">
         The work continues — Angular architecture, modern React and Next.js, and product surfaces where AI actually

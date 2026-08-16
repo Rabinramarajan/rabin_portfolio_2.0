@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
+import { useEffect, useRef } from "react";
 import { formatRoleDates, getCurrentRoles } from "@/content/experience";
 import { profile } from "@/content/profile";
 import { ease } from "@/lib/motion";
@@ -25,6 +25,8 @@ export function CurrentChapter() {
   const bgY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [4, -4]);
   const archY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [8, -8]);
   const metaY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [12, -12]);
+
+  const pointer = usePointerDrift(reduce);
 
   return (
     <div className="xcur" ref={ref}>
@@ -92,8 +94,12 @@ export function CurrentChapter() {
         </div>
 
         <div className="xcur__aside">
+          {/* scroll depth on the outer layer, pointer drift on the inner one —
+              they are the same transform channel, so they cannot share a node */}
           <motion.div className="xcur__arch" style={{ y: archY }}>
-            <LiveArchitecture reduce={reduce} />
+            <motion.div className="xcur__arch-drift" style={{ x: pointer.x, y: pointer.y }}>
+              <LiveArchitecture reduce={reduce} />
+            </motion.div>
           </motion.div>
           <motion.dl className="xcur__meta" style={{ y: metaY }}>
             <div>
@@ -113,6 +119,40 @@ export function CurrentChapter() {
       </div>
     </div>
   );
+}
+
+/**
+ * Pointer parallax, capped at ±5px on each axis.
+ *
+ * Only the architecture diagram moves — never the timeline, the headings or
+ * the page. It is off entirely for reduced motion, for coarse pointers, and
+ * on narrow viewports, so no touch device pays for a listener it can't use.
+ * A spring smooths the raw pointer so the drift trails the cursor instead of
+ * snapping to it.
+ */
+const DRIFT = 5;
+
+function usePointerDrift(reduce: boolean) {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const x = useSpring(mx, { stiffness: 60, damping: 20, restDelta: 0.01 });
+  const y = useSpring(my, { stiffness: 60, damping: 20, restDelta: 0.01 });
+
+  useEffect(() => {
+    if (reduce) return;
+    const mq = window.matchMedia("(min-width: 1024px) and (pointer: fine)");
+    if (!mq.matches) return;
+
+    const onMove = (e: PointerEvent) => {
+      /* normalised to −1…1 across the viewport, then scaled to the cap */
+      mx.set(((e.clientX / window.innerWidth) * 2 - 1) * DRIFT);
+      my.set(((e.clientY / window.innerHeight) * 2 - 1) * DRIFT);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [reduce, mx, my]);
+
+  return { x, y };
 }
 
 /**

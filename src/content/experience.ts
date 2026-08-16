@@ -3,6 +3,7 @@ import type {
   CareerMilestone,
   EngineeringMapBranch,
   ExperienceRole,
+  HorizonChapter,
   StackTrack,
 } from '@/content/types';
 
@@ -94,6 +95,126 @@ export const careerLead = {
 export function getCareerTimeline(): ExperienceRole[] {
   return [...experience].reverse();
 }
+
+/**
+ * The career timeline shown on /experience.
+ *
+ * Every year, title and employer here is taken from `experience` and
+ * `careerMilestones` above — this array is a narrative ordering of the same
+ * record, never a second set of facts.
+ *
+ * Note on 2021: it carries no `role`, because the first professional role
+ * begins at ITGalax in 2022 (see `careerMilestones.first-role`). 2021 is the
+ * B.Sc IT foundation year and is labelled as such.
+ */
+export const careerHorizon: HorizonChapter[] = [
+  {
+    id: "foundation",
+    year: "2021",
+    phase: "Foundation",
+    org: "B.Sc. Information Technology",
+    headline: "Where the fundamentals were set.",
+    body: "Core computer science and web technology — the base every professional year after this was built on.",
+    tags: ["HTML5", "CSS3", "JavaScript"],
+    tone: "past",
+    location: "Tamil Nadu, India",
+    monogram: "BS",
+    achievements: [
+      "Core computer science and web technology fundamentals.",
+      "First interfaces built from scratch — markup, styling and the DOM.",
+      "The base every professional year after this was built on.",
+    ],
+    visual: "foundation",
+  },
+  {
+    id: "build",
+    year: "2022",
+    phase: "Build",
+    role: "Frontend Angular Developer",
+    org: "ITGalax Solutions",
+    headline: "The first production chapter.",
+    body: "Production code, real users and real release cycles. Angular and TypeScript became the daily tools rather than the study material.",
+    tags: ["Angular", "TypeScript", "RxJS"],
+    tone: "past",
+    location: "Chennai, India",
+    monogram: "IT",
+    achievements: [
+      "Turned designs into Angular components that behaved on every shipped device.",
+      "Worked inside real release cycles rather than personal projects.",
+      "Learned correctness on code other people depended on.",
+    ],
+    visual: "interface",
+  },
+  {
+    id: "systems",
+    year: "2023",
+    phase: "Evolution",
+    role: "Frontend Angular Developer",
+    org: "ITGalax Solutions",
+    headline: "From features to systems.",
+    body: "The PRIMS pension portal and the VNPF mobile apps shipped in the same period — one architecture forced to serve both web and mobile.",
+    tags: ["Angular", "Ionic", "Capacitor", "REST APIs"],
+    tone: "past",
+    location: "Chennai, India",
+    monogram: "IT",
+    achievements: [
+      "Shipped the PRIMS pension portal and the VNPF mobile apps in one period.",
+      "Delivered iOS and Android from a single Angular + Ionic codebase.",
+      "Built biometric auth and offline behaviour into enterprise apps.",
+    ],
+    visual: "enterprise",
+  },
+  {
+    id: "scale",
+    year: "2024",
+    phase: "Scale",
+    role: "Frontend Angular Developer",
+    org: "ITGalax Solutions",
+    headline: "Correctness over velocity.",
+    body: "Fiji Government immigration case management serving 10,000+ active users across three countries — where a stream pattern shows up in what people feel.",
+    tags: ["Angular", "RxJS", "Sails.js", "Tailwind CSS"],
+    tone: "past",
+    location: "Chennai, India",
+    monogram: "IT",
+    achievements: [
+      "Served 10,000+ active users across three countries.",
+      "Cut API consumption by 40% through RxJS stream patterns.",
+      "Improved frontend performance by 50%.",
+    ],
+    visual: "projects",
+  },
+  {
+    id: "now",
+    year: "2026",
+    phase: "Current",
+    role: "Frontend Angular Developer · Consultant",
+    org: "Zellavora · RSTACK Solutions",
+    headline: "Engineering with intent.",
+    body: "Two engagements running concurrently — consulting on Angular architecture, and building the interface for an AI-driven analytics product.",
+    tags: ["Angular", "Signals", "TypeScript", "AI/ML integration"],
+    tone: "live",
+    location: "Remote · Chennai, India",
+    monogram: "RS",
+    achievements: [
+      "Building the interface for a web-based analytics application.",
+      "Integrating REST APIs with AI/ML models to power predictions.",
+      "Shipping reusable component libraries and scalable architecture.",
+      "Optimising with Angular Signals, lazy loading and smart API patterns.",
+    ],
+    statuses: ["Engineering with intent", "Active system"],
+    visual: "ecosystem",
+  },
+  {
+    id: "next",
+    year: "NEXT",
+    phase: "Next chapter",
+    headline: "Build. Lead. Shape.",
+    body: "Angular architecture, product thinking, and AI that actually earns its place in the interface.",
+    tags: ["AI", "Architecture", "Product"],
+    tone: "next",
+    footer: "Still being written",
+  },
+];
 
 export function formatRoleDates(role: ExperienceRole) {
   const end = role.end ?? 'Present';

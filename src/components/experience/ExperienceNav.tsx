@@ -24,14 +24,42 @@ export function ExperienceNav() {
       .filter((el): el is HTMLElement => Boolean(el));
     if (!targets.length) return;
 
+    /*
+     * Sections vary enormously in height — the expansion section is several
+     * viewports tall, the closing statement is a fraction of one — so raw
+     * intersectionRatio is not comparable between them: it is a fraction of
+     * the section, and a tall section can never score highly. Coverage is
+     * normalised against the smaller of the reading band and the section, and
+     * every section's latest value is retained, because a section that has
+     * finished crossing its thresholds stops sending entries.
+     */
+    const coverage = new Map<string, number>();
+
     const io = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(visible.target.id);
+        for (const entry of entries) {
+          const band = entry.rootBounds?.height ?? window.innerHeight;
+          const reference = Math.min(band, entry.boundingClientRect.height || 1) || 1;
+          coverage.set(
+            entry.target.id,
+            entry.isIntersecting ? entry.intersectionRect.height / reference : 0,
+          );
+        }
+
+        let best = "";
+        let bestScore = 0;
+        for (const [id, score] of coverage) {
+          if (score > bestScore) {
+            bestScore = score;
+            best = id;
+          }
+        }
+        if (best) setActive(best);
       },
-      { threshold: [0.12, 0.4], rootMargin: "-20% 0px -50% 0px" },
+      {
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+        rootMargin: "-20% 0px -50% 0px",
+      },
     );
     targets.forEach((t) => io.observe(t));
     return () => io.disconnect();

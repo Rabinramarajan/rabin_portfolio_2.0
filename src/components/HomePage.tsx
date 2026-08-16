@@ -7,11 +7,11 @@ import { FaqSection } from "@/components/FaqSection";
 
 /*
  * Below-the-fold sections are code-split so their JS (framer-motion driven
- * animations, the journey/particles canvas, pricing/contact widgets) isn't
- * parsed/executed as part of the critical initial bundle. `ssr: true` keeps
- * the HTML present for SEO/no-JS; only the client hydration chunk is deferred.
+ * animations, pricing/contact widgets) isn't parsed/executed as part of the
+ * critical initial bundle. `ssr: true` keeps the HTML present for SEO/no-JS;
+ * only the client hydration chunk is deferred.
  */
-const JourneySection = dynamic(() => import("@/components/journey").then((m) => m.JourneySection), {
+const JourneySection = dynamic(() => import("@/components/JourneySection").then((m) => m.JourneySection), {
   loading: () => <div style={{ minHeight: "600px" }} aria-hidden />,
 });
 const SkillsSection = dynamic(() => import("@/components/SkillsSection").then((m) => m.SkillsSection), {

@@ -1,14 +1,13 @@
 "use client";
 
-import { getCareerTimeline } from "@/content/experience";
+import { getCurrentRoles } from "@/content/experience";
 import { profile } from "@/content/profile";
-import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 import { TextReveal } from "@/components/motion";
-import { PageHero } from "./PageHero";
 import { PageCta } from "./PageCta";
 import { PageSectionHead } from "./PageSectionHead";
-import { CareerTraceHero } from "@/components/experience/CareerTraceHero";
-import { CareerTrace } from "@/components/experience/CareerTrace";
+import { ExperienceHero } from "@/components/experience/ExperienceHero";
+import { CareerTimeline } from "@/components/experience/CareerTimeline";
+import { JourneySummary } from "@/components/experience/JourneySummary";
 import { TechnologyEvolution } from "@/components/experience/StackEvolution";
 import { CapabilityEvolution } from "@/components/experience/CapabilityEvolution";
 import { MilestoneTrace } from "@/components/experience/MilestoneTrace";
@@ -18,54 +17,39 @@ import { NextChapter } from "@/components/experience/NextChapter";
 import { ExperienceNav } from "@/components/experience/ExperienceNav";
 
 /**
- * EXPERIENCE — one continuous career signal.
+ * EXPERIENCE — one continuous career line.
  *
- * The page reads as a single unbroken trace. The hero shows the whole signal
- * with every year on it; the journey follows it as a zigzag of panels around a
- * line that draws itself; the stack reads as frequency bands; milestones spike
- * up from a baseline; the current chapter is the live end of the trace. Each
- * section keeps its own reveal gesture so the page never settles into one
- * repeated fade-up.
+ * The line starts in the hero, becomes the timeline rail, and leaves the page
+ * pointing at the CTA. Every section between those two points is typography
+ * and rules; there are no cards anywhere on this page on purpose, because the
+ * timeline is meant to be the design rather than a frame around it.
  */
 export function ExperiencePage() {
-  const reduce = useReducedMotionSafe();
-  const roles = getCareerTimeline();
+  const liveCount = getCurrentRoles().length;
 
   return (
     <>
       <ExperienceNav />
 
-      <PageHero
-        index="04"
-        label="Experience"
-        title={["THE EVOLUTION", "OF AN", "ENGINEER."]}
-        lede="From first builds in 2021 to Angular architecture and AI-driven analytics in 2026 — a career measured in what it taught, not in how long it ran."
-        visual={<CareerTraceHero reduce={reduce} />}
-        meta={[
-          { label: "Experience", value: profile.yearsExperienceLabel + " years" },
-          { label: "Discipline", value: "Frontend engineering" },
-          { label: "Core stack", value: "Angular · TypeScript" },
-          { label: "Also building with", value: "React · Next.js" },
-        ]}
-        className="xhero"
-      />
+      <ExperienceHero />
 
       {/* ---------- the journey ---------- */}
       <section className="pf-section xsec" id="journey">
         <div className="shell">
           <PageSectionHead index="01" label="The journey" />
           <TextReveal
-            lines={["EVERY ROLE CHANGED", "HOW I BUILD."]}
+            lines={["EVERY CHAPTER CHANGED", "HOW I BUILD."]}
             as="h2"
             className="xsec__statement"
             accentIndex={1}
           />
           <p className="xsec__lede">
-            Five stages, in order. Each one is a real engagement — the labels describe what changed, not a title
-            anyone handed out.
+            Six chapters, in order. Each one is a real engagement or a real turning point — the
+            labels describe what changed, not a title anyone handed out.
           </p>
 
-          <CareerTrace roles={roles} />
+          <CareerTimeline />
+          <JourneySummary />
         </div>
       </section>
 
@@ -115,7 +99,7 @@ export function ExperiencePage() {
             index="05"
             label="Current chapter"
             title="Where the work is now."
-            lede="Two engagements running concurrently in 2026 — consulting on Angular architecture, and building the interface for an AI-driven analytics product."
+            lede={`${liveCount} engagement${liveCount === 1 ? "" : "s"} across ${profile.yearsExperienceLabel} years of shipping — consulting on Angular architecture, and building the interface for an AI-driven analytics product.`}
           />
           <CurrentChapter />
         </div>
@@ -134,19 +118,6 @@ export function ExperiencePage() {
         </div>
       </section>
 
-      {/* ---------- closing statement ---------- */}
-      <section className="pf-section xsec xsec--quote">
-        <div className="shell">
-          <TextReveal
-            lines={["THE EXPERIENCE ISN'T", "IN THE YEARS. IT'S IN", "WHAT THEY TAUGHT", "ME TO BUILD."]}
-            as="p"
-            className="xquote"
-            accentIndex={3}
-            lineDuration={0.7}
-          />
-        </div>
-      </section>
-
       {/* ---------- next chapter ---------- */}
       <section className="pf-section xsec xsec--next">
         <div className="shell">
@@ -155,8 +126,8 @@ export function ExperiencePage() {
       </section>
 
       <PageCta
-        kicker="04 / EXPERIENCE"
-        headline={["THE STORY", "CONTINUES."]}
+        kicker="05 / EXPERIENCE"
+        headline={["THE NEXT CHAPTER", "IS STILL BEING", "BUILT."]}
         lede="The work is the argument. Let's make the next one count."
         actions={[
           { label: "View Selected Work", href: "/work", variant: "line" },
