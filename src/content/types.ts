@@ -84,6 +84,8 @@ export interface Service {
   number: string;
   title: string;
   proposition: string;
+  /** Short card-length blurb (~15 words). `proposition` is the long-form version. */
+  summary: string;
   deliverables: string[];
   technologies: string[];
   idealFor: string;

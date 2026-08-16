@@ -7,6 +7,8 @@ export const services: Service[] = [
     title: "Frontend Engineering",
     proposition:
       "Production interfaces from design handoff to ship — typed, testable, and built to survive the third release, not just the first demo.",
+    summary:
+      "Production interfaces built to survive the third release, not just the first demo.",
     deliverables: ["Component architecture", "Production-ready interfaces", "Design-system implementation"],
     technologies: ["TypeScript", "Angular", "React", "Next.js"],
     idealFor: "Product teams that need a senior frontend owner.",
@@ -23,6 +25,8 @@ export const services: Service[] = [
     title: "Angular Development",
     proposition:
       "Enterprise Angular applications with signals, standalone APIs, and architecture that stays maintainable under real traffic and real teams.",
+    summary:
+      "Enterprise Angular with signals and standalone APIs, maintainable under real traffic.",
     deliverables: ["Modern Angular applications", "Legacy migrations", "State and data-flow design"],
     technologies: ["Angular 17–22", "Signals", "Standalone APIs", "RxJS"],
     idealFor: "Government, insurance, and enterprise platforms.",
@@ -40,6 +44,8 @@ export const services: Service[] = [
     title: "React / Next.js",
     proposition:
       "Server-first React applications with typed data, careful rendering, and Core Web Vitals treated as product requirements.",
+    summary:
+      "Server-first React with typed data and Core Web Vitals treated as requirements.",
     deliverables: ["App Router architecture", "Typed content models", "Performance-minded UI"],
     technologies: ["React 19", "Next.js", "TypeScript", "Tailwind CSS"],
     idealFor: "Marketing sites, product surfaces, and editorial web apps.",
@@ -57,6 +63,8 @@ export const services: Service[] = [
     title: "UI Engineering",
     proposition:
       "Pixel-accurate, accessible interfaces with a restrained motion language — hierarchy, not decoration.",
+    summary:
+      "Pixel-accurate, accessible interfaces with restrained motion — hierarchy, not decoration.",
     deliverables: ["Accessible markup", "Interaction states", "Cross-browser consistency"],
     technologies: ["SCSS", "Tailwind CSS", "WCAG 2.1 AA", "Motion"],
     idealFor: "Teams who care how the product feels after launch day.",
@@ -73,6 +81,8 @@ export const services: Service[] = [
     title: "Performance Optimization",
     proposition:
       "Faster loads and calmer runtime through profiling, splitting, and budgets — measured, not guessed.",
+    summary:
+      "Faster loads and calmer runtime through profiling, splitting, and budgets.",
     deliverables: ["Core Web Vitals pass", "Bundle reduction", "Runtime profiling"],
     technologies: ["Lighthouse", "Code splitting", "SSR", "Image strategy"],
     idealFor: "Products that already work, but feel heavy.",
@@ -90,6 +100,8 @@ export const services: Service[] = [
     title: "Mobile / Ionic",
     proposition:
       "iOS and Android from one Angular + Ionic codebase, including store builds, native APIs, and offline-aware behaviour.",
+    summary:
+      "iOS and Android from one Angular + Ionic codebase, including store builds.",
     deliverables: ["iOS & Android apps", "Capacitor integration", "Release support"],
     technologies: ["Ionic", "Angular", "Capacitor", "Native APIs"],
     idealFor: "Member apps and field tools that must live on a phone.",
@@ -107,6 +119,8 @@ export const services: Service[] = [
     title: "Design Systems",
     proposition:
       "Reusable component systems that scale with your product — from tokens to production, built for consistency and developer velocity.",
+    summary:
+      "Reusable component systems from tokens to production, built for consistency.",
     deliverables: ["Component architecture", "Design tokens", "Documentation", "Implementation support"],
     technologies: ["TypeScript", "Tailwind CSS", "Storybook", "Angular", "React"],
     idealFor: "Growing teams building multiple products or platforms.",
