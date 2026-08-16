@@ -1,6 +1,5 @@
 "use client";
 
-import { getCurrentRoles } from "@/content/experience";
 import { profile } from "@/content/profile";
 import { TextReveal } from "@/components/motion";
 import { PageCta } from "./PageCta";
@@ -25,8 +24,6 @@ import { ExperienceNav } from "@/components/experience/ExperienceNav";
  * timeline is meant to be the design rather than a frame around it.
  */
 export function ExperiencePage() {
-  const liveCount = getCurrentRoles().length;
-
   return (
     <>
       <ExperienceNav />
@@ -99,7 +96,7 @@ export function ExperiencePage() {
             index="05"
             label="Current chapter"
             title="Where the work is now."
-            lede={`${liveCount} engagement${liveCount === 1 ? "" : "s"} across ${profile.yearsExperienceLabel} years of shipping — consulting on Angular architecture, and building the interface for an AI-driven analytics product.`}
+            lede={`${profile.yearsExperienceLabel} years of shipping — currently Frontend Developer Consultant at RSTACK Solutions, building the interface for an AI-driven analytics product.`}
           />
           <CurrentChapter />
         </div>

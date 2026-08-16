@@ -4773,7 +4773,8 @@ a.contact-method:hover {
 .ctl__org {
   margin-top: 0.15rem;
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  font-weight: 600;
+  color: var(--color-accent);
 }
 .ctl__place {
   display: flex;
@@ -4886,6 +4887,12 @@ a.contact-method:hover {
    ============================================================ */
 .jsec {
   position: relative;
+}
+.jsec__intro {
+  margin-bottom: 0;
+}
+.jsec__art {
+  border-color: rgb(201 242 77 / 16%);
 }
 .jsec .xhero__stats--section {
   margin-top: clamp(1.25rem, 2.5vw, 1.75rem);

@@ -37,7 +37,7 @@ export const about: AboutContent = {
     { year: '2021', title: 'B.Sc. IT Graduate', body: 'Core computer science and web technology foundations.' },
     { year: '2023', title: 'Frontend Developer', body: 'PRIMS Pension Portal and VNPF Ionic cross-platform mobile apps.' },
     { year: '2024', title: 'Senior Angular Engineer', body: 'Fiji Government Immigration Platforms serving 10,000+ users.' },
-    { year: '2026', title: 'AI and Frontend Consultant', body: 'Applied AI/ML (IIT Patna) and Senior Angular Architecture Consultant.' },
+    { year: '2026', title: 'Frontend Developer Consultant', body: 'RSTACK Solutions — interactive frontend for a web-based analytics application, integrating REST APIs with AI/ML models.' },
   ],
   metrics: [
     { value: '30+', label: 'Projects Completed', icon: 'projects' },

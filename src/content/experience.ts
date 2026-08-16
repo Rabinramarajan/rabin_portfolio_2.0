@@ -40,26 +40,6 @@ export const experience: ExperienceRole[] = [
     logo: 'https://www.rstacksolutions.com/favicon.ico?favicon.154iv7xvjl_ae.ico',
   },
   {
-    id: 'zellavora',
-    company: 'Zellavora',
-    role: 'Frontend Angular Developer',
-    type: 'Freelance',
-    start: '2026',
-    end: null,
-    location: 'Chennai, India',
-    description:
-      'Ship production-grade SPAs and hybrid mobile apps across multiple client projects using Angular, TypeScript, Ionic and REST APIs.',
-    responsibilities: [
-      'Build reusable component libraries and scalable architecture enabling faster delivery.',
-      'Optimize performance through Angular Signals, lazy loading and smart API integration patterns.',
-    ],
-    impact: [],
-    technologies: ['Angular', 'Signals', 'TypeScript', 'Ionic', 'REST APIs'],
-    milestone: 'Consulting',
-    chapter: 'CONSULT',
-    visual: 'projects',
-  },
-  {
     id: 'itgalax',
     company: 'ITGalax Solutions Pvt Ltd',
     role: 'Frontend Angular Developer',
@@ -192,19 +172,18 @@ export const careerHorizon: HorizonChapter[] = [
     id: "now",
     year: "2026",
     phase: "Current",
-    role: "Frontend Angular Developer · Consultant",
-    org: "Zellavora · RSTACK Solutions",
+    role: "Frontend Developer Consultant",
+    org: "RSTACK Solutions Private Limited · Contract",
     headline: "Engineering with intent.",
-    body: "Two engagements running concurrently — consulting on Angular architecture, and building the interface for an AI-driven analytics product.",
-    tags: ["Angular", "Signals", "TypeScript", "AI/ML integration"],
+    body: "Designing and developing an interactive front-end interface and experience for a web-based analytics application using modern frontend technologies.",
+    tags: ["Angular", "TypeScript", "RxJS", "REST APIs", "AI/ML integration"],
     tone: "live",
-    location: "Remote · Chennai, India",
+    location: "Remote",
     monogram: "RS",
+    logo: "https://www.rstacksolutions.com/favicon.ico?favicon.154iv7xvjl_ae.ico",
     achievements: [
-      "Building the interface for a web-based analytics application.",
-      "Integrating REST APIs with AI/ML models to power predictions.",
-      "Shipping reusable component libraries and scalable architecture.",
-      "Optimising with Angular Signals, lazy loading and smart API patterns.",
+      "Integrating REST APIs with AI/ML models to generate predictions and power intelligent decision-making.",
+      "Delivering production-grade work on a structured schedule with milestone-based timesheets and code reviews.",
     ],
     statuses: ["Engineering with intent", "Active system"],
     visual: "ecosystem",
@@ -227,9 +206,7 @@ export function formatRoleDates(role: ExperienceRole) {
 }
 
 /**
- * Every engagement currently in progress. Two run concurrently as of 2026,
- * so the current chapter shows both rather than picking one and implying the
- * other has ended.
+ * The engagement currently in progress. RSTACK is the live contract as of 2026.
  */
 export function getCurrentRoles(): ExperienceRole[] {
   const live = experience.filter((r) => r.end === null);
@@ -253,7 +230,7 @@ export const stackEvolution: StackTrack[] = [
   { id: 'ionic', label: 'Ionic / Capacitor', enteredAt: '2022', source: 'itgalax', active: true },
   { id: 'sails', label: 'Sails.js', enteredAt: '2022', source: 'itgalax', active: false },
   { id: 'tailwind', label: 'Tailwind CSS', enteredAt: '2022', source: 'itgalax', active: true },
-  { id: 'signals', label: 'Angular Signals', enteredAt: '2026', source: 'zellavora', active: true },
+  { id: 'signals', label: 'Angular Signals', enteredAt: '2026', source: 'toolkit', active: true },
   { id: 'react', label: 'React / Next.js', enteredAt: '2026', source: 'toolkit', active: true },
   { id: 'aiml', label: 'AI/ML integration', enteredAt: '2026', source: 'rstack', active: true },
 ];
@@ -265,7 +242,6 @@ export const stackSourceLabel: Record<string, string> = {
   foundation: 'B.Sc IT',
   toolkit: 'Working stack',
   itgalax: 'ITGalax',
-  zellavora: 'Zellavora',
   rstack: 'RSTACK',
 };
 
@@ -342,8 +318,8 @@ export const careerMilestones: CareerMilestone[] = [
   {
     id: 'consulting',
     year: '2026',
-    event: 'Independent consulting and applied AI/ML',
-    why: 'Applied AI/ML study at IIT Patna alongside Angular consulting — the toolkit widened from interfaces to intelligent product surfaces.',
+    event: 'Frontend Developer Consultant at RSTACK',
+    why: 'Contract role designing the frontend for a web-based analytics application — REST APIs wired to AI/ML models for predictions and decision-making.',
   },
 ];
 
