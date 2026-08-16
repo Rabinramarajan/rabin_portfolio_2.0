@@ -198,6 +198,21 @@ export interface SkillGroup {
   note?: string;
 }
 
+/** One trait under the skills hero copy. */
+export interface SkillTrait {
+  id: "solver" | "learning" | "team";
+  title: string;
+  body: string;
+}
+
+/** Visual category card on the skills page. */
+export interface SkillShowcase {
+  id: string;
+  label: string;
+  description: string;
+  tools: ToolRef[];
+}
+
 export type ProcessVisualId =
   | "discover"
   | "define"
