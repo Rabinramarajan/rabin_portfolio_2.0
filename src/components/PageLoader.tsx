@@ -1,17 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { duration, ease } from "@/lib/motion";
 
 const noopSubscribe = () => () => {};
-
-const R1_STEM = "M10 6 V38";
-const R1_BOWL = "M10 6 H26 L32 12 V20 L26 26 H10";
-const R1_LEG = "M10 26 L30 42";
-const R2_STEM = "M34 6 V38";
-const R2_BOWL = "M34 6 H50 L56 12 V20 L50 26 H34";
-const R2_LEG = "M34 26 L54 42";
 
 export function PageLoader() {
   const reduce = useReducedMotion();
@@ -58,12 +52,6 @@ export function PageLoader() {
     };
   }, [reduce, visible]);
 
-  const pathProps = {
-    fill: "none",
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
   return (
     <AnimatePresence>
       {visible ? (
@@ -74,66 +62,22 @@ export function PageLoader() {
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : duration.interaction, ease }}
         >
-          <div className="loader__mark">
-            <svg viewBox="0 0 64 48" fill="none" aria-hidden>
-              {/* R1 — warm white */}
-              <motion.path
-                d={R1_STEM}
-                stroke="#f2f1ec"
-                strokeWidth="4.4"
-                {...pathProps}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: phase >= 1 ? 1 : 0, opacity: phase >= 1 ? 1 : 0 }}
-                transition={{ duration: duration.section, ease }}
-              />
-              <motion.path
-                d={R1_BOWL}
-                stroke="#f2f1ec"
-                strokeWidth="4.4"
-                {...pathProps}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: phase >= 1 ? 1 : 0, opacity: phase >= 1 ? 1 : 0 }}
-                transition={{ duration: duration.section, ease, delay: 0.06 }}
-              />
-              <motion.path
-                d={R1_LEG}
-                stroke="#f2f1ec"
-                strokeWidth="4.4"
-                {...pathProps}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: phase >= 1 ? 1 : 0, opacity: phase >= 1 ? 1 : 0 }}
-                transition={{ duration: duration.section, ease, delay: 0.12 }}
-              />
-              {/* R2 — lime */}
-              <motion.path
-                d={R2_STEM}
-                stroke="#c9f24d"
-                strokeWidth="4.4"
-                {...pathProps}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: phase >= 2 ? 1 : 0, opacity: phase >= 2 ? 1 : 0 }}
-                transition={{ duration: duration.section, ease }}
-              />
-              <motion.path
-                d={R2_BOWL}
-                stroke="#c9f24d"
-                strokeWidth="4.4"
-                {...pathProps}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: phase >= 2 ? 1 : 0, opacity: phase >= 2 ? 1 : 0 }}
-                transition={{ duration: duration.section, ease, delay: 0.06 }}
-              />
-              <motion.path
-                d={R2_LEG}
-                stroke="#c9f24d"
-                strokeWidth="4.4"
-                {...pathProps}
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: phase >= 2 ? 1 : 0, opacity: phase >= 2 ? 1 : 0 }}
-                transition={{ duration: duration.section, ease, delay: 0.12 }}
-              />
-            </svg>
-          </div>
+          {/* Badge settles in (phase 1), then its lime halo blooms (phase 2). */}
+          <motion.div
+            className="loader__mark"
+            initial={{ opacity: 0, scale: 0.86 }}
+            animate={{ opacity: phase >= 1 ? 1 : 0, scale: phase >= 1 ? 1 : 0.86 }}
+            transition={{ duration: duration.section, ease }}
+          >
+            <motion.span
+              className="loader__halo"
+              aria-hidden
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: phase >= 2 ? 1 : 0, scale: phase >= 2 ? 1.06 : 0.9 }}
+              transition={{ duration: duration.section, ease }}
+            />
+            <Image src="/logo-mark.png" alt="" aria-hidden width={128} height={128} priority />
+          </motion.div>
 
           <motion.p
             className="loader__name"

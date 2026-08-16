@@ -30,7 +30,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", fontSize: 26, color: "#f97316", letterSpacing: 2 }}>
+        <div style={{ display: "flex", fontSize: 26, color: "#c9f24d", letterSpacing: 2 }}>
           {(project?.category ?? "Case study").toUpperCase()}
         </div>
 

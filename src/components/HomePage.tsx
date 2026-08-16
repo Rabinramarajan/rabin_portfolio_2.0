@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
 import { AboutSection } from "@/components/about/AboutSection";
 import {
@@ -9,41 +8,20 @@ import { WorkHero, WorkGrid } from "@/components/pages/WorkShowcase";
 import { FaqSection } from "@/components/FaqSection";
 
 /*
- * Below-the-fold sections are code-split so their JS (framer-motion driven
- * animations, pricing/contact widgets) isn't parsed/executed as part of the
- * critical initial bundle. `ssr: true` keeps the HTML present for SEO/no-JS;
- * only the client hydration chunk is deferred.
+ * These sections are imported statically on purpose.
+ *
+ * They used to be `next/dynamic` with small `loading` spacers. Each of those
+ * created a streaming Suspense hole, so the shell — Navbar, empty <main>,
+ * Footer — flushed first with the footer sitting ~270px down the viewport,
+ * and the real sections then shoved it off-screen. That measured as a ~0.70
+ * layout shift on roughly one load in three. The sections are all rendered on
+ * every visit anyway, so deferring their chunks bought little and cost CLS.
  */
-const JourneySection = dynamic(
-  () => import("@/components/JourneySection").then((m) => m.JourneySection),
-  {
-    loading: () => <div style={{ minHeight: "600px" }} aria-hidden />,
-  },
-);
-const SkillsSection = dynamic(
-  () => import("@/components/SkillsSection").then((m) => m.SkillsSection),
-  {
-    loading: () => <div style={{ minHeight: "400px" }} aria-hidden />,
-  },
-);
-const ProcessSection = dynamic(
-  () => import("@/components/ProcessSection").then((m) => m.ProcessSection),
-  {
-    loading: () => <div style={{ minHeight: "400px" }} aria-hidden />,
-  },
-);
-const PricingSection = dynamic(
-  () => import("@/components/PricingSection").then((m) => m.PricingSection),
-  {
-    loading: () => <div style={{ minHeight: "400px" }} aria-hidden />,
-  },
-);
-const ContactSection = dynamic(
-  () => import("@/components/ContactSection").then((m) => m.ContactSection),
-  {
-    loading: () => <div style={{ minHeight: "300px" }} aria-hidden />,
-  },
-);
+import { JourneySection } from "@/components/JourneySection";
+import { SkillsSection } from "@/components/SkillsSection";
+import { ProcessSection } from "@/components/ProcessSection";
+import { PricingSection } from "@/components/PricingSection";
+import { ContactSection } from "@/components/ContactSection";
 
 export function HomePage() {
   return (
