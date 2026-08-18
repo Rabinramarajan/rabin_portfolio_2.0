@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async redirects() {
+    return [
+      // Old indexed URL — content now lives at /work.
+      { source: "/projects", destination: "/work", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
