@@ -3,7 +3,7 @@ import { services } from "@/content/services";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Contact",
+  title: "Contact Us",
   description:
     "Contact Rabin R for Angular development, frontend engineering, consulting, performance optimization and product work. Replies usually within one business day.",
   path: "/contact",
