@@ -70,20 +70,28 @@ export function JourneySection() {
 
         <JourneySummary />
 
-        <motion.p
-          className="jsec__more"
-          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 12 }}
+        <motion.div
+          className="jsec__quote"
+          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: reduce ? duration.micro : duration.ui, ease }}
         >
-          <Link href="/experience" className="jsec__link">
-            The full timeline
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-              <path d="M2 8h11M9 4l4 4-4 4" />
+          <p className="jsec__quote-text">
+            <span className="jsec__quote-mark" aria-hidden>
+              &ldquo;
+            </span>
+            Every project is a new challenge. Every challenge is an opportunity to grow.
+            <span className="jsec__quote-accent"> And I&rsquo;m just getting started.</span>
+          </p>
+
+          <Link href="/contact" className="jsec__cta">
+            Let&rsquo;s Build Something Great
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <path d="M4 12 12 4M6 4h6v6" />
             </svg>
           </Link>
-        </motion.p>
+        </motion.div>
       </div>
     </section>
   );

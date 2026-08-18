@@ -6018,39 +6018,76 @@ a.contact-method:hover {
 .jsec .ctl {
   margin-top: clamp(1.25rem, 2.5vw, 2rem);
 }
-.jsec__more {
+/* ---------- the closing quote / CTA card ---------- */
+.jsec__quote {
   margin-top: clamp(1.5rem, 3vw, 2.25rem);
   display: flex;
-  justify-content: center;
-}
-.jsec__link {
-  display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
-  border: 1px solid var(--color-line-strong);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.5rem, 3.5vw, 2.25rem);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: rgb(255 255 255 / 2.5%);
+}
+.jsec__quote-text {
+  position: relative;
+  max-width: 46rem;
+  padding-left: 1.75rem;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--color-text);
-  text-decoration: none;
-  transition:
-    border-color var(--duration-ui) var(--ease-out-quart),
-    color var(--duration-ui) var(--ease-out-quart);
 }
-.jsec__link svg {
-  width: 15px;
-  height: 15px;
-  transition: transform var(--duration-ui) var(--ease-out-quart);
+.jsec__quote-mark {
+  position: absolute;
+  top: -0.5rem;
+  left: -0.15rem;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--color-accent);
+  opacity: 0.6;
 }
-.jsec__link:hover {
-  border-color: var(--color-accent);
+.jsec__quote-accent {
   color: var(--color-accent);
 }
-.jsec__link:hover svg {
-  transform: translateX(3px);
+.jsec__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex: none;
+  padding: 0.75rem 1.35rem;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    transform var(--duration-interaction) var(--ease-out-quart),
+    box-shadow var(--duration-ui) var(--ease-out-quart);
+}
+.jsec__cta svg {
+  width: 15px;
+  height: 15px;
+}
+.jsec__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -14px rgb(201 242 77 / 55%);
+}
+@media (max-width: 640px) {
+  .jsec__quote {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .jsec__cta {
+    align-self: stretch;
+    justify-content: center;
+  }
 }
 
 /* ============================================================
