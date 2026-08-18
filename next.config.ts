@@ -8,8 +8,10 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // Old indexed URL — content now lives at /work.
+      // Old indexed URLs — content now lives at /work.
       { source: "/projects", destination: "/work", permanent: true },
+      { source: "/case-studies", destination: "/work", permanent: true },
+      { source: "/case-studies/:slug", destination: "/work/:slug", permanent: true },
     ];
   },
   async headers() {
