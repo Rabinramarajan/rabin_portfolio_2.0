@@ -30,13 +30,13 @@ export const profile: Profile = {
 };
 
 export const navigation: NavItem[] = [
-  { href: "/#about", label: "About", sectionId: "about" },
+  { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
   { href: "/#skills", label: "Skills", sectionId: "skills" },
   { href: "/#process", label: "Process", sectionId: "process" },
-  { href: "/#contact", label: "Contact", sectionId: "contact" },
+  { href: "/contact", label: "Contact" },
 ];
 
 /**
