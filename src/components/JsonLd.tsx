@@ -14,6 +14,8 @@ const PERSON_ID = SITE_URL + "/#person";
 const SITE_ID = SITE_URL + "/#website";
 const SERVICE_ID = SITE_URL + "/#service";
 
+export { PERSON_ID };
+
 /** Everything Rabin is shown to work with, deduped across the skill matrix. */
 const knowsAbout = Array.from(
   new Set([
@@ -130,6 +132,32 @@ export function BreadcrumbJsonLd({ trail }: { trail: { name: string; path: strin
       name: crumb.name,
       item: absoluteUrl(crumb.path),
     })),
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
+}
+
+/** Scoped Service schema for a dedicated `/services/*` landing page. */
+export function ServiceJsonLd({
+  name,
+  description,
+  path,
+  areaServed = ["India", "Worldwide"],
+}: {
+  name: string;
+  description: string;
+  path: string;
+  areaServed?: string[];
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": absoluteUrl(path) + "#service",
+    name,
+    description,
+    url: absoluteUrl(path),
+    provider: { "@id": PERSON_ID },
+    areaServed,
+    inLanguage: "en",
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
 }
