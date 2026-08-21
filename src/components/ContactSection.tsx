@@ -57,7 +57,7 @@ type QuickContact = z.infer<typeof quickContactSchema>;
  */
 function DotGlobe() {
   const dots = useMemo(() => {
-    const out: { x: number; y: number; r: number; o: number }[] = [];
+    const out: { x: string; y: string; r: string; o: string }[] = [];
     const radius = 150;
     const rings = 22;
     for (let i = 1; i < rings; i++) {
@@ -71,10 +71,10 @@ function DotGlobe() {
         // Fade the far hemisphere so the sphere reads as volume, not a flat disc.
         const depth = (z + radius) / (2 * radius);
         out.push({
-          x: 230 + Math.cos(theta) * ringRadius,
-          y: 210 + y * 0.94,
-          r: 0.6 + depth * 1.05,
-          o: 0.1 + depth * 0.5,
+          x: (230 + Math.cos(theta) * ringRadius).toFixed(2),
+          y: (210 + y * 0.94).toFixed(2),
+          r: (0.6 + depth * 1.05).toFixed(2),
+          o: (0.1 + depth * 0.5).toFixed(2),
         });
       }
     }
