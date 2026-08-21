@@ -22,7 +22,7 @@ import { profile } from "@/content/profile";
 import { SectionKicker } from "@/components/ui";
 import { ImageReveal, TextReveal } from "@/components/motion";
 import { SmartImage } from "@/components/SmartImage";
-import { TechIcon } from "@/components/about/TechIcon";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { DottedWave, PortraitOrbits } from "@/components/about/AboutDecor";
 import type { MetricIcon } from "@/content/types";
 import { duration, ease } from "@/lib/motion";
@@ -196,7 +196,7 @@ function Panels() {
         <ul className="about-tools">
           {about.tools.map((tool) => (
             <li className="about-tools__tile" key={tool.id} title={tool.label}>
-              <TechIcon id={tool.id} label={tool.label} />
+              <StackTechIcon id={tool.id} label={tool.label} />
             </li>
           ))}
           <li className="about-tools__tile about-tools__tile--more" aria-hidden>

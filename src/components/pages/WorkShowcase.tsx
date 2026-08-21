@@ -6,7 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { projects } from "@/content/projects";
 import { profile } from "@/content/profile";
 import type { Project, ProjectFilter } from "@/content/types";
-import { TechIcon } from "@/components/about/TechIcon";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { SmartImage } from "@/components/SmartImage";
 import { SectionKicker } from "@/components/ui";
 import { cn } from "@/lib/cn";
@@ -27,7 +27,7 @@ const STAT_GLYPH: Record<string, string> = {
   badge: "M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM8.3 12.1l2.6 2.6 4.8-4.8",
 };
 
-/** Technology label → Simple Icons id in `TechIcon`; unmapped names fall back to initials. */
+/** Technology label → StackTechIcon id; unmapped names fall back to initials. */
 const TECH_ICON: Record<string, string> = {
   Angular: "angular",
   "Angular Material": "angular",
@@ -215,7 +215,7 @@ function TechStrip({ technologies, max }: { technologies: string[]; max: number 
     <ul className="wx-tech" aria-label="Technologies used">
       {shown.map((t) => (
         <li className="wx-tech__chip" key={t} title={t}>
-          <TechIcon id={TECH_ICON[t] ?? t} label={t} className="wx-tech__icon" />
+          <StackTechIcon id={TECH_ICON[t] ?? t} label={t} className="wx-tech__icon" />
         </li>
       ))}
       {rest > 0 ? (

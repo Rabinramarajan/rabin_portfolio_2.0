@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { services } from "@/content/services";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
-import { TechIcon } from "@/components/about/TechIcon";
+import { StackTechIcon } from "@/components/StackTechIcon";
 import { SectionKicker } from "@/components/ui";
 import { ease, duration } from "@/lib/motion";
 import { ArrowLink } from "./ArrowLink";
@@ -174,7 +174,7 @@ export function ServicesGrid({ id }: { id?: string } = {}) {
           <ul className="sx-tech__list">
             {TECH.map((t) => (
               <li className="sx-tech__item" key={t.id}>
-                <TechIcon id={t.id} label={t.label} className="sx-tech__icon" />
+                <StackTechIcon id={t.id} label={t.label} className="sx-tech__icon" />
                 <span>{t.label}</span>
               </li>
             ))}

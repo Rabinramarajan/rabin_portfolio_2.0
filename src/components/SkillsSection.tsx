@@ -6,7 +6,6 @@ import { motion, useReducedMotion } from "motion/react";
 import { Code2, Database, Infinity as InfinityIcon, PenTool, Rocket, Server, Users, Wrench } from "lucide-react";
 import { everydayTech, skillHero, skillShowcase, skillTraits } from "@/content/skills";
 import { profile } from "@/content/profile";
-import { TechIcon } from "@/components/about/TechIcon";
 import { StackTechIcon } from "@/components/StackTechIcon";
 import { SmartImage } from "@/components/SmartImage";
 import { duration, ease, stagger } from "@/lib/motion";
@@ -181,7 +180,7 @@ function SkillCard({ group, reduce }: { group: SkillShowcase; reduce: boolean })
       <ul className="sk2-card__tools">
         {group.tools.map((tool) => (
           <li key={`${group.id}-${tool.id}-${tool.label}`} title={tool.label}>
-            <TechIcon id={tool.id} label={tool.label} />
+            <StackTechIcon id={tool.id} label={tool.label} />
           </li>
         ))}
       </ul>

@@ -6,7 +6,7 @@ export interface NavItem { href: string; label: string; sectionId?: string; }
 export type MetricIcon = "projects" | "clients" | "experience" | "commitment";
 export interface Metric { value: string; label: string; icon?: MetricIcon; }
 
-/** A technology shown as a brand tile. `id` selects the mark in TechIcons. */
+/** A technology shown as a brand tile. `id` selects the mark in StackTechIcon. */
 export interface ToolRef { id: string; label: string; }
 export interface Cta { label: string; href: string; }
 export interface MediaRef { src: string; alt: string; width?: number; height?: number; }
