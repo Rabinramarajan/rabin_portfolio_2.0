@@ -90,5 +90,7 @@ export async function POST(req: NextRequest) {
 
 /** Minimal server-log analytics — swap for a real sink (Vercel Analytics, etc.) if usage grows. */
 function logAssistantEvent(kind: 'choice' | 'question', value: string) {
-  console.log(`[assistant] ${kind}: ${value.slice(0, 120)}`);
+  if (process.env.DEBUG_ASSISTANT === 'true') {
+    console.log(`[assistant] ${kind}: ${value.slice(0, 120)}`);
+  }
 }
