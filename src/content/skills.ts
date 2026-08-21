@@ -25,7 +25,7 @@ export const skillHero = {
   headline: ["The Right Skills.", "Real Impact."] as const,
   lede: "A blend of modern technologies and proven practices — chosen to ship products that stay fast, accessible, and maintainable.",
   visual: {
-    src: "/media/skills/1.png",
+    src: "/media/skills/1.webp",
     alt: "Skill map — frontend, backend, database, DevOps, tools, and design orbiting a neural core",
     width: 570,
     height: 296,

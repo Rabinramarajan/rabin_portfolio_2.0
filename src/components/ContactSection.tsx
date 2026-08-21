@@ -85,7 +85,7 @@ function DotGlobe() {
     <svg className="cx__globe" viewBox="0 0 520 420" aria-hidden focusable="false">
       <g className="cx__globe-dots">
         {dots.map((d, i) => (
-          <circle key={i} cx={d.x} cy={d.y} r={d.r} opacity={d.o} />
+          <circle key={i} cx={d.x.toFixed(8)} cy={d.y.toFixed(8)} r={d.r.toFixed(8)} opacity={d.o.toFixed(8)} />
         ))}
       </g>
       <path className="cx__trail" d="M120 330 C 190 330, 300 296, 352 190 C 376 142, 404 116, 440 106" />
