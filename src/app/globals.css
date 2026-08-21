@@ -8754,3 +8754,200 @@ a.contact-method:hover {
     transform: none;
   }
 }
+
+/* ============================================================
+   INTERACTIVE MAP — Contact Section
+   Real geographical map showing location with Leaflet + OpenStreetMap
+   ============================================================ */
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  background: var(--color-bg-elevated);
+}
+
+.interactive-map {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: var(--radius-lg);
+  z-index: 10;
+}
+
+/* Leaflet default overrides for dark theme */
+.leaflet-container {
+  background: var(--color-bg-elevated) !important;
+  font-family: var(--font-sans);
+}
+
+.leaflet-control-attribution {
+  background: transparent !important;
+  color: var(--color-text-faint) !important;
+  font-size: 0.65rem;
+  text-shadow: none;
+}
+
+.leaflet-control-attribution a {
+  color: var(--color-accent) !important;
+}
+
+.leaflet-marker-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-line);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.map-popup {
+  padding: 0.5rem 0;
+}
+
+.map-popup-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.2rem 0;
+  letter-spacing: -0.02em;
+}
+
+.map-popup-role {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.4rem 0;
+}
+
+.map-popup-details {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.map-popup-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  background: rgb(201 242 77 / 12%);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Contact info overlay */
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(10, 10, 12, 0.95), rgba(10, 10, 12, 0.85));
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--color-line);
+  padding: 1.2rem;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.map-overlay-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  max-width: 100%;
+  pointer-events: auto;
+}
+
+.map-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--duration-ui) var(--ease-out-expo);
+}
+
+.map-contact-item:hover {
+  background: rgba(201, 242, 77, 0.08);
+  border-color: rgba(201, 242, 77, 0.2);
+}
+
+.map-contact-item svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--color-accent);
+  margin-top: 0.15rem;
+}
+
+.map-contact-label {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+
+.map-contact-value {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.map-link {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: opacity var(--duration-ui) var(--ease-out-expo);
+}
+
+.map-link:hover {
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .map-wrapper {
+    height: 280px;
+  }
+
+  .map-overlay {
+    padding: 0.8rem;
+  }
+
+  .map-overlay-content {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .map-contact-item {
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .map-contact-item svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .map-contact-label {
+    font-size: 0.6rem;
+  }
+
+  .map-contact-value {
+    font-size: 0.75rem;
+  }
+}

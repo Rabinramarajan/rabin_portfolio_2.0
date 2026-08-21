@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,6 +23,7 @@ import { profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Monogram } from "@/components/Logo";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
+import { InteractiveMap } from "@/components/InteractiveMap";
 
 const SOCIAL_ICONS = {
   github: GithubIcon,
@@ -50,51 +50,6 @@ const quickContactSchema = z.object({
 });
 
 type QuickContact = z.infer<typeof quickContactSchema>;
-
-/**
- * Decorative dot-globe with the dashed flight path and paper plane behind the
- * left column. Purely ornamental — hidden from assistive tech.
- */
-function DotGlobe() {
-  const dots = useMemo(() => {
-    const out: { x: string; y: string; r: string; o: string }[] = [];
-    const radius = 150;
-    const rings = 22;
-    for (let i = 1; i < rings; i++) {
-      const phi = (i / rings) * Math.PI;
-      const ringRadius = Math.sin(phi) * radius;
-      const y = -Math.cos(phi) * radius;
-      const count = Math.max(6, Math.round(Math.sin(phi) * 34));
-      for (let j = 0; j < count; j++) {
-        const theta = (j / count) * Math.PI * 2;
-        const z = Math.sin(theta) * ringRadius;
-        // Fade the far hemisphere so the sphere reads as volume, not a flat disc.
-        const depth = (z + radius) / (2 * radius);
-        out.push({
-          x: (230 + Math.cos(theta) * ringRadius).toFixed(2),
-          y: (210 + y * 0.94).toFixed(2),
-          r: (0.6 + depth * 1.05).toFixed(2),
-          o: (0.1 + depth * 0.5).toFixed(2),
-        });
-      }
-    }
-    return out;
-  }, []);
-
-  return (
-    <svg className="cx__globe" viewBox="0 0 520 420" aria-hidden focusable="false">
-      <g className="cx__globe-dots">
-        {dots.map((d, i) => (
-          <circle key={i} cx={d.x} cy={d.y} r={d.r} opacity={d.o} />
-        ))}
-      </g>
-      <path className="cx__trail" d="M120 330 C 190 330, 300 296, 352 190 C 376 142, 404 116, 440 106" />
-      <g className="cx__plane" transform="translate(430 78)">
-        <path d="M2 26 L48 2 L28 50 L21 30 Z" />
-      </g>
-    </svg>
-  );
-}
 
 export function ContactSection() {
   const reduce = useReducedMotion();
@@ -177,9 +132,9 @@ export function ContactSection() {
   return (
     <section id="contact" className="section cx">
       <div className="shell cx__grid">
-        {/* ---------- Left: pitch + contact details ---------- */}
+        {/* ---------- Left: interactive map + contact details ---------- */}
         <motion.div className="cx__intro" {...view(0)}>
-          <DotGlobe />
+          <InteractiveMap />
 
           <p className="cx__eyebrow">
             <span className="cx__eyebrow-dot" aria-hidden />
