@@ -34,12 +34,24 @@ export function Btn({
 /** "h1" when the section is the whole route; "h2" inside the homepage stack. */
 export type SectionHeadingLevel = "h1" | "h2";
 
-export function SectionKicker({ index, label }: { index: string; label: string }) {
+/**
+ * The single section eyebrow used across every section and page hero:
+ * an accent `// NN` index followed by a muted label. Sections pass their own
+ * layout class through `className`; the typography always comes from here.
+ */
+export function SectionKicker({
+  index,
+  label,
+  className,
+}: {
+  index: string;
+  label: string;
+  className?: string;
+}) {
   return (
-    <p className="sec-kicker">
-      <span>{index}</span>
-      <span className="kicker-slash">/</span>
-      <span>{label}</span>
+    <p className={cn("sec-kicker", className)}>
+      <span className="sec-kicker__index">{`// ${index}`}</span>
+      <span className="sec-kicker__label">{label}</span>
     </p>
   );
 }

@@ -39,7 +39,7 @@ import {
 import { StackTechIcon } from "@/components/StackTechIcon";
 import { Monogram } from "@/components/Logo";
 import { duration, ease, stagger } from "@/lib/motion";
-import type { SectionHeadingLevel } from "@/components/ui";
+import { SectionKicker, type SectionHeadingLevel } from "@/components/ui";
 import type { SkillTimelineNode } from "@/content/skills";
 
 type Glyph = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
@@ -107,16 +107,7 @@ export function SkillsSection({
     <section id="skills" className="section skx">
       <div className="shell">
         <header className="skx__top">
-          <p className="skx__eyebrow">
-            <span className="skx__eyebrow-index">{index}</span>
-            <span className="skx__eyebrow-label">{skillHero.kicker}</span>
-            <span className="skx__eyebrow-rule" aria-hidden />
-            <span className="skx__eyebrow-dots" aria-hidden>
-              <i />
-              <i />
-              <i />
-            </span>
-          </p>
+          <SectionKicker index={index} label={skillHero.kicker} />
         </header>
 
         <div className="skx__main">

@@ -10,6 +10,7 @@ import { Monogram } from "@/components/Logo";
 import { SmartImage } from "@/components/SmartImage";
 import { cn } from "@/lib/cn";
 import { duration, ease } from "@/lib/motion";
+import { SectionKicker } from "@/components/ui";
 
 const FILTER_LABEL: Record<ProjectFilter, string> = {
   web: "Web Applications",
@@ -87,12 +88,7 @@ export function WorkSection({
     <section id={id} className={cn("wx", isPageHero && "wx--page")}>
       <div className="shell">
         <div className="wx__top">
-          <p className="wx__kicker">
-            <span className="wx__kicker-index">{index}</span>
-            <span className="wx__kicker-slash">/</span>
-            <span className="wx__kicker-label">Work</span>
-            <span className="wx__kicker-rule" aria-hidden />
-          </p>
+          <SectionKicker index={index} label="Work" className="wx__kicker" />
           {!isPageHero ? (
             <Link className="wx__all" href="/work">
               <span>View All Projects</span>

@@ -7,6 +7,7 @@ import { profile } from "@/content/profile";
 import { Monogram } from "@/components/Logo";
 import { ServiceIcon, StatIcon } from "@/components/pages/ServiceIcons";
 import { duration, ease } from "@/lib/motion";
+import { SectionKicker } from "@/components/ui";
 
 const STATS = [
   { value: "20+", label: "Happy Clients", icon: "people" },
@@ -48,11 +49,7 @@ export function ServicesSection({
           </div>
 
           <div className="svx__intro">
-            <p className="svx__kicker">
-              <span className="svx__kicker-slash">{"//"}</span>
-              <span>{index}</span>
-              <span className="svx__kicker-label">Our Services</span>
-            </p>
+            <SectionKicker index={index} label="Our Services" />
             <Heading className="svx__title">
               Services That
               <br />

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { TextReveal } from "@/components/motion";
+import { SectionKicker } from "@/components/ui";
 
 export interface PageMetaItem {
   label: string;
@@ -28,13 +29,7 @@ export function PageHero({
       <div className="shell">
         <div className="pf-hero__grid">
           <div className="pf-hero__copy">
-            <p className="pf-kicker">
-              <strong>{index}</strong>
-              <span className="pf-kicker-slash" aria-hidden>
-                /
-              </span>
-              <span>{label}</span>
-            </p>
+            <SectionKicker index={index} label={label} />
             <TextReveal lines={title} as="h1" className="pf-title" delay={0.05} accentIndex={title.length - 1} />
             {lede ? <p className="pf-lede">{lede}</p> : null}
           </div>

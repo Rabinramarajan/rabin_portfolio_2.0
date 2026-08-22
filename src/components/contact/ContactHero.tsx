@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { TextReveal } from "@/components/motion";
 import { SmartImage } from "@/components/SmartImage";
+import { SectionKicker } from "@/components/ui";
 import { ContactReveal } from "@/components/contact/ContactMedia";
 import { contactCopy } from "@/content/contact";
 import { duration, ease } from "@/lib/motion";
@@ -21,13 +22,7 @@ export function ContactHero() {
       </div>
       <div className="shell cp-hero__layout">
         <div className="cp-hero__copy">
-          <p className="pf-kicker">
-            <strong>{hero.index}</strong>
-            <span className="pf-kicker-slash" aria-hidden>
-              /
-            </span>
-            <span>{hero.label}</span>
-          </p>
+          <SectionKicker index={hero.index} label={hero.label} />
           <TextReveal lines={[...hero.title]} as="h1" className="cp-hero__title" delay={0.04} accentIndex={1} />
           <motion.p
             className="cp-hero__lede"

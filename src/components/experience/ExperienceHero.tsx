@@ -6,6 +6,7 @@ import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 import { SmartImage } from "@/components/SmartImage";
 import { TextReveal } from "@/components/motion";
 import { StatPills } from "./StatPills";
+import { SectionKicker } from "@/components/ui";
 
 /**
  * EXPERIENCE HERO.
@@ -29,10 +30,9 @@ export function ExperienceHero() {
     <header className="xhero">
       <div className="shell xhero__grid">
         <div className="xhero__copy">
-          <motion.p className="xhero__kicker" {...rise(0)}>
-            <span className="xhero__kicker-dot" aria-hidden />
-            Experience
-          </motion.p>
+          <motion.div {...rise(0)}>
+            <SectionKicker index="05" label="Experience" />
+          </motion.div>
 
           <TextReveal
             lines={["My Journey.", "Real Impact."]}

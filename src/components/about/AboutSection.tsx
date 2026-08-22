@@ -11,6 +11,7 @@ import { SmartImage } from "@/components/SmartImage";
 import type { MetricIcon } from "@/content/types";
 import { duration, ease } from "@/lib/motion";
 import { useCountUp } from "@/hooks/use-parallel";
+import { SectionKicker } from "@/components/ui";
 
 type Glyph = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 
@@ -64,10 +65,7 @@ export function AboutSection() {
         <div className="abt__band">
           <div className="abt__main">
             <motion.div className="abt__copy" {...rise(0)}>
-              <p className="abt-kicker">
-                <span className="abt-kicker__index">{"// 01"}</span>
-                <span className="abt-kicker__label">About Me</span>
-              </p>
+              <SectionKicker index="01" label="About Me" />
 
               <TextReveal
                 lines={about.headingLines ?? [about.heading]}

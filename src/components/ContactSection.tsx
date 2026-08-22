@@ -29,6 +29,7 @@ import { profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Monogram } from "@/components/Logo";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
+import { SectionKicker } from "@/components/ui";
 
 const quickContactSchema = z.object({
   name: z.string().trim().min(2, "Please enter your name.").max(120, "Name is too long."),
@@ -256,11 +257,7 @@ export function ContactSection() {
       <div className="shell cx__stack">
         <div className="cx__top">
           <motion.div className="cx__intro" {...view(0)}>
-            <p className="cx__kicker">
-              <span>08</span>
-              <span className="cx__kicker-slash">/</span>
-              <span>Contact</span>
-            </p>
+            <SectionKicker index="08" label="Contact" />
 
             <div className="cx__hero">
               <div className="cx__hero-copy">
