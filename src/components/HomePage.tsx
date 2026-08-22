@@ -17,7 +17,6 @@ import { FaqSection } from "@/components/FaqSection";
 import { JourneySection } from "@/components/JourneySection";
 import { SkillsSection } from "@/components/SkillsSection";
 import { ProcessSection } from "@/components/ProcessSection";
-import { PricingSection } from "@/components/PricingSection";
 import { ContactSection } from "@/components/ContactSection";
 
 export function HomePage() {
@@ -30,7 +29,6 @@ export function HomePage() {
       <JourneySection />
       <SkillsSection />
       <ProcessSection />
-      <PricingSection />
       <FaqSection />
       <ContactSection />
     </>
