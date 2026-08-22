@@ -128,6 +128,8 @@ export interface Project {
   filter: ProjectFilter;
   cover: Required<MediaRef>;
   gallery: Required<MediaRef>[];
+  /** Public deployment, when there is one — drives the "Live Preview" action. */
+  liveUrl?: string;
   problem: string;
   solution: string;
   overview: string;
