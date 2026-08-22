@@ -4,7 +4,13 @@ export interface SocialLink { id: "github" | "linkedin" | "email" | "website"; l
 export interface NavItem { href: string; label: string; sectionId?: string; }
 /** Which glyph renders beside a metric. Maps to an icon in the consuming component. */
 export type MetricIcon = "projects" | "clients" | "experience" | "commitment";
-export interface Metric { value: string; label: string; icon?: MetricIcon; }
+export interface Metric {
+  value: string;
+  label: string;
+  icon?: MetricIcon;
+  /** One-line qualifier shown under the label on the About stat cards. */
+  note?: string;
+}
 
 /** A technology shown as a brand tile. `id` selects the mark in StackTechIcon. */
 export interface ToolRef { id: string; label: string; }
@@ -83,6 +89,8 @@ export interface AboutContent {
   tools: ToolRef[];
   /** Values row beneath the intro block. */
   values: { title: string; body: string }[];
+  /** Short first-person statements shown beside the About lead. */
+  highlights: string[];
 }
 
 export type ProjectFilter = "web" | "mobile" | "enterprise";
@@ -336,3 +344,32 @@ export interface SeoContent {
   description: string;
   keywords: string[];
 }
+
+/**
+ * One card in the "Services That Solve. Scale. Succeed." grid.
+ *
+ * Deliberately separate from `Service`: `Service` carries the long-form,
+ * SEO-bearing copy that the /services journey, the JSON-LD graph and the
+ * dedicated /services/* landing pages read (and whose ids those pages pin
+ * against). This is the short marketing card — icon, blurb, three stack chips.
+ */
+export interface ServiceOffering {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  /** Exactly three, to keep every card's chip row one line deep. */
+  stack: [string, string, string];
+  icon: ServiceOfferingIcon;
+  href: string;
+}
+
+export type ServiceOfferingIcon =
+  | "code"
+  | "layers"
+  | "phone"
+  | "cloud"
+  | "pen"
+  | "server"
+  | "shield"
+  | "support";

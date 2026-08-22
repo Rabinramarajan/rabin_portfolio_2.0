@@ -40,12 +40,14 @@ export const about: AboutContent = {
     { year: '2026', title: 'Frontend Developer Consultant', body: 'RSTACK Solutions — interactive frontend for a web-based analytics application, integrating REST APIs with AI/ML models.' },
   ],
   metrics: [
-    { value: '30+', label: 'Projects Completed', icon: 'projects' },
-    { value: '20+', label: 'Happy Clients', icon: 'clients' },
-    { value: '4+', label: 'Years Experience', icon: 'experience' }, // CALCULATED from experience.ts
-    { value: '100%', label: 'Commitment', icon: 'commitment' },
+    { value: '4+', label: 'Years Experience', icon: 'experience', note: 'Building modern web applications' }, // CALCULATED from experience.ts
+    { value: '30+', label: 'Projects Completed', icon: 'projects', note: 'From ideas to successful products' },
+    { value: '100%', label: 'Client Satisfaction', icon: 'commitment', note: 'Committed to quality and excellence' },
+    { value: '20+', label: 'Happy Clients', icon: 'clients', note: 'Startups, agencies and enterprises' },
   ],
-  portrait: { src: '/media/working/about-portrait-900.webp', alt: 'Rabin at his desk, with an editor and an analytics dashboard on the monitors behind him', width: 900, height: 1125 },
+  // Composed treatment: the cut-out portrait ships with its own glow rings,
+  // monogram badge and signature, so the section renders it as a single layer.
+  portrait: { src: '/media/about/about-portrait.webp', alt: 'Rabin R, Frontend Angular Consultant', width: 1100, height: 1202 },
   hero: {
     headline: ['THE ENGINEER', 'BEHIND THE', 'INTERFACE.'],
     statement:
@@ -81,5 +83,10 @@ export const about: AboutContent = {
     { title: 'Continuous Growth', body: 'I learn, adapt and improve every single day.' },
     { title: 'Collaboration', body: 'I believe great products are built together.' },
     { title: 'Ownership', body: 'I take full ownership and deliver with commitment.' },
+  ],
+  highlights: [
+    'Passionate about solving complex problems with simple and elegant solutions.',
+    'Focused on performance, accessibility and pixel-perfect implementation.',
+    'Constantly learning, exploring and turning ideas into real-world products.',
   ],
 };

@@ -1,29 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import type { ComponentType } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import {
-  Code,
-  Layers,
-  Zap,
-  Mail,
-  UsersRound,
-  Trophy,
-  Rocket,
-  UserRound,
-  Sparkles,
-  TrendingUp,
-  Users,
-  ShieldCheck,
-  Quote,
-} from "lucide-react";
+import { ArrowRight, Code2, Download, Lightbulb, Rocket, Star, Trophy, Users, UsersRound } from "lucide-react";
 import { about } from "@/content/about";
 import { profile } from "@/content/profile";
-import { SectionKicker } from "@/components/ui";
-import { ImageReveal, TextReveal } from "@/components/motion";
+import { TextReveal } from "@/components/motion";
 import { SmartImage } from "@/components/SmartImage";
-import { StackTechIcon } from "@/components/StackTechIcon";
-import { DottedWave, PortraitOrbits } from "@/components/about/AboutDecor";
 import type { MetricIcon } from "@/content/types";
 import { duration, ease } from "@/lib/motion";
 import { useCountUp } from "@/hooks/use-parallel";
@@ -31,182 +15,129 @@ import { useCountUp } from "@/hooks/use-parallel";
 type Glyph = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 
 /** Icons are presentation, not content — they live with the view, not the data. */
-const DOING_GLYPHS: Glyph[] = [Code, Layers, Zap];
-const VALUE_GLYPHS: Glyph[] = [UserRound, Sparkles, TrendingUp, Users, ShieldCheck];
+const HIGHLIGHT_GLYPHS: Glyph[] = [Rocket, Code2, Lightbulb];
 const METRIC_GLYPHS: Record<MetricIcon, Glyph> = {
-  projects: Mail,
-  clients: UsersRound,
   experience: Trophy,
-  commitment: Rocket,
+  projects: UsersRound,
+  commitment: Star,
+  clients: Users,
 };
 
-/** A live-status pill — used for both availability and the role badge. */
-function Pill({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <p className={className ? `about-pill ${className}` : "about-pill"}>
-      <span className="about-pill__dot" aria-hidden />
-      {children}
-    </p>
-  );
-}
-
-/** Circular glyph badge shared by the "What I Do", values and CTA rows. */
-function Badge({ icon: Icon, className }: { icon: Glyph; className: string }) {
-  return (
-    <span className={className}>
-      <Icon size={18} strokeWidth={2} />
-    </span>
-  );
-}
+/** The three cards that sit in the middle column of the band. */
+const STAT_COUNT = 3;
 
 /** Stat value that counts up ("30+") once its card enters the viewport. */
 function StatValue({ value }: { value: string }) {
   const { ref, display } = useCountUp(value);
   return (
-    <span ref={ref} className="about-stat__value">
+    <span ref={ref} className="abt-stat__value">
       {display}
     </span>
   );
 }
 
-function PortraitCard() {
+/** Square glyph tile — the accented chip used by highlights and stat cards. */
+function Tile({ icon: Icon, className }: { icon: Glyph; className: string }) {
   return (
-    <div className="about-card">
-      <div className="about-card__figure">
-        <PortraitOrbits />
-
-        <Pill className="about-card__status">
-          Available for
-          <br />
-          new opportunities
-        </Pill>
-
-        <ImageReveal parallax={18}>
-          <SmartImage
-            src={about.portrait.src}
-            alt={about.portrait.alt}
-            width={about.portrait.width}
-            height={about.portrait.height}
-            sizes="(max-width: 959px) 90vw, 34vw"
-          />
-        </ImageReveal>
-
-        <span className="about-card__signature" aria-hidden>
-          {profile.shortName} R
-        </span>
-      </div>
-
-      <div className="about-card__footer">
-        <p className="about-card__years">
-          <span className="about-card__years-value">{profile.yearsExperienceLabel}</span>
-          <span className="about-card__years-label">
-            Years of
-            <br />
-            Experience
-          </span>
-        </p>
-
-        <Pill className="about-card__role">{profile.headlineRole}</Pill>
-      </div>
-    </div>
+    <span className={className} aria-hidden>
+      <Icon size={18} strokeWidth={1.8} />
+    </span>
   );
 }
 
-function Lead() {
-  const [opener, ...rest] = about.paragraphs.slice(0, 2);
+function Kicker() {
+  return (
+    <p className="abt-kicker">
+      <span className="abt-kicker__index">{"// 01"}</span>
+      <span className="abt-kicker__label">About Me</span>
+    </p>
+  );
+}
 
+function Copy() {
   return (
     <>
-      <p className="about__eyebrow">About Me</p>
+      <Kicker />
 
       <TextReveal
         lines={about.headingLines ?? [about.heading]}
-        className="about__heading"
+        className="abt__title"
         as="h2"
-        delay={0.1}
+        delay={0.08}
       />
 
-      <div className="about__prose">
-        {/* The stored opener names Rabin in full; the page has already introduced him. */}
-        <p>
-          I&rsquo;m <strong>{profile.shortName}</strong>
-          {opener.replace(/^I am Rabin R,/, ",")}
-        </p>
-        {rest.map((p) => (
-          <p key={p}>{p}</p>
-        ))}
-      </div>
+      <span className="abt__rule" aria-hidden />
 
-      <ul className="about__stats">
-        {about.metrics.map((metric) => {
-          const Icon = metric.icon ? METRIC_GLYPHS[metric.icon] : null;
-          return (
-            <li className="about-stat" key={metric.label}>
-              {Icon ? <Icon className="about-stat__icon" size={18} strokeWidth={1.7} /> : null}
-              <StatValue value={metric.value} />
-              <span className="about-stat__label">{metric.label}</span>
-            </li>
-          );
-        })}
+      {/* The stored opener names Rabin in full; the page has already introduced him. */}
+      <p className="abt__lead">
+        I&rsquo;m <strong>{profile.name}</strong>
+        {about.paragraphs[0].replace(/^I am Rabin R,/, ",")}
+      </p>
+
+      <ul className="abt-highlights">
+        {about.highlights.map((line, i) => (
+          <li className="abt-highlight" key={line}>
+            <Tile icon={HIGHLIGHT_GLYPHS[i % HIGHLIGHT_GLYPHS.length]} className="abt-highlight__icon" />
+            <p className="abt-highlight__text">{line}</p>
+            <span className="abt-highlight__trail" aria-hidden />
+          </li>
+        ))}
       </ul>
 
-      <blockquote className="about-quote">
-        <DottedWave />
-        <Quote className="about-quote__mark" fill="currentColor" aria-hidden />
-        <p className="about-quote__text">
-          {about.philosophy}
-          {about.philosophyLines?.map((line, i, all) => (
-            <span key={line} className={i === all.length - 1 ? "acc" : undefined}>
-              {i === 0 ? <br /> : null}
-              {line}
-            </span>
-          ))}
-        </p>
-      </blockquote>
+      <div className="abt__actions">
+        <Link href={profile.resumePath} className="abt-btn abt-btn--solid">
+          Download Resume
+          <Download size={17} strokeWidth={2} aria-hidden />
+        </Link>
+        <Link href="/work" className="abt-btn abt-btn--line">
+          View My Work
+          <ArrowRight size={17} strokeWidth={2} aria-hidden className="abt-btn__arrow" />
+        </Link>
+      </div>
     </>
   );
 }
 
-function Panels() {
+function Stats() {
   return (
     <>
-      <div className="about-panel">
-        <p className="about-panel__label">What I Do</p>
-
-        <ul className="about-panel__list">
-          {about.whatIDo.map((item, i) => (
-            <li className="about-doing" key={item.title}>
-              <Badge icon={DOING_GLYPHS[i % DOING_GLYPHS.length]} className="about-doing__icon" />
-              <div>
-                <h3 className="about-doing__title">{item.title}</h3>
-                <p className="about-doing__body">{item.body}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        <p className="about-panel__footer">
-          Let&rsquo;s build something <span className="acc">extraordinary</span> together.
-        </p>
-      </div>
-
-      <div className="about-panel">
-        <p className="about-panel__label">Tools &amp; Technologies</p>
-
-        <ul className="about-tools">
-          {about.tools.map((tool) => (
-            <li className="about-tools__tile" key={tool.id} title={tool.label}>
-              <StackTechIcon id={tool.id} label={tool.label} />
-            </li>
-          ))}
-          <li className="about-tools__tile about-tools__tile--more" aria-hidden>
-            &hellip;
+      {about.metrics.slice(0, STAT_COUNT).map((metric) => {
+        const Icon = metric.icon ? METRIC_GLYPHS[metric.icon] : Star;
+        return (
+          <li className="abt-stat" key={metric.label}>
+            <Tile icon={Icon} className="abt-stat__icon" />
+            <StatValue value={metric.value} />
+            <p className="abt-stat__label">{metric.label}</p>
+            {metric.note ? <p className="abt-stat__note">{metric.note}</p> : null}
           </li>
-        </ul>
-
-        <p className="about-panel__note">and many more&hellip;</p>
-      </div>
+        );
+      })}
     </>
+  );
+}
+
+function Portrait() {
+  return (
+    <div className="abt-figure">
+      <span className="abt-figure__glow" aria-hidden />
+
+      <SmartImage
+        src={about.portrait.src}
+        alt={about.portrait.alt}
+        width={about.portrait.width}
+        height={about.portrait.height}
+        sizes="(max-width: 959px) 88vw, 40vw"
+        className="abt-figure__shot"
+      />
+
+      {/*
+       * The name and role are painted into the artwork, so they are invisible
+       * to screen readers and to search. Repeat them as real text.
+       */}
+      <figcaption className="visually-hidden">
+        {profile.name} — {profile.headlineRole}
+      </figcaption>
+    </div>
   );
 }
 
@@ -214,10 +145,10 @@ export function AboutSection() {
   const reduce = useReducedMotion();
 
   /** Staggered scroll-in; collapses to a plain fade when motion is reduced. */
-  const rise = (delay = 0) => ({
-    initial: reduce ? { opacity: 0 } : { opacity: 0, y: 24 },
+  const rise = (delay = 0, y = 24) => ({
+    initial: reduce ? { opacity: 0 } : { opacity: 0, y },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.2 },
+    viewport: { once: true, amount: 0.15 },
     transition: {
       duration: reduce ? duration.micro : duration.section,
       delay: reduce ? 0 : delay,
@@ -226,41 +157,23 @@ export function AboutSection() {
   });
 
   return (
-    <section id="about" className="section section--viewport">
-      <div className="shell">
-        <SectionKicker index="01" label="About" />
+    <section id="about" className="section abt">
+      <span className="abt__aura" aria-hidden />
 
-        <div className="about">
-          <motion.div className="about__rail" {...rise(0)}>
-            <PortraitCard />
-            <p className="about__spine" aria-hidden>
-              Clean Code &middot; Scalable &middot; Impact
-            </p>
+      <div className="shell">
+        <div className="abt__band">
+          <motion.div className="abt__copy" {...rise(0)}>
+            <Copy />
           </motion.div>
 
-          <motion.article className="about__lead" {...rise(0.08)}>
-            <Lead />
-          </motion.article>
+          <motion.ul className="abt__stats" {...rise(0.1)}>
+            <Stats />
+          </motion.ul>
 
-          <motion.aside className="about__panels" {...rise(0.16)}>
-            <Panels />
-          </motion.aside>
+          <motion.figure className="abt__portrait" {...rise(0.16, 32)}>
+            <Portrait />
+          </motion.figure>
         </div>
-
-        <motion.div className="about__values" {...rise(0.1)}>
-          <SectionKicker index="—" label="The Values I Follow" />
-          <ul className="about-values">
-            {about.values.map((value, i) => (
-              <li className="about-value" key={value.title}>
-                <Badge icon={VALUE_GLYPHS[i % VALUE_GLYPHS.length]} className="about-value__icon" />
-                <div>
-                  <h3 className="about-value__title">{value.title}</h3>
-                  <p className="about-value__body">{value.body}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
       </div>
     </section>
   );
