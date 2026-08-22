@@ -6927,6 +6927,80 @@ a.cx__info-card {
   position: relative;
 }
 
+/* Homepage: one even frame — header, four cards, footer share the viewport. */
+@media (min-width: 1024px) {
+  .wkx--home {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100svh;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 0;
+    overflow: hidden;
+  }
+  .wkx--home > .shell {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100%;
+    min-height: 0;
+    padding-top: var(--header-h);
+    padding-bottom: 0.7rem;
+    box-sizing: border-box;
+  }
+  .wkx--home .wkx__head {
+    margin-bottom: clamp(0.65rem, 1.4vh, 1rem);
+    gap: clamp(1rem, 2vw, 1.75rem);
+  }
+  .wkx--home .wkx__emblem {
+    width: clamp(88px, 8vw, 128px);
+  }
+  .wkx--home .wkx__title {
+    margin-top: 0.45rem;
+    font-size: clamp(1.7rem, 1rem + 2.2vw, 2.85rem);
+  }
+  .wkx--home .wkx__title-rule {
+    margin-top: 0.55rem;
+  }
+  .wkx--home .wkx__lede {
+    margin-top: 0.55rem;
+    font-size: 0.82rem;
+  }
+  .wkx--home .wkx__cards {
+    min-height: 0;
+    align-content: stretch;
+  }
+  .wkx--home .wkx__card {
+    min-height: 0;
+  }
+  .wkx--home .wkx__card-media {
+    aspect-ratio: auto;
+    flex: 1 1 0;
+    min-height: 7.5rem;
+  }
+  .wkx--home .wkx__foot {
+    margin-top: clamp(0.55rem, 1.2vh, 0.85rem);
+  }
+  .wkx--home .wkx__cta,
+  .wkx--home .wkx__flow {
+    padding: clamp(0.7rem, 1.4vh, 1.1rem) clamp(0.85rem, 1.6vw, 1.25rem);
+  }
+  .wkx--home .wkx__cta-icon,
+  .wkx--home .wkx__step-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .wkx--home .wkx__step:not(:last-child)::after {
+    top: 24px;
+    left: calc(50% + 28px);
+    right: calc(-50% + 28px);
+  }
+  .wkx--home .wkx__step:not(:last-child)::before {
+    top: 21px;
+  }
+}
+
 /* ---------- header ---------- */
 .wkx__head {
   display: grid;
@@ -7247,14 +7321,20 @@ a.cx__info-card {
   font-weight: 650;
   letter-spacing: -0.02em;
   line-height: 1.22;
+  min-height: calc(1.22em * 3);
   text-wrap: balance;
 }
 .wkx__card-overview {
+  display: -webkit-box;
   margin-top: 0.55rem;
   font-size: 0.79rem;
-  line-height: 1.6;
+  line-height: 1.55;
+  min-height: calc(1.55em * 2);
+  overflow: hidden;
   color: var(--color-text-muted);
   text-wrap: pretty;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .wkx__chips {

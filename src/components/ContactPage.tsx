@@ -6,7 +6,9 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { AvailabilityPanel } from "@/components/contact/AvailabilityPanel";
 import { ContactChannels } from "@/components/contact/ContactChannels";
 import { ContactCta } from "@/components/contact/ContactCta";
-import { inquiryFromIntent } from "@/content/contact";
+import { ContactProcessBridge } from "@/components/contact/ContactProcessBridge";
+import { ContactLazyVideo, ContactReveal } from "@/components/contact/ContactMedia";
+import { contactCopy, inquiryFromIntent } from "@/content/contact";
 import type { InquiryType } from "@/types/contact";
 
 const ContactWorkflow = dynamic(
@@ -23,16 +25,27 @@ export function ContactPage({ intent }: { intent?: string }) {
         <Breadcrumbs trail={[{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }]} />
       </div>
       <ContactHero />
-      <section id="contact-intro" className="cp-split" aria-labelledby="contact-intro-title">
-        <div className="shell cp-split__grid">
+      <section id="contact-intro" className="cp-talk" aria-labelledby="contact-intro-title">
+        <div className="shell">
           <ContactIntro />
-          <div id="contact-form" className="cp-split__form">
-            <ContactForm key={inquiryType ?? "open"} defaultInquiryType={inquiryType} />
-          </div>
         </div>
       </section>
-      <ContactWorkflow />
+      <section className="cp-compose" aria-labelledby="contact-form-title">
+        <div className="shell cp-compose__grid">
+          <div id="contact-form" className="cp-compose__form">
+            <ContactForm key={inquiryType ?? "open"} defaultInquiryType={inquiryType} />
+          </div>
+          <ContactReveal className="cp-compose__visual" delay={0.08}>
+            <div className="cp-frame cp-frame--flow">
+              <span className="cp-frame__glow cp-frame__glow--quiet" aria-hidden />
+              <ContactLazyVideo src={contactCopy.media.messageFlow.src} />
+            </div>
+          </ContactReveal>
+        </div>
+      </section>
       <AvailabilityPanel />
+      <ContactProcessBridge />
+      <ContactWorkflow />
       <ContactChannels />
       <ContactCta />
     </article>

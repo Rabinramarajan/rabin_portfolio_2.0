@@ -77,7 +77,7 @@ export function WorkSection({
   }, [filter, limit]);
 
   return (
-    <section id={id} className={isPageHero ? "wkx wkx--page" : "wkx"}>
+    <section id={id} className={isPageHero ? "wkx wkx--page" : "wkx wkx--home"}>
       <div className="shell">
         <header className="wkx__head">
           <div className="wkx__emblem" aria-hidden>

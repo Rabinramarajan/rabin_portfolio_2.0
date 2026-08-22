@@ -34,7 +34,7 @@ export function ContactWorkflow() {
   const progress = ((active + 1) / workflow.steps.length) * 100;
 
   return (
-    <section className="cp-flow" aria-labelledby="cp-flow-title">
+    <section id="cp-flow" className="cp-flow" aria-labelledby="cp-flow-title">
       <div className="shell">
         <p className="pf-sec-label">
           <span className="pf-sec-label__index">09</span>

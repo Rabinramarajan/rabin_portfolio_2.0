@@ -11,6 +11,39 @@ export const contactCopy = {
       "Reach out for frontend engineering, Angular development, product work, consulting, collaboration, or selected career conversations. I read every note personally.",
     availability: profile.availability.label,
   },
+  media: {
+    hero: {
+      src: "/media/contact/hero_b.png",
+      alt: "Dark workstation with a system map from frontend through API and data to production, marked available",
+      width: 1672,
+      height: 941,
+    },
+    conversation: {
+      src: "/media/contact/intelligent.png",
+      alt: "Editorial diagram of an idea becoming a product through conversation, frontend, API, database, and deployment",
+      width: 1448,
+      height: 1086,
+      index: "CONNECTION / 02",
+      caption: "IDEA → CONVERSATION",
+    },
+    messageFlow: {
+      src: "/media/contact/Create_a_second_seamless_lo.mp4",
+      width: 1280,
+      height: 720,
+    },
+    availability: {
+      src: "/media/contact/Create_a_minimal_second_loo.mp4",
+      width: 1280,
+      height: 720,
+    },
+    process: {
+      src: "/media/contact/IDEA_\u00A0_\u2193_DISCUSS_\u00A0_\u2193_DEFINE.mp4",
+      width: 1280,
+      height: 720,
+      kicker: "From idea to product",
+      index: "03 / Process →",
+    },
+  },
   intro: {
     title: "A short note is enough to start.",
     body: `I'm ${profile.name}, a ${profile.headlineRole} based in ${profile.locationShort}. Share the problem, the product, or the opportunity — I'll reply with a clear next step.`,
