@@ -324,21 +324,6 @@ export interface Insight {
   note?: string;
 }
 
-/** One chapter in the "pixel to protocol" product-architecture journey (homepage Services section). */
-export type ServiceChapterVisual = "frontend" | "backend" | "fullstack" | "foundation" | "ship";
-
-export interface ServiceChapter {
-  id: string;
-  number: string;
-  label: string;
-  title: string;
-  headline: string;
-  description: string;
-  capabilities: string[];
-  technologies: string[];
-  visual: ServiceChapterVisual;
-}
-
 export interface SeoContent {
   title: string;
   description: string;

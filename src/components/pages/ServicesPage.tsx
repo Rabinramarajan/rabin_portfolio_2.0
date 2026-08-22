@@ -11,7 +11,7 @@ import { PageCta } from "./PageCta";
 import { PageSectionHead } from "./PageSectionHead";
 import { ArrowLink } from "./ArrowLink";
 import { ServiceMediaVisual } from "./ServiceVisual";
-import { ServicesGrid, ServicesHero } from "./ServicesShowcase";
+import { ServicesSection } from "@/components/ServicesSection";
 import { StackTechIcon } from "@/components/StackTechIcon";
 
 const DESKTOP_QUERY = "(min-width: 960px)";
@@ -22,9 +22,7 @@ export function ServicesPage() {
 
   return (
     <>
-      <ServicesHero />
-
-      <ServicesGrid />
+      <ServicesSection id="services" headingLevel="h1" index="01" />
 
       <ServicesJourney reduce={reduce} />
 

@@ -1,300 +1,173 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
-import { serviceChapters } from "@/content/serviceChapters";
-import { SectionKicker } from "@/components/ui";
-import { TextReveal } from "@/components/motion";
+import { motion } from "motion/react";
+import { serviceOfferings } from "@/content/serviceOfferings";
+import { profile } from "@/content/profile";
+import { Monogram } from "@/components/Logo";
+import { ServiceIcon, StatIcon } from "@/components/pages/ServiceIcons";
 import { duration, ease } from "@/lib/motion";
-import type { ServiceChapterVisual } from "@/content/types";
 
-const STAGES = ["PROBLEM", "EXPERIENCE", "APPLICATION", "API", "DATA", "SYSTEM", "PRODUCTION"];
+const STATS = [
+  { value: "20+", label: "Happy Clients", icon: "people" },
+  { value: "50+", label: "Projects Delivered", icon: "rocket" },
+  { value: profile.yearsExperienceLabel, label: "Years Experience", icon: "award" },
+  { value: "100%", label: "Client Satisfaction", icon: "star" },
+] as const;
 
-export function ServicesSection() {
-  const reduce = !!useReducedMotion();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const chapterRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-  const routeProgress = useSpring(scrollYProgress, { stiffness: 60, damping: 22, restDelta: 0.001 });
-  const particleTop = useTransform(routeProgress, (v) => `${v * 100}%`);
-
-  useEffect(() => {
-    const observers = chapterRefs.current.map((el, idx) => {
-      if (!el) return null;
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveIndex(idx);
-        },
-        { threshold: 0.5, rootMargin: "-15% 0px -35% 0px" }
-      );
-      observer.observe(el);
-      return observer;
-    });
-    return () => observers.forEach((o) => o?.disconnect());
-  }, []);
+/**
+ * Services — emblem + statement header, an eight-card offer grid and a stats
+ * bar. Cards are driven by `serviceOfferings`; the long-form `services` data
+ * still backs the /services journey and the JSON-LD graph.
+ *
+ * `headingLevel` drops to h2 when the block sits below another hero (home
+ * page) so the document keeps exactly one h1.
+ */
+export function ServicesSection({
+  id = "services",
+  headingLevel = "h2",
+  index = "03",
+}: {
+  id?: string;
+  headingLevel?: "h1" | "h2";
+  index?: string;
+} = {}) {
+  const Heading = headingLevel;
+  const isPageHero = headingLevel === "h1";
 
   return (
-    <section id="services" className="section svc2" ref={containerRef}>
+    <section id={id} className={isPageHero ? "svx svx--page" : "svx"}>
       <div className="shell">
-        {/* --- opening --- */}
-        <div className="svc2__head">
-          <div>
-            <SectionKicker index="02" label="Services" />
-            <h2 className="sec-title">How I can help.</h2>
-            <p className="sec-lede">
-              From interface to infrastructure — I build digital products from problem to production.
+        <header className="svx__head">
+          <div className="svx__emblem" aria-hidden>
+            <span className="svx__emblem-ring svx__emblem-ring--outer" />
+            <span className="svx__emblem-ring svx__emblem-ring--mid" />
+            <span className="svx__emblem-core">
+              <Monogram className="svx__emblem-mark" />
+            </span>
+          </div>
+
+          <div className="svx__intro">
+            <p className="svx__kicker">
+              <span className="svx__kicker-slash">{"//"}</span>
+              <span>{index}</span>
+              <span className="svx__kicker-label">Our Services</span>
             </p>
-            <p className="svc2__tags mono">FRONTEND · BACKEND · FULL-STACK · ARCHITECTURE</p>
+            <Heading className="svx__title">
+              Services That
+              <br />
+              <span className="svx__title-accent">Solve. Scale.</span> Succeed.
+            </Heading>
+            <span className="svx__title-rule" aria-hidden />
           </div>
-          <div className="svc2__status mono" aria-live="off">
-            <span className="svc2__status-label">Build status</span>
-            <span className="svc2__status-row">
-              <span className="svc2__status-dot" aria-hidden />
-              Available for select projects
-            </span>
+
+          <div className="svx__aside">
+            <span className="svx__aside-rule" aria-hidden />
+            <div>
+              <p className="svx__lede">
+                I help businesses and startups transform ideas into high-performance digital products with modern
+                technologies, clean architecture, and exceptional user experiences.
+              </p>
+              <Link className="svx__cta" href="/#contact">
+                <span>Let&rsquo;s Build Something Great</span>
+                <span className="svx__cta-arrow" aria-hidden>
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10" />
+                  </svg>
+                </span>
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* --- pixel to protocol stages --- */}
-        <div className="svc2__stages mono" aria-hidden>
-          {STAGES.map((stage, i) => (
-            <span key={stage} className={i === 0 || i === STAGES.length - 1 ? "svc2__stage svc2__stage--edge" : "svc2__stage"}>
-              {stage}
-            </span>
-          ))}
-        </div>
-      </div>
+          <div className="svx__art" aria-hidden>
+            <HeaderArt />
+          </div>
+        </header>
 
-      <div className="shell svc2__body">
-        {/* --- sticky chapter nav --- */}
-        <nav className="svc2__nav" aria-label="Services chapters">
-          {serviceChapters.map((chapter, idx) => (
-            <a
-              key={chapter.id}
-              href={`#svc-${chapter.id}`}
-              className={idx === activeIndex ? "svc2__nav-item svc2__nav-item--active" : "svc2__nav-item"}
+        <ul className="svx__cards">
+          {serviceOfferings.map((s, i) => (
+            <motion.li
+              className="svx__card"
+              key={s.id}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: duration.section, delay: (i % 4) * 0.06, ease }}
             >
-              <span className="svc2__nav-num mono">{chapter.number}</span>
-              <span className="svc2__nav-label">{chapter.label}</span>
-            </a>
+              <span className="svx__card-edge" aria-hidden />
+              <span className="svx__card-num">{s.number}</span>
+
+              <div className="svx__card-head">
+                <span className="svx__card-icon" aria-hidden>
+                  <span className="svx__card-icon-ring" />
+                  <ServiceIcon name={s.icon} />
+                </span>
+                <div className="svx__card-copy">
+                  <h3 className="svx__card-title">{s.title}</h3>
+                  <p className="svx__card-body">{s.description}</p>
+                </div>
+              </div>
+
+              <ul className="svx__chips">
+                {s.stack.map((t) => (
+                  <li className="svx__chip" key={t}>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+
+              <Link className="svx__card-link" href={s.href} aria-label={`Explore ${s.title}`}>
+                <span>Explore Service</span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                  <path d="M2 8h11M9 4l4 4-4 4" />
+                </svg>
+              </Link>
+            </motion.li>
           ))}
-        </nav>
+        </ul>
 
-        <div className="svc2__nav-mobile mono" aria-hidden>
-          {String(activeIndex + 1).padStart(2, "0")} / {String(serviceChapters.length).padStart(2, "0")}
-          <span className="svc2__nav-mobile-title">{serviceChapters[activeIndex]?.label}</span>
-        </div>
-
-        {/* --- route rail --- */}
-        <div className="svc2__rail" aria-hidden>
-          <div className="svc2__rail-base" />
-          <motion.div className="svc2__rail-fill" style={{ scaleY: reduce ? 1 : routeProgress }} />
-          {!reduce && <motion.span className="svc2__rail-particle" style={{ top: particleTop }} />}
-        </div>
-
-        {/* --- chapters --- */}
-        <div className="svc2__chapters">
-          {serviceChapters.map((chapter, idx) => (
-            <div key={chapter.id}>
-              <ServiceChapterBlock
-                chapter={chapter}
-                index={idx}
-                reduce={reduce}
-                setRef={(el) => {
-                  chapterRefs.current[idx] = el;
-                }}
-              />
-              {idx === 2 && <SignatureMoment reduce={reduce} />}
+        <dl className="svx__stats">
+          {STATS.map((s) => (
+            // The icon lives inside <dt> — a <dl> group may only contain
+            // dt/dd, so a sibling <span> would be invalid here.
+            <div className="svx__stat" key={s.label}>
+              <dt className="svx__stat-value">
+                <span className="svx__stat-icon" aria-hidden>
+                  <StatIcon name={s.icon} />
+                </span>
+                {s.value}
+              </dt>
+              <dd className="svx__stat-label">{s.label}</dd>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* --- closing transition --- */}
-      <div className="shell">
-        <div className="svc2__close">
-          <TextReveal
-            as="h3"
-            className="svc2__close-title"
-            lines={["One product.", "Every layer connected."]}
-            accentIndex={1}
-          />
-          <p className="svc2__close-flow mono">FRONTEND → API → DATA → PRODUCTION</p>
-          <Link href="#work" className="svc2__close-link">
-            03 / SELECTED WORK
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-              <path d="M2 8h11M9 4l4 4-4 4" />
-            </svg>
-          </Link>
-        </div>
+        </dl>
       </div>
     </section>
   );
 }
 
-function SignatureMoment({ reduce }: { reduce: boolean }) {
+/** Orbiting code-window mark that closes the header row on wide screens. */
+function HeaderArt() {
   return (
-    <div className="svc2__signature">
-      <TextReveal
-        as="h3"
-        className="svc2__signature-title"
-        lines={["I don't just build the interface.", "I build what makes it work."]}
-        accentIndex={1}
-      />
-      <motion.p
-        className="svc2__signature-line mono"
-        initial={reduce ? { opacity: 1 } : { opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.6 }}
-        transition={{ duration: duration.section, delay: 0.3, ease }}
-      >
-        FRONTEND + BACKEND + DATA + ARCHITECTURE
-      </motion.p>
-    </div>
-  );
-}
-
-function ServiceChapterBlock({
-  chapter,
-  index,
-  reduce,
-  setRef,
-}: {
-  chapter: (typeof serviceChapters)[number];
-  index: number;
-  reduce: boolean;
-  setRef: (el: HTMLDivElement | null) => void;
-}) {
-  const view = {
-    initial: reduce ? { opacity: 0 } : { opacity: 0, y: 28 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.3, margin: "0px 0px -10% 0px" },
-    transition: { duration: reduce ? duration.micro : duration.section, ease },
-  };
-
-  const isHero = chapter.visual === "fullstack";
-
-  return (
-    <motion.article
-      id={`svc-${chapter.id}`}
-      ref={setRef}
-      className={isHero ? "svc2__chapter svc2__chapter--hero" : "svc2__chapter"}
-      {...view}
-    >
-      <span className="svc2__chapter-meta mono" aria-hidden>
-        {chapter.visual === "fullstack" ? "SYS_02 · STACK_CONNECTED" : chapter.visual === "backend" ? "NODE_ACTIVE · API_READY" : chapter.visual === "ship" ? "BUILD_2026 · PRODUCTION_READY" : "RUNTIME_OK"}
-      </span>
-
-      <div className="svc2__chapter-grid">
-        <div className="svc2__chapter-copy">
-          <p className="svc2__chapter-label mono">
-            {chapter.number} / {chapter.label}
-          </p>
-          <h3 className="svc2__chapter-title">{chapter.title}</h3>
-          <p className="svc2__chapter-headline">{chapter.headline}</p>
-          <p className="svc2__chapter-desc">{chapter.description}</p>
-
-          <ul className="svc2__chapter-caps">
-            {chapter.capabilities.map((cap) => (
-              <li key={cap}>{cap}</li>
-            ))}
-          </ul>
-
-          <p className="svc2__chapter-tech mono">{chapter.technologies.join(" · ")}</p>
-        </div>
-
-        <div className="svc2__chapter-visual" aria-hidden>
-          <ChapterVisual type={chapter.visual} index={index} reduce={reduce} />
-        </div>
-      </div>
-    </motion.article>
-  );
-}
-
-function ChapterVisual({ type, reduce }: { type: ServiceChapterVisual; index: number; reduce: boolean }) {
-  const reveal = (delay: number) => ({
-    initial: reduce ? { opacity: 1 } : { opacity: 0, y: 10 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.6 },
-    transition: { duration: duration.ui, delay: reduce ? 0 : delay, ease },
-  });
-
-  if (type === "frontend") {
-    return (
-      <div className="svc2__viz svc2__viz--stack">
-        {["LAYOUT", "COMPONENT", "STATE", "INTERACTION"].map((label, i) => (
-          <motion.div key={label} className="svc2__viz-block" {...reveal(i * 0.08)}>
-            {label}
-          </motion.div>
-        ))}
-      </div>
-    );
-  }
-
-  if (type === "backend") {
-    return (
-      <div className="svc2__viz svc2__viz--flow">
-        {["CLIENT", "API", "SERVICE", "DATABASE"].map((label, i) => (
-          <motion.div key={label} className="svc2__viz-node" {...reveal(i * 0.08)}>
-            {label}
-          </motion.div>
-        ))}
-        {!reduce && <span className="svc2__viz-pulse" aria-hidden />}
-      </div>
-    );
-  }
-
-  if (type === "fullstack") {
-    const layers = [
-      { label: "EXPERIENCE", sub: "Angular · React · Next.js" },
-      { label: "APPLICATION", sub: "State · Logic · Services" },
-      { label: "API", sub: "Node · NestJS · REST" },
-      { label: "DATA", sub: "PostgreSQL · Prisma" },
-      { label: "PRODUCTION", sub: "CI/CD · Docker · Cloud" },
-    ];
-    return (
-      <div className="svc2__viz svc2__viz--layers">
-        {layers.map((layer, i) => (
-          <motion.div key={layer.label} className="svc2__viz-layer" {...reveal(i * 0.09)}>
-            <span className="svc2__viz-layer-label mono">{layer.label}</span>
-            <span className="svc2__viz-layer-sub mono">{layer.sub}</span>
-          </motion.div>
-        ))}
-      </div>
-    );
-  }
-
-  if (type === "foundation") {
-    return (
-      <div className="svc2__viz svc2__viz--tokens">
-        {["BUTTON", "INPUT", "CARD", "TABLE", "MODAL"].map((label, i) => (
-          <motion.span key={label} className="svc2__viz-token mono" {...reveal(i * 0.06)}>
-            {label}
-          </motion.span>
-        ))}
-        <motion.span className="svc2__viz-token svc2__viz-token--system mono" {...reveal(0.4)}>
-          DESIGN SYSTEM
-        </motion.span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="svc2__viz svc2__viz--pipeline">
-      {["CODE", "TEST", "BUILD", "DEPLOY", "MONITOR"].map((label, i) => (
-        <motion.div key={label} className="svc2__viz-stage" {...reveal(i * 0.08)}>
-          {label}
-        </motion.div>
-      ))}
-      <motion.p className="svc2__viz-live mono" {...reveal(0.5)}>
-        ● PRODUCTION
-      </motion.p>
-    </div>
+    <svg viewBox="0 0 320 220" fill="none" className="svx__art-svg">
+      <g stroke="currentColor" opacity="0.35">
+        <ellipse cx="160" cy="110" rx="150" ry="62" transform="rotate(-18 160 110)" strokeWidth="1" />
+        <ellipse cx="160" cy="110" rx="128" ry="46" transform="rotate(-18 160 110)" strokeWidth="0.7" opacity="0.6" />
+      </g>
+      <rect x="120" y="42" width="150" height="96" rx="12" stroke="currentColor" strokeWidth="1" opacity="0.45" />
+      <rect x="104" y="60" width="150" height="96" rx="12" stroke="currentColor" strokeWidth="1" opacity="0.7" />
+      <rect x="104" y="60" width="150" height="96" rx="12" fill="currentColor" opacity="0.05" />
+      <g stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.5">
+        <path d="M118 78h16M118 88h28M118 98h20M118 108h24" />
+      </g>
+      <g stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M196 96l-8 8 8 8M218 96l8 8-8 8M210 92l-6 24" />
+      </g>
+      <g fill="currentColor">
+        <circle cx="20" cy="150" r="2.5" />
+        <circle cx="298" cy="66" r="2.5" />
+        <circle cx="286" cy="176" r="2" opacity="0.6" />
+      </g>
+    </svg>
   );
 }
