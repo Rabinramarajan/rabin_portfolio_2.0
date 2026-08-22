@@ -36,7 +36,6 @@ export const experience: ExperienceRole[] = [
     technologies: ['Angular', 'TypeScript', 'RxJS', 'REST APIs', 'AI/ML integration'],
     milestone: 'Applied AI',
     chapter: 'EXTEND',
-    visual: 'ecosystem',
     logo: 'https://www.rstacksolutions.com/favicon.ico?favicon.154iv7xvjl_ae.ico',
   },
   {
@@ -59,24 +58,9 @@ export const experience: ExperienceRole[] = [
     technologies: ['Angular', 'TypeScript', 'RxJS', 'Ionic', 'Capacitor', 'Sails.js', 'Tailwind CSS'],
     milestone: 'Deeper engineering',
     chapter: 'BUILD',
-    visual: 'enterprise',
     logo: 'https://itgalax.com/wp-content/uploads/2019/08/favicon.png',
   },
 ];
-
-/** Narrative marker that opens the career timeline — the foundation before the first role. */
-export const careerLead = {
-  label: 'The beginning',
-  chapter: 'BEGIN' as const,
-  year: '2021',
-  note: 'B.Sc IT — core computer science and web foundations.',
-  visual: 'foundation' as const,
-} as const;
-
-/** Chronological career timeline (source is reverse-chronological). */
-export function getCareerTimeline(): ExperienceRole[] {
-  return [...experience].reverse();
-}
 
 /**
  * The career timeline shown on /experience.
@@ -106,7 +90,6 @@ export const careerHorizon: HorizonChapter[] = [
       "First interfaces built from scratch — markup, styling and the DOM.",
       "The base every professional year after this was built on.",
     ],
-    visual: "foundation",
   },
   {
     id: "build",
@@ -126,7 +109,6 @@ export const careerHorizon: HorizonChapter[] = [
       "Worked inside real release cycles rather than personal projects.",
       "Learned correctness on code other people depended on.",
     ],
-    visual: "interface",
   },
   {
     id: "systems",
@@ -146,7 +128,6 @@ export const careerHorizon: HorizonChapter[] = [
       "Delivered iOS and Android from a single Angular + Ionic codebase.",
       "Built biometric auth and offline behaviour into enterprise apps.",
     ],
-    visual: "enterprise",
   },
   {
     id: "scale",
@@ -166,7 +147,6 @@ export const careerHorizon: HorizonChapter[] = [
       "Cut API consumption by 40% through RxJS stream patterns.",
       "Improved frontend performance by 50%.",
     ],
-    visual: "projects",
   },
   {
     id: "now",
@@ -186,7 +166,6 @@ export const careerHorizon: HorizonChapter[] = [
       "Delivering production-grade work on a structured schedule with milestone-based timesheets and code reviews.",
     ],
     statuses: ["Engineering with intent", "Active system"],
-    visual: "ecosystem",
   },
   {
     id: "next",

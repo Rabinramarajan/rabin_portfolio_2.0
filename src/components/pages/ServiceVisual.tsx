@@ -379,57 +379,6 @@ function DesignSystem({ reduce }: { reduce: boolean }) {
   );
 }
 
-/** Services hero — abstract engineering architecture (client → api → data). */
-export function ServiceHeroVisual({ reduce = false }: { reduce?: boolean }) {
-  const cols = [60, 140, 220];
-  return (
-    <svg className="pv svc-hero__svg" viewBox={`0 0 ${W} ${H}`} role="presentation" focusable="false">
-      <Ground />
-      <g className="pv__dim-stroke" aria-hidden>
-        <path d="M60 44V156M140 44V156M220 44V156" fill="none" />
-      </g>
-      {cols.map((x, i) => (
-        <motion.g
-          key={x}
-          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 14 }}
-          animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
-          transition={{ ...T, delay: 0.1 + i * 0.08 }}
-        >
-          <rect
-            className={i === 1 ? "pv__accent-stroke" : "pv__stroke"}
-            x={x - 34}
-            y={96}
-            width={68}
-            height={48}
-          />
-          <line className={i === 1 ? "pv__accent-stroke" : "pv__dim-stroke"} x1={x - 20} y1={112} x2={x + 20} y2={112} />
-          <line className={i === 1 ? "pv__accent-stroke" : "pv__dim-stroke"} x1={x - 20} y1={128} x2={x + 6} y2={128} />
-        </motion.g>
-      ))}
-      {[26, 106, 186].map((x, i) => (
-        <motion.g
-          key={`top${i}`}
-          initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
-          animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
-          transition={{ ...T, delay: 0.32 + i * 0.07 }}
-        >
-          <circle className={i === 1 ? "pv__accent-fill" : "pv__fill"} cx={x} cy={56} r={4.5} />
-          <line className="pv__dim-stroke" x1={x} y1={61} x2={x} y2={96} />
-        </motion.g>
-      ))}
-      <motion.g
-        className="pv__dim-stroke"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ ...T, delay: 0.5 }}
-      >
-        <line x1={40} y1={176} x2={280} y2={176} />
-        <line x1={40} y1={190} x2={280} y2={190} />
-      </motion.g>
-    </svg>
-  );
-}
-
 const SCENES = {
   frontend: Frontend,
   angular: Angular,

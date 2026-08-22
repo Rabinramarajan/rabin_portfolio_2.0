@@ -42,10 +42,6 @@ export class MemoryEmailProvider implements EmailProvider {
   }
 }
 
-export function isSmtpConfigured(env: NodeJS.Dict<string> = process.env): boolean {
-  return Boolean(env.SMTP_HOST);
-}
-
 export function createEmailProvider(env: NodeJS.Dict<string> = process.env): EmailProvider | null {
   const host = env.SMTP_HOST;
   if (!host) return null;

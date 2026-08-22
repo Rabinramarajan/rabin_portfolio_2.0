@@ -140,9 +140,6 @@ export interface Project {
   seo: { title: string; description: string };
 }
 
-/** Abstract visual identity rendered beside each career stage. */
-export type RoleVisualId = "foundation" | "interface" | "projects" | "enterprise" | "ecosystem";
-
 /** One movement of the career narrative. Labels the stage, never invents it. */
 export type CareerChapter = "BEGIN" | "BUILD" | "DEEPEN" | "CONSULT" | "EXTEND";
 
@@ -162,8 +159,6 @@ export interface ExperienceRole {
   milestone?: string;
   /** Which movement of the story this role belongs to. */
   chapter?: CareerChapter;
-  /** Which abstract scene renders alongside the role. */
-  visual?: RoleVisualId;
   /** Employer logo image URL (favicon or mark), shown in the role header. */
   logo?: string;
 }
@@ -201,8 +196,6 @@ export interface HorizonChapter {
   logo?: string;
   statuses?: string[];
   footer?: string;
-  /** Which abstract scene renders alongside the chapter. */
-  visual?: RoleVisualId;
 }
 
 /**

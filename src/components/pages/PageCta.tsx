@@ -1,7 +1,5 @@
-import type { ReactNode } from "react";
 import { TextReveal } from "@/components/motion";
 import { MagneticButton } from "./MagneticButton";
-
 export interface PageCtaAction {
   label: string;
   href: string;
@@ -35,8 +33,4 @@ export function PageCta({
       </div>
     </section>
   );
-}
-
-export function PageCtaActions({ children }: { children: ReactNode }) {
-  return <div className="pf-cta__actions">{children}</div>;
 }

@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     ".claude/**",
     ".cursor/**",
     ".opencode/**",
+    // Node-only build/media utilities — CommonJS by design.
+    "scripts/**",
   ]),
 ]);
 

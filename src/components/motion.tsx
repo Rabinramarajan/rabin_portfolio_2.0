@@ -1,17 +1,9 @@
 "use client";
 
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "motion/react";
-import { useEffect, useRef, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { duration, ease, stagger } from "@/lib/motion";
 import { cn } from "@/lib/cn";
-import { useMotionTier } from "@/lib/motion-tier";
 
 /* ============================================================
    CENTRAL MOTION SYSTEM
@@ -20,35 +12,6 @@ import { useMotionTier } from "@/lib/motion-tier";
    animates transform / opacity / clip-path.
    ============================================================ */
 
-/* ------------------------------------------------------------------
-   Parallax — scroll-linked vertical drift. speed is the fraction of
-   range (in px) that an element travels; 0.05 bg → 0.30 foreground.
------------------------------------------------------------------- */
-export function Parallax({
-  children,
-  className,
-  speed = 0.15,
-  range = 60,
-  style,
-}: {
-  children: ReactNode;
-  className?: string;
-  speed?: number;
-  range?: number;
-  style?: CSSProperties;
-}) {
-  const reduce = useReducedMotion();
-  const { tier } = useMotionTier();
-  const quiet = reduce || tier === "basic";
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [range * speed, -range * speed]);
-  return (
-    <motion.div ref={ref} className={className} style={{ y, ...style }}>
-      {children}
-    </motion.div>
-  );
-}
 
 /* ------------------------------------------------------------------
    TextReveal — line-by-line masked reveal for display type.
@@ -123,56 +86,6 @@ export function TextReveal({
   );
 }
 
-/* ------------------------------------------------------------------
-   ImageReveal — a masked clip-path reveal with an inner image that
-   drifts on scroll and settles from a subtle scale.
------------------------------------------------------------------- */
-export function ImageReveal({
-  children,
-  className,
-  parallax = 16,
-  delay = 0,
-}: {
-  children: ReactNode;
-  className?: string;
-  parallax?: number;
-  delay?: number;
-}) {
-  const reduce = useReducedMotion();
-  const { tier } = useMotionTier();
-  const quiet = reduce || tier === "basic";
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [-parallax, parallax]);
-
-  const reveal = {
-    duration: reduce ? duration.micro : duration.cinematic,
-    delay: reduce ? 0 : delay,
-    ease,
-  };
-
-  return (
-    <motion.figure
-      ref={ref}
-      className={cn("shot image-reveal", className)}
-      initial={reduce ? false : { clipPath: "inset(12% 4% 12% 4%)" }}
-      whileInView={{ clipPath: "inset(0% 0% 0% 0%)" }}
-      viewport={{ once: true, amount: 0.35, margin: "-8%" }}
-      transition={reveal}
-    >
-      <motion.div
-        className="image-reveal__inner"
-        style={{ y }}
-        initial={reduce ? false : { scale: 1.06 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true, amount: 0.35, margin: "-8%" }}
-        transition={reveal}
-      >
-        {children}
-      </motion.div>
-    </motion.figure>
-  );
-}
 
 /* ------------------------------------------------------------------
    Magnetic — pointer-attracted wrapper for primary CTAs.
@@ -225,48 +138,4 @@ export function Magnetic({
       {children}
     </motion.div>
   );
-}
-
-/* ------------------------------------------------------------------
-   useMouseParallax — springs fed by pointer position over a surface.
-   Returns sx/sy (springs in a -1..1 range) plus pointer handlers.
-   Derive per-layer transforms in the consumer with useTransform.
------------------------------------------------------------------- */
-export function useMouseParallax({ strength = 8 } = {}) {
-  const reduce = useReducedMotion();
-  const { tier } = useMotionTier();
-  const quiet = reduce || tier === "basic";
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 90, damping: 18, mass: 0.6 });
-  const sy = useSpring(my, { stiffness: 90, damping: 18, mass: 0.6 });
-  const active = useRef(false);
-
-  useEffect(() => {
-    if (quiet) return;
-    const mq = window.matchMedia("(pointer: fine)");
-    const sync = () => {
-      active.current = mq.matches;
-    };
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, [quiet]);
-
-  const handlers = quiet
-    ? {}
-    : {
-        onPointerMove: (e: ReactPointerEvent<HTMLElement>) => {
-          if (!active.current) return;
-          const r = e.currentTarget.getBoundingClientRect();
-          mx.set(((e.clientX - r.left) / r.width - 0.5) * 2);
-          my.set(((e.clientY - r.top) / r.height - 0.5) * 2);
-        },
-        onPointerLeave: () => {
-          mx.set(0);
-          my.set(0);
-        },
-      };
-
-  return { sx, sy, handlers, strength };
 }
