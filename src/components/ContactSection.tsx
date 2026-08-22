@@ -226,6 +226,7 @@ export function ContactSection() {
           name: values.name,
           email: values.email,
           company: "",
+          inquiryType: "Other",
           projectType: "Other",
           budget: "Not specified",
           timeline: "Not specified",

@@ -16,5 +16,6 @@ SMTP and GEMINI_API_KEY stay on the server. Never expose them as NEXT_PUBLIC_ va
 
 ```bash
 npm run lint
+npm run test
 npm run build
 ```

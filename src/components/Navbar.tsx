@@ -107,7 +107,7 @@ export function Navbar() {
           </motion.nav>
           <motion.div className="hd__cta" {...fade(0.22)}>
             <Magnetic strength={8}>
-              <Link href="/#contact" className="btn btn--solid" style={{ borderRadius: 0 }}>
+              <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }}>
                 <span className="btn__label">
                   Let&apos;s Work Together
                   <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
@@ -182,7 +182,7 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: reduce ? 0 : 0.55, duration: duration.ui, ease }}
             >
-              <Link href="/#contact" className="btn btn--solid" onClick={() => setOpen(false)}>
+              <Link href="/contact" className="btn btn--solid" onClick={() => setOpen(false)}>
                 <span className="btn__label">
                   Let&apos;s Work Together
                   <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
