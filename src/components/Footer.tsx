@@ -4,23 +4,29 @@ import Link from "next/link";
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
+  ArrowRight,
   ArrowUpRight,
+  Briefcase,
   ChevronRight,
   Code2,
+  FolderOpen,
+  Globe,
   Heart,
   Mail,
   MapPin,
   MonitorSmartphone,
+  Navigation,
   Phone,
+  Rocket,
   Send,
   ShieldCheck,
   Users,
   Zap,
 } from "lucide-react";
-import { navigation, profile } from "@/content/profile";
+import { navigation, profile, SITE_URL } from "@/content/profile";
 import { services } from "@/content/services";
 import { duration, ease } from "@/lib/motion";
-import { Logo } from "@/components/Logo";
+import { Monogram } from "@/components/Logo";
 import { MotionToggle } from "@/components/MotionToggle";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 
@@ -39,7 +45,7 @@ const STANDALONE_ROUTES = [
  * The services page renders one continuous showcase rather than per-service
  * anchors, so every entry deep-links to /services itself.
  */
-const SERVICE_LINKS = services.slice(0, 6).map((s) => ({ href: "/services", label: s.title, id: s.id }));
+const SERVICE_LINKS = services.slice(0, 7).map((s) => ({ href: "/services", label: s.title, id: s.id }));
 
 const RESOURCE_LINKS = [
   { href: "/work", label: "Case Studies" },
@@ -66,8 +72,8 @@ const SOCIAL_ICONS = {
 
 /** Dot-matrix world silhouette — decorative texture behind the newsletter column. */
 function DotMap() {
-  const rows = 14;
-  const cols = 34;
+  const rows = 16;
+  const cols = 40;
   const dots: { x: number; y: number }[] = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -80,18 +86,27 @@ function DotMap() {
       if ((west + east) * polar > 0.45) dots.push({ x: c * 8 + 4, y: r * 8 + 4 });
     }
   }
+  // Presence markers plus the great-circle arcs between them, as in the design.
+  const pins: [number, number][] = [
+    [64, 52],
+    [110, 74],
+    [214, 60],
+    [268, 92],
+    [300, 46],
+  ];
+  const arcs = pins.slice(0, -1).map(([x1, y1], i) => {
+    const [x2, y2] = pins[i + 1];
+    return `M ${x1} ${y1} Q ${(x1 + x2) / 2} ${Math.min(y1, y2) - 26} ${x2} ${y2}`;
+  });
   return (
     <svg className="ft__map" viewBox={`0 0 ${cols * 8} ${rows * 8}`} aria-hidden focusable="false">
       {dots.map((d, i) => (
         <circle key={i} cx={d.x} cy={d.y} r="1.35" />
       ))}
-      {/* Presence markers — Chennai plus the three timezones I work across. */}
-      {[
-        [58, 46],
-        [96, 62],
-        [186, 54],
-        [232, 78],
-      ].map(([x, y]) => (
+      {arcs.map((d) => (
+        <path key={d} className="ft__map-arc" d={d} />
+      ))}
+      {pins.map(([x, y]) => (
         <circle key={`p-${x}`} className="ft__map-pin" cx={x} cy={y} r="2.6" />
       ))}
     </svg>
@@ -125,6 +140,7 @@ export function Footer() {
     { icon: MapPin, label: profile.location, href: null },
     { icon: Mail, label: profile.email, href: `mailto:${profile.email}` },
     { icon: Phone, label: profile.phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
+    { icon: Globe, label: SITE_URL.replace(/^https?:\/\//, ""), href: "/" },
   ];
 
   return (
@@ -133,18 +149,27 @@ export function Footer() {
         <div className="ft__card">
           <span className="ft__topo" aria-hidden />
 
+          {/* Crest — the brand mark notched into the top edge, flanked by the
+              hairline rail and its two terminal dots. */}
+          <div className="ft__crest">
+            <span className="ft__crest-rail" aria-hidden />
+            <Link href="/" className="ft__crest-badge" aria-label={`${profile.name} — home`}>
+              <Monogram />
+            </Link>
+            <span className="ft__crest-rail" aria-hidden />
+          </div>
+
           <div className="ft__top">
             <motion.div className="ft__brand" {...view(0)}>
-              <Link href="/" aria-label={`${profile.name} — home`} className="ft__lockup">
-                <Logo showWordmark={false} />
+              <span className="ft__lockup">
+                <span className="ft__lockup-mark" aria-hidden>
+                  <Monogram />
+                </span>
                 <span className="ft__lockup-text">
-                  <span className="ft__name">
-                    {profile.name}
-                    <i aria-hidden />
-                  </span>
+                  <span className="ft__name">{profile.name}</span>
                   <span className="ft__role-tag">{profile.role}</span>
                 </span>
-              </Link>
+              </span>
 
               <p className="ft__blurb">
                 I build scalable, high-performance web applications with modern technologies and exceptional
@@ -154,7 +179,9 @@ export function Footer() {
               <ul className="ft__contact">
                 {contactRows.map(({ icon: Icon, label, href }) => (
                   <li key={label}>
-                    <Icon size={16} aria-hidden />
+                    <span className="ft__contact-icon" aria-hidden>
+                      <Icon size={15} />
+                    </span>
                     {href ? <a href={href}>{label}</a> : <span>{label}</span>}
                   </li>
                 ))}
@@ -162,12 +189,17 @@ export function Footer() {
 
               <Link className="ft__cta" href="/#contact">
                 Let&apos;s Work Together
-                <ArrowUpRight size={18} aria-hidden />
+                <span className="ft__cta-go" aria-hidden>
+                  <ArrowRight size={16} />
+                </span>
               </Link>
             </motion.div>
 
             <motion.nav className="ft__col" aria-label="Footer navigation" {...view(0.05)}>
-              <h3 className="ft__label">Navigation</h3>
+              <h3 className="ft__label">
+                <Navigation size={17} aria-hidden />
+                Navigation
+              </h3>
               <ul className="ft__links">
                 <li>
                   <Link href="/">
@@ -195,7 +227,10 @@ export function Footer() {
             </motion.nav>
 
             <motion.div className="ft__col" {...view(0.1)}>
-              <h3 className="ft__label">Services</h3>
+              <h3 className="ft__label">
+                <Briefcase size={17} aria-hidden />
+                Services
+              </h3>
               <ul className="ft__links">
                 {SERVICE_LINKS.map((item) => (
                   <li key={item.id}>
@@ -209,7 +244,10 @@ export function Footer() {
             </motion.div>
 
             <motion.div className="ft__col" {...view(0.15)}>
-              <h3 className="ft__label">Resources</h3>
+              <h3 className="ft__label">
+                <FolderOpen size={17} aria-hidden />
+                Resources
+              </h3>
               <ul className="ft__links">
                 {RESOURCE_LINKS.map((item) => (
                   <li key={item.href}>
@@ -223,7 +261,10 @@ export function Footer() {
             </motion.div>
 
             <motion.div className="ft__col ft__news" {...view(0.2)}>
-              <h3 className="ft__label">Stay Updated</h3>
+              <h3 className="ft__label">
+                <Send size={17} aria-hidden />
+                Stay Updated
+              </h3>
               <p className="ft__news-copy">
                 Get the latest insights on Angular, web development, and tech trends.
               </p>
@@ -241,21 +282,35 @@ export function Footer() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <button type="submit" aria-label="Subscribe">
-                  <Send size={18} aria-hidden />
+                  <ArrowRight size={18} aria-hidden />
                 </button>
               </form>
               <DotMap />
             </motion.div>
           </div>
 
-
+          <motion.ul className="ft__pillars" {...view(0.1)}>
+            {PILLARS.map(({ icon: Icon, title, copy }) => (
+              <li key={title}>
+                <span className="ft__pillar-icon" aria-hidden>
+                  <Icon size={24} />
+                </span>
+                <span className="ft__pillar-text">
+                  <strong>{title}</strong>
+                  <span>{copy}</span>
+                </span>
+              </li>
+            ))}
+          </motion.ul>
 
           <div className="ft__legal">
             <div className="ft__legal-text">
-              <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+              <p>
+                © {new Date().getFullYear()} {profile.name}. All rights reserved.
+              </p>
               <p>
                 Built with <Heart size={13} aria-hidden className="ft__heart" /> using{" "}
-                <Link href="/skills">Angular &amp; Next.js</Link>.
+                <Link href="/skills">Next.js</Link> &amp; <Link href="/skills">Angular</Link>.
               </p>
             </div>
 
@@ -276,7 +331,7 @@ export function Footer() {
                               { target: "_blank", rel: "me noopener noreferrer" }
                             : {})}
                         >
-                          <Icon width={18} height={18} size={18} aria-hidden />
+                          <Icon width={20} height={20} size={20} aria-hidden />
                         </a>
                       </li>
                     );
@@ -285,13 +340,15 @@ export function Footer() {
             </div>
 
             <Link className="ft__avail" href="/#contact">
-              <span className="ft__avail-dot" aria-hidden />
+              <span className="ft__avail-icon" aria-hidden>
+                <Rocket size={22} />
+              </span>
               <span className="ft__avail-text">
                 <strong>{profile.availability.label}</strong>
                 <span>Let&apos;s build something great together!</span>
               </span>
               <span className="ft__avail-go" aria-hidden>
-                <ArrowUpRight size={16} />
+                <ArrowUpRight size={18} />
               </span>
             </Link>
           </div>
