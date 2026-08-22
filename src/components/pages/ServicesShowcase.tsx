@@ -90,7 +90,7 @@ export function ServicesHero({
           </dl>
 
           <div className="sx-hero__actions">
-            <Link className="btn btn--solid" href="/contact">
+            <Link className="btn btn--solid" href="/#contact">
               <span className="btn__label">Start a Project</span>
               <Arrow />
             </Link>
@@ -133,7 +133,7 @@ export function ServicesGrid({ id }: { id?: string } = {}) {
           </div>
           <div className="sx-offer__aside">
             <p>Need something custom?</p>
-            <Link className="btn btn--line" href="/contact">
+            <Link className="btn btn--line" href="/#contact">
               <span className="btn__label">Let&rsquo;s Discuss</span>
               <Arrow />
             </Link>

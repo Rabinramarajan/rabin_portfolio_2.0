@@ -102,7 +102,7 @@ export function Chatbot({ onClose }: { onClose: () => void }) {
           {streaming ? "..." : "Send"}
         </button>
       </form>
-      <Link className="btn btn--line" href="/contact" onClick={onClose}>
+      <Link className="btn btn--line" href="/#contact" onClick={onClose}>
         <span className="btn__label">Hire Rabin →</span>
       </Link>
     </div>

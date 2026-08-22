@@ -85,7 +85,7 @@ export function JourneySection() {
             <span className="jsec__quote-accent"> And I&rsquo;m just getting started.</span>
           </p>
 
-          <Link href="/contact" className="jsec__cta">
+          <Link href="/#contact" className="jsec__cta">
             Let&rsquo;s Build Something Great
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
               <path d="M4 12 12 4M6 4h6v6" />

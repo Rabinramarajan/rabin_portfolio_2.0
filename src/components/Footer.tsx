@@ -160,7 +160,7 @@ export function Footer() {
                 ))}
               </ul>
 
-              <Link className="ft__cta" href="/contact">
+              <Link className="ft__cta" href="/#contact">
                 Let&apos;s Work Together
                 <ArrowUpRight size={18} aria-hidden />
               </Link>
@@ -284,7 +284,7 @@ export function Footer() {
               </ul>
             </div>
 
-            <Link className="ft__avail" href="/contact">
+            <Link className="ft__avail" href="/#contact">
               <span className="ft__avail-dot" aria-hidden />
               <span className="ft__avail-text">
                 <strong>{profile.availability.label}</strong>

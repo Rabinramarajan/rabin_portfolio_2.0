@@ -121,7 +121,7 @@ export function WorkHero({
               </svg>
               <span className="btn__label">View All Projects</span>
             </Link>
-            <Link className="btn btn--line" href="/contact">
+            <Link className="btn btn--line" href="/#contact">
               <span className="btn__label">Start a Project</span>
               <Arrow />
             </Link>
