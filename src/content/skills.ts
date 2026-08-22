@@ -1,142 +1,124 @@
-import type { SkillGroup, SkillShowcase, SkillTrait } from "@/content/types";
+import type { SkillGroup } from "@/content/types";
 
-export const coreStack = ["Angular", "TypeScript", "Signals", "RxJS"] as const;
+/** One numbered node on the snaking core-skill timeline. */
+export interface SkillTimelineNode {
+  id: string;
+  index: string;
+  title: [string, string];
+  description: string;
+  items: string[];
+}
 
-export const skillTraits: SkillTrait[] = [
-  {
-    id: "solver",
-    title: "Problem Solver",
-    body: "I turn complex problems into simple, efficient solutions.",
-  },
-  {
-    id: "learning",
-    title: "Always Learning",
-    body: "I stay updated with new technologies and industry trends.",
-  },
-  {
-    id: "team",
-    title: "Team Player",
-    body: "I collaborate, communicate and deliver results that matter.",
-  },
-];
+/** A stat tile in the left-hand credibility card. */
+export interface SkillStat {
+  id: string;
+  icon: "star" | "rocket" | "people" | "target";
+  value: string;
+  label: [string, string];
+}
 
 export const skillHero = {
-  kicker: "My Skills",
-  headline: ["The Right Skills.", "Real Impact."] as const,
-  lede: "A blend of modern technologies and proven practices — chosen to ship products that stay fast, accessible, and maintainable.",
-  visual: {
-    src: "/media/skills/1.webp",
-    alt: "Skill map — frontend, backend, database, DevOps, tools, and design orbiting a neural core",
-    width: 570,
-    height: 296,
-  },
-  quote: {
-    before: "Skills are important, but the ability to apply them to solve ",
-    accent: "real problems",
-    after: " is what creates impact.",
-  },
-  quoteRole: "Frontend Angular Consultant",
+  index: "05",
+  kicker: "Skills & Expertise",
+  headline: ["Skills That", "Drive", "Solutions.", "Experience That", "Delivers", "Impact."] as const,
+  lede: "A blend of technical expertise, modern tools, and problem-solving mindset to build scalable, high-performance digital products.",
+  timelineLabel: "Core Skill Timeline",
 };
 
-/** Six visual categories matching the skills page layout. Items stay inside the real stack. */
-export const skillShowcase: SkillShowcase[] = [
+export const skillStats: SkillStat[] = [
+  { id: "years", icon: "star", value: "4+", label: ["Years of", "Experience"] },
+  { id: "projects", icon: "rocket", value: "20+", label: ["Projects", "Delivered"] },
+  { id: "clients", icon: "people", value: "15+", label: ["Happy", "Clients"] },
+  { id: "quality", icon: "target", value: "100%", label: ["Focus on Quality", "& Performance"] },
+];
+
+/**
+ * Six timeline nodes. The first three read left to right; the last three run
+ * back right to left, so the rendered order is 01 02 03 / 06 05 04.
+ */
+export const skillTimeline: SkillTimelineNode[] = [
   {
     id: "frontend",
-    label: "Frontend",
-    description: "Building fast, scalable, and user-friendly web applications.",
-    tools: [
-      { id: "angular", label: "Angular" },
-      { id: "typescript", label: "TypeScript" },
-      { id: "rxjs", label: "RxJS" },
-      { id: "tailwind", label: "Tailwind CSS" },
-      { id: "react", label: "React" },
-      { id: "nextjs", label: "Next.js" },
-    ],
+    index: "01",
+    title: ["Frontend", "Development"],
+    description: "Building responsive, fast & modern web applications with Angular and latest web technologies.",
+    items: ["Angular (17+)", "TypeScript", "HTML5, SCSS, Tailwind CSS"],
+  },
+  {
+    id: "mobile",
+    index: "02",
+    title: ["Mobile", "Development"],
+    description: "Cross-platform mobile apps that deliver native-like performance and great user experience.",
+    items: ["Ionic", "Capacitor", "PWA, Responsive Design"],
+  },
+  {
+    id: "state",
+    index: "03",
+    title: ["State Management", "& Data"],
+    description: "Efficient state management, reactive programming and seamless data handling.",
+    items: ["Angular Signals", "RxJS", "NgRx (State Management)"],
   },
   {
     id: "backend",
-    label: "Backend",
-    description: "Designing secure, efficient, and high-performance APIs.",
-    tools: [
-      { id: "node", label: "Node.js" },
-      { id: "express", label: "Express" },
-      { id: "graphql", label: "GraphQL" },
-      { id: "python", label: "Python" },
-      { id: "php", label: "PHP" },
-      { id: "javascript", label: "JavaScript" },
-    ],
-  },
-  {
-    id: "database",
-    label: "Database",
-    description: "Structuring and managing data with reliable, scalable systems.",
-    tools: [
-      { id: "postgres", label: "PostgreSQL" },
-      { id: "mysql", label: "MySQL" },
-      { id: "supabase", label: "Supabase" },
-      { id: "firebase", label: "Firebase" },
-      { id: "mongodb", label: "MongoDB" },
-      { id: "aws", label: "AWS" },
-    ],
+    index: "04",
+    title: ["Backend &", "APIs"],
+    description: "Building robust APIs and integrating secure, scalable backend services.",
+    items: ["Node.js, Express.js", "RESTful APIs", "PostgreSQL, MySQL"],
   },
   {
     id: "devops",
-    label: "DevOps",
-    description: "Streamlining development, deployment, and infrastructure workflows.",
-    tools: [
-      { id: "git", label: "Git" },
-      { id: "github", label: "GitHub" },
-      { id: "aws", label: "AWS" },
-      { id: "nx", label: "Nx" },
-      { id: "playwright", label: "Playwright" },
-      { id: "eslint", label: "ESLint" },
-    ],
-  },
-  {
-    id: "tools",
-    label: "Tools",
-    description: "Using the right tools to boost productivity and code quality.",
-    tools: [
-      { id: "vscode", label: "VS Code" },
-      { id: "figma", label: "Figma" },
-      { id: "postman", label: "Postman" },
-      { id: "nx", label: "Nx" },
-      { id: "prettier", label: "Prettier" },
-      { id: "playwright", label: "Playwright" },
-    ],
+    index: "05",
+    title: ["Tools &", "DevOps"],
+    description: "Modern tools and DevOps practices to streamline development and ensure smooth delivery.",
+    items: ["Git, GitHub", "Docker", "CI/CD, Vercel"],
   },
   {
     id: "design",
-    label: "Design",
-    description: "Crafting intuitive, visually appealing, and user-centered experiences.",
-    tools: [
-      { id: "figma", label: "Figma" },
-      { id: "adobexd", label: "Adobe XD" },
-      { id: "photoshop", label: "Photoshop" },
-      { id: "illustrator", label: "Illustrator" },
-      { id: "canva", label: "Canva" },
-      { id: "sketch", label: "Sketch" },
-    ],
+    index: "06",
+    title: ["Design &", "Experience"],
+    description: "Design-driven development focused on intuitive UI and exceptional user experience.",
+    items: ["Figma", "UI/UX Principles", "Clean, Modern Interfaces"],
   },
 ];
 
+/** Brand marks in the bottom panel's first column. */
 export const everydayTech = [
   "Angular",
   "TypeScript",
   "RxJS",
+  "Ionic",
   "Tailwind CSS",
-  "React",
-  "Next.js",
+  "NgRx",
   "Node.js",
+  "Express.js",
   "PostgreSQL",
-  "Supabase",
-  "Firebase",
+  "MySQL",
   "Git",
-  "Nx",
-  "VS Code",
-  "Figma",
-  "Postman",
-  "Playwright",
+  "Docker",
+] as const;
+
+export const coreCompetencies = [
+  { id: "architecture", icon: "architecture", label: "Component Architecture" },
+  { id: "clean-code", icon: "code", label: "Clean Code & SOLID" },
+  { id: "performance", icon: "gauge", label: "Performance Optimization" },
+  { id: "testing", icon: "bug", label: "Testing & Debugging" },
+  { id: "api", icon: "link", label: "REST API Integration" },
+  { id: "seo", icon: "accessibility", label: "SEO & Accessibility" },
+] as const;
+
+export const softSkills = [
+  { id: "problem", icon: "bulb", label: "Problem Solving" },
+  { id: "critical", icon: "brain", label: "Critical Thinking" },
+  { id: "communication", icon: "chat", label: "Communication" },
+  { id: "collaboration", icon: "people", label: "Team Collaboration" },
+] as const;
+
+/** The four quadrants orbiting the monogram in the approach dial. */
+export const approachSteps = [
+  { id: "understand", icon: "search", title: "Understand", body: ["Research &", "Analyze"] },
+  { id: "plan", icon: "plan", title: "Plan", body: ["Strategy &", "Architecture"] },
+  { id: "build", icon: "code", title: "Build", body: ["Develop &", "Implement"] },
+  { id: "improve", icon: "trend", title: "Improve", body: ["Test, Optimize &", "Iterate"] },
 ] as const;
 
 export const skillGroups: SkillGroup[] = [

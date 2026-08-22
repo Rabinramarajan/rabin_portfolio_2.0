@@ -1,192 +1,318 @@
 "use client";
 
 import type { ComponentType } from "react";
-import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { Code2, Database, Infinity as InfinityIcon, PenTool, Rocket, Server, Users, Wrench } from "lucide-react";
-import { everydayTech, skillHero, skillShowcase, skillTraits } from "@/content/skills";
-import { profile } from "@/content/profile";
+import {
+  Accessibility,
+  Boxes,
+  Brain,
+  Bug,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  Cloud,
+  Code2,
+  Database,
+  Gauge,
+  Lightbulb,
+  Link2,
+  MessageSquare,
+  PenTool,
+  Rocket,
+  Search,
+  Settings,
+  Smartphone,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import {
+  approachSteps,
+  coreCompetencies,
+  everydayTech,
+  skillHero,
+  skillStats,
+  skillTimeline,
+  softSkills,
+} from "@/content/skills";
 import { StackTechIcon } from "@/components/StackTechIcon";
-import { SmartImage } from "@/components/SmartImage";
+import { Monogram } from "@/components/Logo";
 import { duration, ease, stagger } from "@/lib/motion";
 import type { SectionHeadingLevel } from "@/components/ui";
-import type { SkillShowcase, SkillTrait } from "@/content/types";
+import type { SkillTimelineNode } from "@/content/skills";
 
 type Glyph = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 
-const TRAIT_GLYPHS: Record<SkillTrait["id"], Glyph> = {
-  solver: Code2,
-  learning: Rocket,
-  team: Users,
-};
-
-const CARD_GLYPHS: Record<string, Glyph> = {
+const GLYPH: Record<string, Glyph> = {
+  // timeline nodes
   frontend: Code2,
-  backend: Server,
-  database: Database,
-  devops: InfinityIcon,
-  tools: Wrench,
+  mobile: Smartphone,
+  state: Database,
+  backend: Cloud,
+  devops: Settings,
   design: PenTool,
+  // stats
+  star: Star,
+  rocket: Rocket,
+  people: Users,
+  target: Target,
+  // competencies + soft skills + approach
+  architecture: Boxes,
+  code: Code2,
+  gauge: Gauge,
+  bug: Bug,
+  link: Link2,
+  accessibility: Accessibility,
+  bulb: Lightbulb,
+  brain: Brain,
+  chat: MessageSquare,
+  search: Search,
+  plan: ClipboardList,
+  trend: TrendingUp,
 };
 
-export function SkillsSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
+function Icon({ name, size = 18 }: { name: string; size?: number }) {
+  const Glyph = GLYPH[name] ?? Code2;
+  return <Glyph size={size} strokeWidth={1.75} />;
+}
+
+/**
+ * Skills — a numbered section header, a statement column carrying the
+ * credibility stats, and a snaking six-node "core skill
+ * timeline" that reads 01→03 left to right and 04→06 back the other way. The
+ * closing panel splits into tech marks, competencies, soft skills and the
+ * four-step approach dial.
+ *
+ * The connector rails (chevrons, the U-turn on the right, the tail on the
+ * left) are decorative and collapse away below the timeline's two-row
+ * breakpoint, where the nodes stack into a plain list.
+ */
+export function SkillsSection({
+  headingLevel = "h2",
+  index = skillHero.index,
+}: { headingLevel?: SectionHeadingLevel; index?: string } = {}) {
   const reduce = useReducedMotion();
   const Heading = headingLevel;
   const fade = reduce ? { opacity: 0 } : { opacity: 0, y: 18 };
+  const inView = { opacity: 1, y: 0 };
+  const viewport = { once: true, margin: "-10%" } as const;
+  const sectionTransition = { duration: reduce ? duration.micro : duration.section, ease };
+
+  const topRow = skillTimeline.slice(0, 3);
+  // The lower rail runs right to left, so 06 renders first and 04 last.
+  const bottomRow = skillTimeline.slice(3).reverse();
 
   return (
-    <section id="skills" className="section sk2">
+    <section id="skills" className="section skx">
       <div className="shell">
-        <div className="sk2-hero">
+        <header className="skx__top">
+          <p className="skx__eyebrow">
+            <span className="skx__eyebrow-index">{index}</span>
+            <span className="skx__eyebrow-label">{skillHero.kicker}</span>
+            <span className="skx__eyebrow-rule" aria-hidden />
+            <span className="skx__eyebrow-dots" aria-hidden>
+              <i />
+              <i />
+              <i />
+            </span>
+          </p>
+        </header>
+
+        <div className="skx__main">
           <motion.div
-            className="sk2-hero__copy"
+            className="skx__intro"
             initial={fade}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reduce ? duration.micro : duration.section, ease }}
+            whileInView={inView}
+            viewport={viewport}
+            transition={sectionTransition}
           >
-            <p className="sk2-kicker">
-              <span className="sk2-kicker__dot" aria-hidden />
-              {skillHero.kicker}
-            </p>
-            <Heading className="sk2-title">
-              {skillHero.headline[0]}{" "}
-              <em>{skillHero.headline[1]}</em>
+            <Heading className="skx__title">
+              {skillHero.headline[0]} <br />
+              {skillHero.headline[1]} <em>{skillHero.headline[2]}</em> <br />
+              {skillHero.headline[3]} <br />
+              {skillHero.headline[4]} <em>{skillHero.headline[5]}</em>
             </Heading>
-            <p className="sk2-lede">{skillHero.lede}</p>
-            <ul className="sk2-traits">
-              {skillTraits.map((trait) => {
-                const Icon = TRAIT_GLYPHS[trait.id];
-                return (
-                  <li key={trait.id} className="sk2-trait">
-                    <span className="sk2-trait__icon" aria-hidden>
-                      <Icon size={16} strokeWidth={2} />
-                    </span>
+            <span className="skx__title-rule" aria-hidden />
+            <p className="skx__lede">{skillHero.lede}</p>
+
+            <dl className="skx__stats">
+              {skillStats.map((stat) => (
+                <div className="skx__stat" key={stat.id}>
+                  <dt className="skx__stat-icon" aria-hidden>
+                    <Icon name={stat.icon} size={20} />
+                  </dt>
+                  <dd className="skx__stat-body">
+                    <strong>{stat.value}</strong>
                     <span>
-                      <strong>{trait.title}</strong>
-                      <span>{trait.body}</span>
+                      {stat.label[0]}
+                      <br />
+                      {stat.label[1]}
                     </span>
-                  </li>
-                );
-              })}
-            </ul>
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </motion.div>
 
-          <motion.figure
-            className="sk2-hero__visual"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reduce ? duration.micro : duration.cinematic, ease, delay: reduce ? 0 : 0.08 }}
+          <motion.div
+            className="skx__timeline"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-8%" }}
+            transition={{ staggerChildren: reduce ? 0 : stagger, delayChildren: reduce ? 0 : 0.1 }}
           >
-            <SmartImage
-              src={skillHero.visual.src}
-              alt={skillHero.visual.alt}
-              width={skillHero.visual.width}
-              height={skillHero.visual.height}
-              priority={headingLevel === "h1"}
-              sizes="(max-width: 900px) 92vw, 560px"
-              className="sk2-hero__img"
-            />
-          </motion.figure>
+            <p className="skx__timeline-label">
+              <span className="skx__timeline-arrow" aria-hidden>
+                →
+              </span>
+              {skillHero.timelineLabel}
+              <span className="skx__timeline-arrow" aria-hidden>
+                ←
+              </span>
+            </p>
+
+            <div className="skx__rail skx__rail--fwd">
+              {topRow.map((node, i) => (
+                <TimelineNode key={node.id} node={node} reduce={Boolean(reduce)} connector={i < 2 ? "next" : null} />
+              ))}
+            </div>
+
+            <span className="skx__uturn" aria-hidden />
+            <span className="skx__tail" aria-hidden />
+
+            <div className="skx__rail skx__rail--rev">
+              {bottomRow.map((node, i) => (
+                <TimelineNode
+                  key={node.id}
+                  node={node}
+                  reduce={Boolean(reduce)}
+                  flipped
+                  connector={i < 2 ? "prev" : null}
+                />
+              ))}
+            </div>
+          </motion.div>
         </div>
 
         <motion.div
-          className="sk2-expertise"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-8%" }}
-          transition={{ staggerChildren: reduce ? 0 : stagger, delayChildren: reduce ? 0 : 0.12 }}
+          className="skx__panel"
+          initial={fade}
+          whileInView={inView}
+          viewport={viewport}
+          transition={{ ...sectionTransition, delay: reduce ? 0 : 0.08 }}
         >
-          <p className="sk2-kicker">
-            <span className="sk2-kicker__dot" aria-hidden />
-            Skills &amp; Expertise
-          </p>
-          <div className="sk2-grid">
-            {skillShowcase.map((group) => (
-              <SkillCard key={group.id} group={group} reduce={Boolean(reduce)} />
-            ))}
-          </div>
-        </motion.div>
-
-        <div className="sk2-bottom">
-          <motion.div
-            className="sk2-cloud"
-            initial={fade}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reduce ? duration.micro : duration.section, ease }}
-          >
-            <p className="sk2-cloud__label">Technologies I work with everyday</p>
-            <ul className="sk2-cloud__list">
+          <section className="skx__col">
+            <h3 className="skx__col-title">Technologies I work with</h3>
+            <ul className="skx__tech">
               {everydayTech.map((item) => (
-                <li key={item} className="sk2-cloud__pill">
-                  <StackTechIcon label={item} className="sk2-cloud__icon" />
-                  <span>{item}</span>
+                <li key={item}>
+                  <span className="skx__tech-tile" aria-hidden>
+                    <StackTechIcon label={item} className="skx__tech-icon" />
+                  </span>
+                  <span className="skx__tech-name">{item}</span>
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </section>
 
-          <motion.blockquote
-            className="sk2-quote"
-            initial={fade}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: reduce ? duration.micro : duration.section, ease, delay: reduce ? 0 : 0.08 }}
-          >
-            <span className="sk2-quote__mark" aria-hidden>
-              &ldquo;
-            </span>
-            <p>
-              {skillHero.quote.before}
-              <em>{skillHero.quote.accent}</em>
-              {skillHero.quote.after}
-            </p>
-            <footer>
-              <cite className="sk2-quote__name">{profile.name}</cite>
-              <span className="sk2-quote__role">{skillHero.quoteRole}</span>
-            </footer>
-          </motion.blockquote>
-        </div>
+          <section className="skx__col skx__col--bordered">
+            <h3 className="skx__col-title skx__col-title--center">Core Competencies</h3>
+            <ul className="skx__chips skx__chips--two">
+              {coreCompetencies.map((item) => (
+                <li key={item.id}>
+                  <span className="skx__chip-icon" aria-hidden>
+                    <Icon name={item.icon} size={16} />
+                  </span>
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="skx__col skx__col--bordered">
+            <h3 className="skx__col-title">Soft Skills</h3>
+            <ul className="skx__chips">
+              {softSkills.map((item) => (
+                <li key={item.id}>
+                  <span className="skx__chip-icon" aria-hidden>
+                    <Icon name={item.icon} size={16} />
+                  </span>
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="skx__col skx__col--bordered">
+            <h3 className="skx__col-title skx__col-title--center">My Approach</h3>
+            <div className="skx__dial">
+              <span className="skx__dial-core" aria-hidden>
+                <Monogram className="skx__dial-mark" />
+              </span>
+              {approachSteps.map((step) => (
+                <div className={`skx__step skx__step--${step.id}`} key={step.id}>
+                  <span className="skx__step-icon" aria-hidden>
+                    <Icon name={step.icon} size={16} />
+                  </span>
+                  <strong>{step.title}</strong>
+                  <span>
+                    {step.body[0]}
+                    <br />
+                    {step.body[1]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-function SkillCard({ group, reduce }: { group: SkillShowcase; reduce: boolean }) {
-  const Icon = CARD_GLYPHS[group.id] ?? Code2;
-
+function TimelineNode({
+  node,
+  reduce,
+  flipped = false,
+  connector,
+}: {
+  node: SkillTimelineNode;
+  reduce: boolean;
+  flipped?: boolean;
+  connector: "next" | "prev" | null;
+}) {
   return (
     <motion.article
-      className="sk2-card"
-      variants={
-        reduce
-          ? undefined
-          : {
-              hidden: { opacity: 0, y: 16 },
-              visible: { opacity: 1, y: 0 },
-            }
-      }
+      className={flipped ? "skx__node skx__node--flipped" : "skx__node"}
+      variants={reduce ? undefined : { hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0 } }}
       transition={{ duration: reduce ? duration.micro : duration.section, ease }}
     >
-      <header className="sk2-card__head">
-        <span className="sk2-card__icon" aria-hidden>
-          <Icon size={18} strokeWidth={2} />
+      <div className="skx__node-head">
+        <span className="skx__node-disc" aria-hidden>
+          <Icon name={node.id} size={22} />
         </span>
-        <h3>{group.label}</h3>
-      </header>
-      <p className="sk2-card__desc">{group.description}</p>
-      <ul className="sk2-card__tools">
-        {group.tools.map((tool) => (
-          <li key={`${group.id}-${tool.id}-${tool.label}`} title={tool.label}>
-            <StackTechIcon id={tool.id} label={tool.label} />
-          </li>
+        {connector ? (
+          <span className="skx__node-link" aria-hidden>
+            {connector === "next" ? <ChevronRight size={14} strokeWidth={2.5} /> : <ChevronLeft size={14} strokeWidth={2.5} />}
+          </span>
+        ) : null}
+      </div>
+
+      <p className="skx__node-index" aria-hidden>
+        {node.index}
+      </p>
+      <h3 className="skx__node-title">
+        {node.title[0]}
+        <br />
+        {node.title[1]}
+      </h3>
+      <p className="skx__node-desc">{node.description}</p>
+      <ul className="skx__node-items">
+        {node.items.map((item) => (
+          <li key={item}>{item}</li>
         ))}
       </ul>
-      <Link href="/work" className="sk2-card__explore" aria-label={`Explore ${group.label} work`}>
-        Explore <span aria-hidden>→</span>
-      </Link>
     </motion.article>
   );
 }
