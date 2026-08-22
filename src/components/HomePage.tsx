@@ -1,7 +1,7 @@
 import { Hero } from "@/components/Hero";
 import { AboutSection } from "@/components/about/AboutSection";
 import { ServicesSection } from "@/components/ServicesSection";
-import { WorkHero, WorkGrid } from "@/components/pages/WorkShowcase";
+import { WorkSection } from "@/components/WorkSection";
 import { FaqSection } from "@/components/FaqSection";
 
 /*
@@ -26,8 +26,7 @@ export function HomePage() {
       <Hero />
       <AboutSection />
       <ServicesSection id="services" index="02" />
-      <WorkHero headingLevel="h2" kicker={{ index: "03", label: "Selected Work" }} />
-      <WorkGrid id="work" limit={4} />
+      <WorkSection id="work" index="03" limit={4} />
       <JourneySection />
       <SkillsSection />
       <ProcessSection />

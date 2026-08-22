@@ -1,10 +1,5 @@
-import { WorkGrid, WorkHero } from "./WorkShowcase";
+import { WorkSection } from "@/components/WorkSection";
 
 export function WorkPage() {
-  return (
-    <>
-      <WorkHero />
-      <WorkGrid id="work" />
-    </>
-  );
+  return <WorkSection id="work" headingLevel="h1" index="01" />;
 }
