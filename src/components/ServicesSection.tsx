@@ -3,18 +3,35 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { serviceOfferings } from "@/content/serviceOfferings";
-import { profile } from "@/content/profile";
 import { Monogram } from "@/components/Logo";
 import { ServiceIcon, StatIcon } from "@/components/pages/ServiceIcons";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker } from "@/components/ui";
+import { sections } from "@/content/sections";
+import { about } from "@/content/about";
+import type { MetricIcon } from "@/content/types";
 
-const STATS = [
-  { value: "20+", label: "Happy Clients", icon: "people" },
-  { value: "50+", label: "Projects Delivered", icon: "rocket" },
-  { value: profile.yearsExperienceLabel, label: "Years Experience", icon: "award" },
-  { value: "100%", label: "Client Satisfaction", icon: "star" },
-] as const;
+/**
+ * The stats bar reads `about.metrics` rather than restating the numbers — the
+ * two used to disagree (50+ here vs 30+ in About, both on the same page).
+ *
+ * Only presentation stays local: which glyph a metric gets, and the order the
+ * bar shows them in, which is deliberately not the order the About section
+ * uses.
+ */
+const STAT_ICONS: Record<MetricIcon, string> = {
+  clients: "people",
+  projects: "rocket",
+  experience: "award",
+  commitment: "star",
+};
+
+const STAT_ORDER: MetricIcon[] = ["clients", "projects", "experience", "commitment"];
+
+const STATS = STAT_ORDER.flatMap((icon) => {
+  const metric = about.metrics.find((m) => m.icon === icon);
+  return metric ? [{ value: metric.value, label: metric.label, icon: STAT_ICONS[icon] }] : [];
+});
 
 /**
  * Services — emblem + statement header, an eight-card offer grid and a stats
@@ -27,7 +44,7 @@ const STATS = [
 export function ServicesSection({
   id = "services",
   headingLevel = "h2",
-  index = "03",
+  index,
 }: {
   id?: string;
   headingLevel?: "h1" | "h2";
@@ -35,6 +52,7 @@ export function ServicesSection({
 } = {}) {
   const Heading = headingLevel;
   const isPageHero = headingLevel === "h1";
+  const intro = sections.services;
 
   return (
     <section id={id} className={isPageHero ? "svx svx--page" : "svx"}>
@@ -49,11 +67,14 @@ export function ServicesSection({
           </div>
 
           <div className="svx__intro">
-            <SectionKicker index={index} label="Our Services" />
+            <SectionKicker index={index ?? intro.index} label={intro.label} />
             <Heading className="svx__title">
-              Services That
-              <br />
-              <span className="svx__title-accent">Solve. Scale.</span> Succeed.
+              {intro.title.map((line, i) => (
+                <span key={line.text}>
+                  {line.newline ? <br /> : i > 0 ? " " : null}
+                  {line.accent ? <span className="svx__title-accent">{line.text}</span> : line.text}
+                </span>
+              ))}
             </Heading>
             <span className="svx__title-rule" aria-hidden />
           </div>
@@ -61,10 +82,7 @@ export function ServicesSection({
           <div className="svx__aside">
             <span className="svx__aside-rule" aria-hidden />
             <div>
-              <p className="svx__lede">
-                I help businesses and startups transform ideas into high-performance digital products with modern
-                technologies, clean architecture, and exceptional user experiences.
-              </p>
+              <p className="svx__lede">{intro.lede}</p>
               <Link className="svx__cta" href="/#contact">
                 <span>Let&rsquo;s Build Something Great</span>
                 <span className="svx__cta-arrow" aria-hidden>

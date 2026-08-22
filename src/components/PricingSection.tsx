@@ -4,17 +4,14 @@ import { motion, useReducedMotion } from "motion/react";
 import { Btn, SectionKicker } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { pricingDisclaimer, pricingPlans } from "@/content/pricing";
+import { engagementModels } from "@/content/engagement-models";
+import { accentIndex, sections, titleLines } from "@/content/sections";
 import { duration, ease } from "@/lib/motion";
 import { TextReveal } from "@/components/motion";
 
-const models = [
-  { id: "project" as const, title: "Project", summary: "A defined product, shipped on a timeline." },
-  { id: "retainer" as const, title: "Retainer", summary: "Ongoing care after launch." },
-  { id: "contract" as const, title: "Contract", summary: "Embedded frontend engineering inside your team." },
-];
-
 export function PricingSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
   const reduce = useReducedMotion();
+  const intro = sections.engagement;
 
   const view = (delay = 0) => ({
     initial: reduce ? { opacity: 0 } : { opacity: 0, y: 24 },
@@ -27,13 +24,18 @@ export function PricingSection({ headingLevel = "h2" }: { headingLevel?: Section
     <section id="engagement" className="section">
       <div className="shell">
         <motion.div {...view(0)}>
-          <SectionKicker index="07" label="Engagement" />
-          <TextReveal lines={["How the work", "is structured."]} className="sec-title" as={headingLevel} />
-          <p className="sec-lede">INR first. Indicative starting points — scope decides the rest.</p>
+          <SectionKicker index={intro.index} label={intro.label} />
+          <TextReveal
+            lines={titleLines(intro)}
+            className="sec-title"
+            as={headingLevel}
+            accentIndex={accentIndex(intro)}
+          />
+          <p className="sec-lede">{intro.lede}</p>
         </motion.div>
 
         <div className="eng-list">
-          {models.map((model, i) => {
+          {engagementModels.map((model, i) => {
             const plans = pricingPlans.filter((p) => p.model === model.id);
             const lead = plans[0];
             return (

@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
+import { nextChapter } from "@/content/sections";
 
 /**
  * THE NEXT CHAPTER — the timeline leaves the page.
@@ -22,12 +23,9 @@ export function NextChapter() {
 
   return (
     <div className="xnext">
-      <p className="xnext__kicker">Still being built</p>
+      <p className="xnext__kicker">{nextChapter.kicker}</p>
 
-      <p className="xnext__lede">
-        The work continues — Angular architecture, modern React and Next.js, and product surfaces where AI actually
-        earns its place. Still learning, still shipping, still solving problems worth solving.
-      </p>
+      <p className="xnext__lede">{nextChapter.lede}</p>
 
       <div className="xnext__line" aria-hidden>
         <motion.span

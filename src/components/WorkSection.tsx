@@ -11,6 +11,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { cn } from "@/lib/cn";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker } from "@/components/ui";
+import { sections } from "@/content/sections";
 
 const FILTER_LABEL: Record<ProjectFilter, string> = {
   web: "Web Applications",
@@ -49,7 +50,7 @@ type FilterId = ProjectFilter | "all";
 export function WorkSection({
   id = "work",
   headingLevel = "h2",
-  index = "03",
+  index,
   limit,
 }: {
   id?: string;
@@ -59,6 +60,7 @@ export function WorkSection({
 } = {}) {
   const Heading = headingLevel;
   const isPageHero = headingLevel === "h1";
+  const intro = sections.work;
   const [filter, setFilter] = useState<FilterId>("all");
   const [active, setActive] = useState(0);
 
@@ -88,7 +90,7 @@ export function WorkSection({
     <section id={id} className={cn("wx", isPageHero && "wx--page")}>
       <div className="shell">
         <div className="wx__top">
-          <SectionKicker index={index} label="Work" className="wx__kicker" />
+          <SectionKicker index={index ?? intro.index} label={intro.label} className="wx__kicker" />
           {!isPageHero ? (
             <Link className="wx__all" href="/work">
               <span>View All Projects</span>
@@ -100,13 +102,14 @@ export function WorkSection({
         <div className="wx__intro">
           <div className="wx__intro-copy">
             <Heading className="wx__title">
-              Work that solves
-              <br />
-              <span className="wx__title-accent">real problems.</span>
+              {intro.title.map((line, i) => (
+                <span key={line.text}>
+                  {line.newline ? <br /> : i > 0 ? " " : null}
+                  {line.accent ? <span className="wx__title-accent">{line.text}</span> : line.text}
+                </span>
+              ))}
             </Heading>
-            <p className="wx__lede">
-              I build digital experiences that are fast, scalable, accessible and create real impact.
-            </p>
+            <p className="wx__lede">{intro.lede}</p>
           </div>
 
           <nav className="wx__filters" aria-label="Filter projects">

@@ -1,4 +1,5 @@
 import { faqs } from "@/content/faq";
+import { sections } from "@/content/sections";
 import { SectionKicker, type SectionHeadingLevel } from "@/components/ui";
 
 /**
@@ -10,17 +11,16 @@ import { SectionKicker, type SectionHeadingLevel } from "@/components/ui";
  */
 export function FaqSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
   const Heading = headingLevel;
+  const intro = sections.faq;
 
   return (
     <section id="faq" className="section" aria-labelledby="faq-title">
       <div className="shell">
-        <SectionKicker index="10" label="FAQ" />
+        <SectionKicker index={intro.index} label={intro.label} />
         <Heading className="sec-title" id="faq-title">
-          Questions I get asked.
+          {intro.title[0].text}
         </Heading>
-        <p className="sec-lede">
-          Straight answers about the work, the stack and how an engagement starts.
-        </p>
+        <p className="sec-lede">{intro.lede}</p>
 
         <dl className="faq-list">
           {faqs.map((item) => (

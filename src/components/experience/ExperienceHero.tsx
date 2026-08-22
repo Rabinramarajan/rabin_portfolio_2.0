@@ -7,6 +7,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { TextReveal } from "@/components/motion";
 import { StatPills } from "./StatPills";
 import { SectionKicker } from "@/components/ui";
+import { accentIndex, journeyArt, sections, titleLines } from "@/content/sections";
 
 /**
  * EXPERIENCE HERO.
@@ -19,6 +20,8 @@ import { SectionKicker } from "@/components/ui";
  */
 export function ExperienceHero() {
   const reduce = useReducedMotionSafe();
+  // Same copy as the homepage journey block — this route is its long form.
+  const intro = sections.journey;
 
   const rise = (delay: number) => ({
     initial: reduce ? { opacity: 0 } : { opacity: 0, y: 14 },
@@ -31,20 +34,19 @@ export function ExperienceHero() {
       <div className="shell xhero__grid">
         <div className="xhero__copy">
           <motion.div {...rise(0)}>
-            <SectionKicker index="05" label="Experience" />
+            <SectionKicker index={intro.index} label={intro.label} />
           </motion.div>
 
           <TextReveal
-            lines={["My Journey.", "Real Impact."]}
+            lines={titleLines(intro)}
             as="h1"
             className="xhero__title"
             delay={0.05}
-            accentIndex={1}
+            accentIndex={accentIndex(intro)}
           />
 
           <motion.p className="xhero__lede" {...rise(0.4)}>
-            A timeline of growth, challenges and shipped work — the chapters that shaped how I
-            build today.
+            {intro.lede}
           </motion.p>
 
           <motion.div {...rise(0.52)}>
@@ -59,10 +61,7 @@ export function ExperienceHero() {
           transition={{ duration: reduce ? 0.2 : 1, ease }}
         >
           <SmartImage
-            src="/media/experience/banner_img.png"
-            alt="A climber at the summit looking up a glowing path that switchbacks toward a flag on the next peak"
-            width={1536}
-            height={1024}
+            {...journeyArt}
             priority
             sizes="(max-width: 900px) 100vw, 52vw"
             className="xhero__img"

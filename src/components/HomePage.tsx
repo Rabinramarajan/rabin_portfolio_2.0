@@ -24,8 +24,8 @@ export function HomePage() {
     <>
       <Hero />
       <AboutSection />
-      <ServicesSection id="services" index="02" />
-      <WorkSection id="work" index="03" limit={4} />
+      <ServicesSection id="services" />
+      <WorkSection id="work" limit={4} />
       <JourneySection />
       <SkillsSection />
       <ProcessSection />
