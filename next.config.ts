@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Old indexed URLs — About now lives as a homepage section.
+      { source: "/about", destination: "/#about", permanent: true },
       // Old indexed URLs — content now lives at /work.
       { source: "/projects", destination: "/work", permanent: true },
       { source: "/case-studies", destination: "/work", permanent: true },

@@ -30,7 +30,7 @@ export const profile: Profile = {
 };
 
 export const navigation: NavItem[] = [
-  { href: "/about", label: "About Us" },
+  { href: "/#about", label: "About Us", sectionId: "about" },
   { href: "/services", label: "Services" },
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
