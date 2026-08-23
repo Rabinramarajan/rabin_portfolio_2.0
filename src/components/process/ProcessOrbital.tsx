@@ -95,6 +95,24 @@ const LABELS = [
 const DWELL_MS = 5000;
 const SWAP = { duration: 0.5, ease } as const;
 
+const STATIC_STARS = (() => {
+  const stars = [];
+  let seed = 42;
+  const rnd = () => {
+    const x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+  };
+  for (let i = 0; i < 24; i++) {
+    stars.push({
+      x: 100 + rnd() * 400,
+      y: 50 + rnd() * 300,
+      r: 0.6 + rnd() * 0.9,
+      o: 0.15 + rnd() * 0.5,
+    });
+  }
+  return stars;
+})();
+
 export function ProcessOrbital({ steps }: { steps: ProcessStep[] }) {
   const reduce = useReducedMotionSafe();
   const [active, setActive] = useState(0);
@@ -102,14 +120,7 @@ export function ProcessOrbital({ steps }: { steps: ProcessStep[] }) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   // Decorative Starfield coords
-  const starsRef = useRef(
-    Array.from({ length: 24 }, (_, i) => ({
-      x: 100 + Math.random() * 400,
-      y: 50 + Math.random() * 300,
-      r: 0.6 + Math.random() * 0.9,
-      o: 0.15 + Math.random() * 0.5,
-    })),
-  );
+  const starsRef = useRef(STATIC_STARS);
 
   useEffect(() => {
     if (reduce || held) return;
