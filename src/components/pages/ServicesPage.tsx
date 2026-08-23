@@ -12,7 +12,7 @@ import { PageSectionHead } from "./PageSectionHead";
 import { ArrowLink } from "./ArrowLink";
 import { ServiceMediaVisual } from "./ServiceVisual";
 import { ServicesSection } from "@/components/ServicesSection";
-import { StackTechIcon } from "@/components/StackTechIcon";
+import { TechnologyBadge } from "@/components/TechnologyBadge";
 
 const DESKTOP_QUERY = "(min-width: 960px)";
 const STEP_MS = 0.22;
@@ -154,10 +154,7 @@ function ServicesJourney({ reduce }: { reduce: boolean }) {
                     <dd className="svc__tech">
                       <ul className="svc__tech-list">
                         {service.technologies.map((t) => (
-                          <li key={t} className="svc__tech-chip">
-                            <StackTechIcon label={t} className="svc__tech-icon" />
-                            <span>{t}</span>
-                          </li>
+                          <TechnologyBadge key={t} label={t} />
                         ))}
                       </ul>
                     </dd>
@@ -243,10 +240,7 @@ function ServicesJourney({ reduce }: { reduce: boolean }) {
                     <dd className="svc__tech">
                       <ul className="svc__tech-list">
                         {s.technologies.map((t) => (
-                          <li key={t} className="svc__tech-chip">
-                            <StackTechIcon label={t} className="svc__tech-icon" />
-                            <span>{t}</span>
-                          </li>
+                          <TechnologyBadge key={t} label={t} />
                         ))}
                       </ul>
                     </dd>

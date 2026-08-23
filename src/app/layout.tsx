@@ -80,6 +80,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={[inter.variable, tight.variable, mono.variable, caveat.variable].join(" ")}
     >
       <body>
+        <a className="skip-link" href="#main">
+          Skip to content
+        </a>
         <JsonLd />
         <ProgressSync />
         <Navbar />

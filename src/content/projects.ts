@@ -512,3 +512,45 @@ export const projects: Project[] = [
 ];
 export function getProject(slug: string) { return projects.find((p) => p.slug === slug); }
 export function getNextProject(slug: string) { const n = projects.findIndex((p) => p.slug === slug); if (n === -1) return undefined; return projects[(n + 1) % projects.length]; }
+export function getPreviousProject(slug: string) {
+  const n = projects.findIndex((p) => p.slug === slug);
+  if (n === -1) return undefined;
+  return projects[(n - 1 + projects.length) % projects.length];
+}
+
+/**
+ * Case studies worth reading next to this one, most related first.
+ *
+ * Relatedness is scored from the project record itself rather than a
+ * hand-maintained list, so adding a project cannot leave a stale cross-link
+ * behind: sharing the `filter` bucket is the strongest signal, then each
+ * shared technology, then the same category. Selection is by `slug`, never by
+ * array position, so the ordering of `projects` is free to change.
+ */
+export function relatedProjects(slug: string, limit = 3): Project[] {
+  const current = getProject(slug);
+  if (!current) return [];
+  const tech = new Set(current.technologies.map((t) => t.toLowerCase()));
+  return projects
+    .filter((p) => p.slug !== current.slug)
+    .map((p) => {
+      let score = 0;
+      if (p.filter === current.filter) score += 4;
+      if (p.category === current.category) score += 2;
+      score += p.technologies.filter((t) => tech.has(t.toLowerCase())).length;
+      return { p, score };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || a.p.number.localeCompare(b.p.number))
+    .slice(0, limit)
+    .map((entry) => entry.p);
+}
+
+/**
+ * Gallery frames that are not already shown as the cover. Several projects
+ * ship a single gallery image identical to `cover`, which rendered the same
+ * screenshot twice on the case study page.
+ */
+export function galleryFrames(project: Project) {
+  return project.gallery.filter((frame) => frame.src !== project.cover?.src);
+}

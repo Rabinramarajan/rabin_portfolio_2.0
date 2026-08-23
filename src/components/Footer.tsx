@@ -38,6 +38,25 @@ import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 const STANDALONE_ROUTES = secondaryNavigation.standalone;
 
 /*
+ * The footer's Navigation column prefers a standalone page over its homepage
+ * anchor ("/#skills" -> "/skills"), then appends any standalone route not
+ * already covered — so no destination is listed twice under two labels
+ * ("Skills … /#skills" directly above "Skills … /skills").
+ */
+const FOOTER_NAV = (() => {
+  const standaloneByPath = new Map(STANDALONE_ROUTES.map((item) => [item.href, item]));
+  const seen = new Set<string>();
+  const items = navigation.map((item) => {
+    const page = item.href.startsWith("/#") ? standaloneByPath.get(item.href.slice(1)) : undefined;
+    const resolved = page ?? item;
+    seen.add(resolved.href);
+    return resolved;
+  });
+  items.push(...STANDALONE_ROUTES.filter((item) => !seen.has(item.href)));
+  return items;
+})();
+
+/*
  * The services page renders one continuous showcase rather than per-service
  * anchors, so every entry deep-links to /services itself.
  */
@@ -196,15 +215,7 @@ export function Footer() {
                     Home
                   </Link>
                 </li>
-                {navigation.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href}>
-                      <ChevronRight size={14} aria-hidden />
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-                {STANDALONE_ROUTES.map((item) => (
+                {FOOTER_NAV.map((item) => (
                   <li key={item.href}>
                     <Link href={item.href}>
                       <ChevronRight size={14} aria-hidden />
@@ -298,8 +309,13 @@ export function Footer() {
                 © {new Date().getFullYear()} {profile.name}. All rights reserved.
               </p>
               <p>
-                Built with <Heart size={13} aria-hidden className="ft__heart" /> using{" "}
-                <Link href="/skills">Next.js</Link> &amp; <Link href="/skills">Angular</Link>.
+                {/* The heart is decorative, so it is hidden from assistive tech. Without a
+                    text equivalent the sentence read as "Built with using Next.js…" to a
+                    screen reader, so the word it stands in for is supplied here. */}
+                Built with <Heart size={13} aria-hidden className="ft__heart" />
+                <span className="sr-only">love</span> using{" "}
+                <Link href="/skills">Next.js</Link>, <Link href="/skills">React</Link> and{" "}
+                <Link href="/skills">TypeScript</Link>.
               </p>
             </div>
 

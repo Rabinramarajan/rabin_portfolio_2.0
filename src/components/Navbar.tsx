@@ -19,13 +19,25 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  /* Body scroll lock + focus restoration for the mobile menu */
+  /* Body scroll lock while the mobile menu is open. Locking <html> as well
+     stops iOS Safari from rubber-banding the page behind the overlay. */
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    const html = document.documentElement;
+    const toggle = toggleRef.current;
+    const prevHtml = html.style.overflow;
+    const prevBody = document.body.style.overflow;
+    html.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      html.style.overflow = prevHtml;
+      document.body.style.overflow = prevBody;
+      // The cleanup runs exactly when `open` flips false, so focus returns to
+      // the control that opened the menu.
+      toggle?.focus();
     };
   }, [open]);
 
@@ -118,6 +130,7 @@ export function Navbar() {
             </Magnetic>
           </motion.div>
           <button
+            ref={toggleRef}
             className="hd__toggle"
             type="button"
             aria-expanded={open}
@@ -168,7 +181,7 @@ export function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: reduce ? 0 : 0.1 + i * 0.06, duration: duration.ui, ease }}
                   >
-                    <Link href={item.href} onClick={() => setOpen(false)}>
+                    <Link href={item.href} className={isActive(item) ? "is-active" : undefined} onClick={() => setOpen(false)}>
                       <span className="mm__index">{String(i + 1).padStart(2, "0")}</span>
                       {item.label}
                     </Link>

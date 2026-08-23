@@ -28,14 +28,18 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
           </div>
         </header>
 
-        <ol className="pr__index" aria-label="Process stages overview">
+        {/* Decorative stage strip. The same seven stages are announced — with more
+            detail — by the <ol> inside ProcessTimeline below, so exposing this as a
+            second list made screen readers and crawlers walk the process twice.
+            Kept as presentational markup so the visual design is unchanged. */}
+        <div className="pr__index" aria-hidden>
           {processSteps.map((step) => (
-            <li className="pr__index-item" key={step.id}>
+            <div className="pr__index-item" key={step.id}>
               <span className="pr__index-num">{step.number}</span>
               <span className="pr__index-label">{step.label}</span>
-            </li>
+            </div>
           ))}
-        </ol>
+        </div>
       </div>
 
       <div className="shell">

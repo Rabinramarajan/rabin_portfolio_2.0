@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "name": "Ask Rabin",
+  "subtitle": "Portfolio Assistant",
+  "welcomeMessage": "Hi, I'm Ask Rabin. I can help you explore Rabin's experience, projects, skills, services and availability.",
+  "maxMessageLength": 2000,
+  "maxHistoryTurns": 8,
+  "maxAnswerWords": 90,
+  "showQuickActions": true,
+  "showSources": true,
+  "showProjectCards": true,
+  "allowLeadCapture": true,
+  "quickActions": [
+    { "label": "View Projects", "prompt": "Show me Rabin's projects." },
+    { "label": "Angular Experience", "prompt": "What Angular technologies does Rabin know?" },
+    { "label": "Services", "prompt": "What services does Rabin offer?" },
+    { "label": "Resume", "prompt": "Show me his resume." },
+    { "label": "Availability", "prompt": "Is Rabin available for work?" },
+    { "label": "Contact Rabin", "prompt": "How can I contact Rabin?" }
+  ]
+}
