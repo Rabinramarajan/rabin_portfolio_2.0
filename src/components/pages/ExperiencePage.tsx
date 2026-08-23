@@ -6,7 +6,6 @@ import { PageCta } from "./PageCta";
 import { PageSectionHead } from "./PageSectionHead";
 import { ExperienceHero } from "@/components/experience/ExperienceHero";
 import { CareerTimeline } from "@/components/experience/CareerTimeline";
-import { JourneySummary } from "@/components/experience/JourneySummary";
 import { TechnologyEvolution } from "@/components/experience/StackEvolution";
 import { CapabilityEvolution } from "@/components/experience/CapabilityEvolution";
 import { MilestoneTrace } from "@/components/experience/MilestoneTrace";
@@ -46,7 +45,6 @@ export function ExperiencePage() {
           </p>
 
           <CareerTimeline />
-          <JourneySummary />
         </div>
       </section>
 

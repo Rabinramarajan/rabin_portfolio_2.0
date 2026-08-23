@@ -51,14 +51,6 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
         <ProcessJourney steps={processSteps} />
       </div>
 
-      <div className="shell pr__close">
-        <p className="pr__close-k">07 / Complete</p>
-        <h3 className="pr__close-title">
-          <LineReveal lines={processIntro.closingLines} />
-        </h3>
-        <p className="pr__close-sub">{processIntro.closingSecondary}</p>
-      </div>
-
       <div className="shell pr__cta">
         <h3 className="pr__cta-title">{processIntro.ctaHeading}</h3>
         <p className="pr__cta-lede">{processIntro.ctaLede}</p>

@@ -1,54 +1,41 @@
 "use client";
 
-import type { ComponentType } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useCallback, useRef, useState, type CSSProperties, type ComponentType, type KeyboardEvent } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   Accessibility,
+  ArrowUpRight,
   Boxes,
-  Brain,
   Bug,
-  ChevronLeft,
-  ChevronRight,
-  ClipboardList,
   Cloud,
   Code2,
   Database,
   Gauge,
   Lightbulb,
-  Link2,
   MessageSquare,
   PenTool,
   Rocket,
-  Search,
   Settings,
   Smartphone,
   Star,
   Target,
-  TrendingUp,
   Users,
 } from "lucide-react";
-import {
-  approachSteps,
-  coreCompetencies,
-  everydayTech,
-  skillHero,
-  skillStats,
-  skillTimeline,
-  softSkills,
-} from "@/content/skills";
+import Link from "next/link";
+import { everydayTech, skillDomains, skillHero, skillStats, skillStrengths } from "@/content/skills";
+import type { SkillDomain } from "@/content/skills";
 import { StackTechIcon } from "@/components/StackTechIcon";
 import { Monogram } from "@/components/Logo";
 import { duration, ease, stagger } from "@/lib/motion";
 import { SectionKicker, itemHeadingLevel, type SectionHeadingLevel } from "@/components/ui";
-import type { SkillTimelineNode } from "@/content/skills";
 
 type Glyph = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 
 const GLYPH: Record<string, Glyph> = {
-  // timeline nodes
+  // domains
   frontend: Code2,
-  mobile: Smartphone,
   state: Database,
+  mobile: Smartphone,
   backend: Cloud,
   devops: Settings,
   design: PenTool,
@@ -57,36 +44,34 @@ const GLYPH: Record<string, Glyph> = {
   rocket: Rocket,
   people: Users,
   target: Target,
-  // competencies + soft skills + approach
+  // strengths
   architecture: Boxes,
-  code: Code2,
   gauge: Gauge,
   bug: Bug,
-  link: Link2,
   accessibility: Accessibility,
   bulb: Lightbulb,
-  brain: Brain,
   chat: MessageSquare,
-  search: Search,
-  plan: ClipboardList,
-  trend: TrendingUp,
 };
 
 function Icon({ name, size = 18 }: { name: string; size?: number }) {
   const Glyph = GLYPH[name] ?? Code2;
-  return <Glyph size={size} strokeWidth={1.75} />;
+  return <Glyph size={size} strokeWidth={1.6} />;
 }
 
 /**
- * Skills — a numbered section header, a statement column carrying the
- * credibility stats, and a snaking six-node "core skill
- * timeline" that reads 01→03 left to right and 04→06 back the other way. The
- * closing panel splits into tech marks, competencies, soft skills and the
- * four-step approach dial.
+ * Skills — a three-part cinematic deck that holds one viewport height on a
+ * desktop monitor and reflows to a single column on smaller screens.
  *
- * The connector rails (chevrons, the U-turn on the right, the tail on the
- * left) are decorative and collapse away below the timeline's two-row
- * breakpoint, where the nodes stack into a plain list.
+ *   statement column  ·  orbit stage  ·  detail panel
+ *
+ * The orbit is the interactive control: six domain nodes sit on a ring around
+ * the monogram nucleus and drive the detail panel beside them. The nodes are a
+ * real tablist (roving tabindex, arrow-key navigation), so the whole section
+ * is operable from the keyboard and reads correctly to a screen reader — the
+ * ring geometry is presentation only.
+ *
+ * Everything that moves is transform / opacity, the ring spin is pure CSS, and
+ * all of it collapses under `prefers-reduced-motion`.
  */
 export function SkillsSection({
   headingLevel = "h2",
@@ -95,219 +80,262 @@ export function SkillsSection({
   const reduce = useReducedMotion();
   const Heading = headingLevel;
   const itemHeading = itemHeadingLevel(headingLevel);
-  const fade = reduce ? { opacity: 0 } : { opacity: 0, y: 18 };
+  const [activeId, setActiveId] = useState(skillDomains[0].id);
+  const active = skillDomains.find((d) => d.id === activeId) ?? skillDomains[0];
+
+  const fade = reduce ? { opacity: 0 } : { opacity: 0, y: 20 };
   const inView = { opacity: 1, y: 0 };
   const viewport = { once: true, margin: "-10%" } as const;
-  const sectionTransition = { duration: reduce ? duration.micro : duration.section, ease };
-
-  const topRow = skillTimeline.slice(0, 3);
-  // The lower rail runs right to left, so 06 renders first and 04 last.
-  const bottomRow = skillTimeline.slice(3).reverse();
+  const enter = { duration: reduce ? duration.micro : duration.section, ease };
 
   return (
-    <section id="skills" className="section skx">
-      <div className="shell">
-        <header className="skx__top">
+    <section id="skills" className="section skd">
+      <span className="skd__aura" aria-hidden />
+
+      <div className="shell skd__shell">
+        <motion.header className="skd__top" initial={fade} whileInView={inView} viewport={viewport} transition={enter}>
           <SectionKicker index={index} label={skillHero.kicker} />
-        </header>
+        </motion.header>
 
-        <div className="skx__main">
-          <motion.div
-            className="skx__intro"
-            initial={fade}
-            whileInView={inView}
-            viewport={viewport}
-            transition={sectionTransition}
-          >
-            <Heading className="skx__title">
-              {skillHero.headline[0]} <br />
-              {skillHero.headline[1]} <em>{skillHero.headline[2]}</em> <br />
-              {skillHero.headline[3]} <br />
-              {skillHero.headline[4]} <em>{skillHero.headline[5]}</em>
+        <div className="skd__grid">
+          {/* ---------- statement ---------- */}
+          <motion.div className="skd__intro" initial={fade} whileInView={inView} viewport={viewport} transition={enter}>
+            <Heading className="skd__title">
+              Skills that build
+              <br />
+              digital <em>experiences.</em>
             </Heading>
-            <span className="skx__title-rule" aria-hidden />
-            <p className="skx__lede">{skillHero.lede}</p>
+            <p className="skd__lede">{skillHero.lede}</p>
 
-            <dl className="skx__stats">
+            <dl className="skd__stats">
               {skillStats.map((stat) => (
-                <div className="skx__stat" key={stat.id}>
-                  <dt className="skx__stat-icon" aria-hidden>
-                    <Icon name={stat.icon} size={20} />
+                <div className="skd__stat" key={stat.id}>
+                  <dt className="skd__stat-icon" aria-hidden>
+                    <Icon name={stat.icon} size={17} />
                   </dt>
-                  <dd className="skx__stat-body">
+                  <dd className="skd__stat-body">
                     <strong>{stat.value}</strong>
                     <span>
-                      {stat.label[0]}
-                      <br />
-                      {stat.label[1]}
+                      {stat.label[0]} {stat.label[1]}
                     </span>
                   </dd>
                 </div>
               ))}
             </dl>
+
+            <Link className="skd__cta" href="/work">
+              View skills in action
+              <span className="skd__cta-arrow" aria-hidden>
+                <ArrowUpRight size={16} strokeWidth={2} />
+              </span>
+            </Link>
           </motion.div>
 
+          {/* ---------- orbit ---------- */}
           <motion.div
-            className="skx__timeline"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-8%" }}
-            transition={{ staggerChildren: reduce ? 0 : stagger, delayChildren: reduce ? 0 : 0.1 }}
+            className="skd__stage"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={viewport}
+            transition={{ duration: reduce ? duration.micro : duration.cinematic, ease }}
           >
-            <p className="skx__timeline-label">
-              <span className="skx__timeline-arrow" aria-hidden>
-                →
-              </span>
-              {skillHero.timelineLabel}
-              <span className="skx__timeline-arrow" aria-hidden>
-                ←
-              </span>
-            </p>
+            <SkillOrbit active={activeId} onSelect={setActiveId} reduce={Boolean(reduce)} />
+          </motion.div>
 
-            <div className="skx__rail skx__rail--fwd">
-              {topRow.map((node, i) => (
-                <TimelineNode key={node.id} node={node} reduce={Boolean(reduce)} connector={i < 2 ? "next" : null} itemHeading={itemHeading} />
+          {/* ---------- detail ---------- */}
+          <motion.div
+            className="skd__detail"
+            initial={fade}
+            whileInView={inView}
+            viewport={viewport}
+            transition={{ ...enter, delay: reduce ? 0 : 0.08 }}
+          >
+            <SkillDetail domain={active} reduce={Boolean(reduce)} itemHeading={itemHeading} />
+
+            <ul className="skd__strengths">
+              {skillStrengths.map((item) => (
+                <li key={item.id}>
+                  <span className="skd__strength-icon" aria-hidden>
+                    <Icon name={item.icon} size={15} />
+                  </span>
+                  <span className="skd__strength-body">
+                    <strong>{item.label}</strong>
+                    <span>{item.note}</span>
+                  </span>
+                </li>
               ))}
-            </div>
-
-            <span className="skx__uturn" aria-hidden />
-            <span className="skx__tail" aria-hidden />
-
-            <div className="skx__rail skx__rail--rev">
-              {bottomRow.map((node, i) => (
-                <TimelineNode
-                  key={node.id}
-                  node={node}
-                  reduce={Boolean(reduce)}
-                  flipped
-                  connector={i < 2 ? "prev" : null}
-                  itemHeading={itemHeading}
-                />
-              ))}
-            </div>
+            </ul>
           </motion.div>
         </div>
 
-        <motion.div
-          className="skx__panel"
-          initial={fade}
-          whileInView={inView}
-          viewport={viewport}
-          transition={{ ...sectionTransition, delay: reduce ? 0 : 0.08 }}
-        >
-          <section className="skx__col">
-            <h3 className="skx__col-title">Technologies I work with</h3>
-            <ul className="skx__tech">
-              {everydayTech.map((item) => (
-                <li key={item}>
-                  <span className="skx__tech-tile" aria-hidden>
-                    <StackTechIcon label={item} className="skx__tech-icon" />
-                  </span>
-                  <span className="skx__tech-name">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="skx__col skx__col--bordered">
-            <h3 className="skx__col-title skx__col-title--center">Core Competencies</h3>
-            <ul className="skx__chips skx__chips--two">
-              {coreCompetencies.map((item) => (
-                <li key={item.id}>
-                  <span className="skx__chip-icon" aria-hidden>
-                    <Icon name={item.icon} size={16} />
-                  </span>
-                  {item.label}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="skx__col skx__col--bordered">
-            <h3 className="skx__col-title">Soft Skills</h3>
-            <ul className="skx__chips">
-              {softSkills.map((item) => (
-                <li key={item.id}>
-                  <span className="skx__chip-icon" aria-hidden>
-                    <Icon name={item.icon} size={16} />
-                  </span>
-                  {item.label}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="skx__col skx__col--bordered">
-            <h3 className="skx__col-title skx__col-title--center">My Approach</h3>
-            <div className="skx__dial">
-              <span className="skx__dial-core" aria-hidden>
-                <Monogram className="skx__dial-mark" />
-              </span>
-              {approachSteps.map((step) => (
-                <div className={`skx__step skx__step--${step.id}`} key={step.id}>
-                  <span className="skx__step-icon" aria-hidden>
-                    <Icon name={step.icon} size={16} />
-                  </span>
-                  <strong>{step.title}</strong>
-                  <span>
-                    {step.body[0]}
-                    <br />
-                    {step.body[1]}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
+        {/* ---------- tech rail ---------- */}
+        <motion.div className="skd__rail" initial={fade} whileInView={inView} viewport={viewport} transition={{ ...enter, delay: reduce ? 0 : 0.12 }}>
+          <p className="skd__rail-label">Technologies I work with</p>
+          <ul className="skd__rail-list">
+            {everydayTech.map((item) => (
+              <li key={item}>
+                <span className="skd__rail-icon" aria-hidden>
+                  <StackTechIcon label={item} />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
         </motion.div>
       </div>
     </section>
   );
 }
 
-function TimelineNode({
-  node,
+/* ------------------------------------------------------------------
+   Orbit — the six domain nodes as a tablist.
+   Node placement is inline custom properties rather than classes so the ring
+   stays data-driven: add a seventh domain and the geometry redistributes.
+------------------------------------------------------------------ */
+
+function SkillOrbit({
+  active,
+  onSelect,
   reduce,
-  flipped = false,
-  connector,
+}: {
+  active: string;
+  onSelect: (id: string) => void;
+  reduce: boolean;
+}) {
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const onKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      const keys = ["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp", "Home", "End"];
+      if (!keys.includes(event.key)) return;
+      event.preventDefault();
+      const current = skillDomains.findIndex((d) => d.id === active);
+      const last = skillDomains.length - 1;
+      const next =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? last
+            : event.key === "ArrowRight" || event.key === "ArrowDown"
+              ? (current + 1) % skillDomains.length
+              : (current - 1 + skillDomains.length) % skillDomains.length;
+      onSelect(skillDomains[next].id);
+      refs.current[next]?.focus();
+    },
+    [active, onSelect],
+  );
+
+  return (
+    <div className="skd__orbit">
+      {/* Decorative rings. The dashed one spins; the rest are static. */}
+      <span className="skd__ring skd__ring--outer" aria-hidden />
+      <span className="skd__ring skd__ring--spin" aria-hidden />
+      <span className="skd__ring skd__ring--inner" aria-hidden />
+      <span className="skd__sweep" aria-hidden />
+
+      <span className="skd__core" aria-hidden>
+        <Monogram className="skd__core-mark" />
+      </span>
+
+      <div className="skd__nodes" role="tablist" aria-label="Skill domains" aria-orientation="horizontal" onKeyDown={onKeyDown}>
+        {skillDomains.map((domain, i) => {
+          // Nodes start at 12 o'clock and run clockwise around the ring.
+          const angle = (360 / skillDomains.length) * i - 90;
+          const selected = domain.id === active;
+          return (
+            <button
+              key={domain.id}
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              type="button"
+              role="tab"
+              id={`skd-tab-${domain.id}`}
+              aria-selected={selected}
+              aria-controls="skd-panel"
+              tabIndex={selected ? 0 : -1}
+              className="skd__node"
+              data-selected={selected || undefined}
+              style={{ "--angle": `${angle}deg` } as CSSProperties}
+              onClick={() => onSelect(domain.id)}
+              onMouseEnter={reduce ? undefined : () => onSelect(domain.id)}
+            >
+              <span className="skd__node-disc">
+                <Icon name={domain.id} size={20} />
+              </span>
+              <span className="skd__node-label">
+                <span className="skd__node-index" aria-hidden>
+                  {domain.index}
+                </span>
+                {domain.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------
+   Detail panel — swaps content for the selected domain.
+------------------------------------------------------------------ */
+
+function SkillDetail({
+  domain,
+  reduce,
   itemHeading: ItemHeading,
 }: {
-  node: SkillTimelineNode;
+  domain: SkillDomain;
   reduce: boolean;
-  flipped?: boolean;
-  connector: "next" | "prev" | null;
   itemHeading: "h2" | "h3";
 }) {
-  return (
-    <motion.article
-      className={flipped ? "skx__node skx__node--flipped" : "skx__node"}
-      variants={reduce ? undefined : { hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0 } }}
-      transition={{ duration: reduce ? duration.micro : duration.section, ease }}
-    >
-      <div className="skx__node-head">
-        <span className="skx__node-disc" aria-hidden>
-          <Icon name={node.id} size={22} />
-        </span>
-        {connector ? (
-          <span className="skx__node-link" aria-hidden>
-            {connector === "next" ? <ChevronRight size={14} strokeWidth={2.5} /> : <ChevronLeft size={14} strokeWidth={2.5} />}
-          </span>
-        ) : null}
-      </div>
 
-      <p className="skx__node-index" aria-hidden>
-        {node.index}
-      </p>
-      <ItemHeading className="skx__node-title">
-        {node.title[0]}
-        <br />
-        {node.title[1]}
-      </ItemHeading>
-      <p className="skx__node-desc">{node.description}</p>
-      <ul className="skx__node-items">
-        {node.items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </motion.article>
+  return (
+    <div className="skd__panel" id="skd-panel" role="tabpanel" aria-labelledby={`skd-tab-${domain.id}`} tabIndex={0}>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={domain.id}
+          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+          transition={{ duration: reduce ? duration.micro : duration.ui, ease }}
+        >
+          <p className="skd__panel-index" aria-hidden>
+            {domain.index} <span>/ {domain.tagline}</span>
+          </p>
+          <ItemHeading className="skd__panel-title">{domain.title}</ItemHeading>
+          <p className="skd__panel-desc">{domain.description}</p>
+
+          <ul className="skd__focus">
+            {domain.focus.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+
+          <motion.ul
+            className="skd__chips"
+            initial="hidden"
+            animate="visible"
+            transition={{ staggerChildren: reduce ? 0 : stagger / 2 }}
+          >
+            {domain.tech.map((item) => (
+              <motion.li
+                key={item}
+                variants={
+                  reduce
+                    ? { hidden: { opacity: 0 }, visible: { opacity: 1 } }
+                    : { hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }
+                }
+                transition={{ duration: duration.ui, ease }}
+              >
+                <StackTechIcon label={item} className="skd__chip-icon" />
+                {item}
+              </motion.li>
+            ))}
+          </motion.ul>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 }

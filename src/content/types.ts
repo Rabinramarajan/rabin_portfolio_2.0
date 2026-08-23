@@ -141,7 +141,50 @@ export interface Project {
   architecture?: string;
   features: string[];
   results: string[];
+  /**
+   * Where the product runs, e.g. ["Enterprise Web"] or ["iOS", "Android"].
+   * Derived from the delivery record, not from the stack.
+   */
+  platform?: string[];
+  /** Named only when the engagement is public. Omitted otherwise. */
+  client?: string;
+  /**
+   * What was personally contributed. Populate ONLY from the verified role
+   * record — an empty array hides the section rather than inventing one.
+   */
+  responsibilities?: string[];
+  /**
+   * Verified, evidenced numbers. Never populate from estimation: a project
+   * with no measured outcome carries no metrics and the impact section falls
+   * back to the qualitative `results` lines.
+   */
+  metrics?: ProjectMetric[];
+  /** Engineering decisions with a stated trade-off. Optional by design. */
+  decisions?: EngineeringDecision[];
+  /** Layered stack readout for the engineering section. */
+  stack?: StackLayer[];
   seo: { title: string; description: string };
+}
+
+/** One evidenced outcome. `note` sources the claim so it can be traced. */
+export interface ProjectMetric {
+  value: string;
+  label: string;
+  note?: string;
+}
+
+export interface EngineeringDecision {
+  problem: string;
+  decision: string;
+  why: string;
+  tradeoff?: string;
+  result?: string;
+}
+
+/** "Frontend — Angular", "API — Sails.js": one row of the engineering table. */
+export interface StackLayer {
+  layer: string;
+  value: string;
 }
 
 /** One movement of the career narrative. Labels the stage, never invents it. */

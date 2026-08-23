@@ -169,3 +169,102 @@ export const skillGroups: SkillGroup[] = [
     items: ["Git", "GitHub", "VS Code", "Postman"],
   },
 ];
+
+/* ------------------------------------------------------------------
+   SKILL DECK — the cinematic orbit + detail panel
+   Each domain is one node on the orbit and one panel of detail. `label` is
+   the short form the orbit node prints; the panel gets the long form.
+------------------------------------------------------------------ */
+
+export interface SkillDomain {
+  id: string;
+  index: string;
+  /** Short label rendered under the orbit node — keep it to one word. */
+  label: string;
+  title: string;
+  tagline: string;
+  description: string;
+  /** Three capability lines shown in the detail panel. */
+  focus: [string, string, string];
+  /** Brand chips — every label must resolve through `StackTechIcon`. */
+  tech: string[];
+}
+
+export const skillDomains: SkillDomain[] = [
+  {
+    id: "frontend",
+    index: "01",
+    label: "Frontend",
+    title: "Frontend Engineering",
+    tagline: "The layer people actually touch",
+    description:
+      "Angular applications built to stay fast as they grow — typed end to end, componentised, and measured against real devices rather than a dev laptop.",
+    focus: ["Standalone, zoneless Angular architecture", "Design-system driven component libraries", "Core Web Vitals held under budget"],
+    tech: ["Angular", "TypeScript", "Tailwind CSS", "SCSS", "HTML5"],
+  },
+  {
+    id: "state",
+    index: "02",
+    label: "State",
+    title: "State & Data Flow",
+    tagline: "Predictable under pressure",
+    description:
+      "Reactive state that a team can reason about — signals for local truth, RxJS for streams, and a store only where the complexity genuinely earns it.",
+    focus: ["Signals-first component state", "RxJS stream composition and teardown", "NgRx for cross-feature domains"],
+    tech: ["Angular Signals", "RxJS", "NgRx", "TypeScript"],
+  },
+  {
+    id: "mobile",
+    index: "03",
+    label: "Mobile",
+    title: "Mobile & Cross-Platform",
+    tagline: "One codebase, both stores",
+    description:
+      "Ionic and Capacitor apps that feel native — native plugins where they matter, web speed everywhere else, shipped to iOS and Android from a single build.",
+    focus: ["Ionic + Capacitor native bridges", "Offline-capable PWAs", "Touch-first responsive interaction"],
+    tech: ["Ionic", "Capacitor", "PWA", "Android", "iOS"],
+  },
+  {
+    id: "backend",
+    index: "04",
+    label: "Backend",
+    title: "Backend & APIs",
+    tagline: "Owning the integration end to end",
+    description:
+      "Node services and REST contracts designed alongside the UI that consumes them, so the frontend never has to paper over an awkward payload.",
+    focus: ["Express and Nest service layers", "REST contract and schema design", "Relational data modelling"],
+    tech: ["Node.js", "Express.js", "PostgreSQL", "MySQL", "GraphQL"],
+  },
+  {
+    id: "devops",
+    index: "05",
+    label: "DevOps",
+    title: "Tooling & Delivery",
+    tagline: "Boring releases, on purpose",
+    description:
+      "Pipelines that catch problems before users do — typed builds, automated checks, preview deploys on every branch, and rollbacks that take one click.",
+    focus: ["CI/CD with automated quality gates", "Containerised, reproducible builds", "Preview environments per branch"],
+    tech: ["Git", "GitHub", "Docker", "Vercel", "Playwright"],
+  },
+  {
+    id: "design",
+    index: "06",
+    label: "Design",
+    title: "Design & Experience",
+    tagline: "I work in the file, not just from it",
+    description:
+      "Interface work that starts in Figma and survives the handoff — accessible by default, consistent in spacing and motion, opinionated about hierarchy.",
+    focus: ["Figma to production design systems", "WCAG AA accessibility baseline", "Motion with intent, never decoration"],
+    tech: ["Figma", "Tailwind CSS", "CSS3", "WCAG"],
+  },
+];
+
+/** The strength rail beside the detail panel — competencies plus soft skills. */
+export const skillStrengths = [
+  { id: "architecture", icon: "architecture", label: "Component Architecture", note: "Scalable & maintainable" },
+  { id: "performance", icon: "gauge", label: "Performance Optimization", note: "Fast by default" },
+  { id: "quality", icon: "bug", label: "Testing & Debugging", note: "Proof it still works" },
+  { id: "accessibility", icon: "accessibility", label: "SEO & Accessibility", note: "Usable by everyone" },
+  { id: "problem", icon: "bulb", label: "Problem Solving", note: "Analytical thinking" },
+  { id: "communication", icon: "chat", label: "Clear Communication", note: "No surprises, ever" },
+] as const;

@@ -1,4 +1,4 @@
-import type { Project } from '@/content/types';
+import type { Project, ProjectFilter } from '@/content/types';
 const img = (src: string, alt: string, width = 1600, height = 1000) => ({ src, alt, width, height });
 export const projects: Project[] = [
   {
@@ -9,19 +9,26 @@ export const projects: Project[] = [
     category: 'Government Platform',
     year: '2024',
     role: 'Frontend Angular Developer',
+    platform: ['Enterprise Web'],
+    stack: [
+      { layer: 'Frontend', value: 'Angular (standalone components)' },
+      { layer: 'State', value: 'RxJS' },
+      { layer: 'Styling', value: 'Tailwind CSS' },
+      { layer: 'API', value: 'Sails.js' },
+      { layer: 'Access', value: 'Role-based routing & UI guards' },
+    ],
+    metrics: [
+      { value: '~40%', label: 'Lower API consumption', note: 'Measured against the pre-optimisation frontend data flow.' },
+      { value: '~50%', label: 'Frontend performance gain', note: 'From optimised rendering and workflow handling.' },
+      { value: '10,000+', label: 'Active users', note: 'Fiji Government immigration case management, across three countries.' },
+    ],
     technologies: ['Angular', 'TypeScript', 'Sails.js', 'RxJS', 'Tailwind CSS'],
     featured: true,
     layout: 'large',
     filter: 'enterprise',
-    cover: img(
-      '/media/fiji_internal_application/image3.png',
-      'Fiji Immigration officer workflow dashboard'
-    ),
+    cover: img('/media/fiji_internal_application/image3.png', 'Fiji Immigration officer workflow dashboard', 1370, 769),
     gallery: [
-      img(
-        '/media/fiji_internal_application/image3.png',
-        'Fiji Immigration officer workflow list'
-      )
+      img('/media/fiji_internal_application/image3.png', 'Fiji Immigration officer workflow list', 1370, 769)
     ],
     problem:
       'Immigration operations needed a centralized system where officers could assess applications, verify documents and move cases through complex workflows without losing context.',
@@ -62,19 +69,20 @@ export const projects: Project[] = [
     category: 'Citizen Portal',
     year: '2024',
     role: 'Frontend Angular Developer',
+    platform: ['Public Web'],
+    stack: [
+      { layer: 'Frontend', value: 'Angular' },
+      { layer: 'State', value: 'RxJS' },
+      { layer: 'Styling', value: 'Tailwind CSS' },
+      { layer: 'API', value: 'Sails.js' },
+    ],
     technologies: ['Angular', 'TypeScript', 'Sails.js', 'RxJS', 'Tailwind CSS'],
     featured: true,
     layout: 'medium',
     filter: 'web',
-    cover: img(
-      '/media/fiji_external_application/image1.png',
-      'Fiji Immigration citizen portal'
-    ),
+    cover: img('/media/fiji_external_application/image1.png', 'Fiji Immigration citizen portal', 1366, 768),
     gallery: [
-      img(
-        '/media/fiji_external_application/image1.png',
-        'Fiji Immigration citizen portal welcome screen'
-      )
+      img('/media/fiji_external_application/image1.png', 'Fiji Immigration citizen portal welcome screen', 1366, 768)
     ],
     problem:
       'Applicants needed a way to submit and track immigration applications remotely without depending on physical office visits or assistance from a training desk.',
@@ -116,6 +124,13 @@ export const projects: Project[] = [
     category: 'Pension Platform',
     year: '2023',
     role: 'Frontend Angular Developer',
+    platform: ['Enterprise Web'],
+    stack: [
+      { layer: 'Frontend', value: 'Angular' },
+      { layer: 'UI system', value: 'Angular Material' },
+      { layer: 'State', value: 'RxJS' },
+      { layer: 'API', value: 'Sails.js' },
+    ],
     technologies: [
       'Angular',
       'TypeScript',
@@ -126,15 +141,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'medium',
     filter: 'enterprise',
-    cover: img(
-      '/media/prims_member_portal/image3.png',
-      'PRIMS pension member transactions'
-    ),
+    cover: img('/media/prims_member_portal/image3.png', 'PRIMS pension member transactions', 1919, 911),
     gallery: [
-      img(
-        '/media/prims_member_portal/image3.png',
-        'PRIMS pension contribution and transaction history'
-      )
+      img('/media/prims_member_portal/image3.png', 'PRIMS pension contribution and transaction history', 1919, 911)
     ],
     problem:
       'Members depended heavily on staff to understand contributions, balances, statements and pension-related information that should have been available through self-service.',
@@ -176,6 +185,13 @@ export const projects: Project[] = [
     category: 'Mobile Application',
     year: '2023',
     role: 'Frontend Angular Developer',
+    platform: ['iOS', 'Android'],
+    stack: [
+      { layer: 'App shell', value: 'Ionic + Angular' },
+      { layer: 'Native bridge', value: 'Capacitor' },
+      { layer: 'State', value: 'RxJS' },
+      { layer: 'Language', value: 'TypeScript' },
+    ],
     technologies: [
       'Ionic',
       'Angular',
@@ -186,19 +202,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'full',
     filter: 'mobile',
-    cover: img(
-      '/media/vnpf_mobile/composite-thumb.png',
-      'VNPF blo mi mobile application screens',
-      1600,
-      1200
-    ),
+    cover: img('/media/vnpf_mobile/composite-thumb.png', 'VNPF blo mi mobile application screens', 1200, 900),
     gallery: [
-      img(
-        '/media/vnpf_mobile/composite-thumb.png',
-        'VNPF blo mi mobile application screens',
-        1600,
-        1200
-      )
+      img('/media/vnpf_mobile/composite-thumb.png', 'VNPF blo mi mobile application screens', 1200, 900)
     ],
     problem:
       'VNPF members needed convenient mobile access to their provident fund information without relying on desktop portals or physical offices.',
@@ -240,6 +246,13 @@ export const projects: Project[] = [
     category: 'Enterprise Platform',
     year: '2025',
     role: 'Frontend Angular Developer',
+    platform: ['Enterprise Web'],
+    stack: [
+      { layer: 'Frontend', value: 'Angular (modular architecture)' },
+      { layer: 'State', value: 'RxJS' },
+      { layer: 'Data views', value: 'Structured tables & dashboards' },
+      { layer: 'Styling', value: 'Tailwind CSS' },
+    ],
     technologies: [
       'Angular',
       'TypeScript',
@@ -250,15 +263,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'enterprise',
-    cover: img(
-      '/media/insuremet/image2.png',
-      'InsureMet insurance administration dashboard'
-    ),
+    cover: img('/media/insuremet/image2.png', 'InsureMet insurance administration dashboard', 1366, 768),
     gallery: [
-      img(
-        '/media/insuremet/image2.png',
-        'InsureMet enterprise dashboard'
-      )
+      img('/media/insuremet/image2.png', 'InsureMet enterprise dashboard', 1366, 768)
     ],
     problem:
       'Insurance operations were distributed across different processes and systems, making it harder for teams to manage policies, claims, products and financial information from one place.',
@@ -300,6 +307,13 @@ export const projects: Project[] = [
     category: 'E-Commerce',
     year: '2026',
     role: 'Frontend Angular Developer',
+    platform: ['Web'],
+    stack: [
+      { layer: 'Frontend', value: 'Angular (standalone components)' },
+      { layer: 'Rendering', value: 'Server-side rendering' },
+      { layer: 'State', value: 'RxJS' },
+      { layer: 'Styling', value: 'Tailwind CSS' },
+    ],
     technologies: [
       'Angular',
       'TypeScript',
@@ -352,6 +366,13 @@ export const projects: Project[] = [
     category: 'AI Product',
     year: '2026',
     role: 'Founder & Frontend Engineer',
+    platform: ['Web'],
+    stack: [
+      { layer: 'Frontend', value: 'Angular (standalone components)' },
+      { layer: 'Reactivity', value: 'Signals / Zoneless' },
+      { layer: 'Styling', value: 'Tailwind CSS' },
+      { layer: 'AI', value: 'Assisted content generation' },
+    ],
     technologies: [
       'Angular',
       'TypeScript',
@@ -405,6 +426,14 @@ export const projects: Project[] = [
     category: 'SaaS Admin Platform',
     year: '2026',
     role: 'Founder & Full-Stack Engineer',
+    platform: ['Enterprise Web'],
+    stack: [
+      { layer: 'Frontend', value: 'Angular 22 — Signals, Zoneless' },
+      { layer: 'Styling', value: 'Tailwind CSS' },
+      { layer: 'API', value: 'NestJS' },
+      { layer: 'Database', value: 'PostgreSQL + Prisma' },
+      { layer: 'Storage', value: 'Supabase Storage' },
+    ],
     technologies: [
       'Angular',
       'TypeScript',
@@ -463,6 +492,13 @@ export const projects: Project[] = [
     category: 'Design System',
     year: '2026',
     role: 'Frontend Architect & Angular Developer',
+    platform: ['Angular applications'],
+    stack: [
+      { layer: 'Components', value: 'Standalone Angular components' },
+      { layer: 'Reactivity', value: 'Signals' },
+      { layer: 'Primitives', value: 'Angular CDK' },
+      { layer: 'Styling', value: 'Tailwind CSS design tokens' },
+    ],
     technologies: [
       'Angular',
       'TypeScript',
@@ -553,4 +589,61 @@ export function relatedProjects(slug: string, limit = 3): Project[] {
  */
 export function galleryFrames(project: Project) {
   return project.gallery.filter((frame) => frame.src !== project.cover?.src);
+}
+
+/**
+ * Human labels for the filter buckets. This is the ONE place a bucket is
+ * named — the work section, the work page explorer and any future surface all
+ * read it from here, so a renamed category cannot disagree with itself.
+ */
+export const FILTER_LABEL: Record<ProjectFilter, string> = {
+  enterprise: 'Enterprise',
+  web: 'Web Apps',
+  mobile: 'Mobile',
+  architecture: 'Architecture',
+};
+
+export interface FilterOption {
+  id: ProjectFilter | 'all';
+  label: string;
+  count: number;
+}
+
+/**
+ * The filter row, generated from the project records.
+ *
+ * Buckets with no projects never appear, and every count is `projects.length`
+ * arithmetic rather than a maintained number — so a filter can never advertise
+ * results it cannot show, and the counts can never drift from the catalogue.
+ */
+export function projectFilters(source: Project[] = projects): FilterOption[] {
+  const order: ProjectFilter[] = ['enterprise', 'web', 'mobile', 'architecture'];
+  const present = order.filter((id) => source.some((p) => p.filter === id));
+  return [
+    { id: 'all', label: 'All Work', count: source.length },
+    ...present.map((id) => ({
+      id,
+      label: FILTER_LABEL[id],
+      count: source.filter((p) => p.filter === id).length,
+    })),
+  ];
+}
+
+/**
+ * The one project that leads the work experience. `featured` is true on every
+ * record today, so leading by catalogue position keeps a single hero rather
+ * than silently promoting whichever project happens to sort first.
+ */
+export function featuredProject(): Project {
+  return projects.find((p) => p.featured) ?? projects[0];
+}
+
+/** Distinct domains represented in the catalogue, for the honest stats row. */
+export function projectDomains(): string[] {
+  return Array.from(new Set(projects.map((p) => p.category)));
+}
+
+/** Distinct delivery platforms across every project. */
+export function projectPlatforms(): string[] {
+  return Array.from(new Set(projects.flatMap((p) => p.platform ?? [])));
 }

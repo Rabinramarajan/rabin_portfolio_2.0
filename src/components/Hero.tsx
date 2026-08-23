@@ -68,6 +68,15 @@ export function Hero() {
       {/* --- editorial layer --- */}
       <motion.div className="shell chero__shell" style={{ y: copyY, opacity: copyOpacity }}>
         <div className="chero__copy">
+          <motion.p
+            className="chero__status"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={t(0.04)}
+          >
+            <span className="chero__pulse" aria-hidden /> {hero.availability}
+          </motion.p>
+
           <h1 id="hero-heading" className="chero__title">
             {lines.map((line, i) => (
               <span className="chero__line" key={line.text}>
@@ -144,9 +153,6 @@ export function Hero() {
         ) : null}
       </motion.div>
 
-      <div className="chero__status" aria-hidden={false}>
-        <span className="chero__pulse" aria-hidden /> {hero.availability}
-      </div>
     </section>
   );
 }

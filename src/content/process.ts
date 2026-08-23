@@ -5,8 +5,6 @@ export const processIntro = {
   label: 'My Process',
   headingLines: ['From idea', 'to production.'],
   lede: 'Every project starts with a question, then moves through clarity, design, engineering and continuous refinement.',
-  closingLines: ['Shipping is not', 'the end of the process.'],
-  closingSecondary: "It's where the next iteration starts.",
   ctaHeading: 'Ready to build?',
   ctaLede: "Let's turn your idea into something production-ready.",
 } as const;

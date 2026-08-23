@@ -6,7 +6,6 @@ import { TextReveal } from "@/components/motion";
 import { duration, ease } from "@/lib/motion";
 import { SmartImage } from "@/components/SmartImage";
 import { CareerTimeline } from "@/components/experience/CareerTimeline";
-import { JourneySummary } from "@/components/experience/JourneySummary";
 import { StatPills } from "@/components/experience/StatPills";
 import { accentIndex, journeyArt, sections, titleLines } from "@/content/sections";
 
@@ -63,7 +62,6 @@ export function JourneySection() {
 
         <CareerTimeline limit={4} />
 
-        <JourneySummary />
       </div>
     </section>
   );

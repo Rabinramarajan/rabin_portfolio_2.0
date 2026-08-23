@@ -3,22 +3,13 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { projects } from "@/content/projects";
-import { profile } from "@/content/profile";
+import { FILTER_LABEL, projects } from "@/content/projects";
 import type { Project, ProjectFilter } from "@/content/types";
-import { Monogram } from "@/components/Logo";
 import { ProjectCover } from "@/components/ProjectCover";
 import { cn } from "@/lib/cn";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker, itemHeadingLevel } from "@/components/ui";
 import { sections } from "@/content/sections";
-
-const FILTER_LABEL: Record<ProjectFilter, string> = {
-  web: "Web Apps",
-  mobile: "Mobile",
-  enterprise: "Enterprise",
-  architecture: "Architecture",
-};
 
 /** Category tint, carried by the chapter dot and the stage's rim light. */
 const FILTER_TINT: Record<ProjectFilter, string> = {
@@ -27,13 +18,6 @@ const FILTER_TINT: Record<ProjectFilter, string> = {
   enterprise: "#7c6bf5",
   architecture: "#f2a54d",
 };
-
-const STATS = [
-  { icon: "code", value: `${projects.length}+`, label: ["Projects", "Completed"] },
-  { icon: "people", value: "15+", label: ["Happy", "Clients"] },
-  { icon: "rocket", value: profile.yearsExperienceLabel, label: ["Years of", "Experience"] },
-  { icon: "trophy", value: "100%", label: ["Commitment to", "Quality"] },
-] as const;
 
 type FilterId = ProjectFilter | "all";
 
@@ -265,34 +249,6 @@ export function WorkSection({
             </Link>
           ) : null}
         </div>
-
-        <div className="wx__stats">
-          <span className="wx__emblem" aria-hidden>
-            <span className="wx__emblem-orbit wx__emblem-orbit--outer" />
-            <span className="wx__emblem-orbit wx__emblem-orbit--inner" />
-            <span className="wx__emblem-core">
-              <Monogram className="wx__emblem-mark" />
-            </span>
-          </span>
-
-          <dl className="wx__stat-grid">
-            {STATS.map((s) => (
-              <div className="wx__stat" key={s.value + s.label[0]}>
-                <span className="wx__stat-icon" aria-hidden>
-                  <WorkIcon name={s.icon} />
-                </span>
-                <div className="wx__stat-copy">
-                  <dt className="wx__stat-value">{s.value}</dt>
-                  <dd className="wx__stat-label">
-                    {s.label[0]}
-                    <br />
-                    {s.label[1]}
-                  </dd>
-                </div>
-              </div>
-            ))}
-          </dl>
-        </div>
       </div>
     </section>
   );
@@ -453,46 +409,3 @@ function ExternalIcon() {
   );
 }
 
-/**
- * Line-art glyphs for the stats bar, drawn on a 24-unit grid with
- * `currentColor` strokes so the lime accent flows in from CSS. Each entry is a
- * list of sub-paths — a single `d` can't express glyphs with a detached detail.
- */
-const ICON_PATHS = {
-  code: ["M9.5 8 5.5 12l4 4", "M14.5 8l4 4-4 4"],
-  people: [
-    "M9 11.2a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6z",
-    "M2.5 19.8c0-3.4 2.9-5.6 6.5-5.6s6.5 2.2 6.5 5.6",
-    "M16 5.3a3.1 3.1 0 0 1 0 5.9",
-    "M17.6 14.5c2.5.5 3.9 2.3 3.9 5.1",
-  ],
-  rocket: ["M13.5 3.2c3 1 5.5 3.8 6.4 6.9l-7 7-4-1.4-1.9-4z", "M7.6 15.2 4.4 19.7l4.4-3.2", "M15.4 8.6h.01"],
-  trophy: [
-    "M7.5 3.5h9v5a4.5 4.5 0 0 1-9 0z",
-    "M7.5 5H5v1.5A3 3 0 0 0 7.8 9.5",
-    "M16.5 5H19v1.5a3 3 0 0 1-2.8 3",
-    "M12 13v3.5",
-    "M8.5 20.5h7",
-    "M9.8 20.5c0-2 .9-4 2.2-4s2.2 2 2.2 4",
-  ],
-} as const;
-
-type IconName = keyof typeof ICON_PATHS;
-
-function WorkIcon({ name }: { name: IconName }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      {ICON_PATHS[name].map((d) => (
-        <path key={d} d={d} />
-      ))}
-    </svg>
-  );
-}

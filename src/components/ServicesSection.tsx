@@ -4,39 +4,15 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { serviceOfferings } from "@/content/serviceOfferings";
 import { Monogram } from "@/components/Logo";
-import { ServiceIcon, StatIcon } from "@/components/pages/ServiceIcons";
+import { ServiceIcon } from "@/components/pages/ServiceIcons";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker, itemHeadingLevel } from "@/components/ui";
 import { sections } from "@/content/sections";
-import { about } from "@/content/about";
-import type { MetricIcon } from "@/content/types";
 
 /**
- * The stats bar reads `about.metrics` rather than restating the numbers — the
- * two used to disagree (50+ here vs 30+ in About, both on the same page).
- *
- * Only presentation stays local: which glyph a metric gets, and the order the
- * bar shows them in, which is deliberately not the order the About section
- * uses.
- */
-const STAT_ICONS: Record<MetricIcon, string> = {
-  clients: "people",
-  projects: "rocket",
-  experience: "award",
-  commitment: "star",
-};
-
-const STAT_ORDER: MetricIcon[] = ["clients", "projects", "experience", "commitment"];
-
-const STATS = STAT_ORDER.flatMap((icon) => {
-  const metric = about.metrics.find((m) => m.icon === icon);
-  return metric ? [{ value: metric.value, label: metric.label, icon: STAT_ICONS[icon] }] : [];
-});
-
-/**
- * Services — emblem + statement header, an eight-card offer grid and a stats
- * bar. Cards are driven by `serviceOfferings`; the long-form `services` data
- * still backs the /services journey and the JSON-LD graph.
+ * Services — emblem + statement header and an eight-card offer grid. Cards are
+ * driven by `serviceOfferings`; the long-form `services` data still backs the
+ * /services journey and the JSON-LD graph.
  *
  * `headingLevel` drops to h2 when the block sits below another hero (home
  * page) so the document keeps exactly one h1.
@@ -141,22 +117,6 @@ export function ServicesSection({
             </motion.li>
           ))}
         </ul>
-
-        <dl className="svx__stats">
-          {STATS.map((s) => (
-            // The icon lives inside <dt> — a <dl> group may only contain
-            // dt/dd, so a sibling <span> would be invalid here.
-            <div className="svx__stat" key={s.label}>
-              <dt className="svx__stat-value">
-                <span className="svx__stat-icon" aria-hidden>
-                  <StatIcon name={s.icon} />
-                </span>
-                {s.value}
-              </dt>
-              <dd className="svx__stat-label">{s.label}</dd>
-            </div>
-          ))}
-        </dl>
       </div>
     </section>
   );
