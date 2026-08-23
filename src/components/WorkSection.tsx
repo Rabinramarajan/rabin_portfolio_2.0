@@ -10,7 +10,7 @@ import { Monogram } from "@/components/Logo";
 import { ProjectCover } from "@/components/ProjectCover";
 import { cn } from "@/lib/cn";
 import { duration, ease } from "@/lib/motion";
-import { SectionKicker } from "@/components/ui";
+import { SectionKicker, itemHeadingLevel } from "@/components/ui";
 import { sections } from "@/content/sections";
 
 const FILTER_LABEL: Record<ProjectFilter, string> = {
@@ -62,6 +62,7 @@ export function WorkSection({
   limit?: number;
 } = {}) {
   const Heading = headingLevel;
+  const ItemHeading = itemHeadingLevel(headingLevel);
   const isPageHero = headingLevel === "h1";
   const intro = sections.work;
   const reduce = !!useReducedMotion();
@@ -215,7 +216,7 @@ export function WorkSection({
             animate={engaged}
             priority={isPageHero}
           />
-          <Detail project={featured} reduce={reduce} />
+          <Detail project={featured} reduce={reduce} itemHeading={ItemHeading} />
         </div>
 
         <div className="wx__index">
@@ -359,7 +360,15 @@ function Stage({
 }
 
 /** The reading column beside the stage — what the project is, and where to go. */
-function Detail({ project: p, reduce }: { project: Project; reduce: boolean }) {
+function Detail({
+  project: p,
+  reduce,
+  itemHeading: ItemHeading,
+}: {
+  project: Project;
+  reduce: boolean;
+  itemHeading: "h2" | "h3";
+}) {
   return (
     <motion.article
       className="wx__detail"
@@ -374,7 +383,7 @@ function Detail({ project: p, reduce }: { project: Project; reduce: boolean }) {
         <span className="wx__detail-rule" aria-hidden />
       </p>
 
-      <h3 className="wx__detail-title">{p.title}</h3>
+      <ItemHeading className="wx__detail-title">{p.title}</ItemHeading>
       <p className="wx__detail-body">{p.overview}</p>
 
       <ul className="wx__chips">

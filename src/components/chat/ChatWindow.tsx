@@ -98,6 +98,10 @@ export function ChatWindow({ onClose }: Props) {
     <div
       ref={panelRef}
       role="dialog"
+      /* Focus is trapped here and Escape closes the panel, so it behaves as a
+         modal — without aria-modal a screen reader still offers the page
+         behind it, which no longer matches what a sighted user can reach. */
+      aria-modal="true"
       aria-label={`${chatConfig.name}, ${chatConfig.subtitle}`}
       aria-labelledby={titleId}
       className="chat-panel"

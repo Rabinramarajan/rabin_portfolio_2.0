@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { Btn, SectionKicker } from "@/components/ui";
+import { Btn, SectionKicker, itemHeadingLevel } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { pricingDisclaimer, pricingPlans } from "@/content/pricing";
 import { engagementModels } from "@/content/engagement-models";
@@ -10,6 +10,7 @@ import { duration, ease } from "@/lib/motion";
 import { TextReveal } from "@/components/motion";
 
 export function PricingSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
+  const ItemHeading = itemHeadingLevel(headingLevel);
   const reduce = useReducedMotion();
   const intro = sections.engagement;
 
@@ -49,7 +50,7 @@ export function PricingSection({ headingLevel = "h2" }: { headingLevel?: Section
               >
                 <p className="eng-row__name">{model.title}</p>
                 <div>
-                  <h3>{model.summary}</h3>
+                  <ItemHeading>{model.summary}</ItemHeading>
                   <div className="eng-row__details">
                     <span>Scope: {lead?.scope}. Timeline: {lead?.timeline}.</span>
                     <span>Includes: {lead?.deliverables.slice(0, 5).join(" · ")}.</span>

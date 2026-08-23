@@ -35,6 +35,18 @@ export function Btn({
 export type SectionHeadingLevel = "h1" | "h2";
 
 /**
+ * The heading level for the items listed inside a section.
+ *
+ * A section title is an h1 when the section is the whole route and an h2 in
+ * the homepage stack. Item titles were hardcoded to h3, so on the standalone
+ * routes the h2 tier vanished and the document jumped h1 -> h3. Deriving the
+ * level keeps the outline contiguous in both placements.
+ */
+export function itemHeadingLevel(level: SectionHeadingLevel): "h2" | "h3" {
+  return level === "h1" ? "h2" : "h3";
+}
+
+/**
  * The single section eyebrow used across every section and page hero:
  * an accent `// NN` index followed by a muted label. Sections pass their own
  * layout class through `className`; the typography always comes from here.

@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { capabilityEvolution } from "@/content/experience";
 import { ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
+import { useSideRevealSafe } from "@/lib/useSideRevealSafe";
 
 /**
  * WHAT CHANGED — four editorial statements about how the work itself evolved.
@@ -15,15 +16,25 @@ import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
 export function CapabilityEvolution() {
   const reduce = useReducedMotionSafe();
+  const sideOk = useSideRevealSafe();
 
   return (
     <ol className="xcap">
       {capabilityEvolution.map((step, i) => {
-        const offset =
-          step.from === "left" ? { x: -28 } : step.from === "right" ? { x: 28 } : { y: 26 };
+        // Below the tablet breakpoint there is no horizontal room for a side
+        // entry, so every row reveals upward instead. See useSideRevealSafe.
+        const offset = !sideOk
+          ? { y: 26 }
+          : step.from === "left"
+            ? { x: -28 }
+            : step.from === "right"
+              ? { x: 28 }
+              : { y: 26 };
 
         return (
-          <li className="xcap__row" key={step.number}>
+          /* See CareerTimeline: the media-query hooks resolve after the
+             hydrating render, so the reveal is remounted to pick them up. */
+          <li className="xcap__row" key={`${step.number}-${reduce}-${sideOk}`}>
             <motion.p
               className="xcap__num"
               initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.86 }}

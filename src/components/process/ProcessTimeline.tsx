@@ -59,7 +59,13 @@ const ICONS: Record<ProcessStep["id"], React.ReactNode> = {
   ),
 };
 
-export function ProcessTimeline({ steps }: { steps: ProcessStep[] }) {
+export function ProcessTimeline({
+  steps,
+  itemHeading: ItemHeading = "h3",
+}: {
+  steps: ProcessStep[];
+  itemHeading?: "h2" | "h3";
+}) {
   const reduce = useReducedMotionSafe();
 
   return (
@@ -88,7 +94,7 @@ export function ProcessTimeline({ steps }: { steps: ProcessStep[] }) {
                 <span className="pzt__num">{step.number}</span>
                 <span className="pzt__label">{step.label}</span>
               </p>
-              <h3 className="pzt__title">{step.title}</h3>
+              <ItemHeading className="pzt__title">{step.title}</ItemHeading>
               <p className="pzt__desc">{step.purpose}</p>
             </div>
           </motion.li>

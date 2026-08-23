@@ -1,5 +1,5 @@
 import { processIntro, processSteps } from "@/content/process";
-import { SectionKicker, Btn } from "@/components/ui";
+import { SectionKicker, Btn, itemHeadingLevel } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { ProcessJourney } from "@/components/process/ProcessJourney";
 import { ProcessOverture } from "@/components/process/ProcessOverture";
@@ -12,6 +12,7 @@ import { LineReveal } from "@/components/process/LineReveal";
  */
 export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
   const Heading = headingLevel;
+  const itemHeading = itemHeadingLevel(headingLevel);
   return (
     <section id="process" className="section pr" aria-labelledby="process-title">
       <div className="shell">
@@ -43,7 +44,7 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
       </div>
 
       <div className="shell">
-        <ProcessTimeline steps={processSteps} />
+        <ProcessTimeline steps={processSteps} itemHeading={itemHeading} />
       </div>
 
       <div className="shell">

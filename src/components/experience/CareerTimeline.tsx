@@ -7,6 +7,7 @@ import type { HorizonChapter } from "@/content/types";
 import { StackTechIcon } from "@/components/StackTechIcon";
 import { duration, ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
+import { useSideRevealSafe } from "@/lib/useSideRevealSafe";
 
 /**
  * THE CAREER TIMELINE.
@@ -113,10 +114,24 @@ function Chapter({
 }) {
   /* Odd chapters place their card on the left, so the rail reads as a stitch. */
   const side = index % 2 === 0 ? "right" : "left";
-  const from = side === "right" ? 26 : -26;
+  // Only the two-column desktop timeline has room to enter from the side;
+  // the mobile single column reveals upward instead. See useSideRevealSafe.
+  const sideOk = useSideRevealSafe();
+  const from = sideOk ? (side === "right" ? 26 : -26) : 0;
 
   return (
+    /*
+     * `key` remounts the reveal when either media query resolves.
+     * useReducedMotionSafe and useSideRevealSafe both report their SSR
+     * snapshot on the hydrating render, so the variants motion captures at
+     * mount are the desktop / full-motion ones. Motion reads `variants` when
+     * it applies an animation state, and these rows sit below the fold in the
+     * "hidden" state the whole time — so the corrected values that arrive on
+     * the next render were never applied, and reduced motion was silently
+     * ignored here. Remounting re-runs `initial` with the resolved values.
+     */
     <motion.li
+      key={`${reduce}-${sideOk}`}
       className="ctl__item"
       data-chapter={index}
       data-side={side}
@@ -144,7 +159,7 @@ function Chapter({
           reduce
             ? { hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: duration.micro } } }
             : {
-                hidden: { opacity: 0, x: from, y: 10 },
+                hidden: { opacity: 0, x: from, y: from ? 10 : 22 },
                 show: { opacity: 1, x: 0, y: 0, transition: { duration: 0.62, ease } },
               }
         }

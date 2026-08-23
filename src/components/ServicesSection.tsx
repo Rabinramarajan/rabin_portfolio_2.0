@@ -6,7 +6,7 @@ import { serviceOfferings } from "@/content/serviceOfferings";
 import { Monogram } from "@/components/Logo";
 import { ServiceIcon, StatIcon } from "@/components/pages/ServiceIcons";
 import { duration, ease } from "@/lib/motion";
-import { SectionKicker } from "@/components/ui";
+import { SectionKicker, itemHeadingLevel } from "@/components/ui";
 import { sections } from "@/content/sections";
 import { about } from "@/content/about";
 import type { MetricIcon } from "@/content/types";
@@ -51,6 +51,7 @@ export function ServicesSection({
   index?: string;
 } = {}) {
   const Heading = headingLevel;
+  const ItemHeading = itemHeadingLevel(headingLevel);
   const isPageHero = headingLevel === "h1";
   const intro = sections.services;
 
@@ -118,7 +119,7 @@ export function ServicesSection({
                   <ServiceIcon name={s.icon} />
                 </span>
                 <div className="svx__card-copy">
-                  <h3 className="svx__card-title">{s.title}</h3>
+                  <ItemHeading className="svx__card-title">{s.title}</ItemHeading>
                   <p className="svx__card-body">{s.description}</p>
                 </div>
               </div>

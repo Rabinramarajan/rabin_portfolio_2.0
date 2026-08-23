@@ -204,10 +204,10 @@ export function Footer() {
             </motion.div>
 
             <motion.nav className="ft__col" aria-label="Footer navigation" {...view(0.05)}>
-              <h3 className="ft__label">
+              <h2 className="ft__label">
                 <Navigation size={17} aria-hidden />
                 Navigation
-              </h3>
+              </h2>
               <ul className="ft__links">
                 <li>
                   <Link href="/">
@@ -227,10 +227,10 @@ export function Footer() {
             </motion.nav>
 
             <motion.div className="ft__col" {...view(0.1)}>
-              <h3 className="ft__label">
+              <h2 className="ft__label">
                 <Briefcase size={17} aria-hidden />
                 Services
-              </h3>
+              </h2>
               <ul className="ft__links">
                 {SERVICE_LINKS.map((item) => (
                   <li key={item.id}>
@@ -244,10 +244,10 @@ export function Footer() {
             </motion.div>
 
             <motion.div className="ft__col" {...view(0.15)}>
-              <h3 className="ft__label">
+              <h2 className="ft__label">
                 <FolderOpen size={17} aria-hidden />
                 Resources
-              </h3>
+              </h2>
               <ul className="ft__links">
                 {RESOURCE_LINKS.map((item) => (
                   <li key={item.href}>
@@ -261,10 +261,10 @@ export function Footer() {
             </motion.div>
 
             <motion.div className="ft__col ft__news" {...view(0.2)}>
-              <h3 className="ft__label">
+              <h2 className="ft__label">
                 <Send size={17} aria-hidden />
                 Stay Updated
-              </h3>
+              </h2>
               <p className="ft__news-copy">
                 Get the latest insights on Angular, web development, and tech trends.
               </p>

@@ -39,7 +39,7 @@ import {
 import { StackTechIcon } from "@/components/StackTechIcon";
 import { Monogram } from "@/components/Logo";
 import { duration, ease, stagger } from "@/lib/motion";
-import { SectionKicker, type SectionHeadingLevel } from "@/components/ui";
+import { SectionKicker, itemHeadingLevel, type SectionHeadingLevel } from "@/components/ui";
 import type { SkillTimelineNode } from "@/content/skills";
 
 type Glyph = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
@@ -94,6 +94,7 @@ export function SkillsSection({
 }: { headingLevel?: SectionHeadingLevel; index?: string } = {}) {
   const reduce = useReducedMotion();
   const Heading = headingLevel;
+  const itemHeading = itemHeadingLevel(headingLevel);
   const fade = reduce ? { opacity: 0 } : { opacity: 0, y: 18 };
   const inView = { opacity: 1, y: 0 };
   const viewport = { once: true, margin: "-10%" } as const;
@@ -165,7 +166,7 @@ export function SkillsSection({
 
             <div className="skx__rail skx__rail--fwd">
               {topRow.map((node, i) => (
-                <TimelineNode key={node.id} node={node} reduce={Boolean(reduce)} connector={i < 2 ? "next" : null} />
+                <TimelineNode key={node.id} node={node} reduce={Boolean(reduce)} connector={i < 2 ? "next" : null} itemHeading={itemHeading} />
               ))}
             </div>
 
@@ -180,6 +181,7 @@ export function SkillsSection({
                   reduce={Boolean(reduce)}
                   flipped
                   connector={i < 2 ? "prev" : null}
+                  itemHeading={itemHeading}
                 />
               ))}
             </div>
@@ -267,11 +269,13 @@ function TimelineNode({
   reduce,
   flipped = false,
   connector,
+  itemHeading: ItemHeading,
 }: {
   node: SkillTimelineNode;
   reduce: boolean;
   flipped?: boolean;
   connector: "next" | "prev" | null;
+  itemHeading: "h2" | "h3";
 }) {
   return (
     <motion.article
@@ -293,11 +297,11 @@ function TimelineNode({
       <p className="skx__node-index" aria-hidden>
         {node.index}
       </p>
-      <h3 className="skx__node-title">
+      <ItemHeading className="skx__node-title">
         {node.title[0]}
         <br />
         {node.title[1]}
-      </h3>
+      </ItemHeading>
       <p className="skx__node-desc">{node.description}</p>
       <ul className="skx__node-items">
         {node.items.map((item) => (
