@@ -40,6 +40,13 @@ const OPTIMIZATION_TARGETS = [
   // Project images
   { input: "fiji_external_application/image1.png", formats: ["webp"], quality: "high" },
   { input: "vnpf_mobile/composite-thumb.png", formats: ["webp"], quality: "high" },
+  { input: "galaxy-sofas/1.png", formats: ["webp"], quality: "high" },
+  { input: "galaxy-sofas/2.png", formats: ["webp"], quality: "high" },
+  { input: "galaxy-sofas/3.png", formats: ["webp"], quality: "high" },
+  { input: "galaxy-sofas/4.png", formats: ["webp"], quality: "high" },
+  { input: "galaxy-sofas/5.png", formats: ["webp"], quality: "high" },
+  { input: "galaxy-sofas/6.png", formats: ["webp"], quality: "high" },
+  { input: "galaxy-sofas/7.png", formats: ["webp"], quality: "high" },
 
   // FlatLay - convert JPG to WebP
   { input: "working/projects-flatlay.jpg", formats: ["webp"], quality: "high" },

@@ -324,7 +324,16 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'web',
-    gallery: [],
+    cover: img('/media/galaxy-sofas/2.webp', 'Galaxy Sofas landing page showcase', 1905, 941),
+    gallery: [
+      img('/media/galaxy-sofas/1.webp', 'Galaxy Sofas responsive home layout', 1905, 946),
+      img('/media/galaxy-sofas/2.webp', 'Galaxy Sofas landing page showcase', 1905, 941),
+      img('/media/galaxy-sofas/3.webp', 'Galaxy Sofas product grid and filter navigation', 1905, 943),
+      img('/media/galaxy-sofas/4.webp', 'Galaxy Sofas interactive product details sheet', 1905, 945),
+      img('/media/galaxy-sofas/5.webp', 'Galaxy Sofas seamless shopping cart flow', 1904, 944),
+      img('/media/galaxy-sofas/6.webp', 'Galaxy Sofas modular custom sofa configurator interface', 1904, 940),
+      img('/media/galaxy-sofas/7.webp', 'Galaxy Sofas content-driven about and brand values section', 1904, 945),
+    ],
     problem:
       'A furniture business needed a modern digital storefront that could showcase products clearly while remaining fast, responsive and search-engine friendly.',
     solution:
