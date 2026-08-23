@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { hero } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
@@ -24,12 +29,31 @@ export function Hero() {
 
   /* Scroll-linked depth — the reel drifts and dims as the hero leaves the viewport */
   const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
   const k = isDesktop ? 1 : 0.45;
-  const reelY = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [0, 70 * k]);
-  const reelScale = useTransform(scrollYProgress, [0, 1], quiet ? [1, 1] : [1, 1.08]);
-  const copyY = useTransform(scrollYProgress, [0, 1], quiet ? [0, 0] : [0, -40 * k]);
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.8], quiet ? [1, 1] : [1, 0]);
+  const reelY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    quiet ? [0, 0] : [0, 70 * k],
+  );
+  const reelScale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    quiet ? [1, 1] : [1, 1.08],
+  );
+  const copyY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    quiet ? [0, 0] : [0, -40 * k],
+  );
+  const copyOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.8],
+    quiet ? [1, 1] : [1, 0],
+  );
 
   const t = (delay: number) => ({
     duration: reduce ? duration.micro : duration.section,
@@ -37,12 +61,19 @@ export function Hero() {
     ease,
   });
 
-  const lines = hero.displayLines ?? hero.headlineLines.map((text) => ({ text, accent: false }));
+  const lines =
+    hero.displayLines ??
+    hero.headlineLines.map((text) => ({ text, accent: false }));
   const disciplines = hero.disciplines ?? [];
   const quote = hero.quote;
 
   return (
-    <section id="hero" ref={sectionRef} className="chero" aria-labelledby="hero-heading">
+    <section
+      id="hero"
+      ref={sectionRef}
+      className="chero"
+      aria-labelledby="hero-heading"
+    >
       {/* --- full-bleed reel --- */}
       <div className="chero__stage" aria-hidden>
         {hero.reel ? (
@@ -66,7 +97,10 @@ export function Hero() {
       </div>
 
       {/* --- editorial layer --- */}
-      <motion.div className="shell chero__shell" style={{ y: copyY, opacity: copyOpacity }}>
+      <motion.div
+        className="shell chero__shell"
+        style={{ y: copyY, opacity: copyOpacity }}
+      >
         <div className="chero__copy">
           <motion.p
             className="chero__status"
@@ -74,14 +108,19 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.04)}
           >
-            <span className="chero__pulse" aria-hidden /> {hero.availability}
+            <span className="chero__pulse" aria-hidden />
+            <span className="chero__status-label">{hero.availability}</span>
           </motion.p>
 
           <h1 id="hero-heading" className="chero__title">
             {lines.map((line, i) => (
               <span className="chero__line" key={line.text}>
                 <motion.span
-                  className={line.accent ? "chero__word chero__word--accent" : "chero__word"}
+                  className={
+                    line.accent
+                      ? "chero__word chero__word--accent"
+                      : "chero__word"
+                  }
                   initial={reduce ? { opacity: 0 } : { opacity: 0, y: "0.5em" }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={t(0.08 + i * 0.09)}
@@ -148,11 +187,12 @@ export function Hero() {
               ))}
             </blockquote>
             <span className="chero__quote-rule" aria-hidden />
-            <figcaption className="chero__signature">{quote.signature}</figcaption>
+            <figcaption className="chero__signature">
+              {quote.signature}
+            </figcaption>
           </motion.figure>
         ) : null}
       </motion.div>
-
     </section>
   );
 }
