@@ -12,6 +12,8 @@ export interface EmailMessage {
   replyTo?: string;
   subject: string;
   text: string;
+  /** Optional rich part. Clients that cannot render it fall back to `text`. */
+  html?: string;
   attachments?: EmailAttachment[];
 }
 

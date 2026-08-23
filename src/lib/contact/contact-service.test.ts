@@ -61,4 +61,25 @@ describe("submitContact", () => {
     if (result.ok) return;
     expect(result.error).toMatch(/not configured/i);
   });
+
+  it("still succeeds when the visitor acknowledgement bounces", async () => {
+    // A dead or mistyped visitor address must not undo a delivered notification.
+    const store = new MemoryMessageStore();
+    const email = new MemoryEmailProvider();
+    const send = email.send.bind(email);
+    let call = 0;
+    email.send = async (message) => {
+      call += 1;
+      if (call === 2) throw new Error("550 5.1.1 recipient does not exist");
+      return send(message);
+    };
+
+    const result = await submitContact(payload, { email, store });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    // The notification to the inbox owner went out and was persisted.
+    expect(email.sent).toHaveLength(1);
+    expect(await store.get(result.referenceId)).toBeTruthy();
+  });
 });

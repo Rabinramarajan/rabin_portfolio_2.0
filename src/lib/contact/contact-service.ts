@@ -5,6 +5,12 @@ import { createReferenceId } from "@/lib/contact/reference-id";
 import { mailEnvelope, type EmailProvider } from "@/lib/contact/email-service";
 import type { MessageStore } from "@/lib/contact/message-store";
 import {
+  acknowledgementHtml,
+  acknowledgementText,
+  notificationHtml,
+  notificationText,
+} from "@/lib/contact/email-template";
+import {
   INQUIRY_TYPES,
   type ContactAttachment,
   type ContactPayload,
@@ -72,46 +78,6 @@ export function normalizePayload(raw: unknown): { honeypot: boolean; payload?: C
   return { honeypot: false, payload };
 }
 
-function notificationText(payload: ContactPayload, referenceId: string, receivedAt: string) {
-  return [
-    `Reference: ${referenceId}`,
-    `Name: ${payload.name}`,
-    `Email: ${payload.email}`,
-    `Inquiry: ${payload.inquiryType}`,
-    `Company: ${payload.company || "—"}`,
-    `Website: ${payload.projectUrl || "—"}`,
-    `Role: ${payload.role || "—"}`,
-    `Project type: ${payload.projectType || "—"}`,
-    `Stage: ${payload.projectStage || "—"}`,
-    `Technologies: ${payload.technologies?.join(", ") || "—"}`,
-    `Budget: ${payload.budget || "—"}`,
-    `Timeline: ${payload.timeline || "—"}`,
-    `Engagement: ${payload.engagement || "—"}`,
-    `Found me via: ${payload.referralSource || "—"}`,
-    `Preferred contact: ${payload.preferredContact || "—"}`,
-    `Attachment: ${payload.attachmentName || "—"}`,
-    "",
-    "Message:",
-    payload.message,
-    "",
-    `Submitted: ${receivedAt}`,
-  ].join("\n");
-}
-
-function acknowledgementText(payload: ContactPayload, referenceId: string) {
-  return [
-    `Hi ${payload.name},`,
-    "",
-    "Message received.",
-    "",
-    `Your reference is ${referenceId}. ${profile.availability.responseTime}.`,
-    "",
-    "If anything is urgent, reply to this email with the extra context.",
-    "",
-    `— ${profile.name}`,
-  ].join("\n");
-}
-
 export async function submitContact(
   raw: unknown,
   deps: {
@@ -154,7 +120,8 @@ export async function submitContact(
     from: envelope.from,
     replyTo: payload.email,
     subject: `New Portfolio Inquiry — ${payload.inquiryType} (${referenceId})`,
-    text: notificationText(payload, referenceId, receivedAt),
+    text: notificationText({ payload, referenceId, receivedAt }),
+    html: notificationHtml({ payload, referenceId, receivedAt }),
     attachments: deps.attachment
       ? [
           {
@@ -166,13 +133,25 @@ export async function submitContact(
       : undefined,
   });
 
+  // The acknowledgement goes to an address the visitor typed, so it is the one
+  // send that routinely fails for reasons outside our control (typo, dead
+  // mailbox, a server that rejects unknown recipients at RCPT time). The
+  // notification is already delivered and the message is stored by this point,
+  // so a failure here must not turn a successful submission into a 500 — that
+  // would only prompt the visitor to resubmit and send a duplicate.
   if (envelope.ackEnabled) {
-    await deps.email.send({
-      to: payload.email,
-      from: envelope.from,
-      subject: `Message received — ${referenceId}`,
-      text: acknowledgementText(payload, referenceId),
-    });
+    try {
+      await deps.email.send({
+        to: payload.email,
+        from: envelope.from,
+        replyTo: envelope.to,
+        subject: `Message received — ${referenceId}`,
+        text: acknowledgementText({ payload, referenceId }),
+        html: acknowledgementHtml({ payload, referenceId }),
+      });
+    } catch (error) {
+      console.error(`[contact] acknowledgement failed for ${referenceId}:`, error);
+    }
   }
 
   return { ok: true, referenceId, responseTime: profile.availability.responseTime };
