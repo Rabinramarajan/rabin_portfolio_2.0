@@ -40,6 +40,14 @@ export function ChatWindow({ onClose }: Props) {
     return () => window.clearTimeout(timer);
   }, []);
 
+  // Auto-resize the textarea based on content to prevent scroll clipping.
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [input]);
+
   // Escape closes; Tab is trapped inside the panel while it is open.
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {

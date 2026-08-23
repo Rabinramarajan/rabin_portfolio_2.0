@@ -102,12 +102,13 @@ const STATIC_STARS = (() => {
     const x = Math.sin(seed++) * 10000;
     return x - Math.floor(x);
   };
+  const round = (num: number) => Math.round(num * 100) / 100;
   for (let i = 0; i < 24; i++) {
     stars.push({
-      x: 100 + rnd() * 400,
-      y: 50 + rnd() * 300,
-      r: 0.6 + rnd() * 0.9,
-      o: 0.15 + rnd() * 0.5,
+      x: round(100 + rnd() * 400),
+      y: round(50 + rnd() * 300),
+      r: round(0.6 + rnd() * 0.9),
+      o: round(0.15 + rnd() * 0.5),
     });
   }
   return stars;
