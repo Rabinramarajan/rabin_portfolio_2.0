@@ -120,9 +120,6 @@ export function ProcessOrbital({ steps }: { steps: ProcessStep[] }) {
   const [held, setHeld] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Decorative Starfield coords
-  const starsRef = useRef(STATIC_STARS);
-
   useEffect(() => {
     if (reduce || held) return;
     const id = window.setInterval(() => {
@@ -167,7 +164,7 @@ export function ProcessOrbital({ steps }: { steps: ProcessStep[] }) {
 
         {/* Ambient starfield */}
         <g className="porb__stars" aria-hidden>
-          {starsRef.current.map((star, i) => (
+          {STATIC_STARS.map((star, i) => (
             <circle
               key={i}
               cx={star.x}

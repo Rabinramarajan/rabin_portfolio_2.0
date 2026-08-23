@@ -1,10 +1,9 @@
 import { processIntro, processSteps } from "@/content/process";
-import { SectionKicker, Btn, itemHeadingLevel } from "@/components/ui";
+import { SectionKicker, Btn } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { ProcessOrbital } from "@/components/process/ProcessOrbital";
 import { ProcessJourney } from "@/components/process/ProcessJourney";
 import { ProcessPrinciples } from "@/components/process/ProcessPrinciples";
-import { LineReveal } from "@/components/process/LineReveal";
 
 /**
  * Server component. Only the orbital, the journey, the principles and the
@@ -13,7 +12,6 @@ import { LineReveal } from "@/components/process/LineReveal";
  */
 export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
   const Heading = headingLevel;
-  const itemHeading = itemHeadingLevel(headingLevel);
   const isProcessPage = headingLevel === "h1";
 
   return (
