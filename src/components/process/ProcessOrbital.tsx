@@ -21,14 +21,15 @@ const ORBITS = [
   { rx: 245, ry: 152, speed: 36 },
 ] as const;
 
-// Six stages positioned strategically on the orbits
+// Seven stages positioned strategically on the orbits
 const NODE_SLOTS: Array<{ orbit: number; angle: number }> = [
-  { orbit: 2, angle: 145 },   // 01 Discovery   - Outer Left
-  { orbit: 1, angle: 95 },    // 02 Strategy    - Mid Top
+  { orbit: 2, angle: 145 },   // 01 Discover    - Outer Left
+  { orbit: 1, angle: 95 },    // 02 Define      - Mid Top
   { orbit: 2, angle: 45 },    // 03 Design      - Outer Right-Top
-  { orbit: 2, angle: 325 },   // 04 Develop     - Outer Right-Bottom
-  { orbit: 1, angle: 265 },   // 05 Test        - Mid Bottom
-  { orbit: 0, angle: 0 },     // 06 Deploy      - Inner Right
+  { orbit: 2, angle: 325 },   // 04 Engineer    - Outer Right-Bottom
+  { orbit: 1, angle: 265 },   // 05 Validate    - Mid Bottom
+  { orbit: 0, angle: 0 },     // 06 Launch      - Inner Right
+  { orbit: 0, angle: 180 },   // 07 Evolve      - Inner Left
 ];
 
 function nodeXY(slot: { orbit: number; angle: number }) {
@@ -74,6 +75,13 @@ const GLYPHS: Record<string, React.ReactNode> = {
       <path d="M12 3.5c3 2.5 4.5 5.8 4.5 9.5L12 17l-4.5-4c0-3.7 1.5-7 4.5-9.5z" />
       <circle cx="12" cy="10" r="1.5" />
       <path d="M9.5 18.5 8 21m8-2.5 1.5 2.5" opacity="0.7" />
+    </>
+  ),
+  evolve: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(-28 12 12)" />
+      <ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(28 12 12)" />
     </>
   ),
 };
