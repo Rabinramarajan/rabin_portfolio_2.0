@@ -57,25 +57,30 @@ export const navigation: NavItem[] = [
 ];
 
 /**
- * Secondary navigation. These lived as literal arrays inside Footer.tsx, which
+ * Footer navigation. These lived as literal arrays inside Footer.tsx, which
  * meant the site had two competing definitions of its own link structure —
  * the footer is the only internal link some of these routes get.
  *
- * `standalone`: real pages kept out of the primary nav.
- * `resources`:  the footer's "Resources" column.
+ * Every href below must resolve to a page that exists under src/app or to an
+ * anchor rendered on the homepage; the footer never links to a stub.
+ *
+ * `explore`:   the site's own sections and pages, one destination per label.
+ * `resources`: secondary destinations that are not part of the main journey.
  */
-export const secondaryNavigation: { standalone: NavItem[]; resources: NavItem[] } = {
-  standalone: [
+export const footerNavigation: { explore: NavItem[]; resources: NavItem[] } = {
+  explore: [
+    { href: "/", label: "Home" },
+    { href: "/#about", label: "About", sectionId: "about" },
+    { href: "/services", label: "Services" },
+    { href: "/work", label: "Work" },
+    { href: "/experience", label: "Experience" },
     { href: "/skills", label: "Skills" },
     { href: "/process", label: "Process" },
-    { href: "/insights", label: "Insights" },
+    { href: "/contact", label: "Contact" },
   ],
   resources: [
-    { href: "/work", label: "Case Studies" },
-    { href: "/insights", label: "Articles" },
-    { href: "/pricing", label: "Engagement Models" },
     { href: profile.resumePath, label: "Résumé" },
-    { href: "/skills", label: "Tech Stack" },
+    { href: "/insights", label: "Insights" },
     { href: "/#faq", label: "FAQs" },
   ],
 };
