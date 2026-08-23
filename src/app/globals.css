@@ -4068,6 +4068,9 @@ a.cx__info-card {
   font-weight: 500;
   text-wrap: balance;
 }
+.pr__display-accent {
+  color: var(--color-accent);
+}
 .pr__lede {
   margin-top: 1.25rem;
   max-width: 34rem;
@@ -4076,42 +4079,224 @@ a.cx__info-card {
 .pr__intro-visual {
   min-width: 0;
 }
+.pr__intro-actions {
+  margin-top: 1.5rem;
+}
 
-.pov {
+/* --- orbital command diagram --- */
+.porb {
+  position: relative;
   width: 100%;
 }
-.pov__svg {
+.porb__svg {
   width: 100%;
   height: auto;
   display: block;
   overflow: visible;
 }
-.pov__grid line {
+
+/* Background grid dots */
+.porb__grid circle {
+  fill: var(--color-line-strong);
+}
+
+/* Orbit paths */
+.porb__orbit {
+  fill: none;
   stroke: var(--color-line);
-  stroke-width: 1;
+  stroke-width: 0.8;
+  stroke-dasharray: 4 6;
 }
-.pov__track {
-  stroke: var(--color-line-strong);
-  stroke-width: 1.5;
+.porb__orbit[data-ring="1"] {
+  stroke-dasharray: 6 8;
 }
-.pov__drawn {
+.porb__orbit[data-ring="2"] {
+  stroke-dasharray: 8 10;
+}
+.porb__orbit-active {
+  fill: none;
   stroke: var(--color-accent);
-  stroke-width: 1.8;
-  stroke-linecap: round;
+  stroke-width: 1.2;
+  stroke-dasharray: none;
+  opacity: 0.45;
 }
-.pov__node {
-  fill: var(--color-bg);
+
+/* Travelling particle dots */
+.porb__particle {
+  fill: var(--color-accent);
+  opacity: 0.55;
+}
+.porb__particle[data-ring="0"] {
+  opacity: 0.7;
+}
+
+/* Centre monogram */
+.porb__mono {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 600;
+  fill: var(--color-accent);
+  letter-spacing: -0.04em;
+}
+
+/* Orbit keyword labels */
+.porb__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  fill: var(--color-text-faint);
+  text-transform: uppercase;
+}
+
+/* Stage nodes */
+.porb__node {
+  outline: none;
+}
+.porb__node:focus-visible .porb__ring {
   stroke: var(--color-accent);
-  stroke-width: 1.6;
+  stroke-width: 2;
 }
-.pov__stem {
+.porb__halo {
+  fill: var(--color-accent);
+  opacity: 0.12;
+}
+.porb__ring {
+  fill: none;
   stroke: var(--color-line-strong);
   stroke-width: 1;
+  transition: stroke var(--duration-ui) var(--ease-out-expo);
 }
-.pov__base {
-  stroke: var(--color-line-strong);
-  stroke-width: 1;
+.porb__node[data-state="on"] .porb__ring {
+  stroke: var(--color-accent);
 }
+.porb__dot {
+  fill: var(--color-bg-elevated);
+  transition: fill var(--duration-ui) var(--ease-out-expo);
+}
+.porb__node[data-state="on"] .porb__dot {
+  fill: color-mix(in srgb, var(--color-accent) 10%, var(--color-bg-elevated));
+}
+.porb__glyph {
+  stroke: var(--color-text-faint);
+  transition: stroke var(--duration-ui) var(--ease-out-expo);
+}
+.porb__node[data-state="on"] .porb__glyph {
+  stroke: var(--color-accent);
+}
+.porb__num {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  fill: var(--color-text-faint);
+  transition: fill var(--duration-ui) var(--ease-out-expo);
+}
+.porb__node[data-state="on"] .porb__num {
+  fill: var(--color-accent);
+}
+
+/* Active stage readout */
+.porb__readout {
+  margin-top: 0.75rem;
+  text-align: center;
+  min-height: 1.6rem;
+}
+.porb__stage-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.porb__stage-num {
+  color: var(--color-accent);
+}
+.porb__stage-sep {
+  color: var(--color-text-faint);
+  opacity: 0.5;
+}
+.porb__stage-name {
+  color: var(--color-text-muted);
+}
+
+/* Mobile: hide labels below 600px */
+@media (max-width: 599px) {
+  .porb__label {
+    display: none;
+  }
+}
+
+/* --- process principles strip --- */
+.pprin {
+  margin-top: clamp(1.75rem, 4vw, 3rem);
+  padding-top: clamp(1.75rem, 4vw, 3rem);
+  border-top: 1px solid var(--color-line);
+}
+.pprin__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+}
+@media (min-width: 1100px) {
+  .pprin__grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@media (max-width: 599px) {
+  .pprin__grid {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+  .pprin__badge {
+    min-width: 13rem;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+.pprin__badge {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  transition: border-color var(--duration-ui) var(--ease-out-expo),
+    box-shadow var(--duration-ui) var(--ease-out-expo);
+}
+.pprin__badge:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 16px -4px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+.pprin__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--color-accent);
+  margin-top: 0.1rem;
+}
+.pprin__copy {
+  min-width: 0;
+}
+.pprin__title {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 560;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+.pprin__body {
+  margin-top: 0.3rem;
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
 
 /* --- stage index metadata (not pills) --- */
 .pr__index {
@@ -4607,13 +4792,18 @@ a.cx__info-card {
 }
 .pnav[data-orientation="vertical"] .pnav__list {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0 0.75rem;
   border-top: 1px solid var(--color-line);
 }
 .pnav[data-orientation="vertical"] .pnav__item {
-  flex-wrap: wrap;
-  gap: 0 0.35rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.15rem;
+  padding: 0.8rem 0 0.5rem;
+  min-height: auto;
 }
 .pnav[data-orientation="vertical"] .pnav__label {
   overflow: hidden;
@@ -4789,15 +4979,30 @@ a.cx__info-card {
   padding-bottom: clamp(1rem, 3vw, 2rem);
   border-top: 1px solid var(--color-line);
   text-align: center;
+  position: relative;
+}
+.pr__cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 50% 80% at 50% 0%,
+    color-mix(in srgb, var(--color-accent) 4%, transparent),
+    transparent
+  );
+  pointer-events: none;
 }
 .pr__cta-title {
+  position: relative;
   font-family: var(--font-display);
   font-size: var(--text-3xl);
   letter-spacing: -0.045em;
   line-height: var(--leading-tight);
   font-weight: 500;
+  text-shadow: 0 0 40px color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 .pr__cta-lede {
+  position: relative;
   margin-top: 0.9rem;
   color: var(--color-text-muted);
   max-width: 32rem;
@@ -4806,6 +5011,7 @@ a.cx__info-card {
   margin-inline: auto;
 }
 .pr__cta-actions {
+  position: relative;
   margin-top: 1.75rem;
   display: flex;
   flex-wrap: wrap;

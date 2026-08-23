@@ -1,14 +1,15 @@
 import { processIntro, processSteps } from "@/content/process";
 import { SectionKicker, Btn, itemHeadingLevel } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
+import { ProcessOrbital } from "@/components/process/ProcessOrbital";
 import { ProcessJourney } from "@/components/process/ProcessJourney";
-import { ProcessOverture } from "@/components/process/ProcessOverture";
-import { ProcessTimeline } from "@/components/process/ProcessTimeline";
+import { ProcessPrinciples } from "@/components/process/ProcessPrinciples";
 import { LineReveal } from "@/components/process/LineReveal";
 
 /**
- * Server component. Only the journey, the overture and the headline reveals are
- * client-side — the copy, structure and CTA are rendered on the server.
+ * Server component. Only the orbital, the journey, the principles and the
+ * headline reveals are client-side — the copy, structure and CTA are rendered
+ * on the server.
  */
 export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: SectionHeadingLevel } = {}) {
   const Heading = headingLevel;
@@ -20,35 +21,30 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
           <div className="pr__intro-copy">
             <SectionKicker index={processIntro.index} label={processIntro.label} />
             <Heading className="pr__display" id="process-title">
-              <LineReveal lines={processIntro.headingLines} />
+              {processIntro.headingLines.map((line, i) => (
+                <span key={line}>
+                  {i > 0 && <br />}
+                  {i === 1 ? <span className="pr__display-accent">{line}</span> : line}
+                </span>
+              ))}
             </Heading>
             <p className="pr__lede">{processIntro.lede}</p>
+            <div className="pr__intro-actions">
+              <Btn href="/#contact">Let&apos;s work together</Btn>
+            </div>
           </div>
           <div className="pr__intro-visual">
-            <ProcessOverture />
+            <ProcessOrbital steps={processSteps} />
           </div>
         </header>
-
-        {/* Decorative stage strip. The same seven stages are announced — with more
-            detail — by the <ol> inside ProcessTimeline below, so exposing this as a
-            second list made screen readers and crawlers walk the process twice.
-            Kept as presentational markup so the visual design is unchanged. */}
-        <div className="pr__index" aria-hidden>
-          {processSteps.map((step) => (
-            <div className="pr__index-item" key={step.id}>
-              <span className="pr__index-num">{step.number}</span>
-              <span className="pr__index-label">{step.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="shell">
-        <ProcessTimeline steps={processSteps} itemHeading={itemHeading} />
       </div>
 
       <div className="shell">
         <ProcessJourney steps={processSteps} />
+      </div>
+
+      <div className="shell">
+        <ProcessPrinciples />
       </div>
 
       <div className="shell pr__cta">

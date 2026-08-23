@@ -3,17 +3,40 @@ import type { ProcessStep } from '@/content/types';
 export const processIntro = {
   index: '06',
   label: 'My Process',
-  headingLines: ['From idea', 'to production.'],
-  lede: 'Every project starts with a question, then moves through clarity, design, engineering and continuous refinement.',
+  headingLines: ['A clear process.', 'Real results.'],
+  lede: 'I follow a proven, iterative process that turns ideas into scalable digital products. Transparent, collaborative and focused on impact at every step.',
   ctaHeading: 'Ready to build?',
-  ctaLede: "Let's turn your idea into something production-ready.",
+  ctaLede: "Let’s move from concept to deployment with a clear, high-trust delivery path.",
 } as const;
+
+export const processPrinciples = [
+  {
+    title: 'Goal Focused',
+    body: 'Each stage is tied to business outcomes, not vanity deliverables.',
+  },
+  {
+    title: 'Connected Decisions',
+    body: 'Discovery, strategy and design decisions remain visible throughout delivery.',
+  },
+  {
+    title: 'Quality Built In',
+    body: 'Reliability, performance and accessibility are part of the workflow, not a final checklist.',
+  },
+  {
+    title: 'Transparent Progress',
+    body: 'You always know what is happening now, what is next and why it matters.',
+  },
+  {
+    title: 'Scale Ready',
+    body: 'Architecture and implementation are prepared for growth from the first release.',
+  },
+] as const;
 
 export const processSteps: ProcessStep[] = [
   {
     id: 'discover',
     number: '01',
-    label: 'Discover',
+    label: 'Discovery',
     title: 'Understand before building',
     purpose: 'Understand the product, users, business goals and constraints.',
     description:
@@ -27,14 +50,14 @@ export const processSteps: ProcessStep[] = [
   {
     id: 'define',
     number: '02',
-    label: 'Define',
-    title: 'Turn ambiguity into direction',
+    label: 'Strategy',
+    title: 'Turn insight into direction',
     purpose: 'Turn ambiguity into a clear technical direction.',
     description:
-      'Requirements become a plan. Scope is agreed, the architecture is chosen, and the trade-offs are made deliberately rather than discovered halfway through the build.',
-    happens: ['Information architecture', 'Technical decisions', 'Scope and sequencing'],
-    deliverables: ['Architecture', 'Scope', 'Technical decisions'],
-    output: 'System architecture · Feature priorities · Roadmap',
+      'Findings become strategy. Scope, architecture and rollout sequencing are defined to reduce risk early and keep execution focused.',
+    happens: ['Scope and milestone mapping', 'Architecture strategy', 'Delivery sequencing'],
+    deliverables: ['Scope model', 'Architecture blueprint', 'Execution roadmap'],
+    output: 'Delivery strategy · System map · Priority roadmap',
     outcome: 'A clear technical direction before development begins.',
     visual: 'define',
   },
@@ -55,21 +78,21 @@ export const processSteps: ProcessStep[] = [
   {
     id: 'build',
     number: '04',
-    label: 'Build',
-    title: 'Engineer the product',
+    label: 'Development',
+    title: 'Engineer with production discipline',
     purpose: 'Turn the system into production-ready software.',
     description:
       'Design becomes a real application — typed, componentised and built on modern architecture. Integration and state are handled early so features compose instead of collide.',
     happens: ['Component implementation', 'State and data flow', 'API integration'],
     deliverables: ['Components', 'Integration', 'State', 'API', 'Responsive UI'],
-    output: 'Angular 22 · Signals · TypeScript · SSR · REST · PostgreSQL',
+    output: 'Type-safe code · API integration · Production architecture',
     outcome: 'Working software you can review, not a prototype you have to imagine.',
     visual: 'build',
   },
   {
     id: 'test',
     number: '05',
-    label: 'Test',
+    label: 'Testing',
     title: 'Make it reliable',
     purpose: 'Validate quality, performance and accessibility.',
     description:
@@ -83,29 +106,15 @@ export const processSteps: ProcessStep[] = [
   {
     id: 'launch',
     number: '06',
-    label: 'Launch',
-    title: 'Ship with confidence',
+    label: 'Deployment',
+    title: 'Deploy with confidence',
     purpose: 'Ship a stable, production-ready product.',
     description:
       'Deployment is a controlled step, not an event. Environments, monitoring and search visibility are configured before release so launch day is uneventful.',
     happens: ['Environment configuration', 'Deployment pipeline', 'Monitoring and SEO'],
     deliverables: ['Deployment', 'Monitoring', 'SEO', 'Production readiness'],
-    output: 'Production build · CI/CD · Analytics · Error monitoring',
+    output: 'Deployment pipeline · Monitoring stack · Release instrumentation',
     outcome: 'A live product with the instrumentation to prove it is healthy.',
     visual: 'launch',
-  },
-  {
-    id: 'evolve',
-    number: '07',
-    label: 'Evolve',
-    title: 'Launch is the beginning',
-    purpose: 'Improve the product after launch.',
-    description:
-      'Real usage produces better decisions than any planning session. The product keeps improving through measurement, optimisation and new capability.',
-    happens: ['Analytics review', 'Performance optimisation', 'Iterative releases'],
-    deliverables: ['Optimization', 'Iteration', 'Analytics', 'New capabilities'],
-    output: 'Maintenance · Improvements · Technical support',
-    outcome: 'A product that compounds in value instead of decaying after launch.',
-    visual: 'evolve',
   },
 ];
