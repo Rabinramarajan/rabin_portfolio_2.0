@@ -71,7 +71,40 @@ const TECH_ICON: Record<string, StackIconName> = {
   vercel: "vercel",
   jest: "jest",
   nx: "nx",
+  // Angular family — every qualified Angular label resolves to the Angular mark.
+  "angular cdk": "angular",
+  "angular universal": "angular",
+  "zoneless angular": "angular",
+  "standalone components": "angular",
+  "standalone apis": "angular",
+  signals: "angular",
+  ngrx: "angular",
+  capacitor: "ionic",
+  "capacitor integration": "ionic",
+  // Web platform
+  scss: "sass",
+  html: "html5",
+  css: "css3",
+  "react 19": "react",
+  ssr: "nextjs",
+  "app router": "nextjs",
+  // Backend — Sails and Nest are both Node frameworks, so the Node mark is
+  // accurate. Deliberately NOT mapped: REST, Prisma, Storybook, Lighthouse,
+  // AI/ML, WCAG. No correct brand mark ships in the set, and borrowing an
+  // unrelated logo (GraphQL for REST, Figma for Storybook) misinforms the
+  // reader — those fall through to the neutral mark instead.
+  "sails.js": "nodejs",
+  sails: "nodejs",
+  nestjs: "nodejs",
+  "ci/cd": "github",
 };
+
+/**
+ * Label cleanups applied before lookup, so one mapping entry covers the many
+ * phrasings the content layer uses ("Capacitor integration", "REST APIs",
+ * "AI/ML integration"). Order matters: the longest suffix is stripped first.
+ */
+const LABEL_NOISE = /\s+(integration|implementation|architecture|development|apis?|support)$/;
 
 export function StackTechIcon({
   id,
@@ -86,9 +119,16 @@ export function StackTechIcon({
   if (name) {
     return <InlineStackIcon name={name} className={cn("stack-tech-icon", className)} />;
   }
+  // No brand mark for this technology. Render a neutral dot rather than the
+  // label's first two letters: every call site prints the full label right
+  // next to this tile, so initials rendered as "Ca Capacitor", "RE REST APIs",
+  // "Ng NgRx" and "AI AI/ML" on the live site.
   return (
     <span className={cn("stack-tech-icon", className)} data-stack-icon="fallback" aria-hidden>
-      {label.slice(0, 2)}
+      <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="7" />
+        <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
+      </svg>
     </span>
   );
 }
@@ -98,8 +138,10 @@ function resolveIcon(label: string, id?: string): StackIconName | undefined {
   const parts = label.split("/").map((p) => p.trim().toLowerCase()).filter(Boolean);
   for (const part of parts) {
     if (TECH_ICON[part]) return TECH_ICON[part];
+    const trimmed = part.replace(LABEL_NOISE, "").trim();
+    if (trimmed && TECH_ICON[trimmed]) return TECH_ICON[trimmed];
   }
-  return TECH_ICON[id ?? ""];
+  return TECH_ICON[(id ?? "").toLowerCase()];
 }
 
 /** Renders one inlined mark with per-instance fragment ids so defs never collide. */

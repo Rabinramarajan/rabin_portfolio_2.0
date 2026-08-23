@@ -106,12 +106,6 @@ export const services: Service[] = [
     technologies: ["Ionic", "Angular", "Capacitor", "Native APIs"],
     idealFor: "Member apps and field tools that must live on a phone.",
     image: { src: "/media/service/service_6.webp", alt: "Cross-platform mobile application screens" },
-    media: {
-      type: "video",
-      src: "/media/service/ionic-demo.mp4",
-      poster: "/media/service/service_6.webp",
-      alt: "Cross-platform Ionic mobile application demo",
-    },
   },
   {
     id: "design-systems",

@@ -1,4 +1,4 @@
-import type { HeroContent, NavItem, Profile, SeoContent } from "@/content/types";
+import type { Credentials, HeroContent, NavItem, Profile, SeoContent } from "@/content/types";
 
 export const SITE_URL = "https://www.rabinr.in";
 
@@ -29,6 +29,23 @@ export const profile: Profile = {
   resumePath: "/resume",
 };
 
+/**
+ * THE canonical credibility figures for the whole site.
+ *
+ * `projects` and `clients` are listed in `needsReview` because neither number
+ * can be verified from the repository — projects.ts ships 9 case studies, and
+ * there is no client record anywhere in the content layer. The conservative
+ * end of the figures that already existed in the codebase is used here rather
+ * than inventing a new one; confirm or correct them before launch.
+ */
+export const credentials: Credentials = {
+  years: profile.yearsExperienceLabel,
+  projects: "20+",
+  clients: "15+",
+  commitment: { value: "100%", label: "Focus on Quality" },
+  needsReview: ["projects", "clients"],
+};
+
 export const navigation: NavItem[] = [
   { href: "/#about", label: "About Us", sectionId: "about" },
   { href: "/services", label: "Services" },
@@ -38,6 +55,30 @@ export const navigation: NavItem[] = [
   { href: "/#process", label: "Process", sectionId: "process" },
   { href: "/contact", label: "Contact Us" },
 ];
+
+/**
+ * Secondary navigation. These lived as literal arrays inside Footer.tsx, which
+ * meant the site had two competing definitions of its own link structure —
+ * the footer is the only internal link some of these routes get.
+ *
+ * `standalone`: real pages kept out of the primary nav.
+ * `resources`:  the footer's "Resources" column.
+ */
+export const secondaryNavigation: { standalone: NavItem[]; resources: NavItem[] } = {
+  standalone: [
+    { href: "/skills", label: "Skills" },
+    { href: "/process", label: "Process" },
+    { href: "/insights", label: "Insights" },
+  ],
+  resources: [
+    { href: "/work", label: "Case Studies" },
+    { href: "/insights", label: "Articles" },
+    { href: "/pricing", label: "Engagement Models" },
+    { href: profile.resumePath, label: "Résumé" },
+    { href: "/skills", label: "Tech Stack" },
+    { href: "/#faq", label: "FAQs" },
+  ],
+};
 
 /**
  * Hero content — uses profile data for role, location, name

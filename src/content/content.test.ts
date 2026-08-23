@@ -62,7 +62,8 @@ describe("projects", () => {
   });
 
   it("every referenced image exists in /public and has alt text", () => {
-    const media = projects.flatMap((p) => [p.cover, ...(p.gallery ?? [])]);
+    // `cover` is optional — a case study with no screenshot renders a poster.
+    const media = projects.flatMap((p) => [...(p.cover ? [p.cover] : []), ...(p.gallery ?? [])]);
     for (const image of media) {
       expect(image.alt.trim().length, `alt for ${image.src}`).toBeGreaterThan(0);
       expect(

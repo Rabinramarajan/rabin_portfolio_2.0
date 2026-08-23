@@ -37,7 +37,10 @@ export const contactCopy = {
       height: 720,
     },
     process: {
-      src: "/media/contact/IDEA_\u00A0_\u2193_DISCUSS_\u00A0_\u2193_DEFINE.mp4",
+      // No clip shipped for this bridge — the referenced file was never added to
+      // /public and 404'd on every contact-page view. The band renders its copy
+      // over the flat stage until a real loop exists; set `src` to restore it.
+      src: undefined as string | undefined,
       width: 1280,
       height: 720,
       kicker: "From idea to product",

@@ -7,7 +7,7 @@ import { projects } from "@/content/projects";
 import { profile } from "@/content/profile";
 import type { Project, ProjectFilter } from "@/content/types";
 import { Monogram } from "@/components/Logo";
-import { SmartImage } from "@/components/SmartImage";
+import { ProjectCover } from "@/components/ProjectCover";
 import { cn } from "@/lib/cn";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker } from "@/components/ui";
@@ -241,13 +241,7 @@ export function WorkSection({
                   onKeyDown={(event) => onChapterKey(event, i)}
                 >
                   <span className="wx__chapter-thumb" aria-hidden>
-                    <SmartImage
-                      src={p.cover.src}
-                      alt=""
-                      width={p.cover.width}
-                      height={p.cover.height}
-                      sizes="120px"
-                    />
+                    <ProjectCover project={p} sizes="120px" decorative />
                   </span>
                   <span className="wx__chapter-copy">
                     <span className="wx__chapter-no">{p.number}</span>
@@ -337,11 +331,8 @@ function Stage({
             exit={{ opacity: 0, scale: reduce ? 1 : 1.02 }}
             transition={{ duration: reduce ? duration.micro : duration.section, ease }}
           >
-            <SmartImage
-              src={p.cover.src}
-              alt={p.cover.alt}
-              width={p.cover.width}
-              height={p.cover.height}
+            <ProjectCover
+              project={p}
               sizes="(min-width: 1180px) 60vw, 100vw"
               priority={priority}
             />

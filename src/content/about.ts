@@ -1,4 +1,5 @@
 import type { AboutContent } from '@/content/types';
+import { credentials } from '@/content/profile';
 
 /**
  * About content
@@ -39,11 +40,13 @@ export const about: AboutContent = {
     { year: '2024', title: 'Senior Angular Engineer', body: 'Fiji Government Immigration Platforms serving 10,000+ users.' },
     { year: '2026', title: 'Frontend Developer Consultant', body: 'RSTACK Solutions — interactive frontend for a web-based analytics application, integrating REST APIs with AI/ML models.' },
   ],
+  // Values come from `credentials` in profile.ts — the one canonical source.
+  // Only the per-section wording (label/note/icon) lives here.
   metrics: [
-    { value: '4+', label: 'Years Experience', icon: 'experience', note: 'Building modern web applications' }, // CALCULATED from experience.ts
-    { value: '30+', label: 'Projects Completed', icon: 'projects', note: 'From ideas to successful products' },
-    { value: '100%', label: 'Client Satisfaction', icon: 'commitment', note: 'Committed to quality and excellence' },
-    { value: '20+', label: 'Happy Clients', icon: 'clients', note: 'Startups, agencies and enterprises' },
+    { value: credentials.years, label: 'Years Experience', icon: 'experience', note: 'Building modern web applications' },
+    { value: credentials.projects, label: 'Projects Completed', icon: 'projects', note: 'From ideas to successful products' },
+    { value: credentials.commitment.value, label: credentials.commitment.label, icon: 'commitment', note: 'Committed to quality and excellence' },
+    { value: credentials.clients, label: 'Happy Clients', icon: 'clients', note: 'Startups, agencies and enterprises' },
   ],
   // Composed treatment: the cut-out portrait ships with its own glow rings,
   // monogram badge and signature, so the section renders it as a single layer.

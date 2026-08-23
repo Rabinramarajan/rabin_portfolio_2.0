@@ -1,5 +1,11 @@
 import type { Insight } from '@/content/types';
 
+/** An insight is publishable — and indexable — once it has body paragraphs. */
+export const isPublished = (i: Insight): boolean => (i.body?.length ?? 0) > 0;
+
+/** Insights with a written article, for the sitemap. */
+export const publishedInsights = (): Insight[] => insights.filter(isPublished);
+
 export const insights: Insight[] = [
   {
     id: 'signals',

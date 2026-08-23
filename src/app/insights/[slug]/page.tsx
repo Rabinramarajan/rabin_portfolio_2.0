@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { insights } from "@/content/insights";
+import { insights, isPublished } from "@/content/insights";
 import { SectionKicker } from "@/components/ui";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = insights.find((i) => i.id === slug);
   if (!item) return { title: "Not found", robots: { index: false, follow: false } };
-  return pageMetadata({
+  const meta = pageMetadata({
     title: item.title ?? "Insight",
     description:
       item.dek ??
@@ -22,6 +22,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     path: "/insights/" + item.id,
     type: "article",
   });
+  // A stub with only a title and a dek is thin content — keep it crawlable but
+  // out of the index until `body` is written. See Insight.body in types.ts.
+  return isPublished(item) ? meta : { ...meta, robots: { index: false, follow: true } };
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
@@ -52,9 +55,18 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <SectionKicker index={item.number ?? "09"} label="Insight" />
         <h1 className="sec-title">{item.title}</h1>
         <p className="sec-lede">{item.dek}</p>
-        <p className="muted" style={{ marginTop: "1.5rem" }}>
-          This is a working position from shipped Angular and frontend work — not a metric claim, and not a client list.
-        </p>
+        {item.body?.length ? (
+          item.body.map((paragraph, i) => (
+            <p key={i} style={{ marginTop: "1.5rem" }}>
+              {paragraph}
+            </p>
+          ))
+        ) : (
+          <p className="muted" style={{ marginTop: "1.5rem" }}>
+            This is a working position from shipped Angular and frontend work — the full
+            write-up is still being drafted.
+          </p>
+        )}
         <p style={{ marginTop: "2rem" }}>
           <Link className="btn btn--line" href="/insights">
             <span className="btn__label">All insights →</span>

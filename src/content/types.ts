@@ -126,7 +126,11 @@ export interface Project {
   featured: boolean;
   layout: "large" | "medium" | "full";
   filter: ProjectFilter;
-  cover: Required<MediaRef>;
+  /**
+   * Cover screenshot. Optional: a case study with no captured frame renders a
+   * typographic poster (see ProjectCover) rather than a broken image.
+   */
+  cover?: Required<MediaRef>;
   gallery: Required<MediaRef>[];
   /** Public deployment, when there is one — drives the "Live Preview" action. */
   liveUrl?: string;
@@ -302,6 +306,14 @@ export interface Insight {
   kicker?: string;
   value?: string;
   note?: string;
+  /**
+   * Article body, one paragraph per entry. An insight without a body has no
+   * publishable article yet: its detail route still renders (so the listing
+   * never dead-links) but stays out of the sitemap and is marked `noindex`,
+   * because a page carrying only a title and a one-line dek is thin content.
+   * Adding paragraphs here is all it takes to publish and index the piece.
+   */
+  body?: string[];
 }
 
 export interface SeoContent {
@@ -338,3 +350,27 @@ export type ServiceOfferingIcon =
   | "server"
   | "shield"
   | "support";
+
+/**
+ * Canonical, site-wide credibility figures.
+ *
+ * Every section that shows a headline number (About metrics, Skills stat
+ * tiles, Hero metadata) reads from this one object. Before this existed the
+ * About section claimed "30+ Projects / 20+ Clients" while the Skills section
+ * claimed "20+ Projects / 15+ Clients" on the same site.
+ */
+export interface Credentials {
+  /** Years of professional experience — derived from experience.ts. */
+  years: string;
+  /** Delivered projects. `review: true` means the figure is unverified. */
+  projects: string;
+  /** Clients served. `review: true` means the figure is unverified. */
+  clients: string;
+  /**
+   * Qualitative commitment tile. Deliberately NOT a satisfaction percentage:
+   * a "100% Client Satisfaction" claim is unverifiable and reads as filler.
+   */
+  commitment: { value: string; label: string };
+  /** Figures that still need the owner to confirm a real number. */
+  needsReview: readonly ("projects" | "clients")[];
+}

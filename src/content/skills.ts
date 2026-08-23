@@ -1,4 +1,5 @@
 import type { SkillGroup } from "@/content/types";
+import { credentials } from "@/content/profile";
 
 /** One numbered node on the snaking core-skill timeline. */
 export interface SkillTimelineNode {
@@ -25,11 +26,13 @@ export const skillHero = {
   timelineLabel: "Core Skill Timeline",
 };
 
+// Values come from `credentials` in profile.ts — the one canonical source, so
+// these tiles can never drift from the About section's metrics again.
 export const skillStats: SkillStat[] = [
-  { id: "years", icon: "star", value: "4+", label: ["Years of", "Experience"] },
-  { id: "projects", icon: "rocket", value: "20+", label: ["Projects", "Delivered"] },
-  { id: "clients", icon: "people", value: "15+", label: ["Happy", "Clients"] },
-  { id: "quality", icon: "target", value: "100%", label: ["Focus on Quality", "& Performance"] },
+  { id: "years", icon: "star", value: credentials.years, label: ["Years of", "Experience"] },
+  { id: "projects", icon: "rocket", value: credentials.projects, label: ["Projects", "Delivered"] },
+  { id: "clients", icon: "people", value: credentials.clients, label: ["Happy", "Clients"] },
+  { id: "quality", icon: "target", value: credentials.commitment.value, label: [credentials.commitment.label, "& Performance"] },
 ];
 
 /**

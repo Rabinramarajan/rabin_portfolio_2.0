@@ -23,7 +23,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { navigation, profile, SITE_URL } from "@/content/profile";
+import { navigation, profile, secondaryNavigation, SITE_URL } from "@/content/profile";
 import { services } from "@/content/services";
 import { duration, ease } from "@/lib/motion";
 import { Monogram } from "@/components/Logo";
@@ -33,13 +33,9 @@ import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 /**
  * Routes that exist as their own page but are not in the primary nav — the
  * footer is the only internal link they get, so they stay out of the orphan
- * bucket in the sitemap.
+ * bucket in the sitemap. Defined in profile.ts alongside the primary nav.
  */
-const STANDALONE_ROUTES = [
-  { href: "/skills", label: "Skills" },
-  { href: "/process", label: "Process" },
-  { href: "/insights", label: "Insights" },
-];
+const STANDALONE_ROUTES = secondaryNavigation.standalone;
 
 /*
  * The services page renders one continuous showcase rather than per-service
@@ -47,14 +43,7 @@ const STANDALONE_ROUTES = [
  */
 const SERVICE_LINKS = services.slice(0, 7).map((s) => ({ href: "/services", label: s.title, id: s.id }));
 
-const RESOURCE_LINKS = [
-  { href: "/work", label: "Case Studies" },
-  { href: "/insights", label: "Articles" },
-  { href: "/pricing", label: "Engagement Models" },
-  { href: profile.resumePath, label: "Résumé" },
-  { href: "/skills", label: "Tech Stack" },
-  { href: "/#faq", label: "FAQs" },
-];
+const RESOURCE_LINKS = secondaryNavigation.resources;
 
 const PILLARS = [
   { icon: Zap, title: "Fast & Performant", copy: "Optimized for speed and performance" },

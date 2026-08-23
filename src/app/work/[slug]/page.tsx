@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { ProjectCover } from "@/components/ProjectCover";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getNextProject, getProject, projects } from "@/content/projects";
@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           name={project.title}
           description={project.seo.description}
           path={"/work/" + project.slug}
-          image={project.cover.src}
+          image={project.cover?.src}
           year={project.year}
           technologies={project.technologies}
         />
@@ -68,7 +68,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <span>{project.technologies.join(" / ")}</span>
         </p>
         <div className="shot">
-          <Image src={project.cover.src} alt={project.cover.alt} width={project.cover.width} height={project.cover.height} priority sizes="100vw" />
+          <ProjectCover project={project} priority sizes="100vw" />
         </div>
         <div className="case-split">
           <div>

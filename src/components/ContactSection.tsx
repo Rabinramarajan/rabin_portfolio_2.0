@@ -325,6 +325,10 @@ export function ContactSection() {
               </div>
             </div>
 
+            {/* react-hooks/refs flags `onSubmit` because it closes over `fileRef`.
+                The ref is only read inside the async success branch, long after
+                render, so the rule is a false positive here. */}
+            {/* eslint-disable-next-line react-hooks/refs */}
             <form className="cx__form" onSubmit={handleSubmit(onSubmit)} aria-labelledby="cx-form-title" noValidate>
               <div className="hp" aria-hidden>
                 <label>

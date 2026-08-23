@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { insights } from "@/content/insights";
+import { publishedInsights } from "@/content/insights";
 import { projects } from "@/content/projects";
 import { SITE_URL } from "@/content/profile";
 
@@ -36,7 +36,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly" as const,
       priority: 0.8,
     })),
-    ...insights.map((i) => ({
+    // Only insights with a written body — a title-and-dek stub is thin content.
+    ...publishedInsights().map((i) => ({
       url: SITE_URL + "/insights/" + i.id,
       lastModified: now,
       changeFrequency: "yearly" as const,

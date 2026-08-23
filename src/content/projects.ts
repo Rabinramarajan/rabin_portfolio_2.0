@@ -310,16 +310,7 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'web',
-    cover: img(
-      '/media/galaxy-sofas/hero.png',
-      'Galaxy Sofas e-commerce storefront'
-    ),
-    gallery: [
-      img(
-        '/media/galaxy-sofas/hero.png',
-        'Galaxy Sofas furniture storefront'
-      )
-    ],
+    gallery: [],
     problem:
       'A furniture business needed a modern digital storefront that could showcase products clearly while remaining fast, responsive and search-engine friendly.',
     solution:
@@ -372,16 +363,7 @@ export const projects: Project[] = [
     featured: true,
     layout: 'medium',
     filter: 'web',
-    cover: img(
-      '/media/zellavora-resume-builder/hero.png',
-      'Zellavora AI Resume Builder'
-    ),
-    gallery: [
-      img(
-        '/media/zellavora-resume-builder/hero.png',
-        'Zellavora AI Resume Builder workspace'
-      )
-    ],
+    gallery: [],
     problem:
       'Traditional resume builders either start users with a blank page or lock them into rigid templates without helping them structure their experience effectively.',
     solution:
@@ -437,16 +419,7 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'enterprise',
-    cover: img(
-      '/media/zellavora-control-center/hero.png',
-      'Zellavora Control Center dashboard'
-    ),
-    gallery: [
-      img(
-        '/media/zellavora-control-center/hero.png',
-        'Zellavora Control Center administration dashboard'
-      )
-    ],
+    gallery: [],
     problem:
       'Multiple products and applications need a common operational layer for managing content, users, permissions, projects, configuration and system activity.',
     solution:
@@ -501,16 +474,7 @@ export const projects: Project[] = [
     featured: true,
     layout: 'medium',
     filter: 'architecture',
-    cover: img(
-      '/media/ui-component-architecture/hero.png',
-      'Angular enterprise component architecture'
-    ),
-    gallery: [
-      img(
-        '/media/ui-component-architecture/hero.png',
-        'Reusable Angular component library architecture'
-      )
-    ],
+    gallery: [],
     problem:
       'Large applications often develop duplicated UI patterns, inconsistent interactions and difficult-to-maintain components as multiple teams build features independently.',
     solution:

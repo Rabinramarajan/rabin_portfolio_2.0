@@ -174,7 +174,8 @@ export function ProjectJsonLd({
   name: string;
   description: string;
   path: string;
-  image: string;
+  /** Cover screenshot, when the case study has one. */
+  image?: string;
   year: string;
   technologies: string[];
 }) {
@@ -184,7 +185,8 @@ export function ProjectJsonLd({
     name,
     description,
     url: absoluteUrl(path),
-    image: absoluteUrl(image),
+    // Omit `image` rather than emit a URL for a screenshot that does not exist.
+    ...(image ? { image: absoluteUrl(image) } : {}),
     dateCreated: year,
     keywords: technologies.join(", "),
     inLanguage: "en",

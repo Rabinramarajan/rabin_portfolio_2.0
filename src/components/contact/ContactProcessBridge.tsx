@@ -9,7 +9,9 @@ export function ContactProcessBridge() {
   return (
     <section className="cp-bridge" aria-labelledby="cp-bridge-title">
       <ContactReveal className="cp-bridge__stage">
-        <ContactLazyVideo src={process.src} className="cp-bridge__video" />
+        {process.src ? (
+          <ContactLazyVideo src={process.src} className="cp-bridge__video" />
+        ) : null}
         <div className="cp-bridge__veil" aria-hidden />
         <div className="cp-bridge__copy">
           <h2 id="cp-bridge-title" className="cp-bridge__kicker">
