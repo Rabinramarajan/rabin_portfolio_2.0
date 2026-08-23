@@ -48,10 +48,10 @@ export const ORDER = [
   "journey",
   "skills",
   "process",
+  "faq",
   "engagement",
   "contact",
   "insights",
-  "faq",
 ] as const;
 
 export type SectionId = (typeof ORDER)[number];
@@ -122,7 +122,7 @@ const COPY: Record<SectionId, IntroCopy> = {
   },
   faq: {
     label: "FAQ",
-    title: [{ text: "Questions I get asked." }],
+    title: [{ text: "Questions you" }, { text: "might *have.*", newline: true }],
     lede: "Straight answers about the work, the stack and how an engagement starts.",
   },
 };

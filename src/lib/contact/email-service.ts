@@ -1,11 +1,18 @@
 import { profile } from "@/content/profile";
 
+export interface EmailAttachment {
+  filename: string;
+  content: Buffer;
+  contentType: string;
+}
+
 export interface EmailMessage {
   to: string;
   from: string;
   replyTo?: string;
   subject: string;
   text: string;
+  attachments?: EmailAttachment[];
 }
 
 export interface EmailProvider {

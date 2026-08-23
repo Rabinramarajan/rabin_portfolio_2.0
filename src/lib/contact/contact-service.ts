@@ -4,7 +4,13 @@ import { fieldErrorsFromZod, contactSchema } from "@/lib/contact/validation";
 import { createReferenceId } from "@/lib/contact/reference-id";
 import { mailEnvelope, type EmailProvider } from "@/lib/contact/email-service";
 import type { MessageStore } from "@/lib/contact/message-store";
-import { INQUIRY_TYPES, type ContactPayload, type ContactResult, type InquiryType } from "@/types/contact";
+import {
+  INQUIRY_TYPES,
+  type ContactAttachment,
+  type ContactPayload,
+  type ContactResult,
+  type InquiryType,
+} from "@/types/contact";
 
 const INQUIRY_SET = new Set<string>(INQUIRY_TYPES);
 
@@ -55,6 +61,12 @@ export function normalizePayload(raw: unknown): { honeypot: boolean; payload?: C
     timeline: clean(data.timeline ?? "", 120) || undefined,
     preferredContact: data.preferredContact || undefined,
     projectType: clean(data.projectType ?? "", 120) || undefined,
+    role: data.role || undefined,
+    projectStage: data.projectStage || undefined,
+    engagement: data.engagement || undefined,
+    referralSource: data.referralSource || undefined,
+    technologies: data.technologies?.length ? data.technologies : undefined,
+    attachmentName: clean(data.attachmentName ?? "", 200) || undefined,
   };
 
   return { honeypot: false, payload };
@@ -68,9 +80,16 @@ function notificationText(payload: ContactPayload, referenceId: string, received
     `Inquiry: ${payload.inquiryType}`,
     `Company: ${payload.company || "—"}`,
     `Website: ${payload.projectUrl || "—"}`,
+    `Role: ${payload.role || "—"}`,
+    `Project type: ${payload.projectType || "—"}`,
+    `Stage: ${payload.projectStage || "—"}`,
+    `Technologies: ${payload.technologies?.join(", ") || "—"}`,
     `Budget: ${payload.budget || "—"}`,
     `Timeline: ${payload.timeline || "—"}`,
+    `Engagement: ${payload.engagement || "—"}`,
+    `Found me via: ${payload.referralSource || "—"}`,
     `Preferred contact: ${payload.preferredContact || "—"}`,
+    `Attachment: ${payload.attachmentName || "—"}`,
     "",
     "Message:",
     payload.message,
@@ -100,6 +119,8 @@ export async function submitContact(
     store: MessageStore;
     env?: NodeJS.Dict<string>;
     now?: Date;
+    /** Uploaded file, already size- and type-checked by the route. */
+    attachment?: ContactAttachment;
   },
 ): Promise<ContactResult> {
   const normalized = normalizePayload(raw);
@@ -134,6 +155,15 @@ export async function submitContact(
     replyTo: payload.email,
     subject: `New Portfolio Inquiry — ${payload.inquiryType} (${referenceId})`,
     text: notificationText(payload, referenceId, receivedAt),
+    attachments: deps.attachment
+      ? [
+          {
+            filename: deps.attachment.filename,
+            content: deps.attachment.content,
+            contentType: deps.attachment.contentType,
+          },
+        ]
+      : undefined,
   });
 
   if (envelope.ackEnabled) {

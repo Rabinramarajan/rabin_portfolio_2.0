@@ -3,10 +3,69 @@ import { rateLimit } from "@/lib/rate-limit";
 import { submitContact } from "@/lib/contact/contact-service";
 import { createEmailProvider } from "@/lib/contact/email-service";
 import { createMessageStore } from "@/lib/contact/message-store";
+import { ATTACHMENT } from "@/content/contact-fields";
+import type { ContactAttachment } from "@/types/contact";
 
 export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 32 * 1024;
+/** JSON fields plus one attachment, with headroom for multipart framing. */
+const MAX_MULTIPART_BYTES = ATTACHMENT.maxBytes + MAX_BODY_BYTES;
+
+const ALLOWED_MIME = new Set<string>(ATTACHMENT.mimeTypes);
+
+function hasAllowedExtension(name: string) {
+  const lower = name.toLowerCase();
+  return ATTACHMENT.extensions.some((ext) => lower.endsWith(ext));
+}
+
+/**
+ * Reads a `multipart/form-data` submission: every text part becomes a body
+ * field, and the single `attachment` part is validated against the shared
+ * size/type limits. Both checks matter — the browser's `accept` attribute is
+ * advisory and a crafted request can claim any MIME type it likes.
+ */
+async function readMultipart(
+  req: NextRequest,
+): Promise<{ body: Record<string, unknown>; attachment?: ContactAttachment } | { error: string; status: number }> {
+  const form = await req.formData().catch(() => null);
+  if (!form) return { error: "Invalid request.", status: 400 };
+
+  const body: Record<string, unknown> = {};
+  let attachment: ContactAttachment | undefined;
+
+  for (const [key, value] of form.entries()) {
+    if (typeof value === "string") {
+      // `technologies` arrives as one entry per selected chip.
+      if (key === "technologies") {
+        (body.technologies as string[] | undefined) ??= [];
+        (body.technologies as string[]).push(value);
+      } else {
+        body[key] = value;
+      }
+      continue;
+    }
+
+    if (key !== "attachment" || value.size === 0) continue;
+
+    if (value.size > ATTACHMENT.maxBytes) {
+      return { error: `Attachment is too large. Keep it under ${ATTACHMENT.maxLabel}.`, status: 413 };
+    }
+    if (!ALLOWED_MIME.has(value.type) || !hasAllowedExtension(value.name)) {
+      return { error: "That file type isn't supported. Use PDF, DOC/DOCX, PNG/JPG or ZIP.", status: 400 };
+    }
+
+    attachment = {
+      filename: value.name.slice(0, 200),
+      contentType: value.type,
+      size: value.size,
+      content: Buffer.from(await value.arrayBuffer()),
+    };
+    body.attachmentName = attachment.filename;
+  }
+
+  return { body, attachment };
+}
 
 function clientKey(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
@@ -15,8 +74,11 @@ function clientKey(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const isMultipart = (req.headers.get("content-type") ?? "").includes("multipart/form-data");
+  const limit = isMultipart ? MAX_MULTIPART_BYTES : MAX_BODY_BYTES;
+
   const length = Number(req.headers.get("content-length") ?? 0);
-  if (length > MAX_BODY_BYTES) {
+  if (length > limit) {
     return NextResponse.json({ error: "Request is too large." }, { status: 413 });
   }
 
@@ -24,22 +86,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Too many requests. Please wait a few minutes and try again." }, { status: 429 });
   }
 
-  const rawText = await req.text().catch(() => "");
-  if (rawText.length > MAX_BODY_BYTES) {
-    return NextResponse.json({ error: "Request is too large." }, { status: 413 });
-  }
-
   let body: unknown = null;
-  try {
-    body = rawText ? JSON.parse(rawText) : null;
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  let attachment: ContactAttachment | undefined;
+
+  if (isMultipart) {
+    const parsed = await readMultipart(req);
+    if ("error" in parsed) {
+      return NextResponse.json({ error: parsed.error }, { status: parsed.status });
+    }
+    body = parsed.body;
+    attachment = parsed.attachment;
+  } else {
+    const rawText = await req.text().catch(() => "");
+    if (rawText.length > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: "Request is too large." }, { status: 413 });
+    }
+    try {
+      body = rawText ? JSON.parse(rawText) : null;
+    } catch {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    }
   }
 
   try {
     const result = await submitContact(body, {
       email: createEmailProvider(),
       store: createMessageStore(),
+      attachment,
     });
 
     if (!result.ok) {

@@ -1,509 +1,827 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
+import {
+  useForm,
+  useWatch,
+  type Path,
+  type UseFormRegister,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { motion, useReducedMotion } from "motion/react";
 import {
+  ArrowLeft,
   ArrowRight,
-  Briefcase,
-  Building2,
-  Calendar,
-  FileText,
-  FolderKanban,
-  Globe,
-  Handshake,
+  Check,
+  Clock,
+  Headphones,
   LoaderCircle,
+  Lock,
   Mail,
   MapPin,
-  MessageSquare,
   Paperclip,
   Phone,
   Send,
-  Tag,
-  User,
+  ShieldCheck,
+  X,
 } from "lucide-react";
 import { profile } from "@/content/profile";
+import {
+  ATTACHMENT,
+  BUDGET_RANGES,
+  CONTACT_ROLES,
+  ENGAGEMENTS,
+  PROJECT_STAGES,
+  PROJECT_TYPES,
+  REFERRAL_SOURCES,
+  TECHNOLOGIES,
+  TIMELINES,
+} from "@/content/contact-fields";
 import { duration, ease } from "@/lib/motion";
-import { Monogram } from "@/components/Logo";
-import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 import { SectionKicker } from "@/components/ui";
+import { SmartImage } from "@/components/SmartImage";
 
-const quickContactSchema = z.object({
-  name: z.string().trim().min(2, "Please enter your name.").max(120, "Name is too long."),
-  email: z.email("Enter a valid email address.").trim(),
-  subject: z.string().trim().min(3, "Add a short subject.").max(160, "Subject is too long."),
+const OVERVIEW_MAX = 1200;
+
+const enquirySchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Please enter your full name.")
+    .max(120, "Name is too long."),
+  email: z.email("Enter a valid work email address.").trim(),
+  company: z
+    .string()
+    .trim()
+    .max(160, "Company name is too long.")
+    .optional()
+    .or(z.literal("")),
+  role: z.enum(CONTACT_ROLES).optional().or(z.literal("")),
+
+  projectType: z.enum(PROJECT_TYPES, { message: "Choose the type of work." }),
   message: z
     .string()
     .trim()
-    .min(30, "Tell me a little more — 30 characters or so.")
-    .max(3000, "Message is too long."),
+    .min(30, "A couple of sentences is plenty — 30 characters or so.")
+    .max(OVERVIEW_MAX, `Keep the overview under ${OVERVIEW_MAX} characters.`),
+  projectStage: z.enum(PROJECT_STAGES).optional().or(z.literal("")),
+  technologies: z.array(z.enum(TECHNOLOGIES)).optional(),
+
+  timeline: z.enum(TIMELINES).optional().or(z.literal("")),
+  budget: z.enum(BUDGET_RANGES).optional().or(z.literal("")),
+  projectUrl: z
+    .string()
+    .trim()
+    .max(200, "URL is too long.")
+    .refine(
+      (v) => !v || /^(https?:\/\/|www\.)\S+\.\S+/i.test(v),
+      "Enter a full URL, or leave this blank.",
+    )
+    .optional()
+    .or(z.literal("")),
+  engagement: z.enum(ENGAGEMENTS).optional().or(z.literal("")),
+  referralSource: z.enum(REFERRAL_SOURCES).optional().or(z.literal("")),
+
+  /** Honeypot — must stay empty. */
   website: z.string().optional(),
 });
 
-type QuickContact = z.infer<typeof quickContactSchema>;
+type Enquiry = z.infer<typeof enquirySchema>;
 
-const INFO: Array<{
+/** Which fields each step owns, so a step can be validated on its own. */
+const STEPS: Array<{
+  id: string;
+  title: string;
+  fields: Array<Path<Enquiry>>;
+}> = [
+  {
+    id: "you",
+    title: "About you",
+    fields: ["name", "email", "company", "role"],
+  },
+  {
+    id: "project",
+    title: "Your project",
+    fields: ["projectType", "message", "projectStage", "technologies"],
+  },
+  {
+    id: "details",
+    title: "Details",
+    fields: [
+      "timeline",
+      "budget",
+      "projectUrl",
+      "engagement",
+      "referralSource",
+    ],
+  },
+];
+
+const CHANNELS: Array<{
   icon: typeof Mail;
   label: string;
   value: string;
-  href?: string;
+  note: string;
+  href: string;
 }> = [
   {
     icon: Mail,
     label: "Email",
     value: profile.email,
+    note: "Send me an email anytime",
     href: `mailto:${profile.email}`,
   },
   {
     icon: Phone,
     label: "Phone",
     value: profile.phone,
+    note: profile.phoneHours,
     href: `tel:${profile.phone.replace(/\s/g, "")}`,
   },
   {
     icon: MapPin,
     label: "Location",
     value: profile.location,
+    note: "Available for remote work",
     href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(profile.location)}`,
   },
   {
-    icon: Calendar,
+    icon: Clock,
     label: "Availability",
-    value: profile.availability.label,
+    value: "Full-time · Freelance · Contract",
+    note: profile.availability.label,
     href: "#cx-form-title",
   },
 ];
 
-const SOCIALS = [
+const ASSURANCES = [
   {
-    id: "linkedin",
-    label: "LinkedIn",
-    href: profile.socials.find((s) => s.id === "linkedin")?.href ?? "https://www.linkedin.com/in/rabinr",
-    Icon: LinkedinIcon,
+    icon: Clock,
+    title: "Quick Response",
+    body: profile.availability.responseTime,
   },
   {
-    id: "github",
-    label: "GitHub",
-    href: profile.socials.find((s) => s.id === "github")?.href ?? "https://github.com/Rabinramarajan",
-    Icon: GithubIcon,
+    icon: Headphones,
+    title: "Let's Connect",
+    body: "Easy communication through your preferred way.",
   },
   {
-    id: "website",
-    label: "Website",
-    href: profile.socials.find((s) => s.id === "website")?.href ?? "/",
-    Icon: Globe,
-  },
-  {
-    id: "resume",
-    label: "Resume",
-    href: profile.resumePath,
-    Icon: FileText,
-  },
-  {
-    id: "email",
-    label: "Email",
-    href: `mailto:${profile.email}`,
-    Icon: Mail,
+    icon: ShieldCheck,
+    title: "Trusted & Secure",
+    body: "Your data is safe with privacy guaranteed.",
   },
 ] as const;
 
-const OPEN_FOR = [
-  { icon: Briefcase, label: "Consulting" },
-  { icon: FolderKanban, label: "Freelance Projects" },
-  { icon: Handshake, label: "Collaborations" },
-  { icon: Building2, label: "Full-time Opportunities" },
-] as const;
-
-function OrbitMark() {
+/**
+ * Decorative connected-globe artwork. Purely atmospheric — the location it
+ * depicts is already stated as text in the Location channel card, so it is
+ * hidden from assistive tech rather than described twice.
+ */
+function GlobeVisual() {
   return (
-    <div className="cx__orbit" aria-hidden>
-      <span className="cx__orbit-ring cx__orbit-ring--a" />
-      <span className="cx__orbit-ring cx__orbit-ring--b" />
-      <span className="cx__orbit-ring cx__orbit-ring--c" />
-      <span className="cx__orbit-core">
-        <Monogram className="cx__orbit-mark" />
-      </span>
-      <span className="cx__orbit-dot cx__orbit-dot--a" />
-      <span className="cx__orbit-dot cx__orbit-dot--b" />
+    <div className="cx__globe" aria-hidden>
+      <SmartImage
+        className="cx__globe-img"
+        src="/media/contact/contact_h.png"
+        alt=""
+        width={1217}
+        height={1293}
+        sizes="(max-width: 1100px) 64vw, 34vw"
+        blurColor="#0a0a0c"
+      />
     </div>
   );
 }
 
-function GlobeMap() {
+function formatBytes(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+/**
+ * A labelled `<select>`; the first option acts as the empty state.
+ *
+ * Declared at module scope rather than inside `ContactSection` — a component
+ * created during render is a fresh type on every pass, which would remount the
+ * field and lose its state on each keystroke elsewhere in the form.
+ */
+function Select({
+  name,
+  label,
+  required,
+  placeholder,
+  options,
+  register,
+  error,
+}: {
+  name: Path<Enquiry>;
+  label: string;
+  required?: boolean;
+  placeholder: string;
+  options: readonly string[];
+  register: UseFormRegister<Enquiry>;
+  error?: string;
+}) {
   return (
-    <svg className="cx__globe" viewBox="0 0 560 280" role="img" aria-label="Clients across North America, Europe, the Middle East, Asia and Australia">
-      <defs>
-        <pattern id="cx-dots" width="7" height="7" patternUnits="userSpaceOnUse">
-          <circle cx="1.4" cy="1.4" r="1.15" fill="currentColor" />
-        </pattern>
-        <linearGradient id="cx-arc" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.15" />
-          <stop offset="50%" stopColor="var(--color-accent)" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0.15" />
-        </linearGradient>
-      </defs>
-
-      <g fill="url(#cx-dots)" opacity="0.55">
-        {/* North America */}
-        <path d="M78 58c28-18 62-22 92-8 22 10 38 32 42 56 4 26-6 48-22 66-14 16-36 28-58 24-22-4-38-22-54-38-18-18-32-40-28-64 3-16 14-28 28-36z" />
-        {/* Central / Caribbean */}
-        <path d="M128 148c12 4 22 16 20 28-8 8-20 6-28-2-8-10-4-24 8-26z" />
-        {/* South America */}
-        <path d="M142 176c18 2 32 18 36 36 4 22-4 44-16 60-10 12-26 16-36 8-8-8-10-24-8-38 4-22 10-44 24-66z" />
-        {/* Europe */}
-        <path d="M268 52c22-8 44-4 58 10 10 12 8 28-2 38-14 12-34 10-50 2-16-8-18-28-6-50z" />
-        {/* Africa */}
-        <path d="M272 108c24-4 46 8 54 28 8 22 4 46-6 66-8 16-24 26-40 24-18-2-30-20-34-38-6-24 4-52 26-80z" />
-        {/* Middle East / India */}
-        <path d="M338 108c18 2 32 16 42 32 8 14 22 22 36 20 12-2 18 10 14 22-8 16-28 22-46 18-22-4-40-18-52-36-12-18-10-42 6-56z" />
-        {/* Asia */}
-        <path d="M360 48c36-16 78-14 112 4 28 16 48 42 52 72 2 18-8 34-24 40-22 8-46-2-64-16-16 10-36 16-54 8-22-8-32-32-28-54 4-22 4-40 6-54z" />
-        {/* SE Asia / archipelago */}
-        <path d="M430 168c16 2 30 14 28 26-12 8-28 4-38-6-8-10 0-22 10-20z" />
-        {/* Australia */}
-        <path d="M468 196c22-4 44 6 52 24 6 16-2 32-18 38-18 6-38-2-48-16-10-16-6-40 14-46z" />
-        {/* Japan / islands */}
-        <path d="M508 92c10-2 16 8 14 16-8 6-18 4-22-4-4-8 0-12 8-12z" />
-      </g>
-
-      <g fill="none" stroke="url(#cx-arc)" strokeWidth="1.2">
-        <path d="M132 118 C 210 28, 320 24, 392 138" />
-        <path d="M132 118 C 250 70, 330 90, 372 158" />
-        <path d="M392 138 C 430 90, 490 120, 500 214" />
-        <path d="M372 158 C 300 200, 220 190, 168 214" />
-      </g>
-
-      {[
-        [132, 118],
-        [168, 214],
-        [300, 92],
-        [372, 158],
-        [392, 138],
-        [500, 214],
-      ].map(([x, y], i) => (
-        <g key={i} transform={`translate(${x} ${y})`}>
-          <circle r="10" className="cx__pin-halo" />
-          <circle r="4.5" className="cx__pin" />
-          <circle r="1.8" className="cx__pin-core" />
-        </g>
-      ))}
-    </svg>
+    <div className="cx__field">
+      <label htmlFor={`cx-${name}`}>
+        {label}
+        {required ? <span className="cx__req"> *</span> : null}
+      </label>
+      <select
+        id={`cx-${name}`}
+        className={`cx__input cx__select${error ? " is-invalid" : ""}`}
+        defaultValue=""
+        aria-invalid={!!error}
+        aria-describedby={error ? `cx-${name}-err` : undefined}
+        {...register(name)}
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      {error ? (
+        <p className="cx__err" id={`cx-${name}-err`} role="alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
 }
 
 export function ContactSection() {
   const reduce = useReducedMotion();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState("");
+  const [step, setStep] = useState(0);
+  const [file, setFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState("");
+  /* Bumping this remounts the file input, which is the only way to clear a
+     file picker's selection without reaching for a ref during render. */
+  const [fileKey, setFileKey] = useState(0);
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
+    trigger,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<QuickContact>({
-    resolver: zodResolver(quickContactSchema),
+  } = useForm<Enquiry>({
+    resolver: zodResolver(enquirySchema),
     mode: "onTouched",
-    defaultValues: { name: "", email: "", subject: "", message: "", website: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      company: "",
+      role: "",
+      message: "",
+      projectStage: "",
+      technologies: [],
+      timeline: "",
+      budget: "",
+      projectUrl: "",
+      engagement: "",
+      referralSource: "",
+      website: "",
+    },
   });
+
+  const overviewLength = useWatch({ control, name: "message" })?.length ?? 0;
+  const selectedTech = useWatch({ control, name: "technologies" }) ?? [];
+  const isLast = step === STEPS.length - 1;
 
   const view = (delay = 0) => ({
-    initial: reduce ? { opacity: 0 } : { opacity: 0, y: 22 },
+    initial: reduce ? { opacity: 0 } : { opacity: 0, y: 24 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, amount: 0.12 },
-    transition: { duration: reduce ? duration.micro : duration.section, delay: reduce ? 0 : delay, ease },
+    transition: {
+      duration: reduce ? duration.micro : duration.section,
+      delay: reduce ? 0 : delay,
+      ease,
+    },
   });
 
-  async function onSubmit(values: QuickContact) {
+  function toggleTech(value: (typeof TECHNOLOGIES)[number]) {
+    const next = selectedTech.includes(value)
+      ? selectedTech.filter((t) => t !== value)
+      : [...selectedTech, value];
+    setValue("technologies", next, { shouldDirty: true });
+  }
+
+  function clearFile() {
+    setFile(null);
+    setFileError("");
+    setFileKey((k) => k + 1);
+  }
+
+  function pickFile(picked: File | null) {
+    if (!picked) {
+      clearFile();
+      return;
+    }
+    if (picked.size > ATTACHMENT.maxBytes) {
+      clearFile();
+      setFileError(
+        `That file is ${formatBytes(picked.size)} — keep it under ${ATTACHMENT.maxLabel}.`,
+      );
+      return;
+    }
+    if (
+      !ATTACHMENT.extensions.some((ext) =>
+        picked.name.toLowerCase().endsWith(ext),
+      )
+    ) {
+      clearFile();
+      setFileError("Use a PDF, DOC/DOCX, PNG/JPG or ZIP file.");
+      return;
+    }
+    setFileError("");
+    setFile(picked);
+  }
+
+  /** Validates only the current step before advancing, and focuses what failed. */
+  async function next() {
+    const valid = await trigger(STEPS[step].fields, { shouldFocus: true });
+    if (valid) setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  }
+
+  /*
+   * The nav button stays `type="submit"` on every step and this handler decides
+   * what a submit means. Swapping the button's own `type` between steps looks
+   * equivalent but is not: `next()` is async, so React flips the attribute to
+   * "submit" while the click that triggered it is still in flight, and the
+   * browser then performs a real submission on what the user pressed as
+   * "Continue" — posting a half-filled form. Routing everything through one
+   * handler avoids that race, and gives Enter the same behaviour as the button.
+   */
+  function onFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!isLast) {
+      void next();
+      return;
+    }
+    void handleSubmit(onSubmit)(event);
+  }
+
+  async function onSubmit(values: Enquiry) {
     try {
-      const attachmentNote = fileName ? `\n\n[Visitor selected a file named "${fileName}" — not uploaded. Ask them to email it.]` : "";
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: values.name,
-          email: values.email,
-          company: "",
-          inquiryType: "Other",
-          projectType: "Other",
-          budget: "Not specified",
-          timeline: "Not specified",
-          message: `Subject: ${values.subject}\n\n${values.message}${attachmentNote}`,
-          website: values.website ?? "",
-        }),
-      });
+      const body = new FormData();
+      body.set("name", values.name);
+      body.set("email", values.email);
+      body.set("message", values.message);
+      body.set("projectType", values.projectType);
+      body.set(
+        "inquiryType",
+        values.engagement === "Full-time Opportunity"
+          ? "Full-time Opportunity"
+          : "Project",
+      );
+      for (const key of [
+        "company",
+        "role",
+        "projectStage",
+        "timeline",
+        "budget",
+        "projectUrl",
+        "engagement",
+        "referralSource",
+      ] as const) {
+        const value = values[key];
+        if (value) body.set(key, value);
+      }
+      for (const tech of values.technologies ?? [])
+        body.append("technologies", tech);
+      body.set("website", values.website ?? "");
+      if (file) body.set("attachment", file);
+
+      const res = await fetch("/api/contact", { method: "POST", body });
 
       if (res.ok) {
         toast.success("Message received — I'll get back to you shortly.");
         reset();
-        setFileName("");
-        if (fileRef.current) fileRef.current.value = "";
+        clearFile();
+        setStep(0);
         return;
       }
 
-      const body = (await res.json().catch(() => null)) as { error?: string } | null;
-      toast.error(body?.error ?? "Could not send. Please email me directly.");
+      const payload = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
+      toast.error(
+        payload?.error ?? "Could not send. Please email me directly.",
+      );
     } catch {
-      toast.error("Something went wrong. Please try again or email me directly.");
+      toast.error(
+        "Something went wrong. Please try again or email me directly.",
+      );
     }
   }
 
   return (
     <section id="contact" className="section cx">
       <div className="cx__glow" aria-hidden />
+      <GlobeVisual />
+
       <div className="shell cx__stack">
-        <div className="cx__top">
+        <div className="cx__grid">
+          {/* ---------- left: intro + channels ---------- */}
           <motion.div className="cx__intro" {...view(0)}>
             <SectionKicker index="08" label="Contact" />
 
-            <div className="cx__hero">
-              <div className="cx__hero-copy">
-                <h2 className="cx__title">
-                  Let&apos;s Create Something Amazing <em>Together.</em>
-                </h2>
-                <p className="cx__lede">
-                  Have a project in mind or want to collaborate? I&apos;m always open to discussing new ideas,
-                  products, and opportunities that deserve careful engineering.
-                </p>
-                <div className="cx__sign">
-                  <p className="cx__sign-name">Rabin R.</p>
-                  <p className="cx__sign-role">Frontend Angular Consultant</p>
-                </div>
-              </div>
-              <OrbitMark />
-            </div>
-
-            <ul className="cx__info">
-              {INFO.map(({ icon: Icon, label, value, href }) => {
-                const inner = (
-                  <>
-                    <span className="cx__info-icon" aria-hidden>
-                      <Icon size={18} strokeWidth={1.7} />
-                    </span>
-                    <span className="cx__info-body">
-                      <span className="cx__info-label">{label}</span>
-                      <span className="cx__info-value">{value}</span>
-                    </span>
-                    <span className="cx__info-go" aria-hidden>
-                      <ArrowRight size={14} />
-                    </span>
-                  </>
-                );
-                return (
-                  <li key={label}>
-                    {href ? (
-                      <a
-                        className="cx__info-card"
-                        href={href}
-                        {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      >
-                        {inner}
-                      </a>
-                    ) : (
-                      <div className="cx__info-card">{inner}</div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </motion.div>
-
-          <motion.div className="cx__panel" {...view(0.08)}>
-            <span className="cx__panel-dots" aria-hidden />
-            <div className="cx__panel-head">
-              <span className="cx__panel-icon" aria-hidden>
-                <Send size={22} strokeWidth={1.7} />
-              </span>
-              <div>
-                <h3 className="cx__panel-title" id="cx-form-title">
-                  Send a Message
-                </h3>
-                <p className="cx__panel-sub">Fill out the form and I&apos;ll get back to you as soon as possible.</p>
-              </div>
-            </div>
-
-            {/* react-hooks/refs flags `onSubmit` because it closes over `fileRef`.
-                The ref is only read inside the async success branch, long after
-                render, so the rule is a false positive here. */}
-            {/* eslint-disable-next-line react-hooks/refs */}
-            <form className="cx__form" onSubmit={handleSubmit(onSubmit)} aria-labelledby="cx-form-title" noValidate>
-              <div className="hp" aria-hidden>
-                <label>
-                  Website
-                  <input tabIndex={-1} autoComplete="off" {...register("website")} />
-                </label>
-              </div>
-
-              <div className="cx__row">
-                <div className="cx__field">
-                  <label className="visually-hidden" htmlFor="cx-name">Your Name</label>
-                  <div className={`cx__input${errors.name ? " is-invalid" : ""}`}>
-                    <User size={16} aria-hidden />
-                    <input
-                      id="cx-name"
-                      type="text"
-                      autoComplete="name"
-                      placeholder="Your Name"
-                      aria-invalid={!!errors.name}
-                      aria-describedby={errors.name ? "cx-name-err" : undefined}
-                      {...register("name")}
-                    />
-                  </div>
-                  {errors.name ? (
-                    <p className="cx__err" id="cx-name-err" role="alert">
-                      {errors.name.message}
-                    </p>
-                  ) : null}
-                </div>
-
-                <div className="cx__field">
-                  <label className="visually-hidden" htmlFor="cx-email">Your Email</label>
-                  <div className={`cx__input${errors.email ? " is-invalid" : ""}`}>
-                    <Mail size={16} aria-hidden />
-                    <input
-                      id="cx-email"
-                      type="email"
-                      autoComplete="email"
-                      placeholder="Your Email"
-                      aria-invalid={!!errors.email}
-                      aria-describedby={errors.email ? "cx-email-err" : undefined}
-                      {...register("email")}
-                    />
-                  </div>
-                  {errors.email ? (
-                    <p className="cx__err" id="cx-email-err" role="alert">
-                      {errors.email.message}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="cx__field">
-                <label className="visually-hidden" htmlFor="cx-subject">Subject</label>
-                <div className={`cx__input${errors.subject ? " is-invalid" : ""}`}>
-                  <Tag size={16} aria-hidden />
-                  <input
-                    id="cx-subject"
-                    type="text"
-                    placeholder="Subject"
-                    aria-invalid={!!errors.subject}
-                    aria-describedby={errors.subject ? "cx-subject-err" : undefined}
-                    {...register("subject")}
-                  />
-                </div>
-                {errors.subject ? (
-                  <p className="cx__err" id="cx-subject-err" role="alert">
-                    {errors.subject.message}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="cx__field">
-                <label className="visually-hidden" htmlFor="cx-message">Your Message</label>
-                <div className={`cx__input cx__input--area${errors.message ? " is-invalid" : ""}`}>
-                  <MessageSquare size={16} aria-hidden />
-                  <textarea
-                    id="cx-message"
-                    rows={6}
-                    placeholder="Your Message"
-                    aria-invalid={!!errors.message}
-                    aria-describedby={errors.message ? "cx-message-err" : undefined}
-                    {...register("message")}
-                  />
-                </div>
-                {errors.message ? (
-                  <p className="cx__err" id="cx-message-err" role="alert">
-                    {errors.message.message}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="cx__actions">
-                <input
-                  ref={fileRef}
-                  className="visually-hidden"
-                  type="file"
-                  id="cx-file"
-                  onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "")}
-                />
-                <label className="cx__attach" htmlFor="cx-file">
-                  <Paperclip size={16} aria-hidden />
-                  <span>{fileName || "Attach File (Optional)"}</span>
-                </label>
-
-                <button className="cx__submit" type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <LoaderCircle className="form__spin" size={18} aria-hidden />
-                  ) : (
-                    <Send size={18} aria-hidden />
-                  )}
-                  {isSubmitting ? "Sending…" : "Send Message"}
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        </div>
-
-        <motion.div className="cx__band" {...view(0.1)}>
-          <div className="cx__connect">
-            <p className="cx__band-title">
-              Let&apos;s Connect <em>on</em>
+            <h2 className="cx__title">
+              Let&apos;s build something amazing <em>together.</em>
+            </h2>
+            <p className="cx__lede">
+              I&apos;m always open to discussing new opportunities, interesting
+              projects, or just having a chat about technology and ideas.
+              Let&apos;s connect and create something impactful.
             </p>
-            <ul className="cx__socials">
-              {SOCIALS.map(({ id, label, href, Icon }) => (
-                <li key={id}>
+            <span className="cx__rule" aria-hidden />
+
+            <ul className="cx__channels">
+              {CHANNELS.map(({ icon: Icon, label, value, note, href }) => (
+                <li key={label}>
                   <a
+                    className="cx__channel"
                     href={href}
-                    aria-label={label}
-                    className="cx__social"
-                    {...(href.startsWith("http") ? { target: "_blank", rel: "me noopener noreferrer" } : {})}
+                    {...(href.startsWith("http")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
                   >
-                    <Icon width={18} height={18} size={18} aria-hidden />
+                    <span className="cx__channel-icon" aria-hidden>
+                      <Icon size={16} strokeWidth={1.7} />
+                    </span>
+                    <span className="cx__channel-body">
+                      <span className="cx__channel-label">{label}</span>
+                      <span className="cx__channel-value">{value}</span>
+                      <span className="cx__channel-note">{note}</span>
+                    </span>
                   </a>
                 </li>
               ))}
             </ul>
-            <p className="cx__script">Let&apos;s build the future together</p>
-          </div>
+          </motion.div>
 
-          <div className="cx__open">
-            <p className="cx__band-title cx__band-title--center">
-              I&apos;m Currently <em>Available For</em>
-            </p>
-            <ul className="cx__open-grid">
-              {OPEN_FOR.map(({ icon: Icon, label }) => (
-                <li key={label} className="cx__open-card">
-                  <span className="cx__open-icon" aria-hidden>
+          {/* ---------- right: enquiry wizard + assurances ---------- */}
+          <motion.div className="cx__side" {...view(0.08)}>
+            <div className="cx__panel">
+              <div className="cx__panel-head">
+                <span className="cx__panel-icon" aria-hidden>
+                  <Send size={18} strokeWidth={1.7} />
+                </span>
+                <div>
+                  <h3 className="cx__panel-title" id="cx-form-title">
+                    Start a project
+                  </h3>
+                  <p className="cx__panel-sub">
+                    Step {step + 1} of {STEPS.length} — {STEPS[step].title}
+                  </p>
+                </div>
+              </div>
+
+              <ol className="cx__steps" aria-label="Form progress">
+                {STEPS.map((s, i) => (
+                  <li
+                    key={s.id}
+                    className={`cx__step${i === step ? " is-current" : ""}${i < step ? " is-done" : ""}`}
+                    aria-current={i === step ? "step" : undefined}
+                  >
+                    <span className="cx__step-dot" aria-hidden>
+                      {i < step ? <Check size={11} strokeWidth={3} /> : i + 1}
+                    </span>
+                    <span className="cx__step-label">{s.title}</span>
+                  </li>
+                ))}
+              </ol>
+
+              <form
+                className="cx__form"
+                onSubmit={onFormSubmit}
+                aria-labelledby="cx-form-title"
+                noValidate
+              >
+                <div className="hp" aria-hidden>
+                  <label>
+                    Website
+                    <input
+                      tabIndex={-1}
+                      autoComplete="off"
+                      {...register("website")}
+                    />
+                  </label>
+                </div>
+
+                {/* ---- step 1: about you ---- */}
+                <div className="cx__pane" hidden={step !== 0}>
+                  <div className="cx__row">
+                    <div className="cx__field">
+                      <label htmlFor="cx-name">
+                        Full Name<span className="cx__req"> *</span>
+                      </label>
+                      <input
+                        id="cx-name"
+                        className={`cx__input${errors.name ? " is-invalid" : ""}`}
+                        type="text"
+                        autoComplete="name"
+                        placeholder="Enter your full name"
+                        aria-invalid={!!errors.name}
+                        aria-describedby={
+                          errors.name ? "cx-name-err" : undefined
+                        }
+                        {...register("name")}
+                      />
+                      {errors.name ? (
+                        <p className="cx__err" id="cx-name-err" role="alert">
+                          {errors.name.message}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="cx__field">
+                      <label htmlFor="cx-email">
+                        Work Email<span className="cx__req"> *</span>
+                      </label>
+                      <input
+                        id="cx-email"
+                        className={`cx__input${errors.email ? " is-invalid" : ""}`}
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        placeholder="you@company.com"
+                        aria-invalid={!!errors.email}
+                        aria-describedby={
+                          errors.email ? "cx-email-err" : undefined
+                        }
+                        {...register("email")}
+                      />
+                      {errors.email ? (
+                        <p className="cx__err" id="cx-email-err" role="alert">
+                          {errors.email.message}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="cx__row">
+                    <div className="cx__field">
+                      <label htmlFor="cx-company">Company / Organization</label>
+                      <input
+                        id="cx-company"
+                        className={`cx__input${errors.company ? " is-invalid" : ""}`}
+                        type="text"
+                        autoComplete="organization"
+                        placeholder="Company name"
+                        {...register("company")}
+                      />
+                    </div>
+                    <Select
+                      name="role"
+                      label="Your Role"
+                      placeholder="Select your role"
+                      options={CONTACT_ROLES}
+                      register={register}
+                      error={errors.role?.message}
+                    />
+                  </div>
+                </div>
+
+                {/* ---- step 2: the project ---- */}
+                <div className="cx__pane" hidden={step !== 1}>
+                  <Select
+                    name="projectType"
+                    label="Project Type"
+                    required
+                    placeholder="What kind of work is it?"
+                    options={PROJECT_TYPES}
+                    register={register}
+                    error={errors.projectType?.message}
+                  />
+
+                  <div className="cx__field">
+                    <label htmlFor="cx-message">
+                      Project Overview<span className="cx__req"> *</span>
+                    </label>
+                    <div className="cx__area">
+                      <textarea
+                        id="cx-message"
+                        className={`cx__input cx__input--area${errors.message ? " is-invalid" : ""}`}
+                        rows={4}
+                        maxLength={OVERVIEW_MAX}
+                        placeholder="Tell me briefly about what you're building, the problem you're trying to solve, or what you need help with."
+                        aria-invalid={!!errors.message}
+                        aria-describedby={
+                          errors.message
+                            ? "cx-message-err cx-count"
+                            : "cx-count"
+                        }
+                        {...register("message")}
+                      />
+                      <span
+                        className="cx__count"
+                        id="cx-count"
+                        aria-live="polite"
+                      >
+                        {overviewLength} / {OVERVIEW_MAX}
+                      </span>
+                    </div>
+                    {errors.message ? (
+                      <p className="cx__err" id="cx-message-err" role="alert">
+                        {errors.message.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <Select
+                    name="projectStage"
+                    label="Current Project Stage"
+                    placeholder="Where is it today?"
+                    options={PROJECT_STAGES}
+                    register={register}
+                    error={errors.projectStage?.message}
+                  />
+
+                  <fieldset className="cx__chipset">
+                    <legend>Required Technologies</legend>
+                    <div className="cx__chips">
+                      {TECHNOLOGIES.map((tech) => {
+                        const on = selectedTech.includes(tech);
+                        return (
+                          <button
+                            key={tech}
+                            type="button"
+                            className={`cx__chip${on ? " is-on" : ""}`}
+                            aria-pressed={on}
+                            onClick={() => toggleTech(tech)}
+                          >
+                            {on ? (
+                              <Check size={12} strokeWidth={3} aria-hidden />
+                            ) : null}
+                            {tech}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                </div>
+
+                {/* ---- step 3: logistics ---- */}
+                <div className="cx__pane" hidden={step !== 2}>
+                  <div className="cx__row">
+                    <Select
+                      name="timeline"
+                      label="Expected Timeline"
+                      placeholder="When do you need it?"
+                      options={TIMELINES}
+                      register={register}
+                      error={errors.timeline?.message}
+                    />
+                    <Select
+                      name="budget"
+                      label="Budget Range (optional)"
+                      placeholder="Select a range"
+                      options={BUDGET_RANGES}
+                      register={register}
+                      error={errors.budget?.message}
+                    />
+                  </div>
+
+                  <div className="cx__field">
+                    <label htmlFor="cx-url">
+                      Reference / Existing Product URL
+                    </label>
+                    <input
+                      id="cx-url"
+                      className={`cx__input${errors.projectUrl ? " is-invalid" : ""}`}
+                      type="url"
+                      inputMode="url"
+                      placeholder="https://example.com"
+                      aria-invalid={!!errors.projectUrl}
+                      aria-describedby={
+                        errors.projectUrl ? "cx-url-err" : undefined
+                      }
+                      {...register("projectUrl")}
+                    />
+                    {errors.projectUrl ? (
+                      <p className="cx__err" id="cx-url-err" role="alert">
+                        {errors.projectUrl.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="cx__row">
+                    <Select
+                      name="engagement"
+                      label="Preferred Engagement"
+                      placeholder="How should we work?"
+                      options={ENGAGEMENTS}
+                      register={register}
+                      error={errors.engagement?.message}
+                    />
+                    <Select
+                      name="referralSource"
+                      label="How did you find me?"
+                      placeholder="Select a source"
+                      options={REFERRAL_SOURCES}
+                      register={register}
+                      error={errors.referralSource?.message}
+                    />
+                  </div>
+
+                  <div className="cx__field">
+                    <label htmlFor="cx-file">Attachment (optional)</label>
+                    <input
+                      key={fileKey}
+                      id="cx-file"
+                      className="visually-hidden"
+                      type="file"
+                      accept={ATTACHMENT.extensions.join(",")}
+                      aria-describedby="cx-file-hint"
+                      onChange={(event) =>
+                        pickFile(event.target.files?.[0] ?? null)
+                      }
+                    />
+                    <label className="cx__attach" htmlFor="cx-file">
+                      <Paperclip size={15} aria-hidden />
+                      <span>
+                        {file
+                          ? `${file.name} · ${formatBytes(file.size)}`
+                          : "Choose a file"}
+                      </span>
+                    </label>
+                    {file ? (
+                      <button
+                        type="button"
+                        className="cx__attach-clear"
+                        onClick={clearFile}
+                      >
+                        <X size={13} aria-hidden />
+                        Remove attachment
+                      </button>
+                    ) : null}
+                    <p className="cx__hint" id="cx-file-hint">
+                      PDF, DOC/DOCX, PNG/JPG or ZIP · up to{" "}
+                      {ATTACHMENT.maxLabel}
+                    </p>
+                    {fileError ? (
+                      <p className="cx__err" role="alert">
+                        {fileError}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="cx__nav">
+                  {step > 0 ? (
+                    <button
+                      type="button"
+                      className="cx__back"
+                      onClick={() => setStep((s) => s - 1)}
+                    >
+                      <ArrowLeft size={16} aria-hidden />
+                      Back
+                    </button>
+                  ) : (
+                    <span />
+                  )}
+
+                  <button className="cx__submit" type="submit" disabled={isSubmitting}>
+                    <span>
+                      {isLast ? (isSubmitting ? "Sending…" : "Send Message") : "Continue"}
+                    </span>
+                    {isSubmitting ? (
+                      <LoaderCircle className="form__spin" size={16} aria-hidden />
+                    ) : (
+                      <ArrowRight size={16} aria-hidden />
+                    )}
+                  </button>
+                </div>
+
+                <p className="cx__secure">
+                  <Lock size={13} aria-hidden />
+                  Your information is secure and will never be shared.
+                </p>
+              </form>
+            </div>
+
+            <ul className="cx__assurances">
+              {ASSURANCES.map(({ icon: Icon, title, body }) => (
+                <li key={title} className="cx__assurance">
+                  <span className="cx__assurance-icon" aria-hidden>
                     <Icon size={18} strokeWidth={1.6} />
                   </span>
-                  <span>{label}</span>
+                  <p className="cx__assurance-title">{title}</p>
+                  <p className="cx__assurance-body">{body}</p>
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="cx__world">
-            <p className="cx__band-title cx__band-title--right">
-              Working With Clients <em>Across The Globe</em>
-            </p>
-            <GlobeMap />
-          </div>
-        </motion.div>
-
-        <motion.blockquote className="cx__quote" {...view(0.14)}>
-          <span className="cx__quote-mark" aria-hidden>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path d="M7.2 19.2c-2.4 0-4.4-2-4.4-4.6 0-3.4 2.5-6.7 6.2-9.2l1.1 1.5C7.4 8.7 5.6 11 5.6 13.4c.6-.4 1.4-.6 2.2-.6 1.9 0 3.4 1.4 3.4 3.4s-1.6 3-4 3zm9.6 0c-2.4 0-4.4-2-4.4-4.6 0-3.4 2.5-6.7 6.2-9.2l1.1 1.5c-2.7 1.8-4.5 4.1-4.5 6.5.6-.4 1.4-.6 2.2-.6 1.9 0 3.4 1.4 3.4 3.4s-1.6 3-4 3z" />
-            </svg>
-          </span>
-          <p>
-            Great things in business are never done by one person. They&apos;re done by a team of people.
-          </p>
-          <footer className="cx__quote-by">— Steve Jobs</footer>
-        </motion.blockquote>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
