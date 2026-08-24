@@ -1,502 +1,426 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Magnetic } from "@/components/motion";
+import { SmartImage } from "@/components/SmartImage";
+import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 import { useMotionTier } from "@/lib/motion-tier";
+import { profile } from "@/content/profile";
 import "./maintenance.css";
 
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
+/* The window the countdown runs against. Kept as a single constant so the
+   copy ("back in ~2.5 days") and the timer can never drift apart. */
+const WINDOW_MS = 2.6 * 24 * 60 * 60 * 1000;
+const PROGRESS = 75;
+
+type TimeLeft = { days: number; hours: number; minutes: number; seconds: number };
+
+const ZERO: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+
+function remaining(target: number): TimeLeft {
+  const diff = target - Date.now();
+  if (diff <= 0) return ZERO;
+  return {
+    days: Math.floor(diff / 86_400_000),
+    hours: Math.floor((diff / 3_600_000) % 24),
+    minutes: Math.floor((diff / 60_000) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  };
 }
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/* --- icons (stroke-only, 24-grid, matched to the site's line weight) --- */
+
+type IconProps = { className?: string };
+
+function ClockIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 7.5V12l3 2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CodeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
+      <path
+        d="M8.5 8 4 12l4.5 4M15.5 8 20 12l-4.5 4M13.5 5l-3 14"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BrushIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
+      <path
+        d="M19.5 4.5a2.1 2.1 0 0 0-3 0l-7.2 7.2 3 3 7.2-7.2a2.1 2.1 0 0 0 0-3Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8.4 14.2c-1.5-.5-3.2.3-3.7 1.9-.3 1-.9 1.7-1.7 2.2 1.5 1.3 4.2 1.6 5.6.2.9-.9 1-2.2.5-3.2"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function RocketIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
+      <path
+        d="M14.2 4.6c2.6-1.3 5.2-1.1 5.2-1.1s.2 2.6-1.1 5.2c-1.1 2.3-3 4.3-5.1 5.8l-3.7-3.7c1.5-2.1 3.4-4.1 4.7-6.2Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="m9.5 10.8-2.9.6-2 2 2.4 1M13.2 14.5l-.6 2.9-2 2-1-2.4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="m6.2 17.8-1.7 1.7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ShieldIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
+      <path
+        d="M12 3.2 5.5 5.6v5.1c0 4 2.7 7.7 6.5 9.1 3.8-1.4 6.5-5.1 6.5-9.1V5.6L12 3.2Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="m9.4 11.8 1.9 1.9 3.4-3.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function MailIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
+      <rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
+      <path d="m4.5 8 6.6 4.7a1.5 1.5 0 0 0 1.8 0L19.5 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function XIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+      <path d="M17.5 3h3.1l-6.8 7.7L21.8 21h-6.2l-4.9-6.3L5.1 21H2l7.3-8.3L2.4 3h6.4l4.4 5.8L17.5 3Zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3Z" />
+    </svg>
+  );
+}
+
+function SendIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className={className}>
+      <path
+        d="M20.5 3.5 3.8 9.8c-.8.3-.8 1.4 0 1.7l6.4 2.3 2.3 6.4c.3.8 1.4.8 1.7 0l6.3-16.7Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="m10.2 13.8 4.1-4.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+const PILLARS = [
+  { Icon: ClockIcon, label: "Improving", value: "Performance" },
+  { Icon: CodeIcon, label: "Refining", value: "Code" },
+  { Icon: BrushIcon, label: "Enhancing", value: "Design" },
+  { Icon: RocketIcon, label: "Better Than", value: "Before" },
+] as const;
 
 export function MaintenancePage() {
   const reduce = useReducedMotion();
   const { tier } = useMotionTier();
-  const quiet = reduce || tier === "basic";
+  const quiet = Boolean(reduce) || tier === "basic";
 
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 2,
-    hours: 14,
-    minutes: 37,
-    seconds: 52,
-  });
+  /* The deadline is fixed on mount so the ticking display can never disagree
+     with itself between frames. */
+  const target = useRef<number>(0);
+  const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(ZERO);
 
-  const [email, setEmail] = useState("");
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Countdown timer
   useEffect(() => {
-    // Set target date to 2.6 days from now
-    const targetDate = new Date();
-    targetDate.setTime(targetDate.getTime() + 2.6 * 24 * 60 * 60 * 1000);
+    target.current = Date.now() + WINDOW_MS;
+    setTimeLeft(remaining(target.current));
+    setMounted(true);
 
-    const timer = setInterval(() => {
-      const now = new Date();
-      const difference = targetDate.getTime() - now.getTime();
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      } else {
-        clearInterval(timer);
-      }
+    const id = window.setInterval(() => {
+      setTimeLeft(remaining(target.current));
     }, 1000);
-
-    return () => clearInterval(timer);
+    return () => window.clearInterval(id);
   }, []);
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState<"idle" | "loading" | "done">("idle");
 
-    setIsLoading(true);
-    // Simulate subscription
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    setIsSubscribed(true);
-    setEmail("");
-    setIsLoading(false);
-
-    // Reset after 3 seconds
-    setTimeout(() => {
-      setIsSubscribed(false);
-    }, 3000);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
+  const handleSubscribe = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (!email || state !== "idle") return;
+      setState("loading");
+      await new Promise((resolve) => setTimeout(resolve, 700));
+      setState("done");
+      setEmail("");
+      setTimeout(() => setState("idle"), 4000);
     },
+    [email, state],
+  );
+
+  const socials = useMemo(() => {
+    const find = (id: string) => profile.socials.find((s) => s.id === id)?.href;
+    return [
+      { id: "linkedin", label: "LinkedIn", href: find("linkedin") ?? "#", Icon: LinkedinIcon },
+      { id: "github", label: "GitHub", href: find("github") ?? "#", Icon: GithubIcon },
+      { id: "x", label: "X", href: "https://x.com/", Icon: XIcon },
+      { id: "email", label: "Email", href: `mailto:${profile.email}`, Icon: MailIcon },
+    ];
+  }, []);
+
+  const stagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: quiet ? 0.04 : 0.08, delayChildren: 0.08 } },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+  const rise = {
+    hidden: { opacity: 0, y: quiet ? 0 : 18 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: quiet ? 0.3 : 0.6,
-      },
+      transition: { duration: quiet ? 0.24 : 0.62, ease: [0.16, 1, 0.3, 1] as const },
     },
   };
 
+  const units: Array<[string, number]> = [
+    ["Days", timeLeft.days],
+    ["Hours", timeLeft.hours],
+    ["Minutes", timeLeft.minutes],
+    ["Seconds", timeLeft.seconds],
+  ];
+
   return (
-    <div className="cmaintenance">
-      {/* Background elements */}
-      <div className="cmaintenance__bg">
-        <div className="cmaintenance__bg-grid" />
-        <div className="cmaintenance__bg-glow" />
+    <div className="mnt" data-quiet={quiet ? "true" : "false"}>
+      {/* Ambient backdrop: grid, radial lime bloom, scanning sweep. All CSS —
+          no per-frame JS — so it costs nothing on the main thread. */}
+      <div className="mnt__bg" aria-hidden>
+        <div className="mnt__bg-grid" />
+        <div className="mnt__bg-bloom" />
+        <div className="mnt__bg-vignette" />
       </div>
 
-      {/* Content */}
-      <div className="cmaintenance__container">
-        {/* Left Content */}
-        <motion.div
-          className="cmaintenance__content"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Header */}
-          <motion.div className="cmaintenance__header" variants={itemVariants}>
-            <div className="cmaintenance__logo">
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 40 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <text
-                  x="50%"
-                  y="50%"
-                  dominantBaseline="middle"
-                  textAnchor="middle"
-                  fontSize="28"
-                  fontWeight="bold"
-                  fill="#c9f24d"
-                  fontFamily="Inter Tight"
-                >
-                  R
-                </text>
-              </svg>
-            </div>
-            <div>
-              <p className="cmaintenance__tagline">RABIN R</p>
-              <p className="cmaintenance__subtitle">Frontend Angular Consultant</p>
-            </div>
-          </motion.div>
-
-          {/* Main Heading */}
-          <motion.div className="cmaintenance__hero" variants={itemVariants}>
-            <p className="cmaintenance__status">WE'RE MAKING THINGS BETTER</p>
-            <h1 className="cmaintenance__title">
-              Under
-              <span className="cmaintenance__accent">Maintenance</span>
-            </h1>
-          </motion.div>
-
-          {/* Description */}
-          <motion.p
-            className="cmaintenance__description"
-            variants={itemVariants}
-          >
-            I'm currently working on something awesome.
-            <br />
-            The site will be back soon with an even better experience.
-          </motion.p>
-
-          {/* Feature Cards */}
-          <motion.div className="cmaintenance__features" variants={itemVariants}>
-            {[
-              { icon: "⏱️", label: "Improving", value: "Performance" },
-              { icon: "</> ", label: "Refining", value: "Code" },
-              { icon: "✏️", label: "Enhancing", value: "Design" },
-              { icon: "🚀", label: "Better Than", value: "Before" },
-            ].map((feature, i) => (
-              <motion.div
-                key={i}
-                className="cmaintenance__feature-card"
-                whileHover={quiet ? undefined : { y: -8 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="cmaintenance__feature-icon">{feature.icon}</div>
-                <div className="cmaintenance__feature-text">
-                  <p className="cmaintenance__feature-label">{feature.label}</p>
-                  <p className="cmaintenance__feature-value">{feature.value}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Email Subscription */}
-          <motion.div
-            className="cmaintenance__subscription"
-            variants={itemVariants}
-          >
-            <h2 className="cmaintenance__subscription-title">
-              Stay in the loop
-            </h2>
-            <p className="cmaintenance__subscription-text">
-              Leave your email and I'll notify you once we're live again.
-            </p>
-
-            <form
-              onSubmit={handleSubscribe}
-              className="cmaintenance__subscription-form"
-            >
-              <div className="cmaintenance__input-wrapper">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  className="cmaintenance__input"
-                  required
-                  disabled={isSubscribed}
-                />
-                <Magnetic>
-                  <button
-                    type="submit"
-                    className="cmaintenance__btn"
-                    disabled={isSubscribed || isLoading}
-                  >
-                    {isSubscribed ? "✓ Subscribed" : "Notify Me"}
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path
-                        d="M1 8h14M8 1l7 7-7 7"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                </Magnetic>
-              </div>
-              <p className="cmaintenance__notice">
-                🛡️ No spam. Only updates about new launches and articles.
-              </p>
-            </form>
-          </motion.div>
-
-          {/* Social Links */}
-          <motion.div className="cmaintenance__social" variants={itemVariants}>
-            <p className="cmaintenance__social-label">Follow for updates</p>
-            <div className="cmaintenance__social-links">
-              <a
-                href="https://linkedin.com"
-                className="cmaintenance__social-link"
-                aria-label="LinkedIn"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6M2 9h4v12H2z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <circle cx="4" cy="4" r="2" stroke="currentColor" strokeWidth="2" />
-                </svg>
-              </a>
-              <a
-                href="https://github.com"
-                className="cmaintenance__social-link"
-                aria-label="GitHub"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-              <a
-                href="https://twitter.com"
-                className="cmaintenance__social-link"
-                aria-label="Twitter"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2s9 5 20 5a9.5 9.5 0 0 0-9-5.5c4.75 2.25 9 0 11-4s1-6.75 0-7.5a5.5 5.5 0 0 0-.5-.5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-              <a
-                href="mailto:hello@rabinr.in"
-                className="cmaintenance__social-link"
-                aria-label="Email"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <rect
-                    x="2"
-                    y="4"
-                    width="20"
-                    height="16"
-                    rx="2"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M2 6l10 7.5L22 6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </a>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Right Side - Illustration & Countdown */}
-        <motion.div
-          className="cmaintenance__illustration"
-          variants={itemVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Animated 3D-like construction scene */}
-          <div className="cmaintenance__scene">
-            {/* Gears - animated rotation */}
-            <motion.div
-              className="cmaintenance__gear cmaintenance__gear-1"
-              animate={quiet ? undefined : { rotate: 360 }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            >
-              ⚙️
-            </motion.div>
-
-            <motion.div
-              className="cmaintenance__gear cmaintenance__gear-2"
-              animate={quiet ? undefined : { rotate: -360 }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            >
-              ⚙️
-            </motion.div>
-
-            <motion.div
-              className="cmaintenance__gear cmaintenance__gear-3"
-              animate={quiet ? undefined : { rotate: 360 }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            >
-              ⚙️
-            </motion.div>
-
-            {/* Main R Letter */}
-            <motion.div
-              className="cmaintenance__r-letter"
-              animate={quiet ? undefined : { y: [0, -10, 0] }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <div className="cmaintenance__r-glow">R</div>
-              <div className="cmaintenance__r-text">R</div>
-            </motion.div>
-
-            {/* Crane - animated sway */}
-            <motion.div
-              className="cmaintenance__crane"
-              animate={quiet ? undefined : { x: [0, 8, 0] }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              🏗️
-            </motion.div>
-
-            {/* Barrier cones */}
-            <motion.div
-              className="cmaintenance__barrier"
-              animate={quiet ? undefined : { y: [0, 4, 0] }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5,
-              }}
-            >
-              🚧
-            </motion.div>
-
-            {/* Floating particles */}
-            {!quiet &&
-              [0, 1, 2, 3].map((i) => (
-                <motion.div
-                  key={i}
-                  className="cmaintenance__particle"
-                  style={{ left: `${20 + i * 20}%` }}
-                  animate={{
-                    y: [0, -60, 0],
-                    opacity: [0.3, 0.8, 0.3],
-                  }}
-                  transition={{
-                    duration: 3 + i,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: i * 0.3,
-                  }}
-                >
-                  ✨
-                </motion.div>
-              ))}
+      <motion.div className="mnt__shell" variants={stagger} initial="hidden" animate="visible">
+        <motion.header className="mnt__topbar" variants={rise}>
+          <div className="mnt__brand">
+            <span className="mnt__brand-mark" aria-hidden>
+              R
+            </span>
+            <span className="mnt__brand-text">
+              <span className="mnt__brand-name">{profile.name}</span>
+              <span className="mnt__brand-role">{profile.role}</span>
+            </span>
           </div>
 
-          {/* Progress & Status Card */}
-          <motion.div
-            className="cmaintenance__status-card"
-            animate={
-              quiet
-                ? undefined
-                : { opacity: [0.8, 1, 0.8], scale: [0.98, 1, 0.98] }
-            }
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <div className="cmaintenance__status-header">
-              <div className="cmaintenance__status-icon">⏱️</div>
-              <div className="cmaintenance__status-title">
-                Back Online Soon
-              </div>
-            </div>
-            <p className="cmaintenance__status-message">
-              We're working hard to bring you a seamless experience.
-            </p>
-            <div className="cmaintenance__progress-bar">
-              <motion.div
-                className="cmaintenance__progress-fill"
-                animate={quiet ? undefined : { width: "75%" }}
-                transition={{
-                  duration: 2,
-                }}
+          <Magnetic>
+            <a className="mnt__mail-pill" href={`mailto:${profile.email}`}>
+              <MailIcon className="mnt__mail-pill-icon" />
+              <span>{profile.email}</span>
+            </a>
+          </Magnetic>
+        </motion.header>
+
+        <div className="mnt__grid">
+          {/* ---------------- left column ---------------- */}
+          <div className="mnt__col mnt__col--copy">
+            <motion.p className="mnt__eyebrow" variants={rise}>
+              We&rsquo;re making things better
+            </motion.p>
+
+            <motion.h1 className="mnt__title" variants={rise}>
+              <span className="mnt__title-line">Under</span>
+              <span className="mnt__title-line mnt__title-line--accent">Maintenance</span>
+            </motion.h1>
+
+            <motion.span className="mnt__rule" variants={rise} aria-hidden />
+
+            <motion.p className="mnt__lede" variants={rise}>
+              I&rsquo;m currently working on something awesome.
+              <br />
+              The site will be back soon with an even better experience.
+            </motion.p>
+
+            <motion.ul className="mnt__pillars" variants={rise}>
+              {PILLARS.map(({ Icon, label, value }) => (
+                <li key={value} className="mnt__pillar">
+                  <Icon className="mnt__pillar-icon" />
+                  <span className="mnt__pillar-label">{label}</span>
+                  <span className="mnt__pillar-value">{value}</span>
+                </li>
+              ))}
+            </motion.ul>
+
+            <motion.section className="mnt__notify" variants={rise} aria-labelledby="mnt-notify-title">
+              <h2 className="mnt__notify-title" id="mnt-notify-title">
+                Stay in the loop
+              </h2>
+              <p className="mnt__notify-text">
+                Leave your email and I&rsquo;ll notify you
+                <br />
+                once we&rsquo;re live again.
+              </p>
+
+              <form className="mnt__form" onSubmit={handleSubscribe}>
+                <div className="mnt__field">
+                  <label className="sr-only" htmlFor="mnt-email">
+                    Email address
+                  </label>
+                  <input
+                    id="mnt-email"
+                    className="mnt__input"
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={state !== "idle"}
+                    required
+                  />
+                  <Magnetic>
+                    <button className="mnt__submit" type="submit" disabled={state !== "idle"} data-state={state}>
+                      <span className="mnt__submit-label">
+                        {state === "done" ? "Subscribed" : state === "loading" ? "Sending" : "Notify Me"}
+                      </span>
+                      <SendIcon className="mnt__submit-icon" />
+                    </button>
+                  </Magnetic>
+                </div>
+
+                <p className="mnt__fineprint" role="status">
+                  <ShieldIcon className="mnt__fineprint-icon" />
+                  {state === "done"
+                    ? "You're on the list — I'll email you the moment it's live."
+                    : "No spam. Only updates about new launches and articles."}
+                </p>
+              </form>
+            </motion.section>
+
+            <motion.div className="mnt__social" variants={rise}>
+              <p className="mnt__social-label">Follow for updates</p>
+              <ul className="mnt__social-list">
+                {socials.map(({ id, label, href, Icon }) => (
+                  <li key={id}>
+                    <a
+                      className="mnt__social-link"
+                      href={href}
+                      aria-label={label}
+                      {...(href.startsWith("http")
+                        ? { target: "_blank", rel: "noreferrer noopener" }
+                        : {})}
+                    >
+                      <Icon className="mnt__social-icon" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+
+          {/* ---------------- right column ---------------- */}
+          <div className="mnt__col mnt__col--stage">
+            <motion.div
+              className="mnt__art"
+              variants={rise}
+              animate={quiet ? undefined : { y: [0, -12, 0] }}
+              transition={quiet ? undefined : { duration: 7, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <span className="mnt__art-glow" aria-hidden />
+              <SmartImage
+                src="/media/under-maintain/1.png"
+                alt="A 3D construction scene: a crane lifting an “Upgrading experience” board over a glowing lime letter R, flanked by gears, a barrier and a traffic cone."
+                width={1536}
+                height={1024}
+                priority
+                blurColor="#0a0a0c"
+                sizes="(max-width: 640px) 94vw, (max-width: 1080px) 82vw, 52vw"
+                className="mnt__art-img"
               />
-            </div>
-            <p className="cmaintenance__progress-text">UPGRADING EXPERIENCE 75%</p>
-          </motion.div>
+              <span className="mnt__art-floor" aria-hidden />
+            </motion.div>
 
-          {/* Countdown Timer */}
-          <motion.div
-            className="cmaintenance__countdown"
-            variants={itemVariants}
-          >
-            <div className="cmaintenance__countdown-grid">
-              <div className="cmaintenance__countdown-item">
-                <div className="cmaintenance__countdown-value">
-                  {String(timeLeft.days).padStart(2, "0")}
+            <motion.section className="mnt__status" variants={rise} aria-labelledby="mnt-status-title">
+              <div className="mnt__status-lead">
+                <span className="mnt__status-dial" aria-hidden>
+                  <ClockIcon className="mnt__status-dial-icon" />
+                </span>
+                <div>
+                  <h2 className="mnt__status-title" id="mnt-status-title">
+                    Back Online Soon
+                  </h2>
+                  <p className="mnt__status-text">
+                    We&rsquo;re working hard to bring you
+                    <br />a seamless experience.
+                  </p>
+                  <div className="mnt__progress">
+                    <div
+                      className="mnt__progress-track"
+                      role="progressbar"
+                      aria-valuenow={PROGRESS}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label="Upgrade progress"
+                    >
+                      <motion.span
+                        className="mnt__progress-fill"
+                        initial={{ width: quiet ? `${PROGRESS}%` : "0%" }}
+                        animate={{ width: `${PROGRESS}%` }}
+                        transition={quiet ? { duration: 0 } : { duration: 1.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      />
+                    </div>
+                    <span className="mnt__progress-value">{PROGRESS}%</span>
+                  </div>
                 </div>
-                <div className="cmaintenance__countdown-label">Days</div>
               </div>
-              <div className="cmaintenance__countdown-item">
-                <div className="cmaintenance__countdown-value">
-                  {String(timeLeft.hours).padStart(2, "0")}
-                </div>
-                <div className="cmaintenance__countdown-label">Hours</div>
-              </div>
-              <div className="cmaintenance__countdown-item">
-                <div className="cmaintenance__countdown-value">
-                  {String(timeLeft.minutes).padStart(2, "0")}
-                </div>
-                <div className="cmaintenance__countdown-label">Minutes</div>
-              </div>
-              <div className="cmaintenance__countdown-item">
-                <div className="cmaintenance__countdown-value">
-                  {String(timeLeft.seconds).padStart(2, "0")}
-                </div>
-                <div className="cmaintenance__countdown-label">Seconds</div>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
 
-      {/* Footer */}
-      <motion.footer
-        className="cmaintenance__footer"
-        variants={itemVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <p>© 2026 Rabin R. All rights reserved.</p>
-      </motion.footer>
+              <div className="mnt__countdown" aria-live="off">
+                {units.map(([label, value]) => (
+                  <div className="mnt__unit" key={label}>
+                    <span className="mnt__unit-value" suppressHydrationWarning>
+                      {mounted ? pad(value) : "--"}
+                    </span>
+                    <span className="mnt__unit-label">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.section>
+          </div>
+        </div>
+
+        <motion.footer className="mnt__footer" variants={rise}>
+          <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
+        </motion.footer>
+      </motion.div>
     </div>
   );
 }

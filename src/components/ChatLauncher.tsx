@@ -2,8 +2,10 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { trackChat } from "@/chat/analytics";
 import { chatConfig } from "@/chat/config";
+import { isStandaloneRoute } from "@/lib/chrome-routes";
 
 /**
  * The only chat code on the critical path.
@@ -16,7 +18,7 @@ const ChatWindow = dynamic(() => import("@/components/chat/ChatWindow").then((m)
   ssr: false,
 });
 
-export function ChatLauncher() {
+function ChatLauncherInner() {
   const [open, setOpen] = useState(false);
   const launcherRef = useRef<HTMLButtonElement | null>(null);
 
@@ -53,4 +55,12 @@ export function ChatLauncher() {
       {open ? <ChatWindow onClose={close} /> : null}
     </>
   );
+}
+
+/* The maintenance screen is standalone: it ships its own header and footer, so
+   the global chrome stays out of its way. */
+export function ChatLauncher() {
+  const pathname = usePathname();
+  if (isStandaloneRoute(pathname)) return null;
+  return <ChatLauncherInner />;
 }

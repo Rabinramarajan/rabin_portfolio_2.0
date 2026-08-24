@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
 import { footerNavigation, profile } from "@/content/profile";
@@ -8,6 +9,7 @@ import { duration, ease } from "@/lib/motion";
 import { Monogram } from "@/components/Logo";
 import { MotionToggle } from "@/components/MotionToggle";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
+import { isStandaloneRoute } from "@/lib/chrome-routes";
 
 const SOCIAL_ICONS = {
   github: GithubIcon,
@@ -24,7 +26,7 @@ const SOCIALS = profile.socials.filter(
   (s): s is (typeof profile.socials)[number] & { id: keyof typeof SOCIAL_ICONS } => s.id in SOCIAL_ICONS,
 );
 
-export function Footer() {
+function FooterInner() {
   const reduce = useReducedMotion();
 
   const view = (delay = 0) => ({
@@ -143,4 +145,12 @@ export function Footer() {
       </div>
     </footer>
   );
+}
+
+/* The maintenance screen is standalone: it ships its own header and footer, so
+   the global chrome stays out of its way. */
+export function Footer() {
+  const pathname = usePathname();
+  if (isStandaloneRoute(pathname)) return null;
+  return <FooterInner />;
 }

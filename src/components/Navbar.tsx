@@ -9,6 +9,7 @@ import { duration, ease } from "@/lib/motion";
 import { useScrollSync } from "@/lib/scroll-sync";
 import { Logo } from "@/components/Logo";
 import { Magnetic } from "@/components/motion";
+import { isStandaloneRoute } from "@/lib/chrome-routes";
 import { cn } from "@/lib/cn";
 
 export function Navbar() {
@@ -76,6 +77,9 @@ export function Navbar() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  /* Standalone screens (the maintenance page) supply their own header. */
+  if (isStandaloneRoute(pathname)) return null;
 
   const isActive = (item: (typeof navigation)[number]) => {
     if (item.href.startsWith("/") && !item.href.includes("#")) {
