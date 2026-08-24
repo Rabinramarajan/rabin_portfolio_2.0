@@ -4662,6 +4662,7 @@ code {
 .pj {
   position: relative;
   margin-top: clamp(1.75rem, 4vw, 3rem);
+  margin-bottom: clamp(2rem, 6vw, 4rem);
 }
 .pj__sticky,
 .pj__spacer {
