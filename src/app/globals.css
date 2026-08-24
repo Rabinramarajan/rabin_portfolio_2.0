@@ -4431,87 +4431,155 @@ code {
   }
 }
 
-/* --- process principles strip --- */
+/* --- operating principles: hairline instrument band --- */
 .pprin {
-  margin-top: clamp(1.75rem, 4vw, 3rem);
-  padding-top: clamp(1.75rem, 4vw, 3rem);
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+.pprin__head {
+  display: grid;
+  gap: 0.6rem;
+  padding-bottom: clamp(1.1rem, 2.4vw, 1.75rem);
+}
+@media (min-width: 900px) {
+  .pprin__head {
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    align-items: baseline;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+  }
+}
+.pprin__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+.pprin__kicker span {
+  color: var(--color-accent);
+  margin-right: 0.35rem;
+}
+.pprin__intro {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  max-width: 44rem;
+}
+
+/* Column counts are chosen so the final row is never left with an orphan:
+   5 across wide, 2 across with the fifth spanning at mid widths, 1 on phones. */
+.pprin__band {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-bottom: 1px solid var(--color-line);
+}
+@media (min-width: 640px) {
+  .pprin__band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pprin__cell:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 1160px) {
+  .pprin__band {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .pprin__cell:last-child {
+    grid-column: auto;
+  }
+}
+
+/* Cells are flush to the shell edge by default, which is correct for the
+   single-column case; the inner gutter is added back only to cells that
+   actually sit in a second or later column. */
+.pprin__cell {
+  --pprin-gutter: clamp(1rem, 1.6vw, 1.35rem);
+  position: relative;
+  padding: clamp(1.1rem, 2vw, 1.4rem) var(--pprin-gutter) clamp(1.25rem, 2.2vw, 1.6rem) 0;
   border-top: 1px solid var(--color-line);
 }
-@media (min-width: 960px) {
-  .pprin {
-    margin-top: clamp(3rem, 8vw, 6rem);
-    padding-top: clamp(3rem, 8vw, 6rem);
+@media (min-width: 640px) {
+  .pprin__cell:nth-child(2n) {
+    border-left: 1px solid var(--color-line);
+    padding-left: var(--pprin-gutter);
   }
 }
-.pprin__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: 1rem;
-}
-@media (min-width: 1100px) {
-  .pprin__grid {
-    grid-template-columns: repeat(4, 1fr);
+@media (min-width: 1160px) {
+  .pprin__cell {
+    border-left: 1px solid var(--color-line);
+    padding-left: var(--pprin-gutter);
+  }
+  .pprin__cell:first-child {
+    border-left: 0;
+    padding-left: 0;
   }
 }
-@media (min-width: 2000px) {
-  .pprin__grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
+
+/* Hover lights the cell's own rule rather than lifting a card. */
+.pprin__scan {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-interaction) var(--ease-out-expo);
 }
-@media (max-width: 599px) {
-  .pprin__grid {
-    display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.5rem;
-  }
-  .pprin__badge {
-    min-width: 13rem;
-    scroll-snap-align: start;
-    flex-shrink: 0;
-  }
+.pprin__cell:hover .pprin__scan,
+.pprin__cell:focus-within .pprin__scan {
+  transform: scaleX(1);
 }
-.pprin__badge {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
-  padding: 1rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  transition:
-    border-color var(--duration-ui) var(--ease-out-expo),
-    box-shadow var(--duration-ui) var(--ease-out-expo);
+
+.pprin__ord {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--color-line-strong);
+  transition: color var(--duration-ui) var(--ease-out-expo);
 }
-.pprin__badge:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 16px -4px
-    color-mix(in srgb, var(--color-accent) 25%, transparent);
+.pprin__cell:hover .pprin__ord {
+  color: var(--color-accent);
 }
 .pprin__icon {
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  color: var(--color-accent);
-  margin-top: 0.1rem;
+  display: block;
+  margin-top: 0.9rem;
+  color: var(--color-accent-dim);
+  transition:
+    color var(--duration-ui) var(--ease-out-expo),
+    filter var(--duration-interaction) var(--ease-out-expo);
 }
-.pprin__copy {
-  min-width: 0;
+@media (min-width: 1160px) {
+  .pprin__icon {
+    margin-top: clamp(1.5rem, 2.6vw, 2.25rem);
+  }
+}
+.pprin__cell:hover .pprin__icon {
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent) 45%, transparent));
 }
 .pprin__title {
+  margin-top: 0.8rem;
   font-family: var(--font-display);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   font-weight: 560;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
   color: var(--color-text);
-  line-height: 1.3;
+  text-wrap: balance;
 }
 .pprin__body {
-  margin-top: 0.3rem;
-  font-size: 0.76rem;
+  margin-top: 0.45rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
   color: var(--color-text-muted);
-  line-height: 1.55;
+}
+@media (min-width: 640px) and (max-width: 1159px) {
+  .pprin__body {
+    max-width: 34rem;
+  }
 }
 
 /* --- stage index metadata (not pills) --- */
@@ -10640,16 +10708,13 @@ code {
   display: grid;
   gap: clamp(1.5rem, 3vw, 2.5rem);
 }
-@media (min-width: 960px) {
-  .pr__orbital-card {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    align-items: center;
-  }
-}
+/* The conduit needs the full card width, so the header sits above it rather
+   than beside it. */
 .pr__orbital-card-header {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  max-width: 46rem;
 }
 .pr__orbital-card-title {
   font-family: var(--font-display);
@@ -10661,8 +10726,643 @@ code {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   line-height: 1.6;
-  max-width: 28ch;
+  max-width: 60ch;
 }
 .pr__orbital-card-visual {
   width: 100%;
+}
+
+/* ============================================================
+   PROCESS FLOW — "the signal conduit"
+   One energised ribbon carries the idea from left to right and
+   rises as it goes. Stages sit on the conduit itself, so the
+   section reads as a connected system, not a card grid.
+   Wide screens get the ribbon; compact screens get the same
+   conduit rotated into a vertical spine. One shared readout.
+   ============================================================ */
+
+.pf {
+  --pf-node: clamp(2.75rem, 4.4vw, 3.75rem);
+  --pf-glow: color-mix(in srgb, var(--color-accent) 32%, transparent);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.6vw, 2rem);
+  container-type: inline-size;
+}
+
+/* ---------- wide conduit ---------- */
+.pf__stage {
+  position: relative;
+  display: none;
+  width: 100%;
+  container-type: inline-size;
+  container-name: pfstage;
+}
+@media (min-width: 900px) {
+  .pf__stage {
+    display: block;
+  }
+}
+.pf__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.pf__grid line {
+  stroke: var(--color-line);
+  stroke-width: 0.6;
+  opacity: 0.45;
+}
+.pf__ends line {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+.pf__ends circle {
+  fill: var(--color-accent);
+  opacity: 0.75;
+}
+.pf__end-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  fill: var(--color-text-faint);
+}
+
+.pf__conduit {
+  fill: none;
+  stroke: var(--color-line-strong);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.pf__live {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+.pf__pulse {
+  fill: var(--color-accent);
+  filter: drop-shadow(0 0 6px var(--color-accent));
+}
+
+/* Vertical ties give the ribbon a baseline to read against and carry the
+   stage ordinal without a second row of chrome. */
+.pf__tie line {
+  stroke: var(--color-line);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 6;
+  transition: stroke var(--duration-ui) var(--ease-out-expo);
+}
+.pf__tie-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  fill: var(--color-text-faint);
+  transition: fill var(--duration-ui) var(--ease-out-expo);
+}
+.pf__tie[data-state="on"] line {
+  stroke: color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+.pf__tie[data-state="on"] .pf__tie-num {
+  fill: var(--color-accent);
+}
+
+/* ---------- interactive stage nodes ---------- */
+.pf__nodes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.pf__node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  color: inherit;
+  text-align: center;
+}
+.pf__node[data-side="up"] {
+  flex-direction: column-reverse;
+}
+.pf__node-disc {
+  display: grid;
+  place-items: center;
+  width: var(--pf-node);
+  height: var(--pf-node);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgb(255 255 255 / 6%), transparent 60%),
+    var(--color-bg-elevated);
+  border: 1px solid var(--color-line-strong);
+  box-shadow: 0 6px 22px -12px rgb(0 0 0 / 80%);
+  transition:
+    border-color var(--duration-ui) var(--ease-out-expo),
+    box-shadow var(--duration-interaction) var(--ease-out-expo),
+    transform var(--duration-interaction) var(--ease-out-expo),
+    background-color var(--duration-ui) var(--ease-out-expo);
+}
+.pf__node-disc svg {
+  width: 48%;
+  height: 48%;
+  stroke: var(--color-text-faint);
+  transition: stroke var(--duration-ui) var(--ease-out-expo);
+}
+.pf__node-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.9cqw, 0.72rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  white-space: nowrap;
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.pf__node-num {
+  color: var(--color-line-strong);
+}
+
+.pf__node[data-state="done"] .pf__node-disc {
+  border-color: color-mix(in srgb, var(--color-accent) 38%, transparent);
+}
+.pf__node[data-state="done"] .pf__node-disc svg {
+  stroke: var(--color-accent-dim);
+}
+.pf__node[data-state="done"] .pf__node-label {
+  color: var(--color-text-muted);
+}
+
+.pf__node[data-state="on"] .pf__node-disc {
+  border-color: var(--color-accent);
+  background:
+    radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 65%),
+    var(--color-surface);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--color-accent) 8%, transparent),
+    0 0 28px -4px var(--pf-glow);
+  transform: scale(1.14);
+}
+.pf__node[data-state="on"] .pf__node-disc svg {
+  stroke: var(--color-accent);
+}
+.pf__node[data-state="on"] .pf__node-label {
+  color: var(--color-text);
+}
+.pf__node[data-state="on"] .pf__node-num {
+  color: var(--color-accent);
+}
+
+.pf__node:hover .pf__node-disc {
+  border-color: var(--color-accent);
+}
+.pf__node:focus-visible {
+  outline: none;
+}
+.pf__node:focus-visible .pf__node-disc {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+/* ---------- compact vertical spine ---------- */
+.pf__spine {
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  padding-left: 0.25rem;
+}
+@media (min-width: 900px) {
+  .pf__spine {
+    display: none;
+  }
+}
+.pf__spine-rail,
+.pf__spine-live {
+  position: absolute;
+  left: calc(0.25rem + 1.25rem);
+  top: 1.4rem;
+  bottom: 1.4rem;
+  width: 1px;
+}
+.pf__spine-rail {
+  background: var(--color-line-strong);
+}
+.pf__spine-live {
+  background: linear-gradient(var(--color-accent-dim), var(--color-accent));
+  transform-origin: top;
+  box-shadow: 0 0 10px var(--pf-glow);
+  transition: transform var(--duration-cinematic) var(--ease-out-expo);
+}
+.pf__spine-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.4rem 0.5rem 0.4rem 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  color: inherit;
+}
+.pf__spine-disc {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-line-strong);
+  transition:
+    border-color var(--duration-ui) var(--ease-out-expo),
+    box-shadow var(--duration-ui) var(--ease-out-expo);
+}
+.pf__spine-disc svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  stroke: var(--color-text-faint);
+  transition: stroke var(--duration-ui) var(--ease-out-expo);
+}
+.pf__spine-copy {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.pf__spine-num {
+  color: var(--color-line-strong);
+}
+.pf__spine-node[data-state="done"] .pf__spine-disc {
+  border-color: color-mix(in srgb, var(--color-accent) 38%, transparent);
+}
+.pf__spine-node[data-state="done"] .pf__spine-disc svg {
+  stroke: var(--color-accent-dim);
+}
+.pf__spine-node[data-state="on"] .pf__spine-disc {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 22px -6px var(--pf-glow);
+}
+.pf__spine-node[data-state="on"] .pf__spine-disc svg {
+  stroke: var(--color-accent);
+}
+.pf__spine-node[data-state="on"] .pf__spine-copy {
+  color: var(--color-text);
+}
+.pf__spine-node[data-state="on"] .pf__spine-num {
+  color: var(--color-accent);
+}
+.pf__spine-node:focus-visible {
+  outline: none;
+}
+.pf__spine-node:focus-visible .pf__spine-disc {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- shared readout console ---------- */
+.pf__readout {
+  position: relative;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(160deg, rgb(255 255 255 / 3%), transparent 42%),
+    var(--color-bg-elevated);
+  overflow: hidden;
+}
+.pf__readout::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+  opacity: 0.5;
+}
+.pf__panel {
+  display: grid;
+  gap: clamp(1rem, 2.4vw, 2rem);
+  padding: clamp(1.1rem, 2.4vw, 1.9rem);
+}
+@media (min-width: 760px) {
+  .pf__panel {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+.pf__panel-k {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.pf__panel-num {
+  color: var(--color-accent);
+}
+.pf__panel-title {
+  margin-top: 0.6rem;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+.pf__panel-purpose {
+  margin-top: 0.55rem;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  max-width: 34rem;
+}
+.pf__col-k {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.pf__list {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.pf__list li {
+  position: relative;
+  padding-left: 0.95rem;
+}
+.pf__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 4px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.7;
+}
+.pf__chips {
+  margin-top: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.pf__chips li {
+  padding: 0.24rem 0.55rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  background: rgb(255 255 255 / 2%);
+}
+.pf__outcome {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+.pf__outcome span {
+  color: var(--color-accent);
+  margin-right: 0.25rem;
+}
+
+/* ---------- 100vh composition ---------- */
+/* The ribbon is a fixed 3:1 box and the nodes are positioned as a percentage
+   of it, so height is capped by capping *width* — never max-height, which would
+   letterbox the SVG and drift the node overlay out of alignment. */
+.pf[data-fit="on"] .pf__stage {
+  max-width: min(100%, calc(42svh * 3));
+  margin-inline: auto;
+}
+@media (min-width: 900px) and (max-height: 900px) {
+  .pf[data-fit="on"] {
+    --pf-node: clamp(2.4rem, 3.4vw, 3rem);
+    gap: clamp(0.75rem, 1.6vh, 1.25rem);
+  }
+  .pf[data-fit="on"] .pf__panel {
+    padding: clamp(0.9rem, 1.8vh, 1.4rem);
+    gap: clamp(0.85rem, 1.8vw, 1.5rem);
+  }
+  .pf[data-fit="on"] .pf__list li:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf *,
+  .pf *::before {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* --- homepage process masthead + single-viewport frame --- */
+.pr__fit {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+}
+@media (min-width: 1100px) and (min-height: 620px) {
+  .pr__fit {
+    min-height: calc(100svh - var(--header-h) - 2 * var(--section-y));
+    justify-content: center;
+    gap: clamp(1.25rem, 3vh, 2.75rem);
+  }
+}
+.pr__masthead {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: end;
+}
+@media (min-width: 900px) {
+  .pr__masthead {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+  }
+}
+.pr__masthead-aside {
+  padding-bottom: 0.25rem;
+}
+.pr__masthead-aside .pr__lede {
+  margin-top: 0;
+}
+@media (min-width: 1100px) and (max-height: 860px) {
+  .pr__fit .pr__display {
+    font-size: clamp(2.2rem, 3.4vw, 3.4rem);
+  }
+  .pr__fit .pr__lede {
+    font-size: var(--text-sm);
+  }
+}
+
+
+/* --- conduit telemetry panel ---
+   Sits in the empty quadrant above the start of the ribbon. Percentages track
+   the same 1200x400 viewBox the nodes use, so it scales with the conduit. */
+/* The panel only earns its place once the conduit is wide enough that its
+   lines cannot reach the 02 stage label. Gated on the conduit's own width, not
+   the viewport, because the fit variant caps the conduit on short screens. */
+.pf__telemetry {
+  display: none;
+  position: absolute;
+  left: 0.5%;
+  top: 2%;
+  width: min(21%, 15rem);
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--color-line-strong);
+  pointer-events: none;
+}
+@container pfstage (min-width: 1120px) {
+  .pf__telemetry {
+    display: block;
+  }
+}
+.pf__telemetry-k {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.pf__telemetry-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+  animation: pf-blink 2.6s var(--ease-out-cubic) infinite;
+}
+@keyframes pf-blink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.25;
+  }
+}
+.pf__telemetry-list {
+  margin-top: 0.55rem;
+  display: grid;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+.pf__telemetry-list li {
+  position: relative;
+  padding-left: 0.7rem;
+  text-wrap: balance;
+}
+.pf__telemetry-list li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  opacity: 0.65;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf__telemetry-dot {
+    animation: none;
+  }
+}
+
+/* --- conduit telemetry panel ---
+   Sits in the empty quadrant above the start of the ribbon. Percentages track
+   the same 1200x400 viewBox the nodes use, so it scales with the conduit. */
+.pf__telemetry {
+  position: absolute;
+  left: 0.5%;
+  top: 2%;
+  width: min(21%, 15rem);
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--color-line-strong);
+  pointer-events: none;
+}
+.pf__telemetry-k {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.pf__telemetry-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+  animation: pf-blink 2.6s var(--ease-out-cubic) infinite;
+}
+@keyframes pf-blink {
+  0%,
+  70%,
+  100% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.25;
+  }
+}
+.pf__telemetry-list {
+  margin-top: 0.55rem;
+  display: grid;
+  gap: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+.pf__telemetry-list li {
+  position: relative;
+  padding-left: 0.7rem;
+  text-wrap: balance;
+}
+.pf__telemetry-list li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  opacity: 0.65;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf__telemetry-dot {
+    animation: none;
+  }
 }

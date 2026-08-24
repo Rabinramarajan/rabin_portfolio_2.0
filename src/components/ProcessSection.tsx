@@ -1,8 +1,8 @@
 import { processIntro, processSteps } from "@/content/process";
 import { SectionKicker, Btn } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
-import { ProcessOrbital } from "@/components/process/ProcessOrbital";
-import { ProcessJourney } from "@/components/process/ProcessJourney";
+import { ProcessFlow } from "@/components/process/ProcessFlow";
+// import { ProcessJourney } from "@/components/process/ProcessJourney";
 import { ProcessPrinciples } from "@/components/process/ProcessPrinciples";
 
 /**
@@ -45,27 +45,30 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
             </div>
           </header>
         ) : (
-          /* Homepage: Compact intro with direct orbital visual */
-          <header className="pr__intro">
-            <div className="pr__intro-copy">
-              <SectionKicker index={processIntro.index} label={processIntro.label} />
-              <Heading className="pr__display" id="process-title">
-                {processIntro.headingLines.map((line, i) => (
-                  <span key={line}>
-                    {i > 0 && <br />}
-                    {i === 1 ? <span className="pr__display-accent">{line}</span> : line}
-                  </span>
-                ))}
-              </Heading>
-              <p className="pr__lede">{processIntro.lede}</p>
-              <div className="pr__intro-actions">
-                <Btn href="/#contact">Let&apos;s work together</Btn>
+          /* Homepage: masthead above a full-width signal conduit, sized to sit
+             inside one viewport on desktop without cropping the readout. */
+          <div className="pr__fit">
+            <header className="pr__masthead">
+              <div className="pr__masthead-lead">
+                <SectionKicker index={processIntro.index} label={processIntro.label} />
+                <Heading className="pr__display" id="process-title">
+                  {processIntro.headingLines.map((line, i) => (
+                    <span key={line}>
+                      {i > 0 && <br />}
+                      {i === 1 ? <span className="pr__display-accent">{line}</span> : line}
+                    </span>
+                  ))}
+                </Heading>
               </div>
-            </div>
-            <div className="pr__intro-visual">
-              <ProcessOrbital steps={processSteps} />
-            </div>
-          </header>
+              <div className="pr__masthead-aside">
+                <p className="pr__lede">{processIntro.lede}</p>
+                <div className="pr__intro-actions">
+                  <Btn href="/#contact">Let&apos;s work together</Btn>
+                </div>
+              </div>
+            </header>
+            <ProcessFlow steps={processSteps} fit />
+          </div>
         )}
       </div>
 
@@ -76,19 +79,25 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
             <div className="pr__orbital-card-header">
               <h2 className="pr__orbital-card-title">Interactive Process Map</h2>
               <p className="pr__orbital-card-desc">
-                Explore the workflow stages interactively. Hover or tap each node to read deliverables and outcome signatures.
+                Follow one idea along the conduit. Hover, tap or arrow through any stage to read what happens there, what
+                you receive, and the outcome it locks in.
               </p>
             </div>
             <div className="pr__orbital-card-visual">
-              <ProcessOrbital steps={processSteps} />
+              <ProcessFlow steps={processSteps} />
             </div>
           </div>
         </div>
       )}
 
+      {/* Sticky 01→07 deep-dive journey — retired in favour of the signal
+          conduit above, which now carries the same per-stage detail. Left in
+          place (component and styles intact) so it can be restored by
+          uncommenting this block.
       <div className="shell">
         <ProcessJourney steps={processSteps} />
       </div>
+      */}
 
       <div className="shell">
         <ProcessPrinciples />
