@@ -16,6 +16,8 @@ export interface EmailMessage {
   /** Optional rich part. Clients that cannot render it fall back to `text`. */
   html?: string;
   attachments?: EmailAttachment[];
+  /** Carried through to the logs only; never sent to the SMTP server. */
+  referenceId?: string;
 }
 
 export interface EmailDeliveryStatus {
@@ -128,7 +130,7 @@ export class SmtpEmailProvider implements EmailProvider {
 
   async send(message: EmailMessage, attempt = 1): Promise<void> {
     const maxAttempts = EMAIL_MAX_RETRIES;
-    const referenceId = "unknown";
+    const { referenceId = "unknown", ...mail } = message;
 
     try {
       if (attempt === 1) {
@@ -148,8 +150,19 @@ if (!this.transporter) {
       }
 
       /* eslint-disable @typescript-eslint/no-explicit-any */
-await (this.transporter as any).sendMail(message);
-/* eslint-enable @typescript-eslint/no-explicit-any */
+      const info = (await (this.transporter as any).sendMail(mail)) as {
+        messageId?: string;
+        response?: string;
+        accepted?: string[];
+        rejected?: string[];
+      };
+      /* eslint-enable @typescript-eslint/no-explicit-any */
+
+      // A resolved sendMail only means the relay accepted the envelope. It can
+      // still have refused individual recipients in the same 250 response.
+      if (info?.rejected?.length) {
+        throw new Error(`SMTP server rejected recipient(s): ${info.rejected.join(", ")}`);
+      }
 
       mailLogger.log({
         timestamp: new Date().toISOString(),
@@ -159,6 +172,8 @@ await (this.transporter as any).sendMail(message);
         from: message.from,
         subject: message.subject,
         status: "success",
+        messageId: info?.messageId,
+        smtpResponse: info?.response,
       });
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));

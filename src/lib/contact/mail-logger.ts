@@ -15,6 +15,10 @@ export interface MailEvent {
   errorCode?: string;
   attempt?: number;
   maxAttempts?: number;
+  /** Message-ID header, for correlating with the relay's own logs. */
+  messageId?: string;
+  /** Raw SMTP reply, e.g. "250 2.0.0 Ok: queued as 4c9Ql…". */
+  smtpResponse?: string;
 }
 
 class MailLogger {
@@ -33,8 +37,13 @@ class MailLogger {
     switch (event.type) {
       case "send":
         if (event.status === "success") {
+          // "Accepted", not "Delivered": the relay has taken the message, but
+          // the receiving mailbox can still bounce or spam-file it later. The
+          // queue id in the SMTP reply is what you trace at the relay.
           console.log(
-            `${prefix} [${timestamp}] ✅ Delivered to ${event.to} | Ref: ${event.referenceId}`,
+            `${prefix} [${timestamp}] ✅ Accepted by relay for ${event.to} | Ref: ${event.referenceId}` +
+              (event.messageId ? ` | Message-ID: ${event.messageId}` : "") +
+              (event.smtpResponse ? ` | SMTP: ${event.smtpResponse}` : ""),
           );
         } else {
           console.log(
