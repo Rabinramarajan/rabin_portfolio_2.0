@@ -7,6 +7,7 @@ import { AboutSection } from "@/components/about/AboutSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { WorkSection } from "@/components/WorkSection";
 import { FaqSection } from "@/components/FaqSection";
+import { FaqJsonLd } from "@/components/JsonLd";
 
 /*
  * These sections are imported statically on purpose.
@@ -37,6 +38,7 @@ export function HomePage() {
       <ProcessSection />
       <ProcessMotionEnhancer />
       <FaqSection />
+      <FaqJsonLd />
       <ContactSection />
       <ContactMotionEnhancer />
     </>

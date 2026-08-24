@@ -413,6 +413,11 @@ export function ServiceMediaVisual({ service, reduce = false }: { service: Servi
           loop
           muted
           playsInline
+          /* The poster carries the frame until playback starts, so there is
+             nothing to gain from buffering ahead of it. With reduced motion
+             the clip never plays at all and must not be fetched. */
+          preload={reduce ? "none" : "metadata"}
+          disablePictureInPicture
           aria-label={media.alt}
           className="svc-media-element"
         />

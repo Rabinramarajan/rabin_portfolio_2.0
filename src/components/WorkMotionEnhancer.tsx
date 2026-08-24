@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import { MOTION_CONFIG } from "@/motion/config";
 import { prefersReducedMotion } from "@/motion/gsap-context";
 
-const gsap = require("gsap/dist/gsap");
 
 export function WorkMotionEnhancer() {
   const reduce = prefersReducedMotion();
@@ -19,6 +18,8 @@ export function WorkMotionEnhancer() {
 
     const workSection = document.querySelector("[data-section='work']");
     if (!workSection) return;
+
+    const { gsap } = require("gsap/dist/gsap");
 
     try {
       // ========== PROJECT CARD PARALLAX IMAGE ==========

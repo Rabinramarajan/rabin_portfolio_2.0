@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import { MOTION_CONFIG } from "@/motion/config";
 import { prefersReducedMotion } from "@/motion/gsap-context";
 
-const gsap = require("gsap/dist/gsap");
 
 export function ContactMotionEnhancer() {
   const reduce = prefersReducedMotion();
@@ -19,6 +18,8 @@ export function ContactMotionEnhancer() {
 
     const contactSection = document.querySelector("[data-section='contact']");
     if (!contactSection) return;
+
+    const { gsap } = require("gsap/dist/gsap");
 
     try {
       const timeline = gsap.timeline({

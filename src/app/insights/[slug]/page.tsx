@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { insights, isPublished } from "@/content/insights";
 import { SectionKicker } from "@/components/ui";
-import { BreadcrumbJsonLd } from "@/components/JsonLd";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -34,6 +34,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <article className="section">
       <div className="shell" style={{ maxWidth: "42rem" }}>
+        {/* Article schema only once the post has a body — a stub is thin
+            content and is already kept out of the index. */}
+        {isPublished(item) ? (
+          <ArticleJsonLd
+            headline={item.title ?? "Insight"}
+            description={item.dek ?? ""}
+            path={"/insights/" + item.id}
+          />
+        ) : null}
         <BreadcrumbJsonLd
           trail={[
             { name: "Home", path: "/" },

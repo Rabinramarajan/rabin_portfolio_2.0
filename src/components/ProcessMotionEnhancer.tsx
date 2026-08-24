@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import { MOTION_CONFIG } from "@/motion/config";
 import { prefersReducedMotion } from "@/motion/gsap-context";
 
-const gsap = require("gsap/dist/gsap");
 
 export function ProcessMotionEnhancer() {
   const reduce = prefersReducedMotion();
@@ -19,6 +18,8 @@ export function ProcessMotionEnhancer() {
 
     const processSection = document.querySelector("[data-section='process']");
     if (!processSection) return;
+
+    const { gsap } = require("gsap/dist/gsap");
 
     try {
       const stages = processSection.querySelectorAll("[data-process-stage]");

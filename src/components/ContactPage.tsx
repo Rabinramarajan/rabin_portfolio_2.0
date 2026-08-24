@@ -1,24 +1,23 @@
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import { Breadcrumbs } from "@/components/pages/Breadcrumbs";
 import { ContactHero } from "@/components/contact/ContactHero";
 import { ContactIntro } from "@/components/contact/ContactIntro";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { ContactFormIntent } from "@/components/contact/ContactFormIntent";
 import { AvailabilityPanel } from "@/components/contact/AvailabilityPanel";
 import { ContactChannels } from "@/components/contact/ContactChannels";
 import { ContactCta } from "@/components/contact/ContactCta";
 import { ContactProcessBridge } from "@/components/contact/ContactProcessBridge";
 import { ContactLazyVideo, ContactReveal } from "@/components/contact/ContactMedia";
-import { contactCopy, inquiryFromIntent } from "@/content/contact";
-import type { InquiryType } from "@/types/contact";
+import { contactCopy } from "@/content/contact";
 
 const ContactWorkflow = dynamic(
   () => import("@/components/contact/ContactWorkflow").then((mod) => ({ default: mod.ContactWorkflow })),
   { loading: () => <div className="cp-flow cp-flow--slot" aria-hidden /> },
 );
 
-export function ContactPage({ intent }: { intent?: string }) {
-  const inquiryType: InquiryType | undefined = inquiryFromIntent(intent);
-
+export function ContactPage() {
   return (
     <article className="cp">
       <div className="shell">
@@ -33,7 +32,11 @@ export function ContactPage({ intent }: { intent?: string }) {
       <section className="cp-compose" aria-labelledby="contact-form-title">
         <div className="shell cp-compose__grid">
           <div id="contact-form" className="cp-compose__form">
-            <ContactForm key={inquiryType ?? "open"} defaultInquiryType={inquiryType} />
+            {/* Suspense is required: ContactFormIntent reads searchParams,
+                which would otherwise opt this route out of prerendering. */}
+            <Suspense fallback={<ContactForm />}>
+              <ContactFormIntent />
+            </Suspense>
           </div>
           <ContactReveal className="cp-compose__visual" delay={0.08}>
             <div className="cp-frame cp-frame--flow">

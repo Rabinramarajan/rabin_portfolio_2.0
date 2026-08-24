@@ -91,26 +91,6 @@ export function JsonLd() {
         })),
       },
     },
-    {
-      "@type": "ItemList",
-      "@id": absoluteUrl("/work") + "#list",
-      name: "Selected work",
-      itemListElement: projects.map((project, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        url: absoluteUrl("/work/" + project.slug),
-        name: project.title,
-      })),
-    },
-    {
-      "@type": "FAQPage",
-      "@id": SITE_URL + "/#faq",
-      mainEntity: faqs.map((f) => ({
-        "@type": "Question",
-        name: f.question,
-        acceptedAnswer: { "@type": "Answer", text: f.answer },
-      })),
-    },
   ];
 
   return (
@@ -193,6 +173,80 @@ export function ProjectJsonLd({
     creator: { "@id": PERSON_ID },
     author: { "@id": PERSON_ID },
     isPartOf: { "@id": SITE_ID },
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
+}
+
+/**
+ * FAQ schema, scoped to the one page that renders the questions.
+ *
+ * Google requires FAQ markup to describe content visible on the *same* page.
+ * The FAQ block lives only in the homepage, so emitting this from the root
+ * layout marked up every route — /work, /pricing, every case study — with
+ * questions those pages never show. Render this from the homepage only.
+ */
+export function FaqJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": SITE_URL + "/#faq",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
+}
+
+/** The case-study index as an ItemList. Render where the list is visible. */
+export function WorkListJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": absoluteUrl("/work") + "#list",
+    name: "Selected work",
+    itemListElement: projects.map((project, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: absoluteUrl("/work/" + project.slug),
+      name: project.title,
+    })),
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
+}
+
+/**
+ * Article schema for a written insight post.
+ *
+ * Only call this for a post that actually has a body — a title-and-dek stub is
+ * thin content and is already kept out of the index.
+ */
+export function ArticleJsonLd({
+  headline,
+  description,
+  path,
+  datePublished,
+}: {
+  headline: string;
+  description: string;
+  path: string;
+  datePublished?: string;
+}) {
+  const url = absoluteUrl(path);
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": url + "#article",
+    headline,
+    description,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    inLanguage: "en",
+    author: { "@id": PERSON_ID },
+    publisher: { "@id": PERSON_ID },
+    isPartOf: { "@id": SITE_ID },
+    ...(datePublished ? { datePublished } : {}),
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
 }

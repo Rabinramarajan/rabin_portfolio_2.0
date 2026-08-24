@@ -3,7 +3,7 @@ import { ContactPage } from "@/components/ContactPage";
 import "./contact.css";
 
 export const metadata = pageMetadata({
-  title: "Contact Rabin R — Frontend Angular Consultant",
+  title: "Contact — Frontend Angular Consultant",
   description:
     "Get in touch with Rabin R for frontend engineering, Angular development, consulting, collaboration, and selected opportunities.",
   path: "/contact",
@@ -16,11 +16,6 @@ export const metadata = pageMetadata({
   ],
 });
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{ intent?: string }>;
-}) {
-  const { intent } = await searchParams;
-  return <ContactPage intent={intent} />;
+export default function Page() {
+  return <ContactPage />;
 }

@@ -10,7 +10,6 @@ import { useEffect, useRef } from "react";
 import { MOTION_CONFIG } from "@/motion/config";
 import { prefersReducedMotion, hasPointerFine } from "@/motion/gsap-context";
 
-const gsap = require("gsap/dist/gsap");
 
 export function HeroMotionEnhancer() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -22,6 +21,8 @@ export function HeroMotionEnhancer() {
 
     const hero = document.querySelector("#hero");
     if (!hero) return;
+
+    const { gsap } = require("gsap/dist/gsap");
 
     try {
       // ========== HERO REEL PARALLAX DEPTH ==========

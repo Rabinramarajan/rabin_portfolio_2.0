@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ProjectCover } from "@/components/ProjectCover";
 import { WorkExplorer } from "@/components/work/WorkExplorer";
 import { PageHero } from "@/components/pages/PageHero";
+import { WorkListJsonLd } from "@/components/JsonLd";
 import { PageCta } from "@/components/pages/PageCta";
 import { SectionKicker } from "@/components/ui";
 import { featuredProject, projectPlatforms, projects } from "@/content/projects";
@@ -21,6 +22,7 @@ export function WorkPage() {
 
   return (
     <>
+      <WorkListJsonLd />
       <PageHero
         index="01"
         label="Selected Work"
