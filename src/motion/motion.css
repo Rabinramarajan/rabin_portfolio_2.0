@@ -1,0 +1,256 @@
+/**
+ * Motion System Styles
+ * Animations, transitions, and cursor effects for GSAP motion engine
+ */
+
+/* ========== TEXT REVEAL MASKS ========== */
+.tr__mask {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.tr__line {
+  display: block;
+  position: relative;
+}
+
+.tr__line--accent {
+  /* Accent applied via class */
+}
+
+.tr__mask .acc {
+  color: var(--accent, #00ff00);
+  font-weight: 600;
+}
+
+/* ========== PARALLAX CONTAINERS ========== */
+[data-motion="parallax-bg"],
+[data-motion="parallax-mid"],
+[data-motion="parallax-content"],
+[data-motion="parallax-slide"] {
+  will-change: transform;
+}
+
+/* ========== SCROLL PROGRESS INDICATOR ========== */
+[data-motion="scroll-progress"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light, rgba(255, 255, 255, 0.5)));
+  width: 0%;
+  z-index: 1000;
+  pointer-events: none;
+  transition: width 0.3s ease-out;
+  will-change: width;
+}
+
+/* ========== CUSTOM CURSOR ========== */
+.cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: lighten;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.cursor__dot {
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid var(--text, white);
+  border-radius: 50%;
+}
+
+.cursor--link .cursor__dot {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.5);
+}
+
+.cursor--button .cursor__dot {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.cursor--project .cursor__dot {
+  width: 120%;
+  height: 120%;
+  border-color: var(--accent);
+  animation: cursor-pulse 1.5s ease-in-out infinite;
+}
+
+.cursor--drag .cursor__dot {
+  border-width: 2px;
+  border-color: var(--accent);
+}
+
+@keyframes cursor-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Disable custom cursor on touch/reduced motion */
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* ========== MAGNETIC BUTTON ========== */
+.magnetic {
+  position: relative;
+  will-change: transform;
+}
+
+/* ========== CLIP PATH PRESETS ========== */
+[data-motion="clip-left"] {
+  clip-path: inset(0 100% 0 0);
+}
+
+[data-motion="clip-right"] {
+  clip-path: inset(0 0 0 100%);
+}
+
+[data-motion="clip-top"] {
+  clip-path: inset(100% 0 0 0);
+}
+
+[data-motion="clip-bottom"] {
+  clip-path: inset(0 0 100% 0);
+}
+
+/* ========== WORK SECTION CARDS ========== */
+[data-motion="work-card"] {
+  will-change: transform;
+  transition: box-shadow 0.3s ease;
+}
+
+[data-motion="work-card"]:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+[data-motion="work-image"] {
+  will-change: transform;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+[data-motion="work-image"] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+[data-motion="card-overlay"] {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+}
+
+/* ========== PROCESS SECTION ========== */
+[data-motion="process-stage"] {
+  will-change: transform, opacity;
+}
+
+[data-motion="process-visual"] {
+  will-change: transform, opacity;
+}
+
+[data-motion="process-progress"] {
+  position: absolute;
+  height: 2px;
+  background: var(--accent);
+  width: 0%;
+  will-change: width;
+}
+
+[data-motion="stage-indicator"] {
+  will-change: color, text-shadow, transform;
+  transition: color 0.2s ease;
+}
+
+/* ========== HERO SECTION ========== */
+[data-motion="hero-bg"],
+[data-motion="hero-nav"],
+[data-motion="hero-eyebrow"],
+[data-motion="hero-title"],
+[data-motion="hero-desc"],
+[data-motion="hero-cta"],
+[data-motion="hero-visual"] {
+  will-change: transform, opacity;
+}
+
+[data-motion="parallax-bg"],
+[data-motion="parallax-mid"],
+[data-motion="parallax-content"] {
+  will-change: transform;
+}
+
+[data-motion="pointer-field"] {
+  will-change: transform;
+}
+
+/* ========== HOVER STATES ========== */
+[data-motion="work-card-link"],
+[data-motion="project-link"] {
+  will-change: transform;
+}
+
+/* ========== REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion*="parallax"],
+  [data-motion*="scroll"],
+  [data-motion*="hover"],
+  [data-motion="magnetic"],
+  .cursor {
+    will-change: auto;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  [data-motion*="parallax"] {
+    transform: none !important;
+  }
+}
+
+/* ========== PERFORMANCE OPTIMIZATIONS ========== */
+/* Prevent layout shifts during animations */
+[data-motion="hero-visual"],
+[data-motion="work-image"],
+[data-motion="process-visual"] {
+  contain: layout style paint;
+}
+
+/* Smooth scrolling when available */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ========== ACCESSIBILITY ========== */
+/* Ensure elements remain visible during animation load */
+[data-motion*="hero"],
+[data-motion*="process"],
+[data-motion*="work"] {
+  opacity: 1; /* Explicit fallback if JS fails */
+}
+
+/* High contrast cursor for accessibility */
+@media (prefers-contrast: more) {
+  .cursor__dot {
+    border-width: 2px;
+  }
+}

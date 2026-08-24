@@ -8,7 +8,10 @@ import { JsonLd } from "@/components/JsonLd";
 import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
+import { MotionProvider } from "@/components/MotionProvider";
+import { ScrollProgressIndicator } from "@/components/ScrollProgressIndicator";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
+import "@/motion/motion.css";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", adjustFontFallback: true });
@@ -80,18 +83,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={[inter.variable, tight.variable, mono.variable, caveat.variable].join(" ")}
     >
       <body>
-        <a className="skip-link" href="#main">
-          Skip to content
-        </a>
-        <JsonLd />
-        <ProgressSync />
-        <Navbar />
-        <main id="main">{children}</main>
-        <Footer />
-        <ChatLauncher />
-        <Toaster />
-        <Analytics />
-        <SpeedInsights />
+        <ScrollProgressIndicator />
+        <MotionProvider>
+          <a className="skip-link" href="#main">
+            Skip to content
+          </a>
+          <JsonLd />
+          <ProgressSync />
+          <Navbar />
+          <main id="main">{children}</main>
+          <Footer />
+          <ChatLauncher />
+          <Toaster />
+          <Analytics />
+          <SpeedInsights />
+        </MotionProvider>
       </body>
     </html>
   );
