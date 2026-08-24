@@ -115,23 +115,29 @@ export async function submitContact(
     };
   }
 
-  await deps.email.send({
-    to: envelope.to,
-    from: envelope.from,
-    replyTo: payload.email,
-    subject: `New Portfolio Inquiry — ${payload.inquiryType} (${referenceId})`,
-    text: notificationText({ payload, referenceId, receivedAt }),
-    html: notificationHtml({ payload, referenceId, receivedAt }),
-    attachments: deps.attachment
-      ? [
-          {
-            filename: deps.attachment.filename,
-            content: deps.attachment.content,
-            contentType: deps.attachment.contentType,
-          },
-        ]
-      : undefined,
-  });
+  try {
+    await deps.email.send({
+      to: envelope.to,
+      from: envelope.from,
+      replyTo: payload.email,
+      subject: `New Portfolio Inquiry — ${payload.inquiryType} (${referenceId})`,
+      text: notificationText({ payload, referenceId, receivedAt }),
+      html: notificationHtml({ payload, referenceId, receivedAt }),
+      attachments: deps.attachment
+        ? [
+            {
+              filename: deps.attachment.filename,
+              content: deps.attachment.content,
+              contentType: deps.attachment.contentType,
+            },
+          ]
+        : undefined,
+      referenceId, // For logging
+    } as any);
+  } catch (error) {
+    console.error(`[contact] notification email failed for ${referenceId}:`, error);
+    throw error;
+  }
 
   // The acknowledgement goes to an address the visitor typed, so it is the one
   // send that routinely fails for reasons outside our control (typo, dead
@@ -148,7 +154,8 @@ export async function submitContact(
         subject: `Message received — ${referenceId}`,
         text: acknowledgementText({ payload, referenceId }),
         html: acknowledgementHtml({ payload, referenceId }),
-      });
+        referenceId, // For logging
+      } as any);
     } catch (error) {
       console.error(`[contact] acknowledgement failed for ${referenceId}:`, error);
     }

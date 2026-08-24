@@ -18,7 +18,7 @@ describe("submitContact", () => {
     const result = await submitContact(payload, {
       email,
       store,
-      env: { CONTACT_TO: "rabinr2607@gmail.com", SMTP_FROM: "portfolio@example.com" },
+      env: { CONTACT_TO: "rabinr.dev@gmail.com", SMTP_FROM: "portfolio@example.com" },
       now: new Date("2026-08-22T10:00:00.000Z"),
     });
 

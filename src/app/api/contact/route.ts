@@ -128,7 +128,14 @@ export async function POST(req: NextRequest) {
       referenceId: result.referenceId,
       responseTime: result.responseTime,
     });
-  } catch {
-    return NextResponse.json({ error: "Could not send. Please try again or email me directly." }, { status: 500 });
+  } catch (error) {
+    console.error("[contact] Unhandled error in POST /api/contact:", error);
+
+    const message =
+      error instanceof Error && error.message.includes("authentication")
+        ? "Email service is temporarily unavailable. Your message was saved. Please try again or email me directly."
+        : "Could not send. Your message was saved and I'll get back to you soon. You can also email me directly.";
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

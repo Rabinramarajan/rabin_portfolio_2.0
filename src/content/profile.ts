@@ -10,7 +10,7 @@ export const profile: Profile = {
   headlineRole: "Frontend Software Engineer",
   location: "Chennai, Tamil Nadu, India",
   locationShort: "Chennai, India",
-  email: "rabinr2607@gmail.com",
+  email: "rabinr.dev@gmail.com",
   phone: "+91 97893 76992",
   phoneHours: "Mon - Sat, 10AM - 8PM",
   yearsExperienceLabel: "4+", // CALCULATED from experience.ts via calculateExperienceYears()
@@ -23,7 +23,7 @@ export const profile: Profile = {
   socials: [
     { id: "github", label: "GitHub", href: "https://github.com/Rabinramarajan" },
     { id: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/rabinr" },
-    { id: "email", label: "Email", href: "mailto:rabinr2607@gmail.com" },
+    { id: "email", label: "Email", href: "mailto:rabinr.dev@gmail.com" },
     { id: "website", label: "Website", href: SITE_URL },
   ],
   resumePath: "/resume",
