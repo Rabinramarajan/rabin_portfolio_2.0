@@ -4437,6 +4437,12 @@ code {
   padding-top: clamp(1.75rem, 4vw, 3rem);
   border-top: 1px solid var(--color-line);
 }
+@media (min-width: 960px) {
+  .pprin {
+    margin-top: clamp(3rem, 8vw, 6rem);
+    padding-top: clamp(3rem, 8vw, 6rem);
+  }
+}
 .pprin__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
