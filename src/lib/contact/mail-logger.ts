@@ -32,15 +32,15 @@ class MailLogger {
 
     switch (event.type) {
       case "send":
-        console.log(
-          `${prefix} [${timestamp}] Sending to ${event.to} | Subject: "${event.subject}" | Ref: ${event.referenceId}`,
-        );
-        break;
-
-      case "success":
-        console.log(
-          `${prefix} [${timestamp}] ✅ Delivered to ${event.to} | Ref: ${event.referenceId}`,
-        );
+        if (event.status === "success") {
+          console.log(
+            `${prefix} [${timestamp}] ✅ Delivered to ${event.to} | Ref: ${event.referenceId}`,
+          );
+        } else {
+          console.log(
+            `${prefix} [${timestamp}] Sending to ${event.to} | Subject: "${event.subject}" | Ref: ${event.referenceId}`,
+          );
+        }
         break;
 
       case "retry":

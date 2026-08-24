@@ -51,16 +51,21 @@ export class SmtpEmailProvider implements EmailProvider {
 
     this.lastConnectAttempt = Date.now();
 
-    return nodemailer.createTransport({
+    const transportConfig: any = {
       host: this.config.host,
       port: this.config.port,
       secure: this.config.secure,
-      auth: this.config.user ? { user: this.config.user, pass: this.config.pass } : undefined,
       connectionTimeout: 10 * 1000,
       socketTimeout: 30 * 1000,
       maxConnections: 5,
       maxMessages: 100,
-    });
+    };
+
+    if (this.config.user) {
+      transportConfig.auth = { user: this.config.user, pass: this.config.pass };
+    }
+
+    return nodemailer.createTransport(transportConfig);
   }
 
   async send(message: EmailMessage, attempt = 1): Promise<void> {
@@ -105,7 +110,7 @@ export class SmtpEmailProvider implements EmailProvider {
           error.message.includes("socket hang up") ||
           error.message.includes("self-signed") ||
           error.message.includes("certificate") ||
-          error.code === "ECONNRESET");
+          (error as any).code === "ECONNRESET");
 
       if (isTransient && attempt < maxAttempts) {
         const delay = Math.pow(2, attempt - 1) * 1000;
