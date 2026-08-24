@@ -4439,10 +4439,15 @@ code {
 }
 .pprin__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 1rem;
 }
 @media (min-width: 1100px) {
+  .pprin__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (min-width: 2000px) {
   .pprin__grid {
     grid-template-columns: repeat(5, 1fr);
   }
