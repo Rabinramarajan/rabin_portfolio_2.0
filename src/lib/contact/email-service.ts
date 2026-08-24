@@ -69,6 +69,21 @@ function isPermanentErrorCode(code: string | undefined): boolean {
   return permanentPatterns.some((p) => upper.includes(p));
 }
 
+/**
+ * Build a Message-ID rooted in the sending domain.
+ *
+ * Nodemailer otherwise derives it from `os.hostname()`, which on a serverless
+ * host is an opaque container id. A Message-ID whose domain does not match the
+ * From domain is a long-standing spam heuristic, so pin it explicitly.
+ */
+function buildMessageId(from: string, referenceId: string): string | undefined {
+  const domain = from.split("@")[1]?.replace(/>$/, "").trim();
+  if (!domain) return undefined;
+
+  const unique = `${referenceId}.${Date.now().toString(36)}`;
+  return `<${unique}@${domain}>`;
+}
+
 function maskSensitiveData(message: string): string {
   return message
     .replace(/pass(wd)?[=:\s]+[\S]+/gi, "****")
@@ -150,7 +165,10 @@ if (!this.transporter) {
       }
 
       /* eslint-disable @typescript-eslint/no-explicit-any */
-      const info = (await (this.transporter as any).sendMail(mail)) as {
+      const info = (await (this.transporter as any).sendMail({
+        messageId: buildMessageId(mail.from, referenceId),
+        ...mail,
+      })) as {
         messageId?: string;
         response?: string;
         accepted?: string[];
@@ -266,6 +284,11 @@ private async createTransporter() {
 
     if (this.config.user) {
       transportConfig.auth = { user: this.config.user, pass: this.config.pass };
+
+      // Greet the relay as the sending domain rather than the container's
+      // hostname, for the same reason the Message-ID is pinned above.
+      const domain = this.config.user.split("@")[1];
+      if (domain) transportConfig.name = domain;
     }
 
     return nodemailer.createTransport(transportConfig as Record<string, unknown>);
@@ -311,8 +334,12 @@ export function createEmailProvider(env: NodeJS.Dict<string> = process.env): Ema
 }
 
 export function mailEnvelope(env: NodeJS.Dict<string> = process.env) {
+  const fromAddress = env.SMTP_FROM || env.SMTP_USER || profile.email;
+
   return {
-    from: env.SMTP_FROM || env.SMTP_USER || profile.email,
+    // A bare address reads as machine-generated bulk mail. Keep any display
+    // name the operator already configured in SMTP_FROM.
+    from: fromAddress.includes("<") ? fromAddress : `"${profile.name}" <${fromAddress}>`,
     to: env.CONTACT_TO || profile.email,
     ackEnabled: env.CONTACT_ACK_EMAIL !== "false",
   };
