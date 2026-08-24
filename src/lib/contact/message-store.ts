@@ -2,25 +2,40 @@ import type { ContactPayload } from "@/types/contact";
 import { promises as fs } from "fs";
 import { join } from "path";
 
-export interface StoredMessage {
+export interface StoredContact {
   referenceId: string;
   receivedAt: string;
   payload: ContactPayload;
+  notificationStatus: "pending" | "processing" | "sent" | "failed" | "retrying";
+  acknowledgementStatus: "pending" | "processing" | "sent" | "failed";
+  notificationAttempts: number;
+  acknowledgementAttempts: number;
+  lastEmailError?: string;
+  lastAttemptAt: string;
+  deliveredAt?: string;
 }
 
 export interface MessageStore {
-  save(entry: StoredMessage): Promise<void>;
-  get(referenceId: string): Promise<StoredMessage | undefined>;
+  save(entry: StoredContact): Promise<void>;
+  get(referenceId: string): Promise<StoredContact | undefined>;
+}
+
+export interface MessageSummary {
+  referenceId: string;
+  receivedAt: string;
+  notificationStatus: StoredContact["notificationStatus"];
+  acknowledgementStatus: StoredContact["acknowledgementStatus"];
+  lastAttemptAt: string;
 }
 
 export class MemoryMessageStore implements MessageStore {
-  private readonly items = new Map<string, StoredMessage>();
+  private readonly items = new Map<string, StoredContact>();
 
-  async save(entry: StoredMessage): Promise<void> {
+  async save(entry: StoredContact): Promise<void> {
     this.items.set(entry.referenceId, entry);
   }
 
-  async get(referenceId: string): Promise<StoredMessage | undefined> {
+  async get(referenceId: string): Promise<StoredContact | undefined> {
     return this.items.get(referenceId);
   }
 }
@@ -37,7 +52,7 @@ export class FileMessageStore implements MessageStore {
     return join(this.dir, fileName);
   }
 
-  async save(entry: StoredMessage): Promise<void> {
+  async save(entry: StoredContact): Promise<void> {
     try {
       await fs.mkdir(this.dir, { recursive: true });
       const path = this.getPath(entry.referenceId);
@@ -48,11 +63,11 @@ export class FileMessageStore implements MessageStore {
     }
   }
 
-  async get(referenceId: string): Promise<StoredMessage | undefined> {
+  async get(referenceId: string): Promise<StoredContact | undefined> {
     try {
       const path = this.getPath(referenceId);
       const data = await fs.readFile(path, "utf-8");
-      return JSON.parse(data) as StoredMessage;
+      return JSON.parse(data) as StoredContact;
     } catch {
       return undefined;
     }

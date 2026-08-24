@@ -25,6 +25,19 @@ function asInquiryType(value: string | undefined): InquiryType {
   return "Other";
 }
 
+export interface StoredContact {
+  referenceId: string;
+  receivedAt: string;
+  payload: ContactPayload;
+  notificationStatus: "pending" | "processing" | "sent" | "failed" | "retrying";
+  acknowledgementStatus: "pending" | "processing" | "sent" | "failed";
+  notificationAttempts: number;
+  acknowledgementAttempts: number;
+  lastEmailError?: string;
+  lastAttemptAt: string;
+  deliveredAt?: string;
+}
+
 export function normalizePayload(raw: unknown): { honeypot: boolean; payload?: ContactPayload; error?: ContactResult } {
   if (!raw || typeof raw !== "object") {
     return { honeypot: false, error: { ok: false, error: "Invalid request." } };
@@ -98,12 +111,28 @@ export async function submitContact(
   }
 
   const payload = normalized.payload;
+
+  // Header injection prevention - reject newlines in name/email/message
+  const hasNewline = (value: string) => /\r|\n/.test(value);
+  if (hasNewline(payload.name) || hasNewline(payload.email) || hasNewline(payload.message)) {
+    return { ok: false, error: "Invalid request." };
+  }
   const referenceId = createReferenceId(deps.now);
   const receivedAt = (deps.now ?? new Date()).toISOString();
   const env = deps.env ?? process.env;
   const envelope = mailEnvelope(env);
 
-  await deps.store.save({ referenceId, receivedAt, payload });
+  // Save submission first - this preserves the message even if email fails
+  await deps.store.save({
+    referenceId,
+    receivedAt,
+    payload,
+    notificationStatus: "pending",
+    acknowledgementStatus: "pending",
+    notificationAttempts: 0,
+    acknowledgementAttempts: 0,
+    lastAttemptAt: new Date().toISOString(),
+  });
 
   if (!deps.email) {
     if (env.CONTACT_ALLOW_UNCONFIGURED === "true") {
@@ -115,6 +144,7 @@ export async function submitContact(
     };
   }
 
+  // Attempt owner notification
   try {
     await deps.email.send({
       to: envelope.to,
@@ -132,19 +162,39 @@ export async function submitContact(
             },
           ]
         : undefined,
-      referenceId, // For logging
-    } as any);
+    });
+
+    // Update notification status to sent
+    await deps.store.save({
+      referenceId,
+      receivedAt,
+      payload,
+      notificationStatus: "sent",
+      acknowledgementStatus: "pending",
+      notificationAttempts: 0,
+      acknowledgementAttempts: 0,
+      lastAttemptAt: new Date().toISOString(),
+      deliveredAt: new Date().toISOString(),
+    });
   } catch (error) {
     console.error(`[contact] notification email failed for ${referenceId}:`, error);
-    throw error;
+    // Preserve the submission regardless of email failure
+    await deps.store.save({
+      referenceId,
+      receivedAt,
+      payload,
+      notificationStatus: "failed",
+      acknowledgementStatus: "pending",
+      notificationAttempts: 0,
+      acknowledgementAttempts: 0,
+      lastEmailError: (error as Error).message,
+      lastAttemptAt: new Date().toISOString(),
+    });
+    // Still return success - the message was persisted
   }
 
-  // The acknowledgement goes to an address the visitor typed, so it is the one
-  // send that routinely fails for reasons outside our control (typo, dead
-  // mailbox, a server that rejects unknown recipients at RCPT time). The
-  // notification is already delivered and the message is stored by this point,
-  // so a failure here must not turn a successful submission into a 500 — that
-  // would only prompt the visitor to resubmit and send a duplicate.
+  // The acknowledgement goes to the visitor's address - routine failure should
+  // not undo the owner notification or persistence.
   if (envelope.ackEnabled) {
     try {
       await deps.email.send({
@@ -154,10 +204,33 @@ export async function submitContact(
         subject: `Message received — ${referenceId}`,
         text: acknowledgementText({ payload, referenceId }),
         html: acknowledgementHtml({ payload, referenceId }),
-        referenceId, // For logging
-      } as any);
+      });
+
+      await deps.store.save({
+        referenceId,
+        receivedAt,
+        payload,
+        notificationStatus: "sent",
+        acknowledgementStatus: "sent",
+        notificationAttempts: 0,
+        acknowledgementAttempts: 0,
+        lastAttemptAt: new Date().toISOString(),
+      });
     } catch (error) {
       console.error(`[contact] acknowledgement failed for ${referenceId}:`, error);
+      // Do NOT fail the entire submission - only record the failure
+      await deps.store.save({
+        referenceId,
+        receivedAt,
+        payload,
+        notificationStatus: "sent",
+        acknowledgementStatus: "failed",
+        notificationAttempts: 0,
+        acknowledgementAttempts: 0,
+        lastEmailError: (error as Error).message,
+        lastAttemptAt: new Date().toISOString(),
+      });
+      // Important: we do NOT throw here - the submission was already successful
     }
   }
 

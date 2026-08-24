@@ -20,7 +20,7 @@ interface SmtpConfig {
 async function testSmtpConnection(config: SmtpConfig): Promise<{
   success: boolean;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }> {
   console.log("\n🔍 Testing SMTP Configuration...\n");
   console.log("Configuration:");
@@ -60,7 +60,7 @@ async function testSmtpConnection(config: SmtpConfig): Promise<{
     const err = error instanceof Error ? error : new Error(String(error));
     console.error("❌ SMTP connection failed!\n");
     console.error("Error:", err.message);
-    console.error("Code:", (error as any)?.code);
+    console.error("Code:", (err as Error & { code?: string }).code);
 
     // Provide specific troubleshooting advice
     let troubleshooting = "";
@@ -108,7 +108,7 @@ Troubleshooting: Certificate/TLS Error
       message: `SMTP connection failed: ${err.message}`,
       details: {
         error: err.message,
-        code: (error as any)?.code,
+        code: (err as Error & { code?: string }).code,
         host: config.host,
         port: config.port,
         secure: config.secure,
