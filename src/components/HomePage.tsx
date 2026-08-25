@@ -20,7 +20,6 @@ import { FaqJsonLd } from "@/components/JsonLd";
 import { JourneySection } from "@/components/JourneySection";
 import { SkillsSection } from "@/components/SkillsSection";
 import { ProcessSection } from "@/components/ProcessSection";
-import { ContactSection } from "@/components/ContactSection";
 
 export function HomePage() {
   return (

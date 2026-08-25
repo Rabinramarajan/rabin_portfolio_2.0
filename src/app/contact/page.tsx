@@ -1,7 +1,8 @@
-import { ContactSection } from "@/components/ContactSection";
-import { ContactMotionEnhancer } from "@/components/ContactMotionEnhancer";
 import { ContactPageHero } from "@/components/contact/ContactPageHero";
-import { ContactInformation } from "@/components/contact/ContactInformation";
+import { ContactProjectInquiry } from "@/components/contact/ContactProjectInquiry";
+import { ContactAvailability } from "@/components/contact/ContactAvailability";
+import { ContactChannelsNew as ContactChannels } from "@/components/contact/ContactChannelsNew";
+import { ContactFinalCTA } from "@/components/contact/ContactFinalCTA";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -16,9 +17,10 @@ export default function ContactPage() {
   return (
     <>
       <ContactPageHero />
-      <ContactInformation />
-      <ContactSection />
-      <ContactMotionEnhancer />
+      <ContactProjectInquiry />
+      <ContactAvailability />
+      <ContactChannels />
+      <ContactFinalCTA />
     </>
   );
 }
