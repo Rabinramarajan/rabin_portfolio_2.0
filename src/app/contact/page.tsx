@@ -1,16 +1,15 @@
 import { ContactPageHero } from "@/components/contact/ContactPageHero";
 import { ContactProjectInquiry } from "@/components/contact/ContactProjectInquiry";
-import { ContactAvailability } from "@/components/contact/ContactAvailability";
 import { ContactChannelsNew as ContactChannels } from "@/components/contact/ContactChannelsNew";
 import { ContactFinalCTA } from "@/components/contact/ContactFinalCTA";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Contact Rabin R | Angular & Frontend Engineering",
+  title: "Contact Rabin R | Premium Engineering & Digital Products",
   description:
-    "Have a product or frontend challenge in mind? Contact Rabin R for Angular development, frontend engineering, consulting, and digital product work. Available for select projects.",
+    "Let's build something useful. Have a product, platform, or frontend challenge? Reach out to discuss your next project. Available for select engagements.",
   path: "/contact",
-  keywords: ["contact", "hire", "angular developer", "frontend engineer", "freelance", "consulting"],
+  keywords: ["contact", "hire", "frontend engineer", "product development", "consulting", "angular"],
 });
 
 export default function ContactPage() {
@@ -18,7 +17,6 @@ export default function ContactPage() {
     <>
       <ContactPageHero />
       <ContactProjectInquiry />
-      <ContactAvailability />
       <ContactChannels />
       <ContactFinalCTA />
     </>

@@ -12089,49 +12089,55 @@ code {
    ============================================================ */
 
 .contact-form__panel {
-  padding: clamp(var(--space-32), 3vw, var(--space-40));
-  border: 1px solid var(--color-line);
-  border-radius: 16px;
-  background: var(--cx-card);
-  box-shadow: 0 24px 70px -40px rgb(0 0 0 / 90%);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .contact-form__header {
-  margin-bottom: var(--space-32);
+  margin-bottom: var(--space-40);
   display: grid;
-  gap: var(--space-8);
+  gap: var(--space-12);
 }
 
 .contact-form__title {
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
-  letter-spacing: -0.02em;
-  font-weight: 600;
-  color: var(--color-text);
+  font-family: var(--font-accent);
+  font-size: clamp(0.7rem, 2vw, 0.85rem);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
   margin: 0;
 }
 
 .contact-form__subtitle {
-  font-size: var(--text-sm);
-  color: var(--color-text-faint);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
   margin: 0;
+  line-height: var(--leading-tight);
 }
 
 .contact-form__steps {
   display: grid;
   grid-auto-flow: column;
-  gap: var(--space-2);
+  gap: var(--space-24);
   list-style: none;
   padding: 0;
-  margin: 0 0 var(--space-24);
-  border-bottom: 1px solid var(--color-line);
-  padding-bottom: var(--space-16);
+  margin: 0 0 var(--space-40) 0;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .contact-form__step {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
   padding: 0;
   color: var(--color-text-faint);
   font-size: var(--text-xs);
@@ -12152,15 +12158,17 @@ code {
 .contact-form__step-dot {
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   flex: none;
   border-radius: 50%;
   border: 1px solid currentColor;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  font-family: var(--font-accent);
+  font-size: 11px;
   line-height: 1;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .contact-form__step.is-current .contact-form__step-dot,
@@ -12170,7 +12178,7 @@ code {
 }
 
 .contact-form__step.is-done .contact-form__step-dot {
-  background: rgb(201 242 77 / 12%);
+  background: rgb(201 242 77 / 8%);
 }
 
 .contact-form__step-label {
@@ -12182,7 +12190,7 @@ code {
 
 .contact-form__pane {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--space-32);
   align-content: start;
 }
 
@@ -12192,7 +12200,7 @@ code {
 
 .contact-form__form {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--space-32);
 }
 
 .contact-form__row {
@@ -12209,28 +12217,33 @@ code {
 
 .contact-form__field {
   display: grid;
-  gap: 8px;
+  gap: var(--space-8);
   min-width: 0;
   align-content: start;
+  margin-bottom: var(--space-20);
 }
 
 .contact-form__field label {
-  font-size: var(--text-xs);
-  font-weight: 500;
+  font-family: var(--font-accent);
+  font-size: clamp(0.7rem, 2vw, 0.8rem);
+  font-weight: var(--weight-bold);
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.15em;
 }
 
 .contact-form__input {
   width: 100%;
   min-height: 44px;
-  padding: 0.6rem 0.85rem;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  background: var(--cx-field);
+  padding: 0.75rem 0;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  background: transparent;
   color: var(--color-text);
-  font-size: var(--text-sm);
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  font-family: var(--font-body);
+  font-weight: 400;
   transition:
     border-color var(--duration-ui) var(--ease-out-cubic),
     background var(--duration-ui) var(--ease-out-cubic),
@@ -12238,28 +12251,28 @@ code {
 }
 
 .contact-form__input::placeholder {
-  color: var(--color-text-faint);
+  color: rgba(255, 255, 255, 0.35);
 }
 
 .contact-form__input:hover {
-  border-color: var(--color-line-strong);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
 .contact-form__input:focus-visible {
   outline: none;
-  border-color: rgb(201 242 77 / 55%);
-  background: rgb(201 242 77 / 4%);
-  box-shadow: 0 0 0 3px rgb(201 242 77 / 16%);
+  border-bottom-color: var(--color-accent);
+  background: transparent;
+  box-shadow: none;
 }
 
 .contact-form__input.is-invalid {
-  border-color: rgb(255 107 107 / 55%);
+  border-bottom-color: var(--color-danger);
 }
 
 .contact-form__input.is-invalid:focus-visible {
-  border-color: rgb(255 107 107 / 75%);
-  background: rgb(255 107 107 / 5%);
-  box-shadow: 0 0 0 3px rgb(255 107 107 / 18%);
+  border-bottom-color: var(--color-danger);
+  background: transparent;
+  box-shadow: none;
 }
 
 @media (max-width: 640px) {
