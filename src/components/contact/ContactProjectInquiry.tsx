@@ -117,6 +117,8 @@ export function ContactProjectInquiry() {
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
   const [fileKey, setFileKey] = useState(0);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   const {
     register,
@@ -229,10 +231,17 @@ export function ContactProjectInquiry() {
       const res = await fetch("/api/contact", { method: "POST", body });
 
       if (res.ok) {
-        toast.success("Message received — I'll get back to you shortly.");
-        reset();
-        clearFile();
-        setStep(0);
+        // Show success state animation instead of immediate reset
+        setIsSuccess(true);
+
+        // Auto-reset after 4 seconds
+        setTimeout(() => {
+          reset();
+          clearFile();
+          setStep(0);
+          setIsSuccess(false);
+          setShowDetails(false);
+        }, 4000);
         return;
       }
 
@@ -260,28 +269,53 @@ export function ContactProjectInquiry() {
 
           {/* RIGHT: Form */}
           <motion.div className="contact-inquiry__form-wrapper" {...view(0.08)}>
-            <div className="contact-form__panel">
-              <div className="contact-form__header">
-                <h3 className="contact-form__title" id="inquiry-form-title">
-                  Step {step + 1} of {STEPS.length}
-                </h3>
-                <p className="contact-form__subtitle">{STEPS[step].title}</p>
-              </div>
+            {isSuccess ? (
+              <motion.div
+                className="contact-form__success"
+                initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: duration.section, ease }}
+              >
+                <div className="contact-form__success-icon">
+                  <Check size={32} strokeWidth={2} />
+                </div>
+                <h3 className="contact-form__success-title">Message received</h3>
+                <p className="contact-form__success-message">
+                  Thanks for reaching out. I'll review the details and get back to you with the next step.
+                </p>
+                <motion.a
+                  href="/work"
+                  className="contact-form__success-cta"
+                  whileHover={reduce ? {} : { y: -2 }}
+                  transition={{ duration: duration.micro, ease }}
+                >
+                  <span>View my work</span>
+                  <ArrowRight size={16} strokeWidth={2} />
+                </motion.a>
+              </motion.div>
+            ) : (
+              <div className="contact-form__panel">
+                <div className="contact-form__header">
+                  <div>
+                    <p className="contact-form__title" id="inquiry-form-title">
+                      Step {step + 1} of {STEPS.length}
+                    </p>
+                    <h3 className="contact-form__subtitle">{STEPS[step].title}</h3>
+                  </div>
 
-              <ol className="contact-form__steps" aria-label="Form progress">
-                {STEPS.map((s, i) => (
-                  <li
-                    key={s.id}
-                    className={`contact-form__step${i === step ? " is-current" : ""}${i < step ? " is-done" : ""}`}
-                    aria-current={i === step ? "step" : undefined}
-                  >
-                    <span className="contact-form__step-dot" aria-hidden>
-                      {i < step ? <Check size={11} strokeWidth={3} /> : i + 1}
-                    </span>
-                    <span className="contact-form__step-label">{s.title}</span>
-                  </li>
-                ))}
-              </ol>
+                  {/* Progress Bar */}
+                  <div className="contact-form__progress" aria-label="Form progress" role="progressbar" aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={STEPS.length}>
+                    <div className="contact-form__progress-track">
+                      {STEPS.map((_, i) => (
+                        <div
+                          key={i}
+                          className={`contact-form__progress-segment${i === step ? " is-current" : ""}${i < step ? " is-complete" : ""}`}
+                          aria-hidden
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
 
               <form
                 className="contact-form__form"
@@ -297,7 +331,14 @@ export function ContactProjectInquiry() {
                 </div>
 
                 {/* STEP 1: ABOUT YOU */}
-                <div className="contact-form__pane" hidden={step !== 0}>
+                <motion.div
+                  className="contact-form__pane"
+                  hidden={step !== 0}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, x: 24 }}
+                  animate={step === 0 ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
+                  exit={reduce ? { opacity: 0 } : { opacity: 0, x: -24 }}
+                  transition={{ duration: duration.ui, ease }}
+                >
                   <div className="contact-form__row">
                     <div className="contact-form__field">
                       <label htmlFor="cpi-name">
@@ -364,10 +405,17 @@ export function ContactProjectInquiry() {
                       error={errors.role?.message}
                     />
                   </div>
-                </div>
+                </motion.div>
 
                 {/* STEP 2: PROJECT */}
-                <div className="contact-form__pane" hidden={step !== 1}>
+                <motion.div
+                  className="contact-form__pane"
+                  hidden={step !== 1}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, x: step < 1 ? 24 : -24 }}
+                  animate={step === 1 ? { opacity: 1, x: 0 } : { opacity: 0, x: step > 1 ? -24 : 24 }}
+                  exit={reduce ? { opacity: 0 } : { opacity: 0, x: step > 1 ? -24 : 24 }}
+                  transition={{ duration: duration.ui, ease }}
+                >
                   <Select
                     name="projectType"
                     label="Project Type"
@@ -395,7 +443,12 @@ export function ContactProjectInquiry() {
                         }
                         {...register("message")}
                       />
-                      <span className="contact-form__count" id="cpi-count" aria-live="polite">
+                      <span
+                        className="contact-form__count"
+                        id="cpi-count"
+                        aria-live="polite"
+                        data-near-limit={overviewLength > OVERVIEW_MAX * 0.9 ? "true" : "false"}
+                      >
                         {overviewLength} / {OVERVIEW_MAX}
                       </span>
                     </div>
@@ -435,10 +488,17 @@ export function ContactProjectInquiry() {
                       })}
                     </div>
                   </fieldset>
-                </div>
+                </motion.div>
 
                 {/* STEP 3: DETAILS */}
-                <div className="contact-form__pane" hidden={step !== 2}>
+                <motion.div
+                  className="contact-form__pane"
+                  hidden={step !== 2}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, x: step < 2 ? 24 : -24 }}
+                  animate={step === 2 ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
+                  exit={reduce ? { opacity: 0 } : { opacity: 0, x: -24 }}
+                  transition={{ duration: duration.ui, ease }}
+                >
                   <div className="contact-form__row">
                     <Select
                       name="timeline"
@@ -526,7 +586,7 @@ export function ContactProjectInquiry() {
                       </p>
                     )}
                   </div>
-                </div>
+                </motion.div>
 
                 <div className="contact-form__nav">
                   {step > 0 ? (
@@ -553,7 +613,8 @@ export function ContactProjectInquiry() {
                   Your information is secure and will never be shared.
                 </p>
               </form>
-            </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
