@@ -28,8 +28,11 @@ function hasAllowedExtension(name: string) {
 async function readMultipart(
   req: NextRequest,
 ): Promise<{ body: Record<string, unknown>; attachment?: ContactAttachment } | { error: string; status: number }> {
-  const form = await req.formData().catch(() => null);
-  if (!form) return { error: "Invalid request.", status: 400 };
+  const form = await req.formData().catch((error) => {
+    console.error("[contact] formData parse error:", error instanceof Error ? error.message : String(error));
+    return null;
+  });
+  if (!form) return { error: "Invalid request: failed to parse form data.", status: 400 };
 
   const body: Record<string, unknown> = {};
   let attachment: ContactAttachment | undefined;

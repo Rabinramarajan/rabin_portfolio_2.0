@@ -40,7 +40,8 @@ export interface StoredContact {
 
 export function normalizePayload(raw: unknown): { honeypot: boolean; payload?: ContactPayload; error?: ContactResult } {
   if (!raw || typeof raw !== "object") {
-    return { honeypot: false, error: { ok: false, error: "Invalid request." } };
+    console.error("[contact] Invalid payload type:", typeof raw, "value:", raw);
+    return { honeypot: false, error: { ok: false, error: "Invalid request: payload must be an object." } };
   }
 
   const body = raw as Record<string, unknown>;
@@ -115,7 +116,8 @@ export async function submitContact(
   // Header injection prevention - reject newlines in name/email/message
   const hasNewline = (value: string) => /\r|\n/.test(value);
   if (hasNewline(payload.name) || hasNewline(payload.email) || hasNewline(payload.message)) {
-    return { ok: false, error: "Invalid request." };
+    console.error("[contact] Header injection attempt detected");
+    return { ok: false, error: "Invalid request: contains forbidden characters." };
   }
   const referenceId = createReferenceId(deps.now);
   const receivedAt = (deps.now ?? new Date()).toISOString();
