@@ -101,10 +101,15 @@ export async function POST(req: NextRequest) {
     if (rawText.length > MAX_BODY_BYTES) {
       return NextResponse.json({ error: "Request is too large." }, { status: 413 });
     }
+    if (!rawText) {
+      console.error("[contact] Empty request body received");
+      return NextResponse.json({ error: "Invalid request: body is empty." }, { status: 400 });
+    }
     try {
-      body = rawText ? JSON.parse(rawText) : null;
-    } catch {
-      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+      body = JSON.parse(rawText);
+    } catch (error) {
+      console.error("[contact] JSON parse error:", error instanceof Error ? error.message : String(error));
+      return NextResponse.json({ error: "Invalid request: malformed JSON." }, { status: 400 });
     }
   }
 
