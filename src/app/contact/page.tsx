@@ -1,24 +1,22 @@
-import { ContactPageHero } from "@/components/contact/ContactPageHero";
-import { ContactProjectInquiry } from "@/components/contact/ContactProjectInquiry";
-import { ContactChannelsNew as ContactChannels } from "@/components/contact/ContactChannelsNew";
-import { ContactFinalCTA } from "@/components/contact/ContactFinalCTA";
 import { pageMetadata } from "@/lib/seo";
+import { PremiumContactHero } from "@/components/contact/PremiumContactHero";
+import { PremiumContactForm } from "@/components/contact/PremiumContactForm";
+import { PremiumContactCTA } from "@/components/contact/PremiumContactCTA";
 
 export const metadata = pageMetadata({
-  title: "Contact Rabin R | Premium Engineering & Digital Products",
+  title: "Contact Rabin R | Let's Build Something Amazing",
   description:
-    "Let's build something useful. Have a product, platform, or frontend challenge? Reach out to discuss your next project. Available for select engagements.",
+    "Ready to collaborate? Reach out with your project ideas, challenges, or opportunities. Let's create something impactful together.",
   path: "/contact",
-  keywords: ["contact", "hire", "frontend engineer", "product development", "consulting", "angular"],
+  keywords: ["contact", "hire", "freelance", "project inquiry", "consultation", "collaboration"],
 });
 
 export default function ContactPage() {
   return (
     <>
-      <ContactPageHero />
-      <ContactProjectInquiry />
-      <ContactChannels />
-      <ContactFinalCTA />
+      <PremiumContactHero />
+      <PremiumContactForm />
+      <PremiumContactCTA />
     </>
   );
 }
