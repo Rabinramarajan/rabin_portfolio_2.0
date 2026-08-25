@@ -32,7 +32,7 @@ export function ServicesPage() {
         kicker="02 / SERVICES"
         headline={["KNOW WHAT", "YOU NEED?"]}
         lede="Tell me where the product is and where it has to be. The right engagement becomes obvious quickly."
-        actions={[{ label: "Start a Conversation", href: "/contact" }]}
+        actions={[{ label: "Start a Conversation", href: "/#contact" }]}
       />
     </>
   );

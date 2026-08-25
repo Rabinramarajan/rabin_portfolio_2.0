@@ -18,7 +18,7 @@ const ERROR_TEXT =
 
 const ERROR_ACTIONS: ChatMessage["actions"] = [
   { label: "View Work", type: "internal-link", href: "/work" },
-  { label: "Contact Rabin", type: "internal-link", href: "/contact" },
+  { label: "Contact Rabin", type: "internal-link", href: "/#contact" },
 ];
 
 let messageCounter = 0;

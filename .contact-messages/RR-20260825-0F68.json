@@ -1,0 +1,26 @@
+{
+  "referenceId": "RR-20260825-0F68",
+  "receivedAt": "2026-08-25T13:31:48.764Z",
+  "payload": {
+    "name": "Zellavora Solutions",
+    "email": "zellavorasolutions@gmail.com",
+    "inquiryType": "Project",
+    "message": "i want premium 06 My Process design needed so u give best unique design please /create design",
+    "budget": "₹1L – ₹3L",
+    "timeline": "1–2 weeks",
+    "projectType": "Website",
+    "projectStage": "Design Ready",
+    "engagement": "Monthly Retainer",
+    "referralSource": "Google",
+    "technologies": [
+      "Node.js",
+      "NestJS"
+    ],
+    "attachmentName": "ChatGPT Image Aug 13, 2026, 06_09_42 PM.png"
+  },
+  "notificationStatus": "sent",
+  "acknowledgementStatus": "sent",
+  "notificationAttempts": 0,
+  "acknowledgementAttempts": 0,
+  "lastAttemptAt": "2026-08-25T13:31:55.064Z"
+}

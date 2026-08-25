@@ -53,7 +53,7 @@ export const navigation: NavItem[] = [
   { href: "/experience", label: "Experience" },
   { href: "/#skills", label: "Skills", sectionId: "skills" },
   { href: "/#process", label: "Process", sectionId: "process" },
-  { href: "/contact", label: "Contact Us" },
+  { href: "/#contact", label: "Contact Us", sectionId: "contact" },
 ];
 
 /**
@@ -76,7 +76,7 @@ export const footerNavigation: { explore: NavItem[]; resources: NavItem[] } = {
     { href: "/experience", label: "Experience" },
     { href: "/skills", label: "Skills" },
     { href: "/process", label: "Process" },
-    { href: "/contact", label: "Contact" },
+    { href: "/#contact", label: "Contact", sectionId: "contact" },
   ],
   resources: [
     { href: profile.resumePath, label: "Résumé" },
@@ -109,7 +109,7 @@ export const hero: HeroContent = {
   reel: { src: "/media/hero/banner_v.mp4", poster: "/media/hero/banner-poster.webp" },
   description:
     "Frontend engineer specializing in Angular and modern web application architecture, with a strong focus on performance, usability and product quality.",
-  primaryCta: { label: "Let's Work Together", href: "/contact" },
+  primaryCta: { label: "Let's Work Together", href: "/#contact" },
   secondaryCta: { label: "View Selected Work", href: "/work" },
   metadata: [
     { label: "Role", value: profile.role },

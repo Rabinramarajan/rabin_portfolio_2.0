@@ -60,7 +60,7 @@ function FooterInner() {
               Building scalable, high-performance digital experiences with modern frontend engineering.
             </p>
 
-            <Link className="ft__cta" href="/contact">
+            <Link className="ft__cta" href="/#contact">
               Let&apos;s Work Together
               <span className="ft__cta-go" aria-hidden>
                 <ArrowRight size={16} />
@@ -127,7 +127,7 @@ function FooterInner() {
             <strong>{profile.availability.label}</strong>
             <span>Let&apos;s build something great together.</span>
           </p>
-          <Link className="ft__avail-cta" href="/contact">
+          <Link className="ft__avail-cta" href="/#contact">
             Start a Conversation
             <ArrowUpRight size={16} aria-hidden />
           </Link>

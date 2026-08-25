@@ -21,7 +21,7 @@ export function ContactPage() {
   return (
     <article className="cp">
       <div className="shell">
-        <Breadcrumbs trail={[{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }]} />
+        <Breadcrumbs trail={[{ name: "Home", path: "/" }, { name: "Contact", path: "/#contact" }]} />
       </div>
       <ContactHero />
       <section id="contact-intro" className="cp-talk" aria-labelledby="contact-intro-title">

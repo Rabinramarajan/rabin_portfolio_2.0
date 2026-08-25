@@ -20,8 +20,8 @@ const VIEW_RESUME = link("View Resume", profile.resumePath);
 const VIEW_PROCESS = link("View Process", "/process");
 const VIEW_PRICING = link("Engagement Models", "/pricing");
 const VIEW_INSIGHTS = link("Read Insights", "/insights");
-const CONTACT: ChatAction = link("Contact Rabin", "/contact");
-const START_PROJECT: ChatAction = { label: "Start a Project", type: "lead", href: "/contact" };
+const CONTACT: ChatAction = link("Contact Rabin", "/#contact");
+const START_PROJECT: ChatAction = { label: "Start a Project", type: "lead", href: "/#contact" };
 
 export function buildActions(
   intent: ChatIntent,

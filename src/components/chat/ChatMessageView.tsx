@@ -11,7 +11,7 @@ function actionEvent(action: ChatAction) {
   if (action.type === "lead") return "lead_started" as const;
   if (action.href.startsWith("/work")) return "project_action_clicked" as const;
   if (action.href.startsWith("/resume")) return "resume_action_clicked" as const;
-  if (action.href.startsWith("/contact")) return "contact_action_clicked" as const;
+  if (action.href.startsWith("/contact") || action.href.includes("#contact")) return "contact_action_clicked" as const;
   return "project_action_clicked" as const;
 }
 

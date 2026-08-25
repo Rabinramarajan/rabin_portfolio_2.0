@@ -12,7 +12,6 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/services/web-application-development", priority: 0.85, changeFrequency: "monthly" },
   { path: "/services/mobile-app-development", priority: 0.85, changeFrequency: "monthly" },
   { path: "/freelance-angular-developer", priority: 0.75, changeFrequency: "monthly" },
-  { path: "/contact", priority: 0.8, changeFrequency: "yearly" },
   { path: "/experience", priority: 0.8, changeFrequency: "monthly" },
   { path: "/skills", priority: 0.7, changeFrequency: "monthly" },
   { path: "/process", priority: 0.6, changeFrequency: "yearly" },

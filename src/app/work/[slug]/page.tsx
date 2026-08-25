@@ -340,7 +340,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         </h2>
         <p className="cs__cta-body">Let&apos;s build something production-ready.</p>
         <div className="cs__cta-actions">
-          <Link className="cs__cta-btn cs__cta-btn--solid" href="/contact">
+          <Link className="cs__cta-btn cs__cta-btn--solid" href="/#contact">
             Start a conversation
           </Link>
           <Link className="cs__cta-btn" href="/work">
