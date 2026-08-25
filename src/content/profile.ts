@@ -47,12 +47,16 @@ export const credentials: Credentials = {
 };
 
 export const navigation: NavItem[] = [
-  { href: "/#about", label: "About Us", sectionId: "about" },
-  { href: "/services", label: "Services" },
+  { href: "/services", label: "Service" },
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
   { href: "/#skills", label: "Skills", sectionId: "skills" },
   { href: "/#process", label: "Process", sectionId: "process" },
+];
+
+export const sidebarNavigation: NavItem[] = [
+  { href: "/#", label: "Hero", sectionId: "hero" },
+  { href: "/#about", label: "About Us", sectionId: "about" },
   { href: "/#contact", label: "Contact Us", sectionId: "contact" },
 ];
 

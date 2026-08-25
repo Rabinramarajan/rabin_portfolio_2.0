@@ -3,6 +3,7 @@ import { Inter, Inter_Tight, JetBrains_Mono, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { ProgressSync } from "@/components/ProgressSync";
@@ -91,6 +92,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <JsonLd />
           <ProgressSync />
           <Navbar />
+          <Sidebar />
           <main id="main">{children}</main>
           <Footer />
           <ChatLauncher />
