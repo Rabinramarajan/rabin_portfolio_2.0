@@ -5,7 +5,7 @@ import { profile } from "@/content/profile";
 import { contactCopy } from "@/content/contact";
 import { duration, ease, stagger } from "@/lib/motion";
 import { SectionKicker } from "@/components/ui";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail, Code, User } from "lucide-react";
 
 export function ContactChannelsNew() {
   const reduce = useReducedMotion();
@@ -39,18 +39,21 @@ export function ContactChannelsNew() {
       description: "Best for project briefs and detailed conversations.",
       href: `mailto:${profile.email}`,
       value: profile.email,
+      icon: Mail,
     },
     {
       title: "LinkedIn",
       description: "Professional context, recommendations, and introductions.",
       href: profile.socials.find((s) => s.id === "linkedin")?.href ?? "https://www.linkedin.com/in/rabinr",
       value: "linkedin.com/in/rabinr",
+      icon: User,
     },
     {
       title: "GitHub",
       description: "Code, architecture decisions, and how I ship.",
       href: profile.socials.find((s) => s.id === "github")?.href ?? "https://github.com/Rabinramarajan",
       value: "github.com/Rabinramarajan",
+      icon: Code,
     },
   ];
 
@@ -72,26 +75,32 @@ export function ContactChannelsNew() {
           </motion.div>
 
           <div className="contact-channels-new__grid">
-            {channels.map((channel, index) => (
-              <motion.a
-                key={channel.href}
-                href={channel.href}
-                className="contact-channels-new__row"
-                variants={itemVariants}
-                {...(channel.href.startsWith("http")
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
-              >
-                <div className="contact-channels-new__body">
-                  <h3 className="contact-channels-new__channel-title">{channel.title}</h3>
-                  <p className="contact-channels-new__channel-description">{channel.description}</p>
-                  <p className="contact-channels-new__channel-value">{channel.value}</p>
-                </div>
-                <div className="contact-channels-new__arrow">
-                  <ArrowRight size={18} strokeWidth={2} />
-                </div>
-              </motion.a>
-            ))}
+            {channels.map((channel, index) => {
+              const IconComponent = channel.icon;
+              return (
+                <motion.a
+                  key={channel.href}
+                  href={channel.href}
+                  className="contact-channels-new__row"
+                  variants={itemVariants}
+                  {...(channel.href.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
+                  <div className="contact-channels-new__icon">
+                    <IconComponent size={20} strokeWidth={1.8} />
+                  </div>
+                  <div className="contact-channels-new__body">
+                    <h3 className="contact-channels-new__channel-title">{channel.title}</h3>
+                    <p className="contact-channels-new__channel-description">{channel.description}</p>
+                    <p className="contact-channels-new__channel-value">{channel.value}</p>
+                  </div>
+                  <div className="contact-channels-new__arrow">
+                    <ArrowRight size={18} strokeWidth={2} />
+                  </div>
+                </motion.a>
+              );
+            })}
           </div>
         </motion.div>
       </div>
