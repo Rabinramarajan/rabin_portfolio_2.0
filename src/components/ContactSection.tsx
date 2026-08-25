@@ -432,7 +432,7 @@ export function ContactSection() {
         <div className="cx__grid">
           {/* ---------- left: intro + channels ---------- */}
           <motion.div className="cx__intro" {...view(0)}>
-            <SectionKicker index="08" label="Contact" />
+            <SectionKicker index="02" label="Contact" />
 
             <h2 className="cx__title">
               Let&apos;s build something amazing <em>together.</em>

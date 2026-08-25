@@ -32,7 +32,7 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
               </Heading>
               <p className="pr__lede">{processIntro.lede}</p>
               <div className="pr__intro-actions">
-                <Btn href="/#contact">Let&apos;s work together</Btn>
+                <Btn href="/contact">Let&apos;s work together</Btn>
               </div>
             </div>
             <div className="pr__hero-visual-frame">
@@ -63,7 +63,7 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
               <div className="pr__masthead-aside">
                 <p className="pr__lede">{processIntro.lede}</p>
                 <div className="pr__intro-actions">
-                  <Btn href="/#contact">Let&apos;s work together</Btn>
+                  <Btn href="/contact">Let&apos;s work together</Btn>
                 </div>
               </div>
             </header>
@@ -107,7 +107,7 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
         <h3 className="pr__cta-title">{processIntro.ctaHeading}</h3>
         <p className="pr__cta-lede">{processIntro.ctaLede}</p>
         <div className="pr__cta-actions">
-          <Btn href="/#contact">Start a conversation</Btn>
+          <Btn href="/contact">Start a conversation</Btn>
           <Btn href="/work" variant="line">
             View selected work
           </Btn>

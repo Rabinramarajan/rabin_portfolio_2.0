@@ -49,7 +49,7 @@ function profileRecords(): KnowledgeRecord[] {
         profile.role,
         ...about.industries,
       ]),
-      url: "/#about",
+      url: "/about",
     },
     {
       id: "profile-metrics",
@@ -60,7 +60,7 @@ function profileRecords(): KnowledgeRecord[] {
         `Clients: ${credentials.clients}. ${credentials.commitment.value} ${credentials.commitment.label}. ` +
         `${projects.length} published case studies are on the site.`,
       tags: ["years", "experience", "projects", "clients", "metrics", "track record", "how many"],
-      url: "/#about",
+      url: "/about",
     },
   ];
 }
@@ -237,7 +237,7 @@ function availabilityRecords(): KnowledgeRecord[] {
         "consulting",
         "timezone",
       ],
-      url: "/#contact",
+      url: "/contact",
     },
   ];
 }
@@ -302,10 +302,10 @@ function contactRecords(): KnowledgeRecord[] {
       content: [
         `Email: ${profile.email}. Phone: ${profile.phone} (${profile.phoneHours}).`,
         `LinkedIn: ${contactCopy.channels.linkedin.href}. GitHub: ${contactCopy.channels.github.href}.`,
-        `The contact form at /#contact is the best route for a brief. ${profile.availability.responseTime}.`,
+        `The contact form at /contact is the best route for a brief. ${profile.availability.responseTime}.`,
       ].join(" "),
       tags: ["contact", "email", "phone", "reach", "get in touch", "linkedin", "github", "message", "enquiry"],
-      url: "/#contact",
+      url: "/contact",
     },
   ];
 }

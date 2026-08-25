@@ -112,7 +112,7 @@ export function WorkExplorer({ exclude }: { exclude?: string[] }) {
       )}
 
       <p className="wex__foot">
-        <Link href="/#contact" className="wex__foot-link">
+        <Link href="/contact" className="wex__foot-link">
           Have a project like one of these? Start a conversation →
         </Link>
       </p>

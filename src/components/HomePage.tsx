@@ -2,8 +2,6 @@ import { Hero } from "@/components/Hero";
 import { HeroMotionEnhancer } from "@/components/HeroMotionEnhancer";
 import { WorkMotionEnhancer } from "@/components/WorkMotionEnhancer";
 import { ProcessMotionEnhancer } from "@/components/ProcessMotionEnhancer";
-import { ContactMotionEnhancer } from "@/components/ContactMotionEnhancer";
-import { AboutSection } from "@/components/about/AboutSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { WorkSection } from "@/components/WorkSection";
 import { FaqSection } from "@/components/FaqSection";
@@ -29,7 +27,6 @@ export function HomePage() {
     <>
       <Hero />
       <HeroMotionEnhancer />
-      <AboutSection />
       <ServicesSection id="services" />
       <WorkSection id="work" limit={4} />
       <WorkMotionEnhancer />
@@ -39,8 +36,6 @@ export function HomePage() {
       <ProcessMotionEnhancer />
       <FaqSection />
       <FaqJsonLd />
-      <ContactSection />
-      <ContactMotionEnhancer />
     </>
   );
 }

@@ -13,6 +13,7 @@ export function Sidebar() {
   const isActive = (item: (typeof sidebarNavigation)[number]) => {
     if (item.sectionId && pathname === "/" && activeSection === item.sectionId) return true;
     if (item.sectionId && pathname === `/${item.sectionId}`) return true;
+    if (item.href.startsWith("/") && !item.href.includes("#")) return pathname === item.href;
     return false;
   };
 

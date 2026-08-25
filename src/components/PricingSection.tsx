@@ -59,7 +59,7 @@ export function PricingSection({ headingLevel = "h2" }: { headingLevel?: Section
                 </div>
                 <div>
                   <p className="eng-row__price">{lead?.startingLabel ?? "Starting from — Let's discuss"}</p>
-                  <Btn href="/#contact" variant="line">
+                  <Btn href="/contact" variant="line">
                     Discuss {model.title}
                   </Btn>
                 </div>

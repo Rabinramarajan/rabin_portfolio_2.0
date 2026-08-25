@@ -109,7 +109,7 @@ export function WorkPage() {
         headline={["Have a similar", "challenge?"]}
         lede="Let's build something production-ready."
         actions={[
-          { label: "Start a conversation", href: "/#contact" },
+          { label: "Start a conversation", href: "/contact" },
           { label: "Read the process", href: "/process", variant: "line" },
         ]}
       />

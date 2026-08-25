@@ -126,7 +126,7 @@ export function ExperiencePage() {
         lede="The work is the argument. Let's make the next one count."
         actions={[
           { label: "View Selected Work", href: "/work", variant: "line" },
-          { label: "Let's Work Together", href: "/#contact" },
+          { label: "Let's Work Together", href: "/contact" },
         ]}
       />
     </>

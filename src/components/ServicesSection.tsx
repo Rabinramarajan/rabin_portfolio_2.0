@@ -60,7 +60,7 @@ export function ServicesSection({
             <span className="svx__aside-rule" aria-hidden />
             <div>
               <p className="svx__lede">{intro.lede}</p>
-              <Link className="svx__cta" href="/#contact">
+              <Link className="svx__cta" href="/contact">
                 <span>Let&rsquo;s Build Something Great</span>
                 <span className="svx__cta-arrow" aria-hidden>
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
