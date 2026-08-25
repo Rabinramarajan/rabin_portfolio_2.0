@@ -1,0 +1,16 @@
+{
+  "referenceId": "RR-20260825-7509",
+  "receivedAt": "2026-08-25T13:12:57.500Z",
+  "payload": {
+    "name": "Playwright Test",
+    "email": "test@example.com",
+    "inquiryType": "Project",
+    "message": "This is a comprehensive test message to validate the contact form is working properly with all required fields."
+  },
+  "notificationStatus": "sent",
+  "acknowledgementStatus": "failed",
+  "notificationAttempts": 0,
+  "acknowledgementAttempts": 0,
+  "lastEmailError": "validation_error: Invalid `to` field. Please use our testing email address instead of domains like `example.com`. See our documentation for more information.",
+  "lastAttemptAt": "2026-08-25T13:12:58.458Z"
+}

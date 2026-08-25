@@ -59,13 +59,25 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
     setSubmitState("loading");
     setServerMessage("");
     try {
+      const payload = {
+        ...values,
+        website: values.website ?? "",
+      };
+      const bodyString = JSON.stringify(payload);
+      if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+        console.log("[contact-form] Submitting:", {
+          fields: Object.keys(payload),
+          bodyLength: bodyString.length,
+          hasName: !!payload.name,
+          hasEmail: !!payload.email,
+          hasMessage: !!payload.message,
+          hasInquiryType: !!payload.inquiryType,
+        });
+      }
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...values,
-          website: values.website ?? "",
-        }),
+        body: bodyString,
       });
       const body = (await res.json().catch(() => null)) as {
         ok?: boolean;
@@ -74,6 +86,15 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
         error?: string;
         fieldErrors?: Record<string, string[]>;
       } | null;
+
+      if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+        console.log("[contact-form] Response:", {
+          status: res.status,
+          ok: res.ok,
+          error: body?.error,
+          hasFieldErrors: !!body?.fieldErrors,
+        });
+      }
 
       if (res.ok && body?.ok) {
         setReferenceId(body.referenceId ?? "");
