@@ -6,9 +6,9 @@ export const contactCopy = {
   hero: {
     index: "08",
     label: "Contact",
-    title: ["Let's build something", "worth shipping."],
+    title: ["Let's build", "something", "useful."],
     lede:
-      "Reach out for frontend engineering, Angular development, product work, consulting, collaboration, or selected career conversations. I read every note personally.",
+      "Have a product, platform, or frontend challenge in mind? Tell me what you're building and I'll help you figure out the next step.",
     availability: profile.availability.label,
   },
   media: {
