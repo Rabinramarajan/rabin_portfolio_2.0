@@ -1,27 +1,9 @@
 "use client";
 
 import { useReducedMotion, motion } from "motion/react";
-import { Clock, Headphones, Send, ShieldCheck } from "lucide-react";
+import { Send } from "lucide-react";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { duration, ease } from "@/lib/motion";
-
-const TRUST_ITEMS = [
-  {
-    icon: Clock,
-    label: "Quick Response",
-    desc: "I typically respond within 24 hours.",
-  },
-  {
-    icon: Headphones,
-    label: "Let's Connect",
-    desc: "Easy communication through your preferred way.",
-  },
-  {
-    icon: ShieldCheck,
-    label: "Trusted & Secure",
-    desc: "Your data is safe with privacy guaranteed.",
-  },
-] as const;
 
 export function PremiumContactForm() {
   const reduce = useReducedMotion();
@@ -74,17 +56,6 @@ export function PremiumContactForm() {
 
         <ContactForm />
       </motion.div>
-
-      {/* Trust strip */}
-      <motion.ul className="premium-contact-form__trust" variants={itemVariants}>
-        {TRUST_ITEMS.map(({ icon: Icon, label, desc }) => (
-          <li key={label} className="premium-contact-form__trust-item">
-            <Icon size={22} className="premium-contact-form__trust-icon" aria-hidden="true" />
-            <span className="premium-contact-form__trust-label">{label}</span>
-            <span className="premium-contact-form__trust-desc">{desc}</span>
-          </li>
-        ))}
-      </motion.ul>
     </motion.div>
   );
 }

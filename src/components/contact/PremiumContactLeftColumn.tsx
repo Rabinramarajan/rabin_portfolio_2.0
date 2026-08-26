@@ -1,10 +1,28 @@
 "use client";
 
 import { useReducedMotion, motion } from "motion/react";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Headphones, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { TextReveal } from "@/components/motion";
 import { contactCopy, contactInfo } from "@/content/contact";
 import { duration, ease } from "@/lib/motion";
+
+const TRUST_ITEMS = [
+  {
+    icon: Clock,
+    label: "Quick Response",
+    desc: "I typically respond within 24 hours.",
+  },
+  {
+    icon: Headphones,
+    label: "Let's Connect",
+    desc: "Easy communication through your preferred way.",
+  },
+  {
+    icon: ShieldCheck,
+    label: "Trusted & Secure",
+    desc: "Your data is safe with privacy guaranteed.",
+  },
+] as const;
 
 type Detail = {
   key: string;
@@ -146,6 +164,17 @@ export function PremiumContactLeftColumn() {
           when ideas <span className="premium-contact-left-column__quote-accent">connect</span>.
         </p>
       </motion.blockquote>
+
+      {/* Trust strip */}
+      <motion.ul className="premium-contact-form__trust" variants={itemVariants}>
+        {TRUST_ITEMS.map(({ icon: Icon, label, desc }) => (
+          <li key={label} className="premium-contact-form__trust-item">
+            <Icon size={22} className="premium-contact-form__trust-icon" aria-hidden="true" />
+            <span className="premium-contact-form__trust-label">{label}</span>
+            <span className="premium-contact-form__trust-desc">{desc}</span>
+          </li>
+        ))}
+      </motion.ul>
     </motion.div>
   );
 }
