@@ -5,9 +5,10 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, Check, ChevronDown, CircleAlert, LoaderCircle } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, CircleAlert, LoaderCircle, Paperclip, X } from "lucide-react";
 import Link from "next/link";
 import { contactSchema, type ContactInput } from "@/lib/contact/validation";
+import { ATTACHMENT, CONTACT_ROLES, PROJECT_STAGES, PROJECT_TYPES } from "@/content/contact-fields";
 import { contactCopy } from "@/content/contact";
 import { profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
@@ -15,6 +16,12 @@ import { cn } from "@/lib/cn";
 import type { InquiryType } from "@/types/contact";
 
 type SubmitState = "idle" | "loading" | "ok" | "err";
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 const defaults = (inquiryType?: InquiryType): ContactInput => ({
   name: "",
@@ -28,6 +35,8 @@ const defaults = (inquiryType?: InquiryType): ContactInput => ({
   preferredContact: "",
   message: "",
   website: "",
+  role: "",
+  projectStage: "",
 });
 
 export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: InquiryType }) {
@@ -38,6 +47,35 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
   const [referenceId, setReferenceId] = useState("");
   const [responseTime, setResponseTime] = useState(profile.availability.responseTime);
   const [detailsOpen, setDetailsOpen] = useState(Boolean(defaultInquiryType));
+
+  const [file, setFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState("");
+  const [fileKey, setFileKey] = useState(0);
+
+  function clearFile() {
+    setFile(null);
+    setFileError("");
+    setFileKey((k) => k + 1);
+  }
+
+  function pickFile(picked: File | null) {
+    if (!picked) {
+      clearFile();
+      return;
+    }
+    if (picked.size > ATTACHMENT.maxBytes) {
+      clearFile();
+      setFileError(`That file is ${formatBytes(picked.size)} — keep it under ${ATTACHMENT.maxLabel}.`);
+      return;
+    }
+    if (!ATTACHMENT.extensions.some((ext) => picked.name.toLowerCase().endsWith(ext))) {
+      clearFile();
+      setFileError("Use a PDF, DOC/DOCX, PNG/JPG or ZIP file.");
+      return;
+    }
+    setFileError("");
+    setFile(picked);
+  }
 
   const {
     register,
@@ -59,26 +97,40 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
     setSubmitState("loading");
     setServerMessage("");
     try {
-      const payload = {
-        ...values,
-        website: values.website ?? "",
-      };
-      const bodyString = JSON.stringify(payload);
-      if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
-        console.log("[contact-form] Submitting:", {
-          fields: Object.keys(payload),
-          bodyLength: bodyString.length,
-          hasName: !!payload.name,
-          hasEmail: !!payload.email,
-          hasMessage: !!payload.message,
-          hasInquiryType: !!payload.inquiryType,
+      let res: Response;
+      if (file) {
+        const body = new FormData();
+        body.set("name", values.name);
+        body.set("email", values.email);
+        body.set("message", values.message);
+        if (values.inquiryType) body.set("inquiryType", values.inquiryType);
+        if (values.projectType) body.set("projectType", values.projectType);
+        if (values.company) body.set("company", values.company);
+        if (values.projectUrl) body.set("projectUrl", values.projectUrl);
+        if (values.budget) body.set("budget", values.budget);
+        if (values.timeline) body.set("timeline", values.timeline);
+        if (values.preferredContact) body.set("preferredContact", values.preferredContact);
+        if (values.role) body.set("role", values.role);
+        if (values.projectStage) body.set("projectStage", values.projectStage);
+        body.set("website", values.website ?? "");
+        body.set("attachment", file);
+
+        res = await fetch("/api/contact", {
+          method: "POST",
+          body,
+        });
+      } else {
+        const payload = {
+          ...values,
+          website: values.website ?? "",
+        };
+        res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
       }
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: bodyString,
-      });
+
       const body = (await res.json().catch(() => null)) as {
         ok?: boolean;
         referenceId?: string;
@@ -86,15 +138,6 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
         error?: string;
         fieldErrors?: Record<string, string[]>;
       } | null;
-
-      if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
-        console.log("[contact-form] Response:", {
-          status: res.status,
-          ok: res.ok,
-          error: body?.error,
-          hasFieldErrors: !!body?.fieldErrors,
-        });
-      }
 
       if (res.ok && body?.ok) {
         setReferenceId(body.referenceId ?? "");
@@ -176,6 +219,7 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
             className="btn btn--line"
             onClick={() => {
               reset(defaults(defaultInquiryType));
+              clearFile();
               setMessageLen(0);
               setSubmitState("idle");
               setReferenceId("");
@@ -299,7 +343,41 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
             />
           </Field>
         </div>
+
         <div className="cp-form__grid">
+          <Field label="Project type" htmlFor="cp-project-type" error={errors.projectType?.message}>
+            <select id="cp-project-type" {...register("projectType")}>
+              <option value="">Select project type</option>
+              {PROJECT_TYPES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Your role" htmlFor="cp-role" error={errors.role?.message}>
+            <select id="cp-role" {...register("role")}>
+              <option value="">Select your role</option>
+              {CONTACT_ROLES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </Field>
+        </div>
+
+        <div className="cp-form__grid">
+          <Field label="Project stage" htmlFor="cp-stage" error={errors.projectStage?.message}>
+            <select id="cp-stage" {...register("projectStage")}>
+              <option value="">Select project stage</option>
+              {PROJECT_STAGES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </Field>
           <Field label="Budget" htmlFor="cp-budget" error={errors.budget?.message}>
             <select id="cp-budget" {...register("budget")}>
               <option value="">Not sure yet</option>
@@ -310,6 +388,9 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
               ))}
             </select>
           </Field>
+        </div>
+
+        <div className="cp-form__grid">
           <Field label="Timeline" htmlFor="cp-timeline" error={errors.timeline?.message}>
             <select id="cp-timeline" {...register("timeline")}>
               <option value="">Flexible</option>
@@ -320,16 +401,60 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
               ))}
             </select>
           </Field>
+          <Field label="Preferred contact method" htmlFor="cp-method" error={errors.preferredContact?.message}>
+            <select id="cp-method" {...register("preferredContact")}>
+              <option value="">No preference</option>
+              {contactCopy.form.preferredContact.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </Field>
         </div>
-        <Field label="Preferred contact method" htmlFor="cp-method" error={errors.preferredContact?.message}>
-          <select id="cp-method" {...register("preferredContact")}>
-            <option value="">No preference</option>
-            {contactCopy.form.preferredContact.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
+
+        <Field label="Attachment" htmlFor="cp-file" error={fileError}>
+          <div style={{ width: "100%" }}>
+            <input
+              key={fileKey}
+              id="cp-file"
+              className="visually-hidden"
+              type="file"
+              accept={ATTACHMENT.extensions.join(",")}
+              aria-describedby="cp-file-hint"
+              onChange={(event) => pickFile(event.target.files?.[0] ?? null)}
+            />
+            <label
+              className={cn("contact-form__attach", file && "has-file")}
+              htmlFor="cp-file"
+              style={{ cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", minWidth: 0, flex: 1 }}>
+                <Paperclip size={15} aria-hidden style={{ flexShrink: 0 }} />
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {file ? `${file.name} · ${formatBytes(file.size)}` : "Choose a file"}
+                </span>
+              </div>
+              {file && (
+                <button
+                  type="button"
+                  className="contact-form__attach-remove"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    clearFile();
+                  }}
+                  title="Remove attachment"
+                  aria-label="Remove attachment"
+                >
+                  <X size={15} aria-hidden />
+                </button>
+              )}
+            </label>
+            <p className="cp-hint" id="cp-file-hint" style={{ marginTop: "6px" }}>
+              PDF, DOC/DOCX, PNG/JPG or ZIP · up to {ATTACHMENT.maxLabel}
+            </p>
+          </div>
         </Field>
       </div>
 
