@@ -190,6 +190,26 @@ export function Navbar() {
                     </Link>
                   </motion.li>
                 ))}
+                <motion.li
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: reduce ? 0 : 0.1 + navigation.length * 0.06, duration: duration.ui, ease }}
+                >
+                  <Link href="/about" className={isActive({ href: "/about", label: "About" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
+                    <span className="mm__index">{String(navigation.length + 1).padStart(2, "0")}</span>
+                    About
+                  </Link>
+                </motion.li>
+                <motion.li
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: reduce ? 0 : 0.1 + (navigation.length + 1) * 0.06, duration: duration.ui, ease }}
+                >
+                  <Link href="/contact" className={isActive({ href: "/contact", label: "Contact" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
+                    <span className="mm__index">{String(navigation.length + 2).padStart(2, "0")}</span>
+                    Contact
+                  </Link>
+                </motion.li>
               </ul>
             </nav>
             <motion.div
