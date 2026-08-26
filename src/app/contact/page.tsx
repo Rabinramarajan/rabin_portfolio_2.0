@@ -1,7 +1,9 @@
 import { pageMetadata } from "@/lib/seo";
 import { PremiumContactHero } from "@/components/contact/PremiumContactHero";
-import { PremiumContactForm } from "@/components/contact/PremiumContactForm";
-import { PremiumContactCTA } from "@/components/contact/PremiumContactCTA";
+import { PremiumContactLayout } from "@/components/contact/PremiumContactLayout";
+import { PremiumContactLeftColumn } from "@/components/contact/PremiumContactLeftColumn";
+import { PremiumContactCenterVisual } from "@/components/contact/PremiumContactCenterVisual";
+import { PremiumContactRightColumn } from "@/components/contact/PremiumContactRightColumn";
 
 export const metadata = pageMetadata({
   title: "Contact Rabin R | Let's Build Something Amazing",
@@ -15,8 +17,13 @@ export default function ContactPage() {
   return (
     <>
       <PremiumContactHero />
-      <PremiumContactForm />
-      <PremiumContactCTA />
+      <div className="shell">
+        <PremiumContactLayout
+          left={<PremiumContactLeftColumn />}
+          center={<PremiumContactCenterVisual />}
+          right={<PremiumContactRightColumn />}
+        />
+      </div>
     </>
   );
 }

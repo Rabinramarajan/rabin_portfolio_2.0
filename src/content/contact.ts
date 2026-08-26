@@ -141,3 +141,12 @@ export function inquiryFromIntent(intent?: string): InquiryType | undefined {
   if (!intent) return undefined;
   return INTENT_TO_INQUIRY[intent] ?? "Project";
 }
+
+export const contactInfo = {
+  email: profile.email,
+  phone: profile.phone,
+  phoneHours: profile.phoneHours,
+  location: profile.location,
+  availability: profile.availability.label,
+  responseTime: profile.availability.responseTime,
+} as const;

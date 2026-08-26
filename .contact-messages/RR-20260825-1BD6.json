@@ -1,0 +1,16 @@
+{
+  "referenceId": "RR-20260825-1BD6",
+  "receivedAt": "2026-08-25T20:45:01.478Z",
+  "payload": {
+    "name": "Test User",
+    "email": "test@example.com",
+    "inquiryType": "Project",
+    "message": "This is a test message to verify the contact form is working correctly."
+  },
+  "notificationStatus": "sent",
+  "acknowledgementStatus": "failed",
+  "notificationAttempts": 0,
+  "acknowledgementAttempts": 0,
+  "lastEmailError": "validation_error: Invalid `to` field. Please use our testing email address instead of domains like `example.com`. See our documentation for more information.",
+  "lastAttemptAt": "2026-08-25T20:45:03.479Z"
+}
