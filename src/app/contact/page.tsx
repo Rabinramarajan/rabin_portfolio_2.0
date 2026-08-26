@@ -4,6 +4,7 @@ import { PremiumContactLayout } from "@/components/contact/PremiumContactLayout"
 import { PremiumContactLeftColumn } from "@/components/contact/PremiumContactLeftColumn";
 import { PremiumContactCenterVisual } from "@/components/contact/PremiumContactCenterVisual";
 import { PremiumContactRightColumn } from "@/components/contact/PremiumContactRightColumn";
+import { PremiumContactProjectCta } from "@/components/contact/PremiumContactProjectCta";
 
 export const metadata = pageMetadata({
   title: "Contact Rabin R | Let's Build Something Amazing",
@@ -22,6 +23,7 @@ export default function ContactPage() {
           left={<PremiumContactLeftColumn />}
           center={<PremiumContactCenterVisual />}
           right={<PremiumContactRightColumn />}
+          footer={<PremiumContactProjectCta />}
         />
       </div>
     </>

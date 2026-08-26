@@ -1,9 +1,52 @@
 "use client";
 
 import { useReducedMotion, motion } from "motion/react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { TextReveal } from "@/components/motion";
 import { contactCopy, contactInfo } from "@/content/contact";
 import { duration, ease } from "@/lib/motion";
+
+type Detail = {
+  key: string;
+  icon: typeof Mail;
+  label: string;
+  value: string;
+  sub?: string;
+  href?: string;
+};
+
+const details: Detail[] = [
+  contactInfo.email && {
+    key: "email",
+    icon: Mail,
+    label: "Email",
+    value: contactInfo.email,
+    sub: "Send me an email anytime",
+    href: `mailto:${contactInfo.email}`,
+  },
+  contactInfo.phone && {
+    key: "phone",
+    icon: Phone,
+    label: "Phone",
+    value: contactInfo.phone,
+    sub: contactInfo.phoneHours,
+    href: `tel:${contactInfo.phone.replace(/\s/g, "")}`,
+  },
+  contactInfo.location && {
+    key: "location",
+    icon: MapPin,
+    label: "Location",
+    value: contactInfo.location,
+    sub: "Available for remote work",
+  },
+  contactInfo.availability && {
+    key: "availability",
+    icon: Clock,
+    label: "Availability",
+    value: contactInfo.availability,
+    sub: "Open to new opportunities",
+  },
+].filter(Boolean) as Detail[];
 
 export function PremiumContactLeftColumn() {
   const reduce = useReducedMotion();
@@ -50,7 +93,7 @@ export function PremiumContactLeftColumn() {
 
       {/* Main heading */}
       <TextReveal
-        lines={contactCopy.hero.title}
+        lines={[...contactCopy.hero.title]}
         as="h1"
         className="premium-contact-left-column__title"
         delay={reduce ? 0 : 0.12}
@@ -69,60 +112,29 @@ export function PremiumContactLeftColumn() {
         aria-hidden="true"
       />
 
-      {/* Contact details grid */}
-      <motion.div
-        className="premium-contact-left-column__details"
-        variants={itemVariants}
-      >
-        {contactInfo && (
-          <>
-            {contactInfo.email && (
-              <div className="premium-contact-left-column__detail-item">
-                <span className="premium-contact-left-column__detail-label">Email</span>
-                <a
-                  href={`mailto:${contactInfo.email}`}
-                  className="premium-contact-left-column__detail-value"
-                >
-                  {contactInfo.email}
+      {/* Contact rails */}
+      <motion.ul className="premium-contact-left-column__details" variants={itemVariants}>
+        {details.map(({ key, icon: Icon, label, value, sub, href }) => (
+          <li key={key} className="premium-contact-left-column__detail-item">
+            <span className="premium-contact-left-column__detail-icon" aria-hidden="true">
+              <Icon size={20} />
+            </span>
+            <span className="premium-contact-left-column__detail-body">
+              <span className="premium-contact-left-column__detail-label">{label}</span>
+              {href ? (
+                <a href={href} className="premium-contact-left-column__detail-value">
+                  {value}
                 </a>
-              </div>
-            )}
-
-            {contactInfo.phone && (
-              <div className="premium-contact-left-column__detail-item">
-                <span className="premium-contact-left-column__detail-label">Phone</span>
-                <a
-                  href={`tel:${contactInfo.phone.replace(/\s/g, "")}`}
-                  className="premium-contact-left-column__detail-value"
-                >
-                  {contactInfo.phone}
-                </a>
-                <span className="premium-contact-left-column__detail-subtext">
-                  {contactInfo.phoneHours}
-                </span>
-              </div>
-            )}
-
-            {contactInfo.location && (
-              <div className="premium-contact-left-column__detail-item">
-                <span className="premium-contact-left-column__detail-label">Location</span>
-                <address className="premium-contact-left-column__detail-value">
-                  {contactInfo.location}
-                </address>
-              </div>
-            )}
-
-            {contactInfo.availability && (
-              <div className="premium-contact-left-column__detail-item">
-                <span className="premium-contact-left-column__detail-label">Availability</span>
-                <p className="premium-contact-left-column__detail-value">
-                  {contactInfo.availability}
-                </p>
-              </div>
-            )}
-          </>
-        )}
-      </motion.div>
+              ) : (
+                <span className="premium-contact-left-column__detail-value">{value}</span>
+              )}
+              {sub ? (
+                <span className="premium-contact-left-column__detail-subtext">{sub}</span>
+              ) : null}
+            </span>
+          </li>
+        ))}
+      </motion.ul>
 
       {/* Quote section */}
       <motion.blockquote

@@ -34,7 +34,7 @@ export function PremiumContactCenterVisual({ children }: PremiumContactCenterVis
           fill
           priority
           className="premium-contact-center-visual__image"
-          sizes="(max-width: 560px) 280px, (max-width: 1023px) 380px, 500px"
+          sizes="(max-width: 560px) 24rem, (max-width: 1023px) 34rem, 46vw"
         />
       )}
     </motion.div>

@@ -1,9 +1,27 @@
 "use client";
 
 import { useReducedMotion, motion } from "motion/react";
-import { Mail, MessageSquare } from "lucide-react";
+import { Clock, Headphones, Send, ShieldCheck } from "lucide-react";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { duration, ease } from "@/lib/motion";
+
+const TRUST_ITEMS = [
+  {
+    icon: Clock,
+    label: "Quick Response",
+    desc: "I typically respond within 24 hours.",
+  },
+  {
+    icon: Headphones,
+    label: "Let's Connect",
+    desc: "Easy communication through your preferred way.",
+  },
+  {
+    icon: ShieldCheck,
+    label: "Trusted & Secure",
+    desc: "Your data is safe with privacy guaranteed.",
+  },
+] as const;
 
 export function PremiumContactForm() {
   const reduce = useReducedMotion();
@@ -32,56 +50,41 @@ export function PremiumContactForm() {
   };
 
   return (
-    <section className="premium-contact-form" id="contact-form">
-      <div className="premium-contact-form__backdrop" aria-hidden="true" />
-
-      <div className="shell">
-        <motion.div
-          className="premium-contact-form__container"
-          initial="hidden"
-          whileInView="show"
-          variants={containerVariants}
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          {/* Section header */}
-          <motion.div className="premium-contact-form__header" variants={itemVariants}>
-            <div className="premium-contact-form__eyebrow">
-              <MessageSquare size={18} aria-hidden="true" />
-              <span>Get in Touch</span>
-            </div>
-            <h2 className="premium-contact-form__title">Send me a message</h2>
+    <motion.div
+      className="premium-contact-form"
+      id="contact-form"
+      initial="hidden"
+      whileInView="show"
+      variants={containerVariants}
+      viewport={{ once: true, margin: "-100px" }}
+    >
+      {/* Form panel */}
+      <motion.div className="premium-contact-form__panel" variants={itemVariants}>
+        <div className="premium-contact-form__header">
+          <span className="premium-contact-form__badge" aria-hidden="true">
+            <Send size={20} />
+          </span>
+          <div>
+            <h2 className="premium-contact-form__title">Send a message</h2>
             <p className="premium-contact-form__subtitle">
-              I typically respond within 24 hours. Tell me about your project, challenge, or opportunity.
+              I&rsquo;ll get back to you as soon as possible.
             </p>
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Form container with glass effect */}
-          <motion.div className="premium-contact-form__form-wrapper" variants={itemVariants}>
-            <div className="premium-contact-form__glass">
-              <ContactForm />
-            </div>
-          </motion.div>
+        <ContactForm />
+      </motion.div>
 
-          {/* Trust badges */}
-          <motion.div className="premium-contact-form__trust" variants={itemVariants}>
-            <div className="premium-contact-form__trust-item">
-              <Mail size={20} className="premium-contact-form__trust-icon" aria-hidden="true" />
-              <div>
-                <div className="premium-contact-form__trust-label">Secure</div>
-                <div className="premium-contact-form__trust-desc">End-to-end encrypted</div>
-              </div>
-            </div>
-            <div className="premium-contact-form__divider" aria-hidden="true" />
-            <div className="premium-contact-form__trust-item">
-              <MessageSquare size={20} className="premium-contact-form__trust-icon" aria-hidden="true" />
-              <div>
-                <div className="premium-contact-form__trust-label">Fast Response</div>
-                <div className="premium-contact-form__trust-desc">Usually within 1 day</div>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
+      {/* Trust strip */}
+      <motion.ul className="premium-contact-form__trust" variants={itemVariants}>
+        {TRUST_ITEMS.map(({ icon: Icon, label, desc }) => (
+          <li key={label} className="premium-contact-form__trust-item">
+            <Icon size={22} className="premium-contact-form__trust-icon" aria-hidden="true" />
+            <span className="premium-contact-form__trust-label">{label}</span>
+            <span className="premium-contact-form__trust-desc">{desc}</span>
+          </li>
+        ))}
+      </motion.ul>
+    </motion.div>
   );
 }
