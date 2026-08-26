@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, JetBrains_Mono, Caveat } from "next/font/google";
+import { Inter, Inter_Tight, JetBrains_Mono, Caveat, Bodoni_Moda, Jost } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Navbar } from "@/components/Navbar";
@@ -35,6 +35,20 @@ const caveat = Caveat({
   display: "optional",
   weight: ["500", "600"],
   preload: false,
+});
+const bodoniModa = Bodoni_Moda({
+  subsets: ["latin"],
+  variable: "--font-premium-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  preload: true,
+});
+const jost = Jost({
+  subsets: ["latin"],
+  variable: "--font-premium-body",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -81,7 +95,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={[inter.variable, tight.variable, mono.variable, caveat.variable].join(" ")}
+      className={[inter.variable, tight.variable, mono.variable, caveat.variable, bodoniModa.variable, jost.variable].join(" ")}
     >
       <body>
         <ScrollProgressIndicator />

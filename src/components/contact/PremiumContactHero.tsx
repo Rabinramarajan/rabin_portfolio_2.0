@@ -37,14 +37,6 @@ export function PremiumContactHero() {
           <p className="premium-contact-hero__subtitle">
             Let's start a conversation about your next project
           </p>
-          <div className="premium-contact-hero__cta-wrapper">
-            <a href="#contact-form" className="premium-contact-hero__cta">
-              <span className="premium-contact-hero__cta-text">Get in Touch</span>
-              <svg className="premium-contact-hero__cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
         </div>
       </div>
 

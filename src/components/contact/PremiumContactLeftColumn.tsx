@@ -2,27 +2,8 @@
 
 import { useReducedMotion, motion } from "motion/react";
 import { Clock, Headphones, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
-import { TextReveal } from "@/components/motion";
-import { contactCopy, contactInfo } from "@/content/contact";
+import { contactInfo } from "@/content/contact";
 import { duration, ease } from "@/lib/motion";
-
-const TRUST_ITEMS = [
-  {
-    icon: Clock,
-    label: "Quick Response",
-    desc: "I typically respond within 24 hours.",
-  },
-  {
-    icon: Headphones,
-    label: "Let's Connect",
-    desc: "Easy communication through your preferred way.",
-  },
-  {
-    icon: ShieldCheck,
-    label: "Trusted & Secure",
-    desc: "Your data is safe with privacy guaranteed.",
-  },
-] as const;
 
 type Detail = {
   key: string;
@@ -66,6 +47,24 @@ const details: Detail[] = [
   },
 ].filter(Boolean) as Detail[];
 
+const TRUST_ITEMS = [
+  {
+    icon: Clock,
+    label: "Quick Response",
+    desc: "I typically respond within 24 hours.",
+  },
+  {
+    icon: Headphones,
+    label: "Let's Connect",
+    desc: "Easy communication through your preferred way.",
+  },
+  {
+    icon: ShieldCheck,
+    label: "Trusted & Secure",
+    desc: "Your data is safe with privacy guaranteed.",
+  },
+] as const;
+
 export function PremiumContactLeftColumn() {
   const reduce = useReducedMotion();
 
@@ -99,37 +98,6 @@ export function PremiumContactLeftColumn() {
       variants={containerVariants}
       className="premium-contact-left-column"
     >
-      {/* Eyebrow label */}
-      <motion.div className="premium-contact-left-column__eyebrow" variants={itemVariants}>
-        <span className="premium-contact-left-column__index">
-          {contactCopy.hero.index}
-        </span>
-        <span className="premium-contact-left-column__label">
-          {contactCopy.hero.label}
-        </span>
-      </motion.div>
-
-      {/* Main heading */}
-      <TextReveal
-        lines={[...contactCopy.hero.title]}
-        as="h1"
-        className="premium-contact-left-column__title"
-        delay={reduce ? 0 : 0.12}
-        accentIndex={2}
-      />
-
-      {/* Description */}
-      <motion.p className="premium-contact-left-column__description" variants={itemVariants}>
-        {contactCopy.hero.lede}
-      </motion.p>
-
-      {/* Divider */}
-      <motion.div
-        className="premium-contact-left-column__divider"
-        variants={itemVariants}
-        aria-hidden="true"
-      />
-
       {/* Contact rails */}
       <motion.ul className="premium-contact-left-column__details" variants={itemVariants}>
         {details.map(({ key, icon: Icon, label, value, sub, href }) => (
