@@ -14685,40 +14685,6 @@ a.premium-contact-left-column__detail-value:hover {
   color: var(--color-text-muted);
 }
 
-/* Quote card */
-.premium-contact-left-column__quote {
-  position: relative;
-  margin: 0;
-  padding: clamp(1.5rem, 3vw, 2rem);
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(13, 14, 16, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.premium-contact-left-column__quote::before {
-  content: "\201C";
-  display: block;
-  font-family: var(--font-display);
-  font-size: 3rem;
-  line-height: 0.7;
-  color: var(--color-accent);
-  margin-bottom: var(--space-12);
-}
-
-.premium-contact-left-column__quote-text {
-  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--color-text);
-  margin: 0;
-}
-
-.premium-contact-left-column__quote-accent {
-  color: var(--color-accent);
-}
-
 /* ============================================================
    PREMIUM CONTACT CENTER VISUAL STYLES
    ============================================================ */

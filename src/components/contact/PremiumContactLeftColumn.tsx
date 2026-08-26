@@ -154,17 +154,6 @@ export function PremiumContactLeftColumn() {
         ))}
       </motion.ul>
 
-      {/* Quote section */}
-      <motion.blockquote
-        className="premium-contact-left-column__quote"
-        variants={itemVariants}
-      >
-        <p className="premium-contact-left-column__quote-text">
-          Great things happen<br />
-          when ideas <span className="premium-contact-left-column__quote-accent">connect</span>.
-        </p>
-      </motion.blockquote>
-
       {/* Trust strip */}
       <motion.ul className="premium-contact-form__trust" variants={itemVariants}>
         {TRUST_ITEMS.map(({ icon: Icon, label, desc }) => (
