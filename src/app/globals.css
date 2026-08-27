@@ -1116,6 +1116,7 @@ code {
   background: linear-gradient(178deg, #ffffff 0%, #cfcec8 52%, #8e8d88 100%);
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: transparent;
 }
 .chero__word--accent {
@@ -1127,6 +1128,7 @@ code {
   );
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: transparent;
 }
 .chero__disciplines {
