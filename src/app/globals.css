@@ -612,7 +612,9 @@ code {
   display: flex;
   align-items: center;
   border-bottom: 1px solid transparent;
-  background: transparent;
+  background: rgb(10 10 12 / 35%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition:
     background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
