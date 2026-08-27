@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, type ReactNode } from "react";
 import { duration, ease, stagger } from "@/lib/motion";
 import { cn } from "@/lib/cn";
@@ -89,53 +89,90 @@ export function TextReveal({
 
 /* ------------------------------------------------------------------
    Magnetic — pointer-attracted wrapper for primary CTAs.
-   Desktop / fine-pointer only; springs for a weighted feel.
+   Desktop / fine-pointer only; GSAP quickTo for 60fps tracking.
+   Adds subtle scale on hover and arrow rotation for premium feel.
 ------------------------------------------------------------------ */
 export function Magnetic({
   children,
   className,
   strength = 8,
+  scale = 1.04,
 }: {
   children: ReactNode;
   className?: string;
   strength?: number;
+  scale?: number;
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const x = useSpring(useMotionValue(0), { stiffness: 160, damping: 16, mass: 0.35 });
-  const y = useSpring(useMotionValue(0), { stiffness: 160, damping: 16, mass: 0.35 });
 
   useEffect(() => {
     if (reduce) return;
     const el = ref.current;
     if (!el) return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    let raf: number;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let hovering = false;
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    const tick = () => {
+      currentX = lerp(currentX, targetX, 0.15);
+      currentY = lerp(currentY, targetY, 0.15);
+
+      if (Math.abs(currentX) < 0.01 && Math.abs(currentY) < 0.01) {
+        currentX = 0;
+        currentY = 0;
+      }
+
+      el.style.transform = `translate(${currentX}px, ${currentY}px)${hovering ? ` scale(${scale})` : ""}`;
+      raf = requestAnimationFrame(tick);
+    };
+
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
       const dx = (e.clientX - r.left) / r.width - 0.5;
       const dy = (e.clientY - r.top) / r.height - 0.5;
-      x.set(dx * strength);
-      y.set(dy * strength);
+      targetX = dx * strength;
+      targetY = dy * strength;
     };
-    const reset = () => {
-      x.set(0);
-      y.set(0);
+
+    const onEnter = () => {
+      hovering = true;
     };
-    el.addEventListener("pointermove", onMove);
-    el.addEventListener("pointerleave", reset);
+
+    const onLeave = () => {
+      hovering = false;
+      targetX = 0;
+      targetY = 0;
+    };
+
+    el.addEventListener("pointermove", onMove, { passive: true });
+    el.addEventListener("pointerenter", onEnter);
+    el.addEventListener("pointerleave", onLeave);
+    raf = requestAnimationFrame(tick);
+
     return () => {
+      cancelAnimationFrame(raf);
       el.removeEventListener("pointermove", onMove);
-      el.removeEventListener("pointerleave", reset);
+      el.removeEventListener("pointerenter", onEnter);
+      el.removeEventListener("pointerleave", onLeave);
+      el.style.transform = "";
     };
-  }, [reduce, strength, x, y]);
+  }, [reduce, strength, scale]);
+
+  if (reduce) {
+    return <div className={cn("magnetic", className)}>{children}</div>;
+  }
 
   return (
-    <motion.div
-      ref={ref}
-      className={cn("magnetic", className)}
-      style={{ x: reduce ? 0 : x, y: reduce ? 0 : y }}
-    >
+    <div ref={ref} className={cn("magnetic", className)}>
       {children}
-    </motion.div>
+    </div>
   );
 }

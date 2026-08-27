@@ -1,50 +1,87 @@
 "use client";
 
 /**
- * Scroll Progress Indicator
- * Global progress bar showing scroll position
- * Uses CSS transitions instead of GSAP for simplicity
+ * Premium Scroll Progress Indicator
+ *
+ * Desktop: thin vertical accent line on the right edge + percentage label
+ * Mobile:  thin horizontal accent line below navbar
+ *
+ * Uses direct DOM updates (no React state) for 60 fps performance.
  */
 
 import { useEffect, useRef } from "react";
-import { prefersReducedMotion } from "@/motion/gsap-context";
+import { prefersReducedMotion, hasPointerFine } from "@/motion/gsap-context";
 
 export function ScrollProgressIndicator() {
-  const barRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const fillRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
   const reduce = prefersReducedMotion();
+  const isDesktop = hasPointerFine();
 
   useEffect(() => {
-    if (reduce || typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
 
-    const bar = barRef.current;
-    if (!bar) return;
+    const fill = fillRef.current;
+    const label = labelRef.current;
+    if (!fill) return;
 
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight - windowHeight;
+    let raf: number;
+    let lastPercent = -1;
+
+    const compute = () => {
       const scrolled = window.scrollY;
-      const scrollPercent = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = maxScroll > 0 ? Math.min(Math.max(scrolled / maxScroll, 0), 1) : 0;
+      const rounded = Math.round(percent * 100);
 
-      // Update width via style (CSS transition handles animation)
-      bar.style.width = `${scrollPercent}%`;
+      if (rounded !== lastPercent) {
+        lastPercent = rounded;
+        fill.style.transform = `scaleY(${percent})`;
+        if (label) label.textContent = `${String(rounded).padStart(2, "0")}%`;
+        document.documentElement.style.setProperty("--scroll-progress", `${rounded}%`);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial update
+    if (reduce) {
+      // Reduced motion: update synchronously on scroll, no RAF
+      window.addEventListener("scroll", compute, { passive: true });
+      compute();
+      return () => window.removeEventListener("scroll", compute);
+    }
+
+    const tick = () => {
+      compute();
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(raf);
+      document.documentElement.style.removeProperty("--scroll-progress");
     };
   }, [reduce]);
 
   return (
-    <div
-      ref={barRef}
-      data-motion="scroll-progress"
-      aria-label="Scroll progress"
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={100}
-    />
+    <>
+      {/* ── Desktop: vertical track on right edge ── */}
+      {isDesktop ? (
+        <div
+          ref={trackRef}
+          className="scroll-track"
+          aria-hidden
+        >
+          <div ref={fillRef} className="scroll-track__fill" />
+          <div ref={labelRef} className="scroll-track__label">00%</div>
+        </div>
+      ) : null}
+
+      {/* ── Mobile / Tablet: thin horizontal bar ── */}
+      {!isDesktop ? (
+        <div className="scroll-bar" aria-hidden>
+          <div ref={fillRef} className="scroll-bar__fill" />
+        </div>
+      ) : null}
+    </>
   );
 }

@@ -6,7 +6,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Code2, Download, Lightbulb, Rocket, Star, Trophy, Users, UsersRound } from "lucide-react";
 import { about } from "@/content/about";
 import { profile } from "@/content/profile";
-import { TextReveal } from "@/components/motion";
+import { TextReveal, Magnetic } from "@/components/motion";
 import { SmartImage } from "@/components/SmartImage";
 import type { MetricIcon } from "@/content/types";
 import { duration, ease } from "@/lib/motion";
@@ -93,14 +93,18 @@ export function AboutSection() {
             </motion.div>
 
             <div className="abt__actions">
-              <Link href={profile.resumePath} className="abt-btn abt-btn--solid">
-                Download Resume
-                <Download size={17} strokeWidth={2} aria-hidden />
-              </Link>
-              <Link href="/work" className="abt-btn abt-btn--line">
-                View My Work
-                <ArrowRight size={17} strokeWidth={2} aria-hidden className="abt-btn__arrow" />
-              </Link>
+              <Magnetic strength={8}>
+                <Link href={profile.resumePath} className="abt-btn abt-btn--solid" data-cursor="button" data-cursor-label="DOWNLOAD →">
+                  Download Resume
+                  <Download size={17} strokeWidth={2} aria-hidden />
+                </Link>
+              </Magnetic>
+              <Magnetic strength={8}>
+                <Link href="/work" className="abt-btn abt-btn--line" data-cursor="link" data-cursor-label="VIEW WORK →">
+                  View My Work
+                  <ArrowRight size={17} strokeWidth={2} aria-hidden className="abt-btn__arrow" />
+                </Link>
+              </Magnetic>
             </div>
 
             <ul className="abt__stats">

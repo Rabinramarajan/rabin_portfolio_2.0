@@ -9,6 +9,7 @@ import { ProjectCover } from "@/components/ProjectCover";
 import { cn } from "@/lib/cn";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker, itemHeadingLevel } from "@/components/ui";
+import { Magnetic } from "@/components/motion";
 import { sections } from "@/content/sections";
 
 /** Category tint, carried by the chapter dot and the stage's rim light. */
@@ -360,10 +361,12 @@ function Detail({
       </ul>
 
       <div className="wx__detail-actions">
-        <Link className="wx__btn wx__btn--solid" href={`/work/${p.slug}`}>
-          <span>View Case Study</span>
-          <ArrowUpRight />
-        </Link>
+        <Magnetic strength={8}>
+          <Link className="wx__btn wx__btn--solid" href={`/work/${p.slug}`} data-cursor="project" data-cursor-label="VIEW PROJECT →">
+            <span>View Case Study</span>
+            <ArrowUpRight />
+          </Link>
+        </Magnetic>
         {p.liveUrl ? (
           <a className="wx__btn wx__btn--ghost" href={p.liveUrl} target="_blank" rel="noreferrer noopener">
             <span>Live Preview</span>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { navigation, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
@@ -18,13 +18,109 @@ export function Navbar() {
   const { active: activeSection } = useScrollSync();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const navRef = useRef<HTMLUListElement>(null);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
-  /* Body scroll lock while the mobile menu is open. Locking <html> as well
-     stops iOS Safari from rubber-banding the page behind the overlay. */
+  /* ---- Scroll-aware show/hide + scroll state ---- */
+  useEffect(() => {
+    const onScroll = () => {
+      if (ticking.current) return;
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const delta = y - lastScrollY.current;
+
+        // At top: always show, always transparent
+        if (y < 10) {
+          setHidden(false);
+          setScrolled(false);
+        } else {
+          setScrolled(true);
+          // Smart hide: only after scrolling 60px+ from last checkpoint
+          if (delta > 60) {
+            setHidden(true);
+          } else if (delta < -30) {
+            setHidden(false);
+          }
+        }
+
+        lastScrollY.current = y;
+        ticking.current = false;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* ---- Sliding indicator ---- */
+  const moveIndicator = useCallback(
+    (item: HTMLElement | null) => {
+      const indicator = indicatorRef.current;
+      const nav = navRef.current;
+      if (!indicator || !nav || !item || reduce) return;
+
+      const navRect = nav.getBoundingClientRect();
+      const itemRect = item.getBoundingClientRect();
+      const x = itemRect.left - navRect.left;
+      const w = itemRect.width;
+
+      indicator.style.width = `${w}px`;
+      indicator.style.transform = `translateX(${x}px)`;
+      indicator.style.opacity = "1";
+    },
+    [reduce],
+  );
+
+  // Reset indicator when no section is active (hero state)
+  useEffect(() => {
+    if (!activeSection && indicatorRef.current) {
+      indicatorRef.current.style.opacity = "0";
+    }
+  }, [activeSection]);
+
+  // Position indicator on mount, resize, and active section change
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const update = () => {
+      if (!activeSection || !navRef.current) {
+        if (indicatorRef.current) {
+          indicatorRef.current.style.opacity = "0";
+        }
+        return;
+      }
+
+      // Find the nav item that corresponds to the active section
+      const links = navRef.current.querySelectorAll("a");
+      for (const link of links) {
+        const href = link.getAttribute("href") ?? "";
+        if (href.includes(`#${activeSection}`)) {
+          moveIndicator(link.closest("li") as HTMLElement | null ?? link);
+          return;
+        }
+        const route = href.replace(/^\//, "");
+        if (route === activeSection) {
+          moveIndicator(link.closest("li") as HTMLElement | null ?? link);
+          return;
+        }
+      }
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [activeSection, moveIndicator]);
+
+  /* Body scroll lock while the mobile menu is open */
   useEffect(() => {
     if (!open) return;
     const html = document.documentElement;
@@ -36,8 +132,6 @@ export function Navbar() {
     return () => {
       html.style.overflow = prevHtml;
       document.body.style.overflow = prevBody;
-      // The cleanup runs exactly when `open` flips false, so focus returns to
-      // the control that opened the menu.
       toggle?.focus();
     };
   }, [open]);
@@ -46,7 +140,7 @@ export function Navbar() {
     if (open) closeRef.current?.focus();
   }, [open]);
 
-  /* Header surface appears after leaving the top of the page */
+  /* Sentinel for scroll detection */
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
@@ -55,7 +149,7 @@ export function Navbar() {
     return () => io.disconnect();
   }, []);
 
-  /* Keyboard: ESC closes, Tab is trapped inside the menu */
+  /* Keyboard: ESC closes, Tab trapped inside menu */
   useEffect(() => {
     if (!open) return;
     const root = overlayRef.current;
@@ -78,7 +172,6 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  /* Standalone screens (the maintenance page) supply their own header. */
   if (isStandaloneRoute(pathname)) return null;
 
   const isActive = (item: (typeof navigation)[number]) => {
@@ -102,7 +195,10 @@ export function Navbar() {
   return (
     <>
       <div ref={sentinelRef} aria-hidden style={{ position: "absolute", width: 1, height: 1 }} />
-      <header className={cn("hd", scrolled && "is-scrolled")}>
+      <header
+        className={cn("hd", scrolled && "is-scrolled", hidden && "is-hidden")}
+        aria-label="Site header"
+      >
         <div className="hd__inner">
           <motion.div {...fade(0.05)}>
             <Link href="/" aria-label="Rabin R — home" className="logo">
@@ -110,7 +206,7 @@ export function Navbar() {
             </Link>
           </motion.div>
           <motion.nav className="hd__nav" aria-label="Primary" {...fade(0.14)}>
-            <ul>
+            <ul ref={navRef}>
               {navigation.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className={isActive(item) ? "is-active" : undefined}>
@@ -118,11 +214,12 @@ export function Navbar() {
                   </Link>
                 </li>
               ))}
+              <span ref={indicatorRef} className="hd__indicator" aria-hidden="true" />
             </ul>
           </motion.nav>
           <motion.div className="hd__cta" {...fade(0.22)}>
             <Magnetic strength={8}>
-              <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }}>
+              <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }} data-cursor="button" data-cursor-label="LET'S TALK →">
                 <span className="btn__label">
                   Let&apos;s Work Together
                   <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">

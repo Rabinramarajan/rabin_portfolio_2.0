@@ -9,6 +9,7 @@ import { duration, ease } from "@/lib/motion";
 import { Monogram } from "@/components/Logo";
 import { MotionToggle } from "@/components/MotionToggle";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
+import { Magnetic } from "@/components/motion";
 import { isStandaloneRoute } from "@/lib/chrome-routes";
 
 const SOCIAL_ICONS = {
@@ -60,12 +61,14 @@ function FooterInner() {
               Building scalable, high-performance digital experiences with modern frontend engineering.
             </p>
 
-            <Link className="ft__cta" href="/contact">
-              Let&apos;s Work Together
-              <span className="ft__cta-go" aria-hidden>
-                <ArrowRight size={16} />
-              </span>
-            </Link>
+            <Magnetic strength={8}>
+              <Link className="ft__cta" href="/contact" data-cursor="button" data-cursor-label="LET'S TALK →">
+                Let&apos;s Work Together
+                <span className="ft__cta-go" aria-hidden>
+                  <ArrowRight size={16} />
+                </span>
+              </Link>
+            </Magnetic>
           </motion.div>
 
           <motion.div className="ft__cols" {...view(0.05)}>
@@ -127,10 +130,12 @@ function FooterInner() {
             <strong>{profile.availability.label}</strong>
             <span>Let&apos;s build something great together.</span>
           </p>
-          <Link className="ft__avail-cta" href="/contact">
-            Start a Conversation
-            <ArrowUpRight size={16} aria-hidden />
-          </Link>
+          <Magnetic strength={8}>
+            <Link className="ft__avail-cta" href="/contact" data-cursor="button" data-cursor-label="START →">
+              Start a Conversation
+              <ArrowUpRight size={16} aria-hidden />
+            </Link>
+          </Magnetic>
         </div>
 
         <div className="ft__legal">

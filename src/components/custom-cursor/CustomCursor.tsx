@@ -6,7 +6,9 @@
  *
  * States: default | link | button | project | image | text | hidden
  * Labels: configured via data-cursor-label on hover targets
- * Magnetic: applied to elements with data-cursor="magnetic"
+ *
+ * Note: Element magnetic movement is handled by the Magnetic component,
+ * NOT by the cursor. The cursor only tracks position and changes state.
  */
 
 import { useEffect, useRef, useCallback } from "react";
@@ -61,7 +63,6 @@ export function CustomCursor() {
   const labelTextRef = useRef<string>("");
   const mouseRef = useRef({ x: -100, y: -100 });
   const rafRef = useRef<number>(0);
-  const magnetRef = useRef({ active: false, el: null as HTMLElement | null, strength: 10 });
 
   const quickFns = useRef<{
     dotX: ((v: number) => void) | null;
@@ -113,7 +114,6 @@ export function CustomCursor() {
       }
     }
 
-    const magnet = magnetRef.current;
     const fns = quickFns.current;
 
     const onPointerMove = (e: PointerEvent) => {
@@ -122,26 +122,6 @@ export function CustomCursor() {
 
       const { state, label } = resolveTarget(e.target as Element);
       updateState(state, label);
-
-      const magnetEl = (e.target as HTMLElement)?.closest?.("[data-cursor='magnetic']") as HTMLElement | null;
-      if (magnetEl && !reduced) {
-        const rect = magnetEl.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
-        const threshold = Math.max(rect.width, rect.height) * 0.8;
-
-        if (dist < threshold) {
-          magnet.active = true;
-          magnet.el = magnetEl;
-          magnet.strength = parseFloat(magnetEl.getAttribute("data-cursor-magnetic") || "") || 10;
-        }
-      }
-
-      if (!magnetEl) {
-        magnet.active = false;
-        magnet.el = null;
-      }
     };
 
     const onPointerLeave = () => {
@@ -156,38 +136,18 @@ export function CustomCursor() {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
-      let targetX = mx;
-      let targetY = my;
-
-      if (magnet.active && magnet.el) {
-        const rect = magnet.el.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = mx - cx;
-        const dy = my - cy;
-        targetX = mx - dx * 0.15;
-        targetY = my - dy * 0.15;
-
-        const elDx = dx * 0.3;
-        const elDy = dy * 0.3;
-        magnet.el.style.transform = `translate(${elDx}px, ${elDy}px)`;
-      } else if (magnet.el) {
-        magnet.el.style.transform = "";
-        magnet.el = null;
-      }
-
       if (fns.dotX && fns.dotY) {
-        fns.dotX(targetX);
-        fns.dotY(targetY);
+        fns.dotX(mx);
+        fns.dotY(my);
       } else {
-        dot.style.transform = `translate(${targetX}px, ${targetY}px)`;
+        dot.style.transform = `translate(${mx}px, ${my}px)`;
       }
 
       if (fns.ringX && fns.ringY) {
-        fns.ringX(targetX);
-        fns.ringY(targetY);
+        fns.ringX(mx);
+        fns.ringY(my);
       } else {
-        ring.style.transform = `translate(${targetX}px, ${targetY}px)`;
+        ring.style.transform = `translate(${mx}px, ${my}px)`;
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -215,7 +175,6 @@ export function CustomCursor() {
       window.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("pointerenter", onPointerEnter);
       style.remove();
-      if (magnet.el) magnet.el.style.transform = "";
     };
   }, [updateState]);
 

@@ -11,18 +11,24 @@ export function MagneticButton({
   variant = "solid",
   className,
   strength = 8,
+  "data-cursor": dataCursor,
+  "data-cursor-label": dataCursorLabel,
 }: {
   href: string;
   children: ReactNode;
   variant?: "solid" | "line";
   className?: string;
   strength?: number;
+  "data-cursor"?: string;
+  "data-cursor-label"?: string;
 }) {
   return (
     <Magnetic strength={strength}>
       <Link
         href={href}
         className={cn("btn", variant === "solid" ? "btn--solid" : "btn--line", className)}
+        {...(dataCursor ? { "data-cursor": dataCursor } : {})}
+        {...(dataCursorLabel ? { "data-cursor-label": dataCursorLabel } : {})}
       >
         <span className="btn__label">
           {children}

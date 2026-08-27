@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { hero } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
@@ -27,39 +22,196 @@ export function Hero() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  /* Scroll-linked depth — the reel drifts and dims as the hero leaves the viewport */
   const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-  const k = isDesktop ? 1 : 0.45;
-  const reelY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    quiet ? [0, 0] : [0, 70 * k],
-  );
-  const reelScale = useTransform(
-    scrollYProgress,
-    [0, 1],
-    quiet ? [1, 1] : [1, 1.08],
-  );
-  const copyY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    quiet ? [0, 0] : [0, -40 * k],
-  );
-  const copyOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.8],
-    quiet ? [1, 1] : [1, 0],
-  );
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
   const t = (delay: number) => ({
     duration: reduce ? duration.micro : duration.section,
     delay: reduce ? 0 : delay,
     ease,
   });
+
+  /* ── GSAP animations: entrance + scroll parallax + mouse parallax ── */
+  useEffect(() => {
+    if (typeof window === "undefined" || quiet) return;
+    const hero = sectionRef.current;
+    if (!hero) return;
+
+    const { gsap } = require("gsap/dist/gsap");
+    const { ScrollTrigger } = require("gsap/dist/ScrollTrigger");
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      /* ── Entrance timeline ── */
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+      });
+
+      // Phase 1: stage (background reel)
+      tl.from(".chero__stage", {
+        opacity: 0,
+        duration: 1.0,
+        ease: "power1.out",
+      }, 0);
+
+      // Phase 2: status badge
+      tl.from(".chero__status", {
+        opacity: 0,
+        y: 10,
+        duration: 0.5,
+      }, 0.15);
+
+      // Phase 3: title lines (mask reveal)
+      const titleLines = hero.querySelectorAll(".chero__line");
+      if (titleLines.length) {
+        tl.from(titleLines, {
+          y: "110%",
+          duration: 0.85,
+          stagger: 0.1,
+          ease: "power3.out",
+        }, 0.25);
+      }
+
+      // Phase 4: disciplines strip
+      tl.from(".chero__disciplines", {
+        opacity: 0,
+        y: 12,
+        duration: 0.55,
+      }, 0.7);
+
+      // Phase 5: lede / description
+      tl.from(".chero__lede", {
+        opacity: 0,
+        y: 14,
+        duration: 0.6,
+      }, 0.82);
+
+      // Phase 6: CTAs
+      tl.from(".chero__actions", {
+        opacity: 0,
+        y: 14,
+        duration: 0.55,
+      }, 0.95);
+
+      // Phase 7: pull-quote
+      tl.from(".chero__quote", {
+        opacity: 0,
+        y: 18,
+        duration: 0.6,
+      }, 0.9);
+
+      // Phase 8: scroll indicator
+      if (scrollIndicatorRef.current) {
+        tl.from(scrollIndicatorRef.current, {
+          opacity: 0,
+          y: -8,
+          duration: 0.5,
+        }, 1.25);
+      }
+
+      /* ── Scroll parallax depth planes ── */
+      // Background (slowest drift + subtle scale)
+      gsap.to(".chero__stage", {
+        y: 80,
+        scale: 1.06,
+        opacity: 0.7,
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.6,
+        },
+      });
+
+      // Content shell (counter-motion — drifts up slightly)
+      gsap.to(".chero__shell", {
+        y: -35,
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.6,
+        },
+      });
+
+      // Haze layer (medium depth)
+      gsap.to(".chero__haze", {
+        y: 50,
+        opacity: 0.3,
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.6,
+        },
+      });
+
+      // Scroll indicator fade-out on scroll
+      if (scrollIndicatorRef.current) {
+        gsap.to(scrollIndicatorRef.current, {
+          opacity: 0,
+          y: 20,
+          scrollTrigger: {
+            trigger: hero,
+            start: "5% top",
+            end: "18% top",
+            scrub: true,
+          },
+        });
+      }
+    }, hero);
+
+    return () => ctx.revert();
+  }, [quiet]);
+
+  /* ── Mouse parallax (desktop fine-pointer only) ── */
+  useEffect(() => {
+    if (reduce || !isDesktop) return;
+    const hero = sectionRef.current;
+    if (!hero) return;
+
+    const { gsap } = require("gsap/dist/gsap");
+
+    let rafId: number;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    const onMove = (e: MouseEvent) => {
+      const rect = hero.getBoundingClientRect();
+      mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    };
+
+    const tick = () => {
+      // Background haze follows pointer (subtle)
+      gsap.to(".chero__haze", {
+        x: mouseX * 18,
+        y: mouseY * 14,
+        duration: 0.8,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+
+      // Vignette gradient follows pointer (very subtle)
+      const vg = hero.querySelector(".chero__vignette");
+      if (vg) {
+        const cx = 50 + mouseX * 12;
+        const cy = 50 + mouseY * 12;
+        (vg as HTMLElement).style.background =
+          `radial-gradient(ellipse at ${cx}% ${cy}%, transparent 28%, rgb(10 10 12 / 55%) 100%)`;
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(rafId);
+    };
+  }, [reduce, isDesktop]);
 
   const lines =
     hero.displayLines ??
@@ -73,14 +225,12 @@ export function Hero() {
       ref={sectionRef}
       className="chero"
       aria-labelledby="hero-heading"
-      data-motion="hero-bg"
     >
-      {/* --- full-bleed reel --- */}
-      <div className="chero__stage" aria-hidden data-motion="parallax-bg">
+      {/* ── full-bleed reel ── */}
+      <div className="chero__stage" aria-hidden>
         {hero.reel ? (
-          <motion.video
+          <video
             className="chero__reel"
-            style={{ y: reelY, scale: reelScale }}
             src={hero.reel.src}
             poster={hero.reel.poster}
             autoPlay={!reduce}
@@ -93,31 +243,26 @@ export function Hero() {
         ) : null}
         <div className="chero__scrim" />
         <div className="chero__vignette" />
-        <div className="chero__haze" data-motion="pointer-field" />
+        <div className="chero__haze" />
         <div className="chero__blend" />
       </div>
 
-      {/* --- editorial layer --- */}
-      <motion.div
-        className="shell chero__shell"
-        style={{ y: copyY, opacity: copyOpacity }}
-        data-motion="parallax-content"
-      >
+      {/* ── editorial layer ── */}
+      <div className="shell chero__shell">
         <div className="chero__copy">
           <motion.p
             className="chero__status"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.04)}
-            data-motion="hero-eyebrow"
           >
             <span className="chero__pulse" aria-hidden />
             <span className="chero__status-label">{hero.availability}</span>
           </motion.p>
 
-          <h1 id="hero-heading" className="chero__title" data-motion="hero-title">
+          <h1 id="hero-heading" className="chero__title">
             {lines.map((line, i) => (
-              <span className="chero__line" key={line.text} data-motion="line">
+              <span className="chero__line" key={line.text}>
                 <motion.span
                   className={
                     line.accent
@@ -155,7 +300,6 @@ export function Hero() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.5)}
-            data-motion="hero-desc"
           >
             {hero.description}
           </motion.p>
@@ -165,7 +309,6 @@ export function Hero() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.58)}
-            data-motion="hero-cta"
           >
             <Magnetic strength={8}>
               <Btn href={hero.primaryCta.href} data-cursor="button" data-cursor-label="LET'S GO →">
@@ -184,7 +327,6 @@ export function Hero() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.7)}
-            data-motion="hero-visual"
           >
             <span className="chero__quote-mark" aria-hidden>
               &ldquo;
@@ -200,7 +342,13 @@ export function Hero() {
             </figcaption>
           </motion.figure>
         ) : null}
-      </motion.div>
+      </div>
+
+      {/* ── scroll indicator ── */}
+      <div className="chero__scroll" ref={scrollIndicatorRef} aria-hidden>
+        <span className="chero__scroll-text">SCROLL</span>
+        <span className="chero__scroll-line" />
+      </div>
     </section>
   );
 }

@@ -33,17 +33,80 @@
 }
 
 /* ========== SCROLL PROGRESS INDICATOR ========== */
-[data-motion="scroll-progress"] {
+
+/* Desktop: thin vertical accent line on right edge */
+.scroll-track {
   position: fixed;
   top: 0;
-  left: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-light, rgba(255, 255, 255, 0.5)));
-  width: 0%;
-  z-index: 1000;
+  right: 1.25rem;
+  width: 2px;
+  height: 100vh;
+  z-index: 150;
   pointer-events: none;
-  transition: width 0.3s ease-out;
-  will-change: width;
+  background: rgb(255 255 255 / 6%);
+}
+.scroll-track__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    var(--color-accent) 0%,
+    rgb(201 242 77 / 60%) 100%
+  );
+  transform-origin: top center;
+  transform: scaleY(0);
+  will-change: transform;
+}
+.scroll-track__label {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 0.65rem);
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+/* Mobile / Tablet: thin horizontal bar below navbar */
+.scroll-bar {
+  position: fixed;
+  top: var(--header-h, 3.5rem);
+  left: 0;
+  width: 100%;
+  height: 2px;
+  z-index: 199;
+  pointer-events: none;
+  background: rgb(255 255 255 / 4%);
+}
+.scroll-bar__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent) 0%,
+    rgb(201 242 77 / 50%) 100%
+  );
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+/* Reduced motion: remove smooth transitions */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-track__fill,
+  .scroll-bar__fill {
+    transition: none;
+  }
 }
 
 /* ========== CUSTOM CURSOR (Legacy) ========== */
