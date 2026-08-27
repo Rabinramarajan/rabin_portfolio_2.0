@@ -605,16 +605,17 @@ code {
 
 .hd {
   --scroll-factor: 0;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: var(--z-header);
   height: calc(var(--header-h) - (var(--scroll-factor) * 12px));
   display: flex;
   align-items: center;
   border-bottom: 1px solid transparent;
-  background: rgb(10 10 12 / 35%);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: transparent;
   transition:
     background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
@@ -929,7 +930,7 @@ code {
 /* --- cinematic hero: full-bleed reel + editorial overlay --- */
 .chero {
   position: relative;
-  min-height: calc(100svh - var(--header-h));
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1087,6 +1088,7 @@ code {
   display: grid;
   gap: 2.5rem;
   align-items: end;
+  justify-content: center;
   padding-top: clamp(1.5rem, 4vh, 2.75rem);
   padding-bottom: clamp(3.5rem, 7vh, 5.5rem);
 }
