@@ -73,9 +73,10 @@ export function Hero() {
       ref={sectionRef}
       className="chero"
       aria-labelledby="hero-heading"
+      data-motion="hero-bg"
     >
       {/* --- full-bleed reel --- */}
-      <div className="chero__stage" aria-hidden>
+      <div className="chero__stage" aria-hidden data-motion="parallax-bg">
         {hero.reel ? (
           <motion.video
             className="chero__reel"
@@ -92,7 +93,7 @@ export function Hero() {
         ) : null}
         <div className="chero__scrim" />
         <div className="chero__vignette" />
-        <div className="chero__haze" />
+        <div className="chero__haze" data-motion="pointer-field" />
         <div className="chero__blend" />
       </div>
 
@@ -100,6 +101,7 @@ export function Hero() {
       <motion.div
         className="shell chero__shell"
         style={{ y: copyY, opacity: copyOpacity }}
+        data-motion="parallax-content"
       >
         <div className="chero__copy">
           <motion.p
@@ -107,14 +109,15 @@ export function Hero() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.04)}
+            data-motion="hero-eyebrow"
           >
             <span className="chero__pulse" aria-hidden />
             <span className="chero__status-label">{hero.availability}</span>
           </motion.p>
 
-          <h1 id="hero-heading" className="chero__title">
+          <h1 id="hero-heading" className="chero__title" data-motion="hero-title">
             {lines.map((line, i) => (
-              <span className="chero__line" key={line.text}>
+              <span className="chero__line" key={line.text} data-motion="line">
                 <motion.span
                   className={
                     line.accent
@@ -152,6 +155,7 @@ export function Hero() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.5)}
+            data-motion="hero-desc"
           >
             {hero.description}
           </motion.p>
@@ -161,11 +165,14 @@ export function Hero() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.58)}
+            data-motion="hero-cta"
           >
             <Magnetic strength={8}>
-              <Btn href={hero.primaryCta.href}>{hero.primaryCta.label}</Btn>
+              <Btn href={hero.primaryCta.href} data-cursor="button" data-cursor-label="LET'S GO →">
+                {hero.primaryCta.label}
+              </Btn>
             </Magnetic>
-            <Btn href={hero.secondaryCta.href} variant="line">
+            <Btn href={hero.secondaryCta.href} variant="line" data-cursor="link" data-cursor-label="VIEW WORK →">
               {hero.secondaryCta.label}
             </Btn>
           </motion.div>
@@ -177,6 +184,7 @@ export function Hero() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={t(0.7)}
+            data-motion="hero-visual"
           >
             <span className="chero__quote-mark" aria-hidden>
               &ldquo;
