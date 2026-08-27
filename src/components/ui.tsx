@@ -10,19 +10,22 @@ function Arrow() {
   );
 }
 
-export function Btn({
-  href,
-  children,
-  variant = "solid",
-  className,
-}: {
+type BtnProps = {
   href: string;
   children: ReactNode;
   variant?: "solid" | "line";
   className?: string;
-}) {
+  "data-cursor"?: string;
+  "data-cursor-label"?: string;
+};
+
+export function Btn({ href, children, variant = "solid", className, ...rest }: BtnProps) {
   return (
-    <Link href={href} className={cn("btn", variant === "solid" ? "btn--solid" : "btn--line", className)}>
+    <Link
+      href={href}
+      className={cn("btn", variant === "solid" ? "btn--solid" : "btn--line", className)}
+      {...rest}
+    >
       <span className="btn__label">
         {children}
         <Arrow />

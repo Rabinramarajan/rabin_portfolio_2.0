@@ -10,6 +10,7 @@ import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
 import { MotionProvider } from "@/components/MotionProvider";
+import { CustomCursor } from "@/components/custom-cursor/CustomCursor";
 import { ScrollProgressIndicator } from "@/components/ScrollProgressIndicator";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import "@/motion/motion.css";
@@ -111,6 +112,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Footer />
           <ChatLauncher />
           <Toaster />
+          <CustomCursor />
           <Analytics />
           <SpeedInsights />
         </MotionProvider>

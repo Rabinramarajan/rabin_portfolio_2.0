@@ -3411,7 +3411,25 @@ code {
   border-color: var(--color-accent);
   background: var(--color-accent);
 }
+.cursor-ring[data-state="image"] {
+  width: 80px;
+  height: 80px;
+  border-color: var(--color-accent);
+  background: rgb(201 242 77 / 12%);
+  box-shadow: 0 0 30px rgb(201 242 77 / 18%);
+}
+.cursor-ring[data-state="hidden"] {
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
 .cursor-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-family: var(--font-mono);
   font-size: 0.52rem;
   letter-spacing: 0.14em;
@@ -3420,6 +3438,29 @@ code {
   white-space: nowrap;
   pointer-events: none;
   text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.cursor-ring[data-state="button"] .cursor-label,
+.cursor-ring[data-state="project"] .cursor-label,
+.cursor-ring[data-state="image"] .cursor-label {
+  opacity: 1;
+}
+.cursor-dot[data-cursor-comp="dot"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  pointer-events: none;
+  will-change: transform;
+}
+.cursor-ring[data-cursor-comp="ring"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  will-change: transform;
 }
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {
   .cursor-dot,
