@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import {
   Inter,
-  Inter_Tight,
   JetBrains_Mono,
-  Caveat,
-  Bodoni_Moda,
-  Jost,
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -27,41 +23,14 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  adjustFontFallback: true,
+  weight: ["300", "400", "500", "600", "700"],
 });
-const tight = Inter_Tight({
-  subsets: ["latin"],
-  variable: "--font-inter-tight",
-  display: "optional",
-  adjustFontFallback: true,
-  preload: true,
-});
+
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
-  display: "optional",
-  preload: false,
-});
-const caveat = Caveat({
-  subsets: ["latin"],
-  variable: "--font-caveat",
-  display: "optional",
-  weight: ["500", "600"],
-  preload: false,
-});
-const bodoniModa = Bodoni_Moda({
-  subsets: ["latin"],
-  variable: "--font-premium-display",
   display: "swap",
   weight: ["400", "500", "600", "700"],
-  preload: true,
-});
-const jost = Jost({
-  subsets: ["latin"],
-  variable: "--font-premium-body",
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -124,11 +93,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-scroll-behavior="smooth"
       className={[
         inter.variable,
-        tight.variable,
         mono.variable,
-        caveat.variable,
-        bodoniModa.variable,
-        jost.variable,
       ].join(" ")}
     >
       <body>

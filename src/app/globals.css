@@ -3,8 +3,7 @@
 /* ============================================================
    RABIN R — DESIGN SYSTEM
    Near-black / warm white / single Rabin lime accent.
-   Inter Tight (display) · Inter (body) · JetBrains Mono (technical)
-   Premium Contact: Bodoni Moda + Jost with liquid glass effects
+   Unified typography: Inter (display, body, UI) · JetBrains Mono (code)
    ============================================================ */
 
 :root {
@@ -27,12 +26,10 @@
 
   /* --- font families --- */
   --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
-  --font-display: "Archivo", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-accent: "Space Grotesk", system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  --font-premium-display: "Bodoni Moda", serif;
-  --font-premium-body: "Jost", sans-serif;
+  --font-display: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-body: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-accent: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace;
 
   /* --- type tokens (editorial hierarchy) --- */
   --type-xs: 0.75rem;      /* 12px - labels */
@@ -148,7 +145,7 @@
   --color-background: var(--color-bg);
   --color-accent: var(--color-accent);
   --font-sans: var(--font-inter);
-  --font-display: var(--font-inter-tight);
+  --font-display: var(--font-inter);
   --font-mono: var(--font-jetbrains);
 }
 
@@ -252,7 +249,7 @@ code {
 
 /* Display font for hero and major headings */
 .display-font {
-  font-family: var(--font-premium-display), serif;
+  font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -314,7 +311,7 @@ code {
   position: relative;
   padding-left: 1.5rem;
   border-left: 2px solid var(--color-accent);
-  font-family: var(--font-premium-display), serif;
+  font-family: var(--font-display);
   font-style: italic;
   font-size: var(--text-lg);
   line-height: 1.6;
@@ -1212,7 +1209,7 @@ code {
   background: linear-gradient(90deg, var(--color-accent), transparent);
 }
 .chero__signature {
-  font-family: var(--font-caveat), "Segoe Script", "Brush Script MT", cursive;
+  font-family: var(--font-display);
   font-size: 2.1rem;
   line-height: 1;
   color: var(--color-accent);
@@ -3338,7 +3335,7 @@ code {
   position: absolute;
   left: 0.3rem;
   top: 0.05rem;
-  font-family: serif;
+  font-family: var(--font-sans);
   font-size: 1.2rem;
   color: #ca8a04;
   line-height: 1;
@@ -3522,7 +3519,7 @@ code {
 }
 
 .sticky-note__handwriting {
-  font-family: cursive, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.82rem;
   color: #475569;
   font-weight: 600;
@@ -13573,7 +13570,7 @@ html {
 }
 
 /* ---- Contact Page Full-Screen Hero (Trust & Authority Style) ---- */
-/* Professional hero following UI/UX Pro Max design system with Archivo + Space Grotesk */
+/* Professional hero following UI/UX Pro Max design system with unified Inter typography */
 
 /* ============================================================
    CONTACT HERO — Premium 2-Column Design
@@ -15715,7 +15712,7 @@ html {
 }
 
 .premium-contact-hero__title {
-  font-family: var(--font-premium-display);
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 1rem + 4vw, 4.5rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -15729,7 +15726,7 @@ html {
   line-height: 1.7;
   color: var(--color-text-muted);
   text-wrap: balance;
-  font-family: var(--font-premium-body);
+  font-family: var(--font-body);
   font-weight: 400;
   letter-spacing: 0.01em;
 }
@@ -16001,7 +15998,7 @@ html {
   font-size: var(--type-sm);
   font-weight: 600;
   color: var(--color-text);
-  font-family: var(--font-premium-display);
+  font-family: var(--font-display);
   letter-spacing: 0.01em;
 }
 
@@ -16010,7 +16007,7 @@ html {
   line-height: 1.6;
   color: var(--color-text-muted);
   text-wrap: balance;
-  font-family: var(--font-premium-body);
+  font-family: var(--font-body);
   font-weight: 400;
 }
 
@@ -16538,7 +16535,7 @@ html {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--premium-accent);
-  font-family: var(--font-premium-body);
+  font-family: var(--font-body);
 }
 
 .premium-contact-left-column__detail-value {
@@ -16548,7 +16545,7 @@ html {
   text-decoration: none;
   line-height: 1.4;
   word-break: break-word;
-  font-family: var(--font-premium-display);
+  font-family: var(--font-display);
   letter-spacing: 0.01em;
   transition: color var(--duration-ui) var(--ease-out-expo);
 }
@@ -16560,7 +16557,7 @@ a.premium-contact-left-column__detail-value:hover {
 .premium-contact-left-column__detail-subtext {
   font-size: var(--type-xs);
   color: var(--color-text-muted);
-  font-family: var(--font-premium-body);
+  font-family: var(--font-body);
   font-weight: 400;
   letter-spacing: 0.01em;
 }
@@ -18131,7 +18128,7 @@ a.premium-contact-left-column__detail-value:hover {
   color: #C8FF00;
   opacity: 0.3;
   line-height: 1;
-  font-family: var(--font-caveat), cursive;
+  font-family: var(--font-display);
 }
 
 .eco__memo-text {
@@ -18198,7 +18195,7 @@ a.premium-contact-left-column__detail-value:hover {
 }
 
 .eco__handwriting-sign {
-  font-family: var(--font-caveat), cursive;
+  font-family: var(--font-display);
   font-size: 1.15rem;
   color: #C8FF00;
   opacity: 0.85;
