@@ -192,6 +192,10 @@ export function Navbar() {
           transition: { duration: duration.ui, delay, ease },
         };
 
+  const currentYear = new Date().getFullYear();
+  const sectionNumber = activeSection ? navigation.findIndex((item) => item.sectionId === activeSection) + 1 : 0;
+  const totalSections = navigation.length;
+
   return (
     <>
       <div ref={sentinelRef} aria-hidden style={{ position: "absolute", width: 1, height: 1 }} />
@@ -217,6 +221,18 @@ export function Navbar() {
               <span ref={indicatorRef} className="hd__indicator" aria-hidden="true" />
             </ul>
           </motion.nav>
+          <motion.div className="hd__timing" {...fade(0.18)} aria-label="Current section">
+            <div className="hd__timing-year">{currentYear}</div>
+            <div className="hd__timing-status">
+              <span className="hd__timing-label">Present</span>
+              <span className="hd__timing-current">Current</span>
+            </div>
+            {activeSection && (
+              <div className="hd__timing-counter">
+                {String(sectionNumber).padStart(2, "0")} / {String(totalSections).padStart(2, "0")}
+              </div>
+            )}
+          </motion.div>
           <motion.div className="hd__cta" {...fade(0.22)}>
             <Magnetic strength={8}>
               <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }} data-cursor="button" data-cursor-label="LET'S TALK →">
