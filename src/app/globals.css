@@ -4682,6 +4682,68 @@ html {
 .tr__line--accent {
   color: var(--color-accent);
 }
+
+/* --- word reveal --- */
+.tr__words {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.12em;
+}
+.tr__word-row {
+  display: contents;
+}
+.tr__word-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+  margin-bottom: -0.04em;
+}
+.tr__word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+  color: var(--color-text);
+}
+.tr__word--accent {
+  color: var(--color-accent);
+}
+.tr__word-space {
+  display: inline-block;
+  width: 0.3em;
+}
+
+/* --- character reveal --- */
+.tr__chars {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.06em;
+}
+.tr__char-row {
+  display: contents;
+}
+.tr__char-mask {
+  display: inline-block;
+  overflow: hidden;
+}
+.tr__char {
+  display: inline-block;
+  will-change: transform, opacity;
+  color: var(--color-text);
+}
+.tr__char--accent {
+  color: var(--color-accent);
+}
+.tr__char-space {
+  display: inline-block;
+  width: 0.28em;
+}
+
+/* --- fade reveal --- */
+.tr__fade-line {
+  will-change: transform, opacity;
+}
+.tr__fade-line--accent {
+  color: var(--color-accent);
+}
 /*
  * Accented run inside running text. Emitted by TextReveal for `*…*` spans and
  * written by hand where a single phrase should carry the accent.
@@ -8678,6 +8740,19 @@ html {
   object-fit: cover;
   object-position: center 22%;
 }
+/* Mouse parallax inner layer — GSAP controls transform for cursor-based movement */
+.wx__stage-mouse {
+  display: block;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+.wx__stage-mouse img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+}
 .wx__stage-scrim {
   position: absolute;
   inset: 0;
@@ -10742,6 +10817,20 @@ html {
   height: 100%;
   object-fit: cover;
 }
+/* Scroll parallax outer layer — GSAP ScrollTrigger controls Y transform */
+.pcard__parallax {
+  display: block;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+/* Mouse parallax inner layer — GSAP controls transform for cursor-based movement */
+.pcard__mouse {
+  display: block;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
 .pcard__shot .project-poster {
   width: 100%;
   height: 100%;
@@ -10904,6 +10993,126 @@ html {
     opacity: 1;
     transform: none;
   }
+}
+
+/* --- Card title arrow (slides in on hover) --- */
+.pcard__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.pcard__arrow {
+  display: inline-flex;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translate(-6px, 6px);
+  transition:
+    opacity var(--duration-interaction) var(--ease-out-quart),
+    transform var(--duration-interaction) var(--ease-out-quart);
+}
+.pcard__arrow svg {
+  width: 16px;
+  height: 16px;
+}
+.pcard__link:hover .pcard__arrow,
+.pcard__link:focus-visible .pcard__arrow {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Card shine sweep (subtle highlight on hover) --- */
+.pcard__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgb(255 255 255 / 6%) 45%,
+    rgb(255 255 255 / 10%) 50%,
+    rgb(255 255 255 / 6%) 55%,
+    transparent 60%
+  );
+  opacity: 0;
+  transform: translateX(-100%);
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s ease;
+  pointer-events: none;
+}
+.pcard__link:hover .pcard__shine {
+  opacity: 1;
+  transform: translateX(100%);
+}
+
+/* ============================================================
+   FLOATING PROJECT PREVIEW
+   ============================================================ */
+.wx-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-preview, 9000);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.95);
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.wx-preview__img {
+  display: block;
+  width: clamp(200px, 24vw, 320px);
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 24px 80px -16px rgb(0 0 0 / 75%);
+}
+.wx-preview__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+.wx-preview__no {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.wx-preview__name {
+  color: var(--color-text);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wx-preview__cta {
+  margin-left: auto;
+  color: var(--color-accent);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.wx-preview:hover .wx-preview__cta {
+  opacity: 1;
+  transform: none;
+}
+@media (hover: none) {
+  .wx-preview { display: none; }
+}
+
+/* ============================================================
+   WORK SECTION GSAP ENTRANCE HELPERS
+   ============================================================ */
+.wx__title,
+.wx__lede,
+.wx__controls,
+.wx__kicker {
+  will-change: transform, opacity;
 }
 
 /* ============================================================
@@ -11158,6 +11367,11 @@ html {
   .pcard__shot,
   .pcard__cta,
   .pcard__reveal,
+  .pcard__arrow,
+  .pcard__shine,
+  .wx__stage-mouse,
+  .pcard__parallax,
+  .pcard__mouse,
   .cgal__btn img,
   .cs__related-card,
   .cs__scroll svg {
@@ -11169,6 +11383,7 @@ html {
     max-height: 4rem;
     opacity: 1;
   }
+  .wx-preview { display: none !important; }
 }
 
 /* ============================================================

@@ -7,7 +7,8 @@ import { Monogram } from "@/components/Logo";
 import { ServiceIcon } from "@/components/pages/ServiceIcons";
 import { duration, ease } from "@/lib/motion";
 import { SectionKicker, itemHeadingLevel } from "@/components/ui";
-import { sections } from "@/content/sections";
+import { sections, titleLines, accentIndex } from "@/content/sections";
+import { TextReveal } from "@/components/motion";
 
 /**
  * Services — emblem + statement header and an eight-card offer grid. Cards are
@@ -45,14 +46,13 @@ export function ServicesSection({
 
           <div className="svx__intro">
             <SectionKicker index={index ?? intro.index} label={intro.label} />
-            <Heading className="svx__title">
-              {intro.title.map((line, i) => (
-                <span key={line.text}>
-                  {line.newline ? <br /> : i > 0 ? " " : null}
-                  {line.accent ? <span className="svx__title-accent">{line.text}</span> : line.text}
-                </span>
-              ))}
-            </Heading>
+            <TextReveal
+              lines={titleLines(intro)}
+              accentIndex={accentIndex(intro)}
+              as={headingLevel}
+              className="svx__title"
+              mode="word"
+            />
             <span className="svx__title-rule" aria-hidden />
           </div>
 

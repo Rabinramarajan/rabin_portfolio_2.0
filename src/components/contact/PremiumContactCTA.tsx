@@ -73,6 +73,7 @@ export function PremiumContactCTA() {
               as="h2"
               delay={reduce ? 0 : 0.12}
               accentIndex={0}
+              mode="word"
             />
             <p className="premium-contact-cta__subtitle">
               Let's turn it into reality. Whether it's a full project, quick consultation, or just exploring ideas together.

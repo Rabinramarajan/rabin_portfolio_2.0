@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useMemo, type ReactNode } from "react";
 import { duration, ease, stagger } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -9,15 +9,88 @@ import { cn } from "@/lib/cn";
    CENTRAL MOTION SYSTEM
    One rhythm, one easing, one vocabulary across the site.
    Every primitive here respects prefers-reduced-motion and only
-   animates transform / opacity / clip-path.
+   animates transform / opacity / clip-path / filter.
    ============================================================ */
 
 
 /* ------------------------------------------------------------------
-   TextReveal — line-by-line masked reveal for display type.
-   Each line sits in an overflow-hidden mask; the inner span travels
-   up 112% → 0%. Optional accent on a single line.
+   TextReveal — multi-mode text animation for display type.
+
+   Modes:
+     line     — line-by-line mask reveal (default, existing behaviour)
+     word     — word-by-word staggered reveal
+     character — character-by-character stagger (short text only)
+     fade     — simple fade + lift
+
+   Each mode uses overflow-hidden masks so text emerges cleanly.
+   The `*…*` accent syntax is supported in all modes.
 ------------------------------------------------------------------ */
+
+type RevealMode = "line" | "word" | "character" | "fade";
+
+/** Split `*accented*` runs into plain / accent spans. */
+function accentSegments(text: string): React.ReactNode[] {
+  const parts = text.split("*");
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <span key={i} className="acc">{part}</span>
+    ) : (
+      <span key={i}>{part}</span>
+    ),
+  );
+}
+
+/** Split a line into words, preserving accent syntax. */
+function splitWords(line: string): string[] {
+  return line.split(/(\s+)/).filter(Boolean);
+}
+
+/** Split a line into characters (ignoring spaces). */
+function splitChars(line: string): { char: string; isSpace: boolean }[] {
+  return [...line].map((char) => ({ char, isSpace: char === " " }));
+}
+
+/* ── Variants by mode ─────────────────────────────────────────── */
+
+const lineVariants = (reduce: boolean, delay: number, dur: number, i: number, stag: number) => ({
+  hidden: reduce ? { opacity: 0 } : { y: "112%" },
+  show: reduce
+    ? { opacity: 1, transition: { duration: duration.micro } }
+    : { y: "0%", transition: { duration: dur, delay: delay + i * stag, ease } },
+});
+
+const wordVariants = (reduce: boolean, delay: number, dur: number, i: number, stag: number) => ({
+  hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 14, filter: "blur(4px)" },
+  show: reduce
+    ? { opacity: 1, transition: { duration: duration.micro } }
+    : {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        transition: { duration: dur, delay: delay + i * stag, ease },
+      },
+});
+
+const charVariants = (reduce: boolean, delay: number, dur: number, i: number, stag: number) => ({
+  hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 10 },
+  show: reduce
+    ? { opacity: 1, transition: { duration: duration.micro } }
+    : {
+        opacity: 1,
+        y: 0,
+        transition: { duration: dur, delay: delay + i * stag, ease },
+      },
+});
+
+const fadeVariants = (reduce: boolean, delay: number, dur: number) => ({
+  hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 16 },
+  show: reduce
+    ? { opacity: 1, transition: { duration: duration.micro } }
+    : { opacity: 1, y: 0, transition: { duration: dur, delay, ease } },
+});
+
+/* ── Component ────────────────────────────────────────────────── */
+
 export function TextReveal({
   lines,
   className,
@@ -25,6 +98,8 @@ export function TextReveal({
   delay = 0,
   lineDuration = duration.section,
   as = "h2",
+  mode = "line",
+  stagger: stag,
 }: {
   lines: string[];
   className?: string;
@@ -32,55 +107,123 @@ export function TextReveal({
   delay?: number;
   lineDuration?: number;
   as?: "h1" | "h2" | "h3" | "p" | "span";
+  mode?: RevealMode;
+  stagger?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = !!useReducedMotion();
   const Tag = motion[as];
+  const dur = reduce ? duration.micro : lineDuration;
+  const s = stag ?? (mode === "character" ? 0.02 : mode === "word" ? 0.04 : stagger);
 
-  /*
-   * The observer has to watch the heading, never the inner line. Each line
-   * starts translated fully outside its overflow-hidden mask, so an observer
-   * on the line itself reports an intersection ratio of ~0 and a viewport
-   * `amount` above 0 can never be satisfied — the reveal would never fire.
-   * Watching the unclipped wrapper and driving the lines through variants
-   * keeps the stagger without that trap.
-   */
+  /* ── LINE MODE (existing behaviour, unchanged) ── */
+  if (mode === "line") {
+    return (
+      <Tag
+        className={className}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.35, margin: "0px 0px -8% 0px" }}
+      >
+        {lines.map((line, i) => (
+          <span key={line} className="tr__mask">
+            <motion.span
+              className={cn("tr__line", i === accentIndex && "tr__line--accent")}
+              style={{ display: "block" }}
+              variants={lineVariants(reduce, delay, dur, i, s)}
+            >
+              {accentSegments(line)}
+            </motion.span>
+          </span>
+        ))}
+      </Tag>
+    );
+  }
+
+  /* ── WORD MODE ── */
+  if (mode === "word") {
+    let wordIdx = 0;
+    return (
+      <Tag
+        className={cn("tr__words", className)}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3, margin: "0px 0px -6% 0px" }}
+      >
+        {lines.map((line, lineIdx) => (
+          <span key={lineIdx} className="tr__word-row">
+            {splitWords(line).map((token) => {
+              if (/^\s+$/.test(token)) {
+                return <span key={wordIdx++} className="tr__word-space"> </span>;
+              }
+              const idx = wordIdx++;
+              return (
+                <span key={idx} className="tr__word-mask">
+                  <motion.span
+                    className={cn("tr__word", lineIdx === accentIndex && "tr__word--accent")}
+                    variants={wordVariants(reduce, delay, dur, idx, s)}
+                  >
+                    {accentSegments(token)}
+                  </motion.span>
+                </span>
+              );
+            })}
+          </span>
+        ))}
+      </Tag>
+    );
+  }
+
+  /* ── CHARACTER MODE (short text only) ── */
+  if (mode === "character") {
+    let charIdx = 0;
+    return (
+      <Tag
+        className={cn("tr__chars", className)}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.3, margin: "0px 0px -6% 0px" }}
+      >
+        {lines.map((line, lineIdx) => (
+          <span key={lineIdx} className="tr__char-row">
+            {splitChars(line).map(({ char, isSpace }) => {
+              if (isSpace) {
+                return <span key={charIdx++} className="tr__char-space"> </span>;
+              }
+              const idx = charIdx++;
+              return (
+                <span key={idx} className="tr__char-mask">
+                  <motion.span
+                    className={cn("tr__char", lineIdx === accentIndex && "tr__char--accent")}
+                    variants={charVariants(reduce, delay, dur, idx, s)}
+                  >
+                    {char}
+                  </motion.span>
+                </span>
+              );
+            })}
+          </span>
+        ))}
+      </Tag>
+    );
+  }
+
+  /* ── FADE MODE (simple fade + lift) ── */
   return (
     <Tag
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.35, margin: "0px 0px -8% 0px" }}
+      viewport={{ once: true, amount: 0.3, margin: "0px 0px -6% 0px" }}
     >
       {lines.map((line, i) => (
-        <span key={line} className="tr__mask">
-          <motion.span
-            className={cn("tr__line", i === accentIndex && "tr__line--accent")}
-            style={{ display: "block" }}
-            variants={{
-              hidden: reduce ? { opacity: 0 } : { y: "112%" },
-              show: reduce
-                ? { opacity: 1, transition: { duration: duration.micro } }
-                : {
-                    y: "0%",
-                    transition: { duration: lineDuration, delay: delay + i * stagger, ease },
-                  },
-            }}
-          >
-            {/*
-             * `*…*` marks an accented run inside a line, so a heading can tint
-             * a phrase without the caller having to split it into its own line.
-             */}
-            {line.split("*").map((part, p) =>
-              p % 2 === 1 ? (
-                <span key={p} className="acc">
-                  {part}
-                </span>
-              ) : (
-                part
-              ),
-            )}
-          </motion.span>
-        </span>
+        <motion.span
+          key={i}
+          className={cn("tr__fade-line", i === accentIndex && "tr__fade-line--accent")}
+          style={{ display: "block" }}
+          variants={fadeVariants(reduce, delay + i * s, dur)}
+        >
+          {accentSegments(line)}
+        </motion.span>
       ))}
     </Tag>
   );

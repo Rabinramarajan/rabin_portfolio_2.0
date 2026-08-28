@@ -93,6 +93,7 @@ export function WorkExplorer({ exclude }: { exclude?: string[] }) {
                   ease,
                   delay: reduce ? 0 : Math.min(i, 5) * 0.04,
                 }}
+                data-motion="work-card"
               >
                 <ProjectCard project={p} />
               </motion.li>

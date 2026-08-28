@@ -29,21 +29,31 @@ export function ProjectCard({
   className?: string;
 }) {
   return (
-    <article className={cn("pcard", className)}>
-      <Link href={`/work/${p.slug}`} className="pcard__link">
-        <span className="pcard__frame">
-          <span className="pcard__shot">
-            <ProjectCover
-              project={p}
-              sizes="(min-width: 1180px) 33vw, (min-width: 720px) 50vw, 100vw"
-              priority={priority}
-              decorative
-            />
+    <article className={cn("pcard", className)} data-motion="work-card">
+      <Link
+        href={`/work/${p.slug}`}
+        className="pcard__link"
+        data-cursor="project"
+        data-cursor-label="VIEW PROJECT →"
+      >
+        <span className="pcard__frame" data-motion="card-frame">
+          <span className="pcard__parallax" data-card-parallax>
+            <span className="pcard__mouse" data-card-mouse>
+              <span className="pcard__shot" data-motion="card-image">
+                <ProjectCover
+                  project={p}
+                  sizes="(min-width: 1180px) 33vw, (min-width: 720px) 50vw, 100vw"
+                  priority={priority}
+                  decorative
+                />
+              </span>
+            </span>
           </span>
           <span className="pcard__no" aria-hidden>
             {p.number}
           </span>
-          <span className="pcard__veil" aria-hidden />
+          <span className="pcard__veil" data-motion="card-overlay" aria-hidden />
+          <span className="pcard__shine" aria-hidden />
         </span>
 
         <span className="pcard__body">
@@ -53,7 +63,14 @@ export function ProjectCard({
             <span>{p.year}</span>
           </span>
 
-          <Heading className="pcard__title">{p.title}</Heading>
+          <Heading className="pcard__title">
+            {p.title}
+            <span className="pcard__arrow" aria-hidden>
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M5 11 11 5M5.5 5H11v5.5" />
+              </svg>
+            </span>
+          </Heading>
           <span className="pcard__tagline">{p.tagline}</span>
 
           <span className="pcard__reveal">
@@ -74,8 +91,6 @@ export function ProjectCard({
                 <span className="pcard__tech pcard__tech--more">{`+${p.technologies.length - 3}`}</span>
               ) : null}
             </span>
-            {/* Not a nested link — the whole card is the link. This is the
-                affordance that tells you so. */}
             <span className="pcard__cta" aria-hidden>
               View case study
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6">

@@ -119,6 +119,7 @@ export function WorkSection({
   return (
     <section
       id={id}
+      data-section="work"
       className={cn("wx", isPageHero && "wx--page")}
       style={{ "--wx-tint": FILTER_TINT[featured.filter] } as CSSProperties}
     >
@@ -136,7 +137,7 @@ export function WorkSection({
           ) : null}
         </header>
 
-        <div className="wx__intro">
+        <div className="wx__intro" data-work-intro>
           <div className="wx__intro-copy">
             <Heading className="wx__title">
               {intro.title.map((line, i) => (
@@ -212,7 +213,7 @@ export function WorkSection({
 
           <ol className="wx__chapters" role="tablist" aria-label="Projects">
             {chapters.map((p, i) => (
-              <li className="wx__chapter-cell" key={p.slug}>
+              <li className="wx__chapter-cell" key={p.slug} data-work-chapter>
                 <button
                   ref={(node) => {
                     chapterRefs.current[i] = node;
@@ -279,21 +280,24 @@ function Stage({
     <div className="wx__stage">
       <span className="wx__stage-rim" aria-hidden />
 
-      <div className="wx__stage-frame">
+      <div className="wx__stage-frame" data-work-stage>
         <AnimatePresence initial={false}>
           <motion.div
             className="wx__stage-shot"
             key={p.slug}
+            data-work-image
             initial={still ? false : { opacity: 0, scale: 1.05, x: dir * 32 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             exit={{ opacity: 0, scale: reduce ? 1 : 1.02 }}
             transition={{ duration: reduce ? duration.micro : duration.section, ease }}
           >
-            <ProjectCover
-              project={p}
-              sizes="(min-width: 1180px) 60vw, 100vw"
-              priority={priority}
-            />
+            <span className="wx__stage-mouse" data-work-mouse aria-hidden>
+              <ProjectCover
+                project={p}
+                sizes="(min-width: 1180px) 60vw, 100vw"
+                priority={priority}
+              />
+            </span>
           </motion.div>
         </AnimatePresence>
 

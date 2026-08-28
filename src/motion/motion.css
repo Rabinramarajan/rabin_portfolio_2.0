@@ -24,6 +24,67 @@
   font-weight: 600;
 }
 
+/* --- word reveal --- */
+.tr__words {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.12em;
+}
+.tr__word-row {
+  display: contents;
+}
+.tr__word-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+  margin-bottom: -0.04em;
+}
+.tr__word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+.tr__word--accent {
+  color: var(--accent, var(--color-accent));
+}
+.tr__word-space {
+  display: inline-block;
+  width: 0.3em;
+}
+
+/* --- character reveal --- */
+.tr__chars {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.06em;
+}
+.tr__char-row {
+  display: contents;
+}
+.tr__char-mask {
+  display: inline-block;
+  overflow: hidden;
+}
+.tr__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+.tr__char--accent {
+  color: var(--accent, var(--color-accent));
+}
+.tr__char-space {
+  display: inline-block;
+  width: 0.28em;
+}
+
+/* --- fade reveal --- */
+.tr__fade-line {
+  display: block;
+  will-change: transform, opacity;
+}
+.tr__fade-line--accent {
+  color: var(--accent, var(--color-accent));
+}
+
 /* ========== PARALLAX CONTAINERS ========== */
 [data-motion="parallax-bg"],
 [data-motion="parallax-mid"],
