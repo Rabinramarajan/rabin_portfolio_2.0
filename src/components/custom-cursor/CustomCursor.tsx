@@ -13,7 +13,7 @@
 
 import { useEffect, useRef, useCallback } from "react";
 
-type CursorState = "default" | "link" | "button" | "project" | "image" | "text" | "hidden";
+type CursorState = "default" | "link" | "button" | "project" | "image" | "text" | "hidden" | "explore";
 
 const STATE_MAP: Record<string, CursorState> = {
   link: "link",
@@ -23,6 +23,7 @@ const STATE_MAP: Record<string, CursorState> = {
   text: "text",
   hidden: "hidden",
   magnetic: "button",
+  explore: "explore",
 };
 
 function resolveTarget(el: Element | null): { state: CursorState; label: string } {
@@ -105,10 +106,12 @@ export function CustomCursor() {
       try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const gsap = require("gsap/dist/gsap").gsap;
-        quickFns.current.dotX = gsap.quickTo(dot, "x", { duration: 0.15, ease: "power3.out" });
-        quickFns.current.dotY = gsap.quickTo(dot, "y", { duration: 0.15, ease: "power3.out" });
-        quickFns.current.ringX = gsap.quickTo(ring, "x", { duration: 0.35, ease: "power3.out" });
-        quickFns.current.ringY = gsap.quickTo(ring, "y", { duration: 0.35, ease: "power3.out" });
+        gsap.set(dot, { xPercent: -50, yPercent: -50 });
+        gsap.set(ring, { xPercent: -50, yPercent: -50 });
+        quickFns.current.dotX = gsap.quickTo(dot, "x", { duration: 0.12, ease: "power3.out" });
+        quickFns.current.dotY = gsap.quickTo(dot, "y", { duration: 0.12, ease: "power3.out" });
+        quickFns.current.ringX = gsap.quickTo(ring, "x", { duration: 0.3, ease: "power3.out" });
+        quickFns.current.ringY = gsap.quickTo(ring, "y", { duration: 0.3, ease: "power3.out" });
       } catch {
         // GSAP not available — fall back to direct transform
       }
@@ -140,14 +143,14 @@ export function CustomCursor() {
         fns.dotX(mx);
         fns.dotY(my);
       } else {
-        dot.style.transform = `translate(${mx}px, ${my}px)`;
+        dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
       }
 
       if (fns.ringX && fns.ringY) {
         fns.ringX(mx);
         fns.ringY(my);
       } else {
-        ring.style.transform = `translate(${mx}px, ${my}px)`;
+        ring.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
       }
 
       rafRef.current = requestAnimationFrame(tick);

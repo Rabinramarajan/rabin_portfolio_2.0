@@ -184,9 +184,6 @@ export function SkillsSection({
           </ul>
         </motion.div>
 
-        {/* ---------- mobile skill grid (visible only below 960px) ---------- */}
-        <MobileSkillGrid groups={skillGroups} />
-
         {/* ---------- ecosystem ---------- */}
         <TechEcosystem headingLevel={headingLevel} />
       </div>
@@ -343,41 +340,6 @@ function SkillDetail({
           </motion.ul>
         </motion.div>
       </AnimatePresence>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------
-   MobileSkillGrid — simplified grid fallback for mobile (below 960px).
-   The SVG ecosystem graph is hidden on mobile; this grid gives touch
-   users a tappable way to browse all skills by category.
------------------------------------------------------------------- */
-
-function MobileSkillGrid({
-  groups,
-}: {
-  groups: typeof skillGroups;
-}) {
-  return (
-    <div className="eco__mobile-grid" aria-label="All technologies">
-      {groups.map((g) => (
-        <Fragment key={g.id}>
-          <p className="eco__mobile-cat">{g.label}</p>
-          {g.items.map((item) => (
-            <button
-              key={item}
-              type="button"
-              className="eco__mobile-item"
-              data-cursor="link"
-            >
-              <span className="eco__mobile-item-icon" aria-hidden>
-                <StackTechIcon label={item} />
-              </span>
-              {item}
-            </button>
-          ))}
-        </Fragment>
-      ))}
     </div>
   );
 }
