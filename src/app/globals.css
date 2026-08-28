@@ -623,29 +623,14 @@ code {
   height: var(--header-h);
   display: flex;
   align-items: center;
-  border-bottom: 1px solid transparent;
-  background: transparent;
-  transition:
-    background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: backdrop-filter, background, transform;
-}
-.hd.is-scrolled {
+  border-bottom: 1px solid var(--color-line);
   background: rgb(8 8 10 / 82%);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  border-bottom-color: var(--color-line);
-}
-.hd.is-hidden {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
+  will-change: auto;
 }
 /* Progress indicator line under header — driven by ScrollProgressIndicator via --scroll-progress */
-.hd.is-scrolled::after {
+.hd::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -6016,11 +6001,6 @@ html {
   }
   .hd__indicator {
     transition: none !important;
-  }
-  .hd.is-hidden {
-    transform: none;
-    opacity: 1;
-    pointer-events: auto;
   }
   .pj__mobile {
     display: block !important;
@@ -18524,4 +18504,83 @@ a.premium-contact-left-column__detail-value:hover {
   .eco__mobile-deck {
     display: block;
   }
+}
+
+/* ============================================================
+   DISABLE ALL MOTION EFFECTS GLOBALLY
+   ============================================================ */
+
+/* Remove all animations, transitions, and motion properties */
+* {
+  animation: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition: none !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* Disable will-change optimizations */
+[style*="will-change"] {
+  will-change: auto !important;
+}
+
+/* Disable scroll behavior animation */
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Remove box-shadow transitions and hovers */
+*:hover {
+  box-shadow: none !important;
+}
+
+/* Ensure all keyframe animations are disabled */
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0 !important; }
+  50% { opacity: 1 !important; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1 !important; }
+  50% { opacity: 1 !important; }
+}
+
+@keyframes skd-spin {
+  from { transform: none !important; }
+  to { transform: none !important; }
+}
+
+@keyframes ecoNucleusPulse {
+  0%, 100% { opacity: 0.5 !important; }
+  50% { opacity: 0.5 !important; }
+}
+
+@keyframes ecoAuraPulse {
+  0%, 100% { opacity: 0.3 !important; }
+  50% { opacity: 0.3 !important; }
+}
+
+@keyframes cx-float {
+  0%, 100% { transform: none !important; }
+  50% { transform: none !important; }
+}
+
+@keyframes form-spin {
+  from { transform: none !important; }
+  to { transform: none !important; }
+}
+
+@keyframes page-enter {
+  from { opacity: 1 !important; }
+  to { opacity: 1 !important; }
+}
+
+@keyframes chat-pulse {
+  0%, 100% { opacity: 1 !important; }
+  50% { opacity: 1 !important; }
+}
+
+@keyframes chat-cursor-blink {
+  0%, 50%, 100% { opacity: 1 !important; }
 }

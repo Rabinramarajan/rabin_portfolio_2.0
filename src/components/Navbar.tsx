@@ -3,69 +3,27 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { navigation, profile } from "@/content/profile";
-import { duration, ease } from "@/lib/motion";
 import { useScrollSync } from "@/lib/scroll-sync";
 import { Logo } from "@/components/Logo";
-import { Magnetic } from "@/components/motion";
 import { isStandaloneRoute } from "@/lib/chrome-routes";
-import { cn } from "@/lib/cn";
 
 export function Navbar() {
   const pathname = usePathname();
-  const reduce = useReducedMotion();
   const { active: activeSection } = useScrollSync();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const navRef = useRef<HTMLUListElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLSpanElement>(null);
-  const navRef = useRef<HTMLUListElement>(null);
-  const lastScrollY = useRef(0);
-  const ticking = useRef(false);
-
-  /* ---- Scroll-aware show/hide + scroll state ---- */
-  useEffect(() => {
-    const onScroll = () => {
-      if (ticking.current) return;
-      ticking.current = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        const delta = y - lastScrollY.current;
-
-        // At top: always show, always transparent
-        if (y < 10) {
-          setHidden(false);
-          setScrolled(false);
-        } else {
-          setScrolled(true);
-          // Smart hide: only after scrolling 60px+ from last checkpoint
-          if (delta > 60) {
-            setHidden(true);
-          } else if (delta < -30) {
-            setHidden(false);
-          }
-        }
-
-        lastScrollY.current = y;
-        ticking.current = false;
-      });
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   /* ---- Sliding indicator ---- */
   const moveIndicator = useCallback(
     (item: HTMLElement | null) => {
       const indicator = indicatorRef.current;
       const nav = navRef.current;
-      if (!indicator || !nav || !item || reduce) return;
+      if (!indicator || !nav || !item) return;
 
       const navRect = nav.getBoundingClientRect();
       const itemRect = item.getBoundingClientRect();
@@ -76,7 +34,7 @@ export function Navbar() {
       indicator.style.transform = `translateX(${x}px)`;
       indicator.style.opacity = "1";
     },
-    [reduce],
+    [],
   );
 
   // Reset indicator when no section is active (hero state)
@@ -140,14 +98,6 @@ export function Navbar() {
     if (open) closeRef.current?.focus();
   }, [open]);
 
-  /* Sentinel for scroll detection */
-  useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting), { threshold: 0 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
 
   /* Keyboard: ESC closes, Tab trapped inside menu */
   useEffect(() => {
@@ -183,29 +133,19 @@ export function Navbar() {
     return false;
   };
 
-  const fade = (delay: number) =>
-    reduce
-      ? {}
-      : {
-          initial: { opacity: 0, y: -10 },
-          animate: { opacity: 1, y: 0 },
-          transition: { duration: duration.ui, delay, ease },
-        };
-
   return (
     <>
-      <div ref={sentinelRef} aria-hidden style={{ position: "absolute", width: 1, height: 1 }} />
       <header
-        className={cn("hd", scrolled && "is-scrolled", hidden && "is-hidden")}
+        className="hd"
         aria-label="Site header"
       >
         <div className="hd__inner">
-          <motion.div {...fade(0.05)}>
+          <div>
             <Link href="/" aria-label="Rabin R — home" className="logo">
               <Logo />
             </Link>
-          </motion.div>
-          <motion.nav className="hd__nav" aria-label="Primary" {...fade(0.14)}>
+          </div>
+          <nav className="hd__nav" aria-label="Primary">
             <ul ref={navRef}>
               {navigation.map((item) => (
                 <li key={item.href}>
@@ -216,19 +156,17 @@ export function Navbar() {
               ))}
               <span ref={indicatorRef} className="hd__indicator" aria-hidden="true" />
             </ul>
-          </motion.nav>
-          <motion.div className="hd__cta" {...fade(0.22)}>
-            <Magnetic strength={8}>
-              <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }} data-cursor="button" data-cursor-label="LET'S TALK →">
-                <span className="btn__label">
-                  Let&apos;s Work Together
-                  <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
-                    <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                  </svg>
-                </span>
-              </Link>
-            </Magnetic>
-          </motion.div>
+          </nav>
+          <div className="hd__cta">
+            <Link href="/contact" className="btn btn--solid" style={{ borderRadius: 0 }} data-cursor="button" data-cursor-label="LET'S TALK →">
+              <span className="btn__label">
+                Let&apos;s Work Together
+                <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
+                  <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+                </svg>
+              </span>
+            </Link>
+          </div>
           <button
             ref={toggleRef}
             className="hd__toggle"
@@ -243,93 +181,69 @@ export function Navbar() {
           </button>
         </div>
       </header>
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            ref={overlayRef}
-            className="mm"
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu"
-            initial={reduce ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
-            animate={reduce ? { opacity: 1 } : { clipPath: "inset(0 0 0% 0)" }}
-            exit={reduce ? { opacity: 0 } : { clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: reduce ? duration.micro : duration.section, ease }}
-          >
-            <div className="mm__top">
-              <Link href="/" onClick={() => setOpen(false)} aria-label="Rabin R — home">
-                <Logo />
-              </Link>
-              <button
-                ref={closeRef}
-                className="hd__toggle is-open"
-                type="button"
-                aria-label="Close menu"
-                onClick={() => setOpen(false)}
-              >
-                <span />
-                <span />
-              </button>
-            </div>
-            <nav className="mm__nav" aria-label="Mobile">
-              <ul>
-                {navigation.map((item, i) => (
-                  <motion.li
-                    key={item.href}
-                    initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: reduce ? 0 : 0.1 + i * 0.06, duration: duration.ui, ease }}
-                  >
-                    <Link href={item.href} className={isActive(item) ? "is-active" : undefined} onClick={() => setOpen(false)}>
-                      <span className="mm__index">{String(i + 1).padStart(2, "0")}</span>
-                      {item.label}
-                    </Link>
-                  </motion.li>
-                ))}
-                <motion.li
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: reduce ? 0 : 0.1 + navigation.length * 0.06, duration: duration.ui, ease }}
-                >
-                  <Link href="/about" className={isActive({ href: "/about", label: "About" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
-                    <span className="mm__index">{String(navigation.length + 1).padStart(2, "0")}</span>
-                    About
-                  </Link>
-                </motion.li>
-                <motion.li
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: reduce ? 0 : 0.1 + (navigation.length + 1) * 0.06, duration: duration.ui, ease }}
-                >
-                  <Link href="/contact" className={isActive({ href: "/contact", label: "Contact" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
-                    <span className="mm__index">{String(navigation.length + 2).padStart(2, "0")}</span>
-                    Contact
-                  </Link>
-                </motion.li>
-              </ul>
-            </nav>
-            <motion.div
-              className="mm__foot"
-              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: reduce ? 0 : 0.55, duration: duration.ui, ease }}
+      {open && (
+        <div
+          ref={overlayRef}
+          className="mm"
+          id="mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+        >
+          <div className="mm__top">
+            <Link href="/" onClick={() => setOpen(false)} aria-label="Rabin R — home">
+              <Logo />
+            </Link>
+            <button
+              ref={closeRef}
+              className="hd__toggle is-open"
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setOpen(false)}
             >
-              <Link href="/contact" className="btn btn--solid" onClick={() => setOpen(false)}>
-                <span className="btn__label">
-                  Let&apos;s Work Together
-                  <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
-                    <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                  </svg>
-                </span>
-              </Link>
-              <a className="mm__email" href={"mailto:" + profile.email}>
-                {profile.email}
-              </a>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+              <span />
+              <span />
+            </button>
+          </div>
+          <nav className="mm__nav" aria-label="Mobile">
+            <ul>
+              {navigation.map((item, i) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={isActive(item) ? "is-active" : undefined} onClick={() => setOpen(false)}>
+                    <span className="mm__index">{String(i + 1).padStart(2, "0")}</span>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/about" className={isActive({ href: "/about", label: "About" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
+                  <span className="mm__index">{String(navigation.length + 1).padStart(2, "0")}</span>
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className={isActive({ href: "/contact", label: "Contact" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
+                  <span className="mm__index">{String(navigation.length + 2).padStart(2, "0")}</span>
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </nav>
+          <div className="mm__foot">
+            <Link href="/contact" className="btn btn--solid" onClick={() => setOpen(false)}>
+              <span className="btn__label">
+                Let&apos;s Work Together
+                <svg viewBox="0 0 16 16" aria-hidden className="btn__arrow">
+                  <path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+                </svg>
+              </span>
+            </Link>
+            <a className="mm__email" href={"mailto:" + profile.email}>
+              {profile.email}
+            </a>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, JetBrains_Mono, Caveat, Bodoni_Moda, Jost } from "next/font/google";
+import {
+  Inter,
+  Inter_Tight,
+  JetBrains_Mono,
+  Caveat,
+  Bodoni_Moda,
+  Jost,
+} from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Navbar } from "@/components/Navbar";
@@ -16,7 +23,12 @@ import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import "@/motion/motion.css";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", adjustFontFallback: true });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+  adjustFontFallback: true,
+});
 const tight = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-inter-tight",
@@ -66,11 +78,21 @@ export const metadata: Metadata = {
     title: defaultSeo.title,
     description: defaultSeo.description,
   },
-  twitter: { card: "summary_large_image", title: defaultSeo.title, description: defaultSeo.description },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultSeo.title,
+    description: defaultSeo.description,
+  },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
   alternates: { canonical: SITE_URL + "/" },
   manifest: "/manifest.webmanifest",
@@ -86,7 +108,11 @@ export const metadata: Metadata = {
       ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
       : {}),
     ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
-      ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } }
+      ? {
+          other: {
+            "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION,
+          },
+        }
       : {}),
   },
 };
@@ -96,14 +122,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={[inter.variable, tight.variable, mono.variable, caveat.variable, bodoniModa.variable, jost.variable].join(" ")}
+      className={[
+        inter.variable,
+        tight.variable,
+        mono.variable,
+        caveat.variable,
+        bodoniModa.variable,
+        jost.variable,
+      ].join(" ")}
     >
       <body>
-        <ScrollProgressIndicator />
         <MotionProvider>
-          <a className="skip-link" href="#main">
-            Skip to content
-          </a>
           <JsonLd />
           <ProgressSync />
           <Navbar />

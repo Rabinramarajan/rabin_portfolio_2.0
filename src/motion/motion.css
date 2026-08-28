@@ -1,22 +1,25 @@
 /**
- * Motion System Styles
- * Animations, transitions, and cursor effects for GSAP motion engine
+ * Motion System Styles — ALL MOTION EFFECTS DISABLED
+ * All animations, transitions, and motion effects are completely removed
  */
 
+/* ========== DISABLE ALL ANIMATIONS ========== */
+* {
+  animation: none !important;
+  transition: none !important;
+}
+
 /* ========== TEXT REVEAL MASKS ========== */
-.tr__mask {
-  display: block;
-  overflow: hidden;
-  position: relative;
-}
-
-.tr__line {
-  display: block;
-  position: relative;
-}
-
-.tr__line--accent {
-  /* Accent applied via class */
+.tr__mask,
+.tr__line,
+.tr__word,
+.tr__word-mask,
+.tr__char,
+.tr__char-mask,
+.tr__fade-line {
+  overflow: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 .tr__mask .acc {
@@ -24,78 +27,23 @@
   font-weight: 600;
 }
 
-/* --- word reveal --- */
-.tr__words {
-  display: flex;
-  flex-wrap: wrap;
-  row-gap: 0.12em;
-}
-.tr__word-row {
-  display: contents;
-}
-.tr__word-mask {
-  display: inline-block;
-  overflow: hidden;
-  padding-bottom: 0.04em;
-  margin-bottom: -0.04em;
-}
-.tr__word {
-  display: inline-block;
-  will-change: transform, opacity, filter;
-}
-.tr__word--accent {
-  color: var(--accent, var(--color-accent));
-}
-.tr__word-space {
-  display: inline-block;
-  width: 0.3em;
-}
-
-/* --- character reveal --- */
-.tr__chars {
-  display: flex;
-  flex-wrap: wrap;
-  row-gap: 0.06em;
-}
-.tr__char-row {
-  display: contents;
-}
-.tr__char-mask {
-  display: inline-block;
-  overflow: hidden;
-}
-.tr__char {
-  display: inline-block;
-  will-change: transform, opacity;
-}
-.tr__char--accent {
-  color: var(--accent, var(--color-accent));
-}
-.tr__char-space {
-  display: inline-block;
-  width: 0.28em;
-}
-
-/* --- fade reveal --- */
-.tr__fade-line {
-  display: block;
-  will-change: transform, opacity;
-}
+.tr__word--accent,
+.tr__char--accent,
 .tr__fade-line--accent {
   color: var(--accent, var(--color-accent));
 }
 
-/* ========== PARALLAX CONTAINERS ========== */
-[data-motion="parallax-bg"],
-[data-motion="parallax-mid"],
-[data-motion="parallax-content"],
-[data-motion="parallax-slide"] {
-  will-change: transform;
+/* ========== PARALLAX & MOTION DISABLED ========== */
+[data-motion] {
+  will-change: auto !important;
+  transition: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
 }
 
 /* ========== SCROLL PROGRESS INDICATOR ========== */
-
-/* Desktop: thin vertical accent line on right edge */
 .scroll-track {
   position: fixed;
   top: 0;
@@ -106,36 +54,7 @@
   pointer-events: none;
   background: rgb(255 255 255 / 6%);
 }
-.scroll-track__fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    180deg,
-    var(--color-accent) 0%,
-    rgb(201 242 77 / 60%) 100%
-  );
-  transform-origin: top center;
-  transform: scaleY(0);
-  will-change: transform;
-}
-.scroll-track__label {
-  position: absolute;
-  top: 50%;
-  right: calc(100% + 0.65rem);
-  transform: translateY(-50%);
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.12em;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  opacity: 0.55;
-  transition: opacity 0.3s ease;
-}
 
-/* Mobile / Tablet: thin horizontal bar below navbar */
 .scroll-bar {
   position: fixed;
   top: var(--header-h, 3.5rem);
@@ -146,70 +65,14 @@
   pointer-events: none;
   background: rgb(255 255 255 / 4%);
 }
-.scroll-bar__fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-accent) 0%,
-    rgb(201 242 77 / 50%) 100%
-  );
-  transform-origin: left center;
-  transform: scaleX(0);
-  will-change: transform;
-}
-
-/* Reduced motion: remove smooth transitions */
-@media (prefers-reduced-motion: reduce) {
-  .scroll-track__fill,
-  .scroll-bar__fill {
-    transition: none;
-  }
-}
-
-/* ========== CUSTOM CURSOR (Legacy) ========== */
-/* Replaced by CustomCursor component using .cursor-dot / .cursor-ring in globals.css */
-
-/* ========== MAGNETIC BUTTON ========== */
-.magnetic {
-  position: relative;
-  will-change: transform;
-}
-
-/* ========== CLIP PATH PRESETS ========== */
-[data-motion="clip-left"] {
-  clip-path: inset(0 100% 0 0);
-}
-
-[data-motion="clip-right"] {
-  clip-path: inset(0 0 0 100%);
-}
-
-[data-motion="clip-top"] {
-  clip-path: inset(100% 0 0 0);
-}
-
-[data-motion="clip-bottom"] {
-  clip-path: inset(0 0 100% 0);
-}
 
 /* ========== WORK SECTION CARDS ========== */
 [data-motion="work-card"] {
-  will-change: transform;
-  transition: box-shadow 0.3s ease;
+  box-shadow: none;
 }
 
 [data-motion="work-card"]:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-[data-motion="work-image"] {
-  will-change: transform;
-  overflow: hidden;
-  border-radius: inherit;
+  box-shadow: none;
 }
 
 [data-motion="work-image"] img {
@@ -218,114 +81,7 @@
   object-fit: cover;
 }
 
-[data-motion="card-overlay"] {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.2);
-  opacity: 0;
-}
-
-/* ========== PROCESS SECTION ========== */
-[data-motion="process-stage"] {
-  will-change: transform, opacity;
-}
-
-[data-motion="process-visual"] {
-  will-change: transform, opacity;
-}
-
-[data-motion="process-progress"] {
-  position: absolute;
-  height: 2px;
-  background: var(--accent);
-  width: 0%;
-  will-change: width;
-}
-
-[data-motion="stage-indicator"] {
-  will-change: color, text-shadow, transform;
-  transition: color 0.2s ease;
-}
-
-/* ========== HERO SECTION ========== */
-[data-motion="hero-bg"],
-[data-motion="hero-nav"],
-[data-motion="hero-eyebrow"],
-[data-motion="hero-title"],
-[data-motion="hero-desc"],
-[data-motion="hero-cta"],
-[data-motion="hero-visual"] {
-  will-change: transform, opacity;
-}
-
-[data-motion="parallax-bg"],
-[data-motion="parallax-mid"],
-[data-motion="parallax-content"] {
-  will-change: transform;
-}
-
-[data-motion="pointer-field"] {
-  will-change: transform;
-}
-
-/* ========== HOVER STATES ========== */
-[data-motion="work-card-link"],
-[data-motion="project-link"] {
-  will-change: transform;
-}
-
-/* ========== REDUCED MOTION ========== */
-@media (prefers-reduced-motion: reduce) {
-  [data-motion*="parallax"],
-  [data-motion*="scroll"],
-  [data-motion*="hover"],
-  [data-motion="magnetic"],
-  .cursor-dot,
-  .cursor-ring {
-    will-change: auto;
-    transition: none !important;
-    animation: none !important;
-  }
-
-  [data-motion*="parallax"] {
-    transform: none !important;
-  }
-}
-
-/* ========== PERFORMANCE OPTIMIZATIONS ========== */
-/* Prevent layout shifts during animations */
-[data-motion="hero-visual"],
-[data-motion="work-image"],
-[data-motion="process-visual"] {
-  contain: layout style paint;
-}
-
-/* Smooth scrolling when available */
+/* ========== DISABLE SMOOTH SCROLLING ========== */
 html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
-/* ========== ACCESSIBILITY ========== */
-/* Ensure elements remain visible during animation load */
-[data-motion*="hero"],
-[data-motion*="process"],
-[data-motion*="work"] {
-  opacity: 1; /* Explicit fallback if JS fails */
-}
-
-/* High contrast cursor for accessibility */
-@media (prefers-contrast: more) {
-  .cursor-dot {
-    width: 8px;
-    height: 8px;
-  }
-  .cursor-ring {
-    border-width: 2px;
-  }
+  scroll-behavior: auto;
 }
