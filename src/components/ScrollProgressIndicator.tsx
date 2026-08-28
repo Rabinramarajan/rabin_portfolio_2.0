@@ -9,17 +9,25 @@
  * Uses direct DOM updates (no React state) for 60 fps performance.
  */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { prefersReducedMotion, hasPointerFine } from "@/motion/gsap-context";
 
 export function ScrollProgressIndicator() {
   const trackRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
   const reduce = prefersReducedMotion();
-  const isDesktop = hasPointerFine();
+
+  // Initialize mounted state on client only
+  useEffect(() => {
+    setMounted(true);
+    setIsDesktop(hasPointerFine());
+  }, []);
 
   useEffect(() => {
+    if (!mounted) return;
     if (typeof window === "undefined") return;
 
     const fill = fillRef.current;
@@ -60,7 +68,9 @@ export function ScrollProgressIndicator() {
       cancelAnimationFrame(raf);
       document.documentElement.style.removeProperty("--scroll-progress");
     };
-  }, [reduce]);
+  }, [mounted, reduce]);
+
+  if (!mounted) return null;
 
   return (
     <>
