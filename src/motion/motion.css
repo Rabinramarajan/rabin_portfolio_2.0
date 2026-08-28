@@ -10,24 +10,55 @@
 }
 
 /* ========== RE-ENABLE ECOSYSTEM ANIMATIONS ========== */
-.eco * {
-  animation: inherit !important;
-  transition: inherit !important;
+/* SVG animation elements in ecosystem */
+.eco__trunk-pulse {
+  animation: trunkEnergy 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
 }
 
+.eco__branch-signal {
+  animation: branchSignalFlow 4s linear infinite !important;
+}
+
+.eco__branch--highlighted .eco__branch-signal {
+  animation-duration: 2.2s !important;
+}
+
+.eco__branch-glow {
+  animation: branchGlowPulse 5s ease-in-out infinite !important;
+}
+
+.eco__branch--highlighted .eco__branch-glow {
+  animation: branchGlowPulseActive 3s ease-in-out infinite !important;
+}
+
+.eco__nucleus-ring--outer {
+  animation: spinSlow 40s linear infinite !important;
+}
+
+.eco__nucleus-logo-foreign {
+  animation: nucleusGlow 3s ease-in-out infinite !important;
+}
+
+.eco__nucleus-logo-mark {
+  animation: logoLighting 4s ease-in-out infinite !important;
+}
+
+.eco__node-aura {
+  animation: auraPulse 2.5s ease-in-out infinite alternate !important;
+}
+
+/* Motion/React animations */
 .eco__pill,
 .eco__sidebar-item,
 .eco__node-item,
 .eco__branch,
 .eco__node-strand,
-.eco__trunk-pulse,
-.eco__branch-signal,
 .eco__filter-pill,
 .eco__explore-overlay,
 .eco__note-card,
 .eco__mobile-node-btn {
-  animation: auto;
-  transition: auto;
+  animation: auto !important;
+  transition: auto !important;
 }
 
 /* ========== TEXT REVEAL MASKS ========== */
