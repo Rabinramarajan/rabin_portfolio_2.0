@@ -17885,11 +17885,12 @@ a.premium-contact-left-column__detail-value:hover {
 
 .eco__node-text {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.04em;
   fill: var(--color-text);
   pointer-events: none;
   transition: fill 0.25s ease, font-weight 0.25s ease;
+  dominant-baseline: hanging;
 }
 
 .eco__node-item:hover .eco__node-text {

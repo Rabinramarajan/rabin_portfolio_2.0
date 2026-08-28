@@ -1038,10 +1038,10 @@ function DigitalTreeCanvas({
 
                 {/* Node Brand Icon (via StackTechIcon) */}
                 <foreignObject
-                  x={isSelected ? -13 : -10}
-                  y={isSelected ? -13 : -10}
-                  width={isSelected ? 26 : 20}
-                  height={isSelected ? 26 : 20}
+                  x={isSelected ? -12 : -9}
+                  y={isSelected ? -12 : -9}
+                  width={isSelected ? 24 : 18}
+                  height={isSelected ? 24 : 18}
                   className="eco__node-icon-foreign"
                 >
                   <StackTechIcon label={node.label} />
@@ -1049,7 +1049,7 @@ function DigitalTreeCanvas({
 
                 {/* Technology Label */}
                 <text
-                  y={isSelected ? 34 : 26}
+                  y={isSelected ? 36 : 28}
                   textAnchor="middle"
                   className="eco__node-text"
                 >
