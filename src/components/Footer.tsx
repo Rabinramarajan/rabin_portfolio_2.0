@@ -7,7 +7,6 @@ import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
 import { footerNavigation, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Monogram } from "@/components/Logo";
-import { MotionToggle } from "@/components/MotionToggle";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 import { Magnetic } from "@/components/motion";
 import { isStandaloneRoute } from "@/lib/chrome-routes";
@@ -145,7 +144,6 @@ function FooterInner() {
           <p className="ft__built">
             Built with <Link href="/skills">Next.js</Link> and <Link href="/skills">React</Link>.
           </p>
-          <MotionToggle />
         </div>
       </div>
     </footer>

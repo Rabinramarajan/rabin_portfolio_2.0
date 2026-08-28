@@ -45,3 +45,7 @@ next-env.d.ts
 
 .vercel
 .env*
+# local agent + runtime state (never commit)
+/.claude-flow/
+/.contact-messages/
+/.claude/

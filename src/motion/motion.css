@@ -79,12 +79,6 @@
   font-weight: 600;
 }
 
-.tr__word--accent,
-.tr__char--accent,
-.tr__fade-line--accent {
-  color: var(--accent, var(--color-accent));
-}
-
 /* ========== PARALLAX & MOTION DISABLED ========== */
 [data-motion] {
   will-change: auto !important;
@@ -106,7 +100,6 @@
   pointer-events: none;
   background: rgb(255 255 255 / 6%);
 }
-
 
 /* ========== WORK SECTION CARDS ========== */
 [data-motion="work-card"] {

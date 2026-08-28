@@ -11,10 +11,9 @@ export interface PremiumContactLayoutProps {
    */
   center: ReactNode;
   right: ReactNode;
-  footer?: ReactNode;
 }
 
-export function PremiumContactLayout({ left, center, right, footer }: PremiumContactLayoutProps) {
+export function PremiumContactLayout({ left, center, right }: PremiumContactLayoutProps) {
   return (
     <div className="premium-contact-page">
       <div className="premium-contact-page__stage" aria-hidden="true">
@@ -25,8 +24,6 @@ export function PremiumContactLayout({ left, center, right, footer }: PremiumCon
         <div className="premium-contact-page__left">{left}</div>
         <div className="premium-contact-page__right">{right}</div>
       </div>
-
-      {footer ? <div className="premium-contact-page__footer">{footer}</div> : null}
     </div>
   );
 }

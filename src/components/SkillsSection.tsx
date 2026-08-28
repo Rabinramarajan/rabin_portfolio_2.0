@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, type CSSProperties, type ComponentType, type KeyboardEvent, Fragment } from "react";
+import { useCallback, useRef, useState, type CSSProperties, type ComponentType, type KeyboardEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   Accessibility,
@@ -22,7 +22,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { everydayTech, skillDomains, skillHero, skillStats, skillGroups, skillStrengths } from "@/content/skills";
+import { everydayTech, skillDomains, skillHero, skillStats, skillStrengths } from "@/content/skills";
 import type { SkillDomain } from "@/content/skills";
 import { StackTechIcon } from "@/components/StackTechIcon";
 import { TechEcosystem } from "@/components/TechEcosystem";

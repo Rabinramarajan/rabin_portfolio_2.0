@@ -1,25 +1,16 @@
 "use client";
 
 /**
- * Motion Components — ALL MOTION EFFECTS DISABLED
- * These are passthrough components with no animations
+ * Motion primitives — currently render-only.
+ *
+ * `TextReveal` and `Magnetic` keep the markup and prop shape their call sites
+ * rely on, but the animations are disabled; the extra timing props are
+ * accepted and ignored so the sites can be re-animated without churn.
  */
 
 import type { ReactNode } from "react";
 
-/* TextReveal — Passthrough component with no animation */
-export function TextReveal({
-  lines,
-  className,
-  accentIndex,
-  delay = 0,
-  lineDuration = 0.6,
-  as = "h2",
-  staggerLines = 0.08,
-  staggerWords = 0.03,
-  staggerChars = 0.02,
-  mode = "line",
-}: {
+type TextRevealProps = {
   lines: string[];
   className?: string;
   accentIndex?: number | number[];
@@ -30,28 +21,29 @@ export function TextReveal({
   staggerWords?: number;
   staggerChars?: number;
   mode?: "line" | "word" | "character" | "fade";
-}) {
-  const Component = as || "h2";
+};
+
+export function TextReveal({ lines, className, accentIndex }: TextRevealProps) {
+  const isAccent = (i: number) =>
+    accentIndex === i || (Array.isArray(accentIndex) && accentIndex.includes(i));
+
   return (
     <div className={className}>
       {lines.map((line, i) => (
         <div key={i} className="tr__line">
-          <span className={accentIndex === i || (Array.isArray(accentIndex) && accentIndex.includes(i)) ? "acc" : ""}>{line}</span>
+          <span className={isAccent(i) ? "acc" : ""}>{line}</span>
         </div>
       ))}
     </div>
   );
 }
 
-/* Magnetic — Passthrough component with no animation */
-export function Magnetic({
-  children,
-  strength = 0,
-  className,
-}: {
+type MagneticProps = {
   children: ReactNode;
   strength?: number;
   className?: string;
-}) {
+};
+
+export function Magnetic({ children, className }: MagneticProps) {
   return <div className={className}>{children}</div>;
 }

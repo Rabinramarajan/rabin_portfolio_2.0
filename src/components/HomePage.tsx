@@ -1,7 +1,4 @@
 import { Hero } from "@/components/Hero";
-import { WorkMotionEnhancer } from "@/components/WorkMotionEnhancer";
-import { ProcessMotionEnhancer } from "@/components/ProcessMotionEnhancer";
-import { SectionTransitions } from "@/components/SectionTransitions";
 import { ServicesHorizontalScroll } from "@/components/ServicesHorizontalScroll";
 import { WorkSection } from "@/components/WorkSection";
 import { FaqSection } from "@/components/FaqSection";
@@ -27,14 +24,11 @@ export function HomePage() {
       <Hero />
       <ServicesHorizontalScroll id="services" />
       <WorkSection id="work" limit={4} />
-      <WorkMotionEnhancer />
       <JourneySection />
       <SkillsSection />
       <ProcessSection />
-      <ProcessMotionEnhancer />
       <FaqSection />
       <FaqJsonLd />
-      <SectionTransitions />
     </>
   );
 }

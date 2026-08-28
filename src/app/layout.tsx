@@ -12,9 +12,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
-import { MotionProvider } from "@/components/MotionProvider";
 import { CustomCursor } from "@/components/custom-cursor/CustomCursor";
-import { ScrollProgressIndicator } from "@/components/ScrollProgressIndicator";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import "@/motion/motion.css";
 import "./globals.css";
@@ -97,19 +95,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       ].join(" ")}
     >
       <body>
-        <MotionProvider>
-          <JsonLd />
-          <ProgressSync />
-          <Navbar />
-          <Sidebar />
-          <main id="main">{children}</main>
-          <Footer />
-          <ChatLauncher />
-          <Toaster />
-          <CustomCursor />
-          <Analytics />
-          <SpeedInsights />
-        </MotionProvider>
+        <JsonLd />
+        <ProgressSync />
+        <Navbar />
+        <Sidebar />
+        <main id="main">{children}</main>
+        <Footer />
+        <ChatLauncher />
+        <Toaster />
+        <CustomCursor />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

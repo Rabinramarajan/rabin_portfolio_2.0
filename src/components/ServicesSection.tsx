@@ -27,7 +27,6 @@ export function ServicesSection({
   headingLevel?: "h1" | "h2";
   index?: string;
 } = {}) {
-  const Heading = headingLevel;
   const ItemHeading = itemHeadingLevel(headingLevel);
   const isPageHero = headingLevel === "h1";
   const intro = sections.services;

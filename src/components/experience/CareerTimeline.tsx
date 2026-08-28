@@ -119,7 +119,6 @@ export function CareerTimeline({ limit }: { limit?: number } = {}) {
             index={i}
             state={i === active ? "now" : i < active ? "past" : "next"}
             reduce={reduce}
-            isActive={i === active}
           />
         ))}
       </ol>
@@ -132,13 +131,11 @@ function Chapter({
   index,
   state,
   reduce,
-  isActive: _isActive,
 }: {
   chapter: HorizonChapter;
   index: number;
   state: "past" | "now" | "next";
   reduce: boolean;
-  isActive: boolean;
 }) {
   /* Odd chapters place their card on the left, so the rail reads as a stitch. */
   const side = index % 2 === 0 ? "right" : "left";

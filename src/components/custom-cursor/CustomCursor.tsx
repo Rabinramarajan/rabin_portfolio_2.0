@@ -66,13 +66,6 @@ export function CustomCursor() {
   const mouseRef = useRef({ x: -100, y: -100 });
   const rafRef = useRef<number>(0);
 
-  const quickFns = useRef<{
-    dotX: ((v: number) => void) | null;
-    dotY: ((v: number) => void) | null;
-    ringX: ((v: number) => void) | null;
-    ringY: ((v: number) => void) | null;
-  }>({ dotX: null, dotY: null, ringX: null, ringY: null });
-
   const updateState = useCallback((next: CursorState, label: string) => {
     const ring = ringRef.current;
     if (!ring) return;
@@ -96,8 +89,6 @@ export function CustomCursor() {
     const mq = window.matchMedia("(pointer: fine)");
     if (!mq.matches) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const dot = dotRef.current;
     const ring = ringRef.current;
     if (!dot || !ring) return;
@@ -106,8 +97,6 @@ export function CustomCursor() {
     // Initialize with centered positioning
     dot.style.transform = `translate(-50%, -50%)`;
     ring.style.transform = `translate(-50%, -50%)`;
-
-    const fns = quickFns.current;
 
     const onPointerMove = (e: PointerEvent) => {
       mouseRef.current.x = e.clientX;

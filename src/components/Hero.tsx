@@ -1,27 +1,14 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { hero } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Btn } from "@/components/ui";
 import { Magnetic } from "@/components/motion";
-import { useMotionTier } from "@/lib/motion-tier";
 
 export function Hero() {
   const reduce = useReducedMotion();
-  const { tier } = useMotionTier();
-  const quiet = reduce || tier === "basic";
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const sync = () => setIsDesktop(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
   const sectionRef = useRef<HTMLElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
 
