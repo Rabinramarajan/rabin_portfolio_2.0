@@ -629,17 +629,6 @@ code {
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   will-change: auto;
 }
-/* Progress indicator line under header — driven by ScrollProgressIndicator via --scroll-progress */
-.hd::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  width: var(--scroll-progress, 0%);
-  background: linear-gradient(90deg, var(--color-accent), rgb(201 242 77 / 40%));
-  transition: width 0.15s ease-out;
-}
 .hd__inner {
   display: flex;
   align-items: center;

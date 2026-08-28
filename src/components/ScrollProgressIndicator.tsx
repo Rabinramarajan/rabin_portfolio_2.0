@@ -85,26 +85,16 @@ export function ScrollProgressIndicator() {
 
   if (!mounted) return null;
 
-  return (
-    <>
-      {/* ── Desktop: vertical track on right edge ── */}
-      {isDesktop ? (
-        <div
-          ref={trackRef}
-          className="scroll-track"
-          aria-hidden
-        >
-          <div ref={fillRef} className="scroll-track__fill" />
-          <div ref={labelRef} className="scroll-track__label">00%</div>
-        </div>
-      ) : null}
+  if (!isDesktop) return null;
 
-      {/* ── Mobile / Tablet: thin horizontal bar ── */}
-      {!isDesktop ? (
-        <div className="scroll-bar" aria-hidden>
-          <div ref={fillRef} className="scroll-bar__fill" />
-        </div>
-      ) : null}
-    </>
+  return (
+    <div
+      ref={trackRef}
+      className="scroll-track"
+      aria-hidden
+    >
+      <div ref={fillRef} className="scroll-track__fill" />
+      <div ref={labelRef} className="scroll-track__label">00%</div>
+    </div>
   );
 }
