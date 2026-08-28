@@ -1,12 +1,33 @@
 /**
- * Motion System Styles — ALL MOTION EFFECTS DISABLED
- * All animations, transitions, and motion effects are completely removed
+ * Motion System Styles — SELECTIVE ANIMATIONS
+ * Ecosystem animations are enabled; other motion effects are disabled
  */
 
 /* ========== DISABLE ALL ANIMATIONS ========== */
 * {
   animation: none !important;
   transition: none !important;
+}
+
+/* ========== RE-ENABLE ECOSYSTEM ANIMATIONS ========== */
+.eco * {
+  animation: inherit !important;
+  transition: inherit !important;
+}
+
+.eco__pill,
+.eco__sidebar-item,
+.eco__node-item,
+.eco__branch,
+.eco__node-strand,
+.eco__trunk-pulse,
+.eco__branch-signal,
+.eco__filter-pill,
+.eco__explore-overlay,
+.eco__note-card,
+.eco__mobile-node-btn {
+  animation: auto;
+  transition: auto;
 }
 
 /* ========== TEXT REVEAL MASKS ========== */

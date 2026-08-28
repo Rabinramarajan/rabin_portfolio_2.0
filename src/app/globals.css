@@ -17733,6 +17733,18 @@ a.premium-contact-left-column__detail-value:hover {
   letter-spacing: -0.04em;
 }
 
+.eco__nucleus-logo-foreign {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eco__nucleus-logo-mark {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 12px rgba(200, 255, 0, 0.35));
+}
+
 .eco__nucleus-label-bg {
   fill: #11151C;
   stroke: rgba(255, 255, 255, 0.1);

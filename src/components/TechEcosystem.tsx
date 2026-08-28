@@ -932,7 +932,7 @@ function DigitalTreeCanvas({
         </g>
 
         {/* ============================================================
-           CENTER DEVELOPER "R" MONOGRAM NUCLEUS
+           CENTER DEVELOPER LOGO NUCLEUS
            ============================================================ */}
         <g transform="translate(550, 440)" className="eco__nucleus-group">
           {/* Subtle Ambient Atmosphere */}
@@ -943,16 +943,16 @@ function DigitalTreeCanvas({
           <circle r="36" className="eco__nucleus-ring eco__nucleus-ring--mid" />
           <circle r="26" className="eco__nucleus-core-disc" />
 
-          {/* Subtle Developer "R" Monogram */}
-          <text
-            x="0"
-            y="2"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            className="eco__nucleus-r-mark"
+          {/* Developer Logo Mark */}
+          <foreignObject
+            x="-32"
+            y="-32"
+            width="64"
+            height="64"
+            className="eco__nucleus-logo-foreign"
           >
-            R
-          </text>
+            <Monogram className="eco__nucleus-logo-mark" />
+          </foreignObject>
 
           {/* Core Indicator Label */}
           <g transform="translate(0, 52)">
