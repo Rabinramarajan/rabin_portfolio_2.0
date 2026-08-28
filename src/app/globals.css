@@ -395,11 +395,13 @@ code {
   height: 1.25em;
   max-width: 100%;
   max-height: 100%;
+  filter: brightness(1.1) contrast(1.15);
 }
 .stack-tech-icon svg {
   width: 100%;
   height: 100%;
   display: block;
+  color: inherit;
 }
 
 /* --- project cover poster ---
@@ -17582,23 +17584,49 @@ a.premium-contact-left-column__detail-value:hover {
   stroke-width: 6;
   opacity: 0.08;
   transition: opacity 0.3s ease, stroke-width 0.3s ease;
+  animation: branchGlowPulse 5s ease-in-out infinite;
 }
 
 .eco__branch--highlighted .eco__branch-glow {
   opacity: 0.3;
   stroke-width: 10;
+  animation: branchGlowPulseActive 3s ease-in-out infinite;
+}
+
+@keyframes branchGlowPulse {
+  0%, 100% {
+    opacity: 0.05;
+    stroke-width: 5;
+  }
+  50% {
+    opacity: 0.2;
+    stroke-width: 8;
+  }
+}
+
+@keyframes branchGlowPulseActive {
+  0%, 100% {
+    opacity: 0.2;
+    stroke-width: 8;
+  }
+  50% {
+    opacity: 0.5;
+    stroke-width: 12;
+  }
 }
 
 .eco__branch-path {
   fill: none;
   stroke-width: 2;
   opacity: 0.65;
-  transition: opacity 0.3s ease, stroke-width 0.3s ease;
+  transition: opacity 0.3s ease, stroke-width 0.3s ease, filter 0.3s ease;
+  filter: drop-shadow(0 0 2px currentColor);
 }
 
 .eco__branch--highlighted .eco__branch-path {
   opacity: 1;
   stroke-width: 2.5;
+  filter: drop-shadow(0 0 6px currentColor);
 }
 
 .eco__branch-signal {
@@ -17737,12 +17765,32 @@ a.premium-contact-left-column__detail-value:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: nucleusGlow 3s ease-in-out infinite;
 }
 
 .eco__nucleus-logo-mark {
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 0 12px rgba(200, 255, 0, 0.35));
+  animation: logoLighting 4s ease-in-out infinite;
+}
+
+@keyframes nucleusGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(200, 255, 0, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 24px rgba(200, 255, 0, 0.6));
+  }
+}
+
+@keyframes logoLighting {
+  0%, 100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .eco__nucleus-label-bg {
@@ -17821,15 +17869,18 @@ a.premium-contact-left-column__detail-value:hover {
   place-items: center;
   transform-box: fill-box;
   transform-origin: center;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+  filter: brightness(1) drop-shadow(0 0 2px rgba(200, 255, 0, 0.2));
 }
 
 .eco__node-item:hover .eco__node-icon-foreign {
   transform: scale(1.15);
+  filter: brightness(1.25) drop-shadow(0 0 6px rgba(200, 255, 0, 0.4));
 }
 
 .eco__node-item--selected .eco__node-icon-foreign {
   transform: scale(1.2);
+  filter: brightness(0.9) drop-shadow(0 0 0px rgba(0, 0, 0, 0)) !important;
 }
 
 .eco__node-text {
