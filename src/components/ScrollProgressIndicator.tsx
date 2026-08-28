@@ -10,7 +10,17 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { prefersReducedMotion, hasPointerFine } from "@/motion/gsap-context";
+
+// Utility functions (GSAP dependency removed)
+function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function hasPointerFine(): boolean {
+  if (typeof window === "undefined") return true;
+  return window.matchMedia("(pointer: fine)").matches;
+}
 
 export function ScrollProgressIndicator() {
   const trackRef = useRef<HTMLDivElement>(null);

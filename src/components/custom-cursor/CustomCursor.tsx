@@ -2,13 +2,14 @@
 
 /**
  * CustomCursor — Premium animated cursor with state machine.
- * Desktop-only, reduced-motion-aware, GSAP quickTo powered.
+ * Desktop-only, reduced-motion-aware.
  *
  * States: default | link | button | project | image | text | hidden
  * Labels: configured via data-cursor-label on hover targets
  *
  * Note: Element magnetic movement is handled by the Magnetic component,
  * NOT by the cursor. The cursor only tracks position and changes state.
+ * GSAP has been removed - uses direct DOM transforms instead.
  */
 
 import { useEffect, useRef, useCallback } from "react";
@@ -101,21 +102,10 @@ export function CustomCursor() {
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    // Import GSAP at runtime
-    if (!reduced) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const gsap = require("gsap/dist/gsap").gsap;
-        gsap.set(dot, { xPercent: -50, yPercent: -50 });
-        gsap.set(ring, { xPercent: -50, yPercent: -50 });
-        quickFns.current.dotX = gsap.quickTo(dot, "x", { duration: 0.12, ease: "power3.out" });
-        quickFns.current.dotY = gsap.quickTo(dot, "y", { duration: 0.12, ease: "power3.out" });
-        quickFns.current.ringX = gsap.quickTo(ring, "x", { duration: 0.3, ease: "power3.out" });
-        quickFns.current.ringY = gsap.quickTo(ring, "y", { duration: 0.3, ease: "power3.out" });
-      } catch {
-        // GSAP not available — fall back to direct transform
-      }
-    }
+    // GSAP removed - use direct DOM transforms
+    // Initialize with centered positioning
+    dot.style.transform = `translate(-50%, -50%)`;
+    ring.style.transform = `translate(-50%, -50%)`;
 
     const fns = quickFns.current;
 
@@ -139,19 +129,8 @@ export function CustomCursor() {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
-      if (fns.dotX && fns.dotY) {
-        fns.dotX(mx);
-        fns.dotY(my);
-      } else {
-        dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-      }
-
-      if (fns.ringX && fns.ringY) {
-        fns.ringX(mx);
-        fns.ringY(my);
-      } else {
-        ring.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-      }
+      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+      ring.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
 
       rafRef.current = requestAnimationFrame(tick);
     };
