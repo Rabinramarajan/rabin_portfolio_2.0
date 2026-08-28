@@ -1082,8 +1082,6 @@ function ExploreStickyNotesMode({
   reduce: boolean;
 }) {
   const branch = ECO_BRANCHES.find((b) => b.id === tech.branchId);
-  const [activeNoteIndex, setActiveNoteIndex] = useState(0);
-  const TOTAL_NOTES = 4;
 
   // Projects delivered with this technology
   const deliveredProjects = useMemo(() => {
@@ -1116,33 +1114,6 @@ function ExploreStickyNotesMode({
     return branchSiblings;
   }, [tech]);
 
-  // Track which note is in view using IntersectionObserver
-  useEffect(() => {
-    if (typeof IntersectionObserver === "undefined") return;
-
-    const noteElements = document.querySelectorAll(".eco__note-card");
-    if (!noteElements.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-
-        if (visible) {
-          const index = Array.from(noteElements).indexOf(visible.target as Element);
-          if (index !== -1) {
-            setActiveNoteIndex(index);
-          }
-        }
-      },
-      { rootMargin: "-20% 0px -60% 0px", threshold: 0 },
-    );
-
-    noteElements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <motion.div
       className="eco__explore-overlay"
@@ -1159,12 +1130,6 @@ function ExploreStickyNotesMode({
             {branch?.icon} {branch?.label.toUpperCase()} ARCHITECTURE
           </span>
           <span className="eco__explore-spec">{tech.specCode}</span>
-        </div>
-
-        <div className="eco__explore-progress" aria-hidden>
-          <span className="eco__progress-counter">
-            {String(activeNoteIndex + 1).padStart(2, "0")} / {String(TOTAL_NOTES).padStart(2, "0")}
-          </span>
         </div>
 
         <button
