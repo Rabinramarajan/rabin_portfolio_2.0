@@ -19,6 +19,7 @@ export function ScrollProgressIndicator() {
   const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const reduce = prefersReducedMotion();
+  const setupRef = useRef(false);
 
   // Initialize mounted state on client only
   useEffect(() => {
@@ -27,8 +28,10 @@ export function ScrollProgressIndicator() {
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || setupRef.current) return;
     if (typeof window === "undefined") return;
+
+    setupRef.current = true;
 
     const fill = fillRef.current;
     const label = labelRef.current;
