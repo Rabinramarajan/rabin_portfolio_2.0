@@ -113,7 +113,81 @@ function calculatePositions(groups: SkillGroup[]): EcoNode[] {
 }
 
 /* ------------------------------------------------------------------
-   CategoryFilter — magnetic pill buttons
+   CategorySidebar — left sidebar with category list
+------------------------------------------------------------------ */
+
+function CategorySidebar({
+  groups,
+  active,
+  onSelect,
+}: {
+  groups: SkillGroup[];
+  active: string | null;
+  onSelect: (id: string | null) => void;
+}) {
+  const totalTechs = useMemo(() => groups.reduce((sum, g) => sum + g.items.length, 0), [groups]);
+
+  return (
+    <div className="eco__sidebar">
+      <div className="eco__sidebar-header">
+        <h3 className="eco__sidebar-title">Categories</h3>
+      </div>
+
+      <div className="eco__sidebar-list">
+        {groups.map((group) => (
+          <motion.button
+            key={group.id}
+            className={cn("eco__sidebar-item", active === group.id && "eco__sidebar-item--active")}
+            onClick={() => onSelect(active === group.id ? null : group.id)}
+            whileHover={{ x: 4 }}
+            whileTap={{ scale: 0.98 }}
+            data-cursor="explore"
+          >
+            <span className="eco__sidebar-icon">
+              {group.id === "frontend" && "⚛"}
+              {group.id === "mobile" && "📱"}
+              {group.id === "backend" && "⚙"}
+              {group.id === "data" && "📊"}
+              {group.id === "design" && "🎨"}
+              {group.id === "quality" && "✓"}
+              {group.id === "tooling" && "🔧"}
+            </span>
+            <span className="eco__sidebar-label">{group.label}</span>
+            <span className="eco__sidebar-count">{group.items.length}</span>
+          </motion.button>
+        ))}
+      </div>
+
+      <div className="eco__sidebar-footer">
+        <div className="eco__sidebar-stat">
+          <div className="eco__sidebar-stat-value">{totalTechs}+</div>
+          <div className="eco__sidebar-stat-label">and growing</div>
+        </div>
+      </div>
+
+      <div className="eco__sidebar-legend">
+        <h4 className="eco__sidebar-legend-title">Legend</h4>
+        <div className="eco__sidebar-legend-items">
+          <div className="eco__legend-item">
+            <div className="eco__legend-dot eco__legend-dot--core"></div>
+            <span>Core</span>
+          </div>
+          <div className="eco__legend-item">
+            <div className="eco__legend-dot eco__legend-dot--connected"></div>
+            <span>Connected</span>
+          </div>
+          <div className="eco__legend-item">
+            <div className="eco__legend-dot eco__legend-dot--supporting"></div>
+            <span>Supporting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------
+   CategoryFilter — magnetic pill buttons (top filter)
 ------------------------------------------------------------------ */
 
 function CategoryFilter({
@@ -469,48 +543,59 @@ export function TechEcosystem({
       </motion.div>
 
       <motion.div
-        className="eco__body"
+        className="eco__container"
         initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={viewport}
         transition={{ duration: reduce ? 0.15 : 0.7, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
       >
-        <EcosystemGraph
-          nodes={nodes}
-          connections={connections}
+        {/* Left Sidebar */}
+        <CategorySidebar
           groups={groups}
-          activeCategory={activeCategory}
-          selectedSkill={selectedSkill}
-          onSelect={handleSelect}
-          reduce={Boolean(reduce)}
+          active={activeCategory}
+          onSelect={handleCategorySelect}
         />
 
-        <div className="eco__detail-slot">
-          <AnimatePresence mode="wait" initial={false}>
-            {selectedSkill ? (
-              <SkillDetailPanel
-                key={selectedSkill}
-                skillId={selectedSkill}
-                nodes={nodes}
-                groups={groups}
-                onClose={() => setSelectedSkill(null)}
-                reduce={Boolean(reduce)}
-              />
-            ) : (
-              <motion.div
-                key="prompt"
-                className="eco__prompt"
-                initial={reduce ? { opacity: 0 } : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={reduce ? { opacity: 0 } : { opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <span className="eco__prompt-icon" aria-hidden>◎</span>
-                <p>Select a technology to explore</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* Center Content */}
+        <div className="eco__body">
+          <EcosystemGraph
+            nodes={nodes}
+            connections={connections}
+            groups={groups}
+            activeCategory={activeCategory}
+            selectedSkill={selectedSkill}
+            onSelect={handleSelect}
+            reduce={Boolean(reduce)}
+          />
+
+          <div className="eco__detail-slot">
+            <AnimatePresence mode="wait" initial={false}>
+              {selectedSkill ? (
+                <SkillDetailPanel
+                  key={selectedSkill}
+                  skillId={selectedSkill}
+                  nodes={nodes}
+                  groups={groups}
+                  onClose={() => setSelectedSkill(null)}
+                  reduce={Boolean(reduce)}
+                />
+              ) : (
+                <motion.div
+                  key="prompt"
+                  className="eco__prompt"
+                  initial={reduce ? { opacity: 0 } : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={reduce ? { opacity: 0 } : { opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <span className="eco__prompt-icon" aria-hidden>◎</span>
+                  <p>Select a technology to explore</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
+
       </motion.div>
     </div>
   );
