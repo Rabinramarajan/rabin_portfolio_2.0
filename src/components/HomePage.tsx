@@ -2,7 +2,7 @@ import { Hero } from "@/components/Hero";
 import { WorkMotionEnhancer } from "@/components/WorkMotionEnhancer";
 import { ProcessMotionEnhancer } from "@/components/ProcessMotionEnhancer";
 import { SectionTransitions } from "@/components/SectionTransitions";
-import { ServicesSection } from "@/components/ServicesSection";
+import { ServicesHorizontalScroll } from "@/components/ServicesHorizontalScroll";
 import { WorkSection } from "@/components/WorkSection";
 import { FaqSection } from "@/components/FaqSection";
 import { FaqJsonLd } from "@/components/JsonLd";
@@ -25,7 +25,7 @@ export function HomePage() {
   return (
     <>
       <Hero />
-      <ServicesSection id="services" />
+      <ServicesHorizontalScroll id="services" />
       <WorkSection id="work" limit={4} />
       <WorkMotionEnhancer />
       <JourneySection />

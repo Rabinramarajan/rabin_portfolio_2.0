@@ -1,0 +1,360 @@
+/* Pinned horizontal scroll section — dark premium direction.
+   Layout is driven by two custom properties so the JS never needs to know
+   card metrics: change them here and ScrollTrigger picks it up on refresh. */
+
+.pin {
+  --card-w: clamp(320px, 40vw, 480px);
+  --card-gap: clamp(48px, 4vw, 64px);
+  --edge: clamp(24px, 6vw, 96px);
+
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  /* right inset clears the fixed .sidebar dot-nav, which only renders ≥1400px */
+  --rail-inset: 0px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* soft radial wash behind the whole rail */
+.pin::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 80% at 20% 0%,
+    rgb(201 242 77 / 7%) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* --- persistent chrome (outside the translated track) --- */
+
+.eyebrow {
+  position: absolute;
+  /* clears the fixed navbar (--header-h) rather than sitting under it */
+  top: calc(var(--header-h, 72px) + clamp(16px, 4vh, 40px));
+  left: var(--edge);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.eyebrowText {
+  margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+
+.eyebrowRule {
+  width: clamp(32px, 6vw, 72px);
+  height: 1px;
+  background: var(--color-line-strong);
+}
+
+.counter {
+  position: absolute;
+  /* bottom-left: the bottom-right corner belongs to the chat launcher */
+  left: var(--edge);
+  bottom: clamp(24px, 6vh, 64px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--type-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.counterCurrent {
+  color: var(--color-accent);
+}
+
+.progressRail {
+  position: absolute;
+  left: var(--edge);
+  right: calc(var(--edge) + var(--rail-inset));
+  bottom: calc(clamp(24px, 6vh, 64px) + 2.25rem);
+  z-index: 1;
+  height: 1px;
+  background: var(--color-line);
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  width: 100%;
+  background: var(--color-accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+/* --- the translated rail --- */
+
+/* Clips the track. Its width — not window.innerWidth — is what the tween
+   measures travel against, so the inset below stays honest. */
+.viewport {
+  overflow: hidden;
+  margin-right: var(--rail-inset);
+  /* softens both clip edges so a half-visible card reads as "more to come"
+     rather than as a truncation bug */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 clamp(24px, 5vw, 80px),
+    #000 calc(100% - clamp(24px, 5vw, 80px)),
+    transparent 100%
+  );
+}
+
+.track {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding-block: 0;
+  align-items: center;
+  gap: var(--card-gap);
+  padding-inline: var(--edge);
+  width: max-content;
+  will-change: transform;
+}
+
+/* --- cards --- */
+
+.cardItem {
+  flex: 0 0 var(--card-w);
+  width: var(--card-w);
+  display: flex;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  min-height: clamp(340px, 46vh, 460px);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  background:
+    radial-gradient(140% 100% at 0% 0%, rgb(255 255 255 / 5%) 0%, transparent 55%),
+    var(--color-surface);
+  transition:
+    border-color 220ms ease,
+    transform 320ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    background-color 220ms ease;
+}
+
+.cardIndex {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: var(--weight-regular);
+  line-height: 1;
+  color: rgb(255 255 255 / 12%);
+  transition: color 220ms ease;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.cardDescription {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--type-base);
+  line-height: var(--leading-normal);
+}
+
+.cardIcon {
+  position: absolute;
+  top: clamp(1.75rem, 3vw, 2.5rem);
+  right: clamp(1.75rem, 3vw, 2.5rem);
+  color: var(--color-text-faint);
+  transition: color 220ms ease;
+}
+
+.cardIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.cardStack {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cardChip {
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+}
+
+/* hover is desktop-and-pointer only, and never fights the GSAP transform
+   (it lives on the card, the tween lives on the track) */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    border-color: var(--color-line-strong);
+    transform: translateY(-6px);
+  }
+
+  .card:hover .cardIndex,
+  .card:hover .cardIcon {
+    color: var(--color-accent-dim);
+  }
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-color: var(--color-accent-dim);
+}
+
+/* --- mobile: no pin, native swipe with snap --- */
+
+@media (min-width: 1400px) {
+  .pin {
+    --rail-inset: 13rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .pin {
+    height: auto;
+    overflow: visible;
+    padding-block: clamp(4rem, 12vh, 7rem);
+  }
+
+  .eyebrow,
+  .counter,
+  .progressRail {
+    position: static;
+    margin-inline: var(--edge);
+  }
+
+  .eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .counter {
+    display: none;
+  }
+
+  .progressRail {
+    display: none;
+  }
+
+  .viewport {
+    overflow: visible;
+    margin-right: 0;
+    mask-image: none;
+  }
+
+  .track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: auto;
+    will-change: auto;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cardItem {
+    scroll-snap-align: center;
+  }
+}
+
+/* --- reduced motion: plain wrapped grid, no pin, no scrub --- */
+
+@media (prefers-reduced-motion: reduce) {
+  .pin {
+    height: auto;
+    overflow: visible;
+    padding-block: clamp(4rem, 12vh, 7rem);
+  }
+
+  .eyebrow,
+  .counter,
+  .progressRail {
+    position: static;
+    margin-inline: var(--edge);
+  }
+
+  .counter,
+  .progressRail {
+    display: none;
+  }
+
+  .eyebrow {
+    margin-bottom: 1.5rem;
+  }
+
+  .viewport {
+    overflow: visible;
+    margin-right: 0;
+    mask-image: none;
+  }
+
+  .track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    width: auto;
+    overflow: visible;
+    will-change: auto;
+    transform: none !important;
+  }
+
+  .cardItem {
+    width: auto;
+    flex-basis: auto;
+  }
+
+  .card {
+    transition: none;
+    min-height: 0;
+  }
+
+  /* the rail's display-scale title is too tall once cards sit in a grid */
+  .cardTitle {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+  }
+
+  .cardIndex {
+    font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
