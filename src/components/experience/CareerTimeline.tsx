@@ -80,8 +80,33 @@ export function CareerTimeline({ limit }: { limit?: number } = {}) {
     return () => io.disconnect();
   }, [chapters.length]);
 
+  const total = chapters.length;
+  const activeChapter = chapters[active];
+
   return (
     <div className="ctl">
+      {/* Progress counter — desktop only */}
+      <div className="ctl__progress" aria-hidden>
+        <span className="ctl__progress-current">
+          {String(active + 1).padStart(2, "0")}
+        </span>
+        <span className="ctl__progress-sep">/</span>
+        <span className="ctl__progress-total">
+          {String(total).padStart(2, "0")}
+        </span>
+      </div>
+
+      {/* Active chapter label — shows what's currently in view */}
+      {activeChapter ? (
+        <div className="ctl__active-label" aria-live="polite" aria-atomic="true">
+          <span className="ctl__active-dot" aria-hidden />
+          <span className="ctl__active-text">
+            {activeChapter.phase}
+            {activeChapter.role ? ` · ${activeChapter.role}` : ""}
+          </span>
+        </div>
+      ) : null}
+
       <ol className="ctl__list" ref={listRef}>
         <span className="ctl__rail" aria-hidden>
           <motion.span className="ctl__rail-fill" style={{ scaleY: reduce ? 1 : fill }} />
@@ -94,6 +119,7 @@ export function CareerTimeline({ limit }: { limit?: number } = {}) {
             index={i}
             state={i === active ? "now" : i < active ? "past" : "next"}
             reduce={reduce}
+            isActive={i === active}
           />
         ))}
       </ol>
@@ -106,11 +132,13 @@ function Chapter({
   index,
   state,
   reduce,
+  isActive: _isActive,
 }: {
   chapter: HorizonChapter;
   index: number;
   state: "past" | "now" | "next";
   reduce: boolean;
+  isActive: boolean;
 }) {
   /* Odd chapters place their card on the left, so the rail reads as a stitch. */
   const side = index % 2 === 0 ? "right" : "left";

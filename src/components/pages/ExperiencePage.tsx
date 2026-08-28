@@ -13,6 +13,7 @@ import { CurrentChapter } from "@/components/experience/CurrentChapter";
 import { EngineeringMap } from "@/components/experience/EngineeringMap";
 import { NextChapter } from "@/components/experience/NextChapter";
 import { ExperienceNav } from "@/components/experience/ExperienceNav";
+import { ExperienceMotionEnhancer } from "@/components/experience/ExperienceMotionEnhancer";
 
 /**
  * EXPERIENCE — one continuous career line.
@@ -25,6 +26,7 @@ import { ExperienceNav } from "@/components/experience/ExperienceNav";
 export function ExperiencePage() {
   return (
     <>
+      <ExperienceMotionEnhancer />
       <ExperienceNav />
 
       <ExperienceHero />

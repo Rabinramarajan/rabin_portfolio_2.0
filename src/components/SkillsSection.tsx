@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, type CSSProperties, type ComponentType, type KeyboardEvent } from "react";
+import { useCallback, useRef, useState, type CSSProperties, type ComponentType, type KeyboardEvent, Fragment } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   Accessibility,
@@ -22,9 +22,10 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { everydayTech, skillDomains, skillHero, skillStats, skillStrengths } from "@/content/skills";
+import { everydayTech, skillDomains, skillHero, skillStats, skillGroups, skillStrengths } from "@/content/skills";
 import type { SkillDomain } from "@/content/skills";
 import { StackTechIcon } from "@/components/StackTechIcon";
+import { TechEcosystem } from "@/components/TechEcosystem";
 import { Monogram } from "@/components/Logo";
 import { duration, ease, stagger } from "@/lib/motion";
 import { SectionKicker, itemHeadingLevel, type SectionHeadingLevel } from "@/components/ui";
@@ -182,6 +183,12 @@ export function SkillsSection({
             ))}
           </ul>
         </motion.div>
+
+        {/* ---------- mobile skill grid (visible only below 960px) ---------- */}
+        <MobileSkillGrid groups={skillGroups} />
+
+        {/* ---------- ecosystem ---------- */}
+        <TechEcosystem headingLevel={headingLevel} />
       </div>
     </section>
   );
@@ -336,6 +343,41 @@ function SkillDetail({
           </motion.ul>
         </motion.div>
       </AnimatePresence>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------
+   MobileSkillGrid — simplified grid fallback for mobile (below 960px).
+   The SVG ecosystem graph is hidden on mobile; this grid gives touch
+   users a tappable way to browse all skills by category.
+------------------------------------------------------------------ */
+
+function MobileSkillGrid({
+  groups,
+}: {
+  groups: typeof skillGroups;
+}) {
+  return (
+    <div className="eco__mobile-grid" aria-label="All technologies">
+      {groups.map((g) => (
+        <Fragment key={g.id}>
+          <p className="eco__mobile-cat">{g.label}</p>
+          {g.items.map((item) => (
+            <button
+              key={item}
+              type="button"
+              className="eco__mobile-item"
+              data-cursor="link"
+            >
+              <span className="eco__mobile-item-icon" aria-hidden>
+                <StackTechIcon label={item} />
+              </span>
+              {item}
+            </button>
+          ))}
+        </Fragment>
+      ))}
     </div>
   );
 }
