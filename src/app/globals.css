@@ -12300,7 +12300,13 @@ a.premium-contact-left-column__detail-value:hover {
   flex-direction: column;
 }
 
+/* Left-aligned like every other section header. The earlier `.eco__header`
+   rule centres it, from when the ecosystem was a sub-block under the skills
+   deck; these reset that so the kicker lines up with the filter pills. */
 .eco__header {
+  text-align: left;
+  max-width: none;
+  margin-inline: 0;
   margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
 
@@ -12319,6 +12325,7 @@ a.premium-contact-left-column__detail-value:hover {
 
 .eco__lede {
   max-width: 38rem;
+  margin-inline: 0;
   color: var(--color-text-muted);
   margin-top: 0.75rem;
   font-size: var(--text-sm);
