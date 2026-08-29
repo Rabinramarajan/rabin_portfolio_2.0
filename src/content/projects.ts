@@ -25,7 +25,7 @@ export const projects: Project[] = [
     technologies: ['Angular', 'TypeScript', 'Sails.js', 'RxJS', 'Tailwind CSS'],
     featured: true,
     layout: 'large',
-    filter: 'enterprise',
+    filter: 'systems',
     cover: img('/media/fiji_internal_application/image3.png', 'Fiji Immigration officer workflow dashboard', 1370, 769),
     gallery: [
       img('/media/fiji_internal_application/image3.png', 'Fiji Immigration officer workflow list', 1370, 769)
@@ -140,7 +140,7 @@ export const projects: Project[] = [
     ],
     featured: true,
     layout: 'medium',
-    filter: 'enterprise',
+    filter: 'platforms',
     cover: img('/media/prims_member_portal/image3.png', 'PRIMS pension member transactions', 1919, 911),
     gallery: [
       img('/media/prims_member_portal/image3.png', 'PRIMS pension contribution and transaction history', 1919, 911)
@@ -201,7 +201,7 @@ export const projects: Project[] = [
     ],
     featured: true,
     layout: 'full',
-    filter: 'mobile',
+    filter: 'web',
     cover: img('/media/vnpf_mobile/composite-thumb.png', 'VNPF blo mi mobile application screens', 1200, 900),
     gallery: [
       img('/media/vnpf_mobile/composite-thumb.png', 'VNPF blo mi mobile application screens', 1200, 900)
@@ -262,7 +262,7 @@ export const projects: Project[] = [
     ],
     featured: true,
     layout: 'large',
-    filter: 'enterprise',
+    filter: 'platforms',
     cover: img('/media/insuremet/image2.png', 'InsureMet insurance administration dashboard', 1366, 768),
     gallery: [
       img('/media/insuremet/image2.png', 'InsureMet enterprise dashboard', 1366, 768)
@@ -323,7 +323,7 @@ export const projects: Project[] = [
     ],
     featured: true,
     layout: 'large',
-    filter: 'web',
+    filter: 'marketplaces',
     cover: img('/media/galaxy-sofas/2.webp', 'Galaxy Sofas landing page showcase', 1905, 941),
     gallery: [
       img('/media/galaxy-sofas/1.webp', 'Galaxy Sofas responsive home layout', 1905, 946),
@@ -456,7 +456,7 @@ export const projects: Project[] = [
     ],
     featured: true,
     layout: 'large',
-    filter: 'enterprise',
+    filter: 'dashboards',
     gallery: [],
     problem:
       'Multiple products and applications need a common operational layer for managing content, users, permissions, projects, configuration and system activity.',
@@ -518,7 +518,7 @@ export const projects: Project[] = [
     ],
     featured: true,
     layout: 'medium',
-    filter: 'architecture',
+    filter: 'systems',
     gallery: [],
     problem:
       'Large applications often develop duplicated UI patterns, inconsistent interactions and difficult-to-maintain components as multiple teams build features independently.',
@@ -606,10 +606,11 @@ export function galleryFrames(project: Project) {
  * read it from here, so a renamed category cannot disagree with itself.
  */
 export const FILTER_LABEL: Record<ProjectFilter, string> = {
-  enterprise: 'Enterprise',
-  web: 'Web Apps',
-  mobile: 'Mobile',
-  architecture: 'Architecture',
+  web: 'Web Applications',
+  dashboards: 'Dashboards',
+  platforms: 'Platforms',
+  marketplaces: 'Marketplaces',
+  systems: 'Systems',
 };
 
 export interface FilterOption {
@@ -626,10 +627,10 @@ export interface FilterOption {
  * results it cannot show, and the counts can never drift from the catalogue.
  */
 export function projectFilters(source: Project[] = projects): FilterOption[] {
-  const order: ProjectFilter[] = ['enterprise', 'web', 'mobile', 'architecture'];
+  const order: ProjectFilter[] = ['web', 'dashboards', 'platforms', 'marketplaces', 'systems'];
   const present = order.filter((id) => source.some((p) => p.filter === id));
   return [
-    { id: 'all', label: 'All Work', count: source.length },
+    { id: 'all', label: 'All', count: source.length },
     ...present.map((id) => ({
       id,
       label: FILTER_LABEL[id],

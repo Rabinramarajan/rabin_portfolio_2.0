@@ -93,7 +93,12 @@ export interface AboutContent {
   highlights: string[];
 }
 
-export type ProjectFilter = "web" | "mobile" | "enterprise" | "architecture";
+export type ProjectFilter =
+  | "web"
+  | "dashboards"
+  | "platforms"
+  | "marketplaces"
+  | "systems";
 
 export interface Service {
   id: string;

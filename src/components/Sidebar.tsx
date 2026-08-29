@@ -6,9 +6,17 @@ import { motion } from "motion/react";
 import { sidebarNavigation } from "@/content/profile";
 import { useScrollSync } from "@/lib/scroll-sync";
 
+/** Routes that render their own full-width grid, which the fixed rail would
+    otherwise sit on top of at wide viewports. The rail is a scroll-spy for the
+    homepage section stack; on these routes it indexes sections that are not on
+    the page, so it is a nav pointing at nothing as well as an overlap. */
+const HIDE_ON = ["/work"];
+
 export function Sidebar() {
   const pathname = usePathname();
   const { active: activeSection } = useScrollSync();
+
+  const hidden = HIDE_ON.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 
   const isActive = (item: (typeof sidebarNavigation)[number]) => {
     if (item.sectionId && pathname === "/" && activeSection === item.sectionId) return true;
@@ -16,6 +24,8 @@ export function Sidebar() {
     if (item.href.startsWith("/") && !item.href.includes("#")) return pathname === item.href;
     return false;
   };
+
+  if (hidden) return null;
 
   return (
     <aside className="sidebar">

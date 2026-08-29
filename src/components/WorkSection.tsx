@@ -15,9 +15,10 @@ import { sections } from "@/content/sections";
 /** Category tint, carried by the chapter dot and the stage's rim light. */
 const FILTER_TINT: Record<ProjectFilter, string> = {
   web: "#c9f24d",
-  mobile: "#4d9bf2",
-  enterprise: "#7c6bf5",
-  architecture: "#f2a54d",
+  dashboards: "#4d9bf2",
+  platforms: "#7c6bf5",
+  marketplaces: "#f2a54d",
+  systems: "#4df2c9",
 };
 
 type FilterId = ProjectFilter | "all";

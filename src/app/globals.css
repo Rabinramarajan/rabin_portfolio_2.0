@@ -9625,10 +9625,285 @@ html {
 }
 
 /* ============================================================
+   WORK PAGE  (/work)
+   Hero (headline + orbital field) · filter row · card grid.
+   One column of rhythm: the hero, the filter, the grid, the
+   reveal. Nothing between them competes for the same job.
+   ============================================================ */
+
+.wpage {
+  padding: calc(var(--header-h) + clamp(0.75rem, 1.8vw, 1.5rem)) 0
+    clamp(2.5rem, 5vw, 4rem);
+  position: relative;
+  overflow: clip;
+}
+
+/* ---------- hero ---------- */
+
+.wpage__hero {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  align-items: center;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+@media (min-width: 900px) {
+  .wpage__hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+}
+.wpage__copy {
+  min-width: 0;
+}
+.wpage__title {
+  margin-top: 0.9rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.2vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+.wpage__line {
+  display: block;
+}
+.wpage__lede {
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  max-width: 34rem;
+}
+
+/* ---------- orbital field ----------
+   Decorative. Rings and nodes are drawn in one SVG; the brand mark sits at
+   the centre of the same square so the two can never drift apart. */
+
+.worbit {
+  position: relative;
+  aspect-ratio: 1;
+  width: min(100%, 24rem);
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.worbit__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.worbit__ring {
+  stroke: var(--color-accent);
+  stroke-width: 0.35;
+  fill: none;
+}
+.worbit__chord {
+  stroke: var(--color-accent);
+  stroke-width: 0.25;
+  opacity: 0.16;
+}
+.worbit__node {
+  fill: var(--color-accent);
+  opacity: 0.6;
+}
+.worbit__dust {
+  fill: var(--color-accent);
+  opacity: 0.28;
+}
+/* The mark is one node in the field, not a badge in front of it: small
+   enough that the outer rings still read as the subject. */
+.worbit__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 17%;
+}
+.worbit__mark .monogram {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 18px rgb(201 242 77 / 16%));
+}
+
+/* The field is the first thing a narrow screen can afford to lose height on:
+   it keeps its meaning at half the size, and the headline gets the fold. */
+@media (max-width: 899px) {
+  .worbit {
+    width: min(100%, 18rem);
+    opacity: 0.85;
+  }
+}
+
+/* ---------- filter row ----------
+   A single pill rail, centred, with the live bucket filled in the accent.
+   Below 720px the rail is replaced by a native select. */
+
+.wex__filters {
+  display: none;
+}
+@media (min-width: 720px) {
+  .wex__filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    margin-inline: auto;
+    margin-bottom: clamp(1.25rem, 2.6vw, 1.75rem);
+    padding: 0.3rem;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-bg-elevated);
+  }
+}
+.wex__filter {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color var(--duration-ui) var(--ease-out-quart),
+    background-color var(--duration-ui) var(--ease-out-quart);
+}
+.wex__filter:hover {
+  color: var(--color-text);
+}
+.wex__filter.is-on {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: 600;
+}
+
+/* ---------- filter, narrow ---------- */
+
+.wex__picker {
+  position: relative;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+}
+@media (min-width: 720px) {
+  .wex__picker {
+    display: none;
+  }
+}
+.wex__select {
+  appearance: none;
+  width: 100%;
+  padding: 0.95rem 2.75rem 0.95rem 1.1rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.wex__picker svg {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  translate: 0 -50%;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+/* ---------- grid ---------- */
+
+.wex__grid {
+  list-style: none;
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .wex__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1180px) {
+  .wex__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.wex__grid > li {
+  min-width: 0;
+}
+
+.wex__empty {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+}
+.wex__empty-title {
+  font-size: var(--text-lg);
+}
+.wex__empty-body {
+  margin: 0.5rem 0 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- reveal ---------- */
+
+.wex__foot {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+.wex__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.9rem 1.9rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-quart),
+    color var(--duration-ui) var(--ease-out-quart),
+    background-color var(--duration-ui) var(--ease-out-quart);
+}
+.wex__more svg {
+  width: 20px;
+  height: 12px;
+  transition: translate var(--duration-ui) var(--ease-out-quart);
+}
+.wex__more:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.wex__more:hover svg {
+  translate: 4px 0;
+}
+
+/* ============================================================
    PROJECT CARD  (/work explorer, and any future project surface)
-   One coordinated hover move: the frame eases behind a fixed mask,
-   the role/platform row lifts in and the CTA slides up. Driven from
-   :hover AND :focus-visible so the keyboard path is identical.
+   Bordered panel: cover with the index and the launch glyph laid
+   over it, then title, category, one line of copy, and the way in.
+   Every hover move is driven from one :hover, :focus-within rule
+   so the keyboard path is identical.
    ============================================================ */
 
 .pcard {
@@ -9640,540 +9915,176 @@ html {
   height: 100%;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
-  overflow: hidden;
   background: var(--color-bg-elevated);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
   transition:
     border-color var(--duration-interaction) var(--ease-out-quart),
-    transform var(--duration-interaction) var(--ease-out-quart);
+    background-color var(--duration-interaction) var(--ease-out-quart),
+    box-shadow var(--duration-interaction) var(--ease-out-quart);
 }
 .pcard__link:hover,
-.pcard__link:focus-visible {
-  border-color: var(--color-line-strong);
-  transform: translateY(-4px);
+.pcard__link:focus-visible,
+.pcard__link:focus-within {
+  border-color: rgb(201 242 77 / 34%);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-depth-md), var(--shadow-glow);
 }
+
+/* --- cover --- */
+
 .pcard__frame {
   position: relative;
   display: block;
-  overflow: hidden;
   aspect-ratio: 16 / 10;
+  overflow: hidden;
   background: var(--color-surface);
 }
-/* Sizing only — never `display`. The typographic fallback poster is a flex
-   column that bottom-aligns its own copy, and overriding its display collapsed
-   it to the top of the frame with the title overflowing the card. */
-.pcard__shot {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.pcard__shot img {
+.pcard__shot,
+.pcard__shot img,
+.pcard__shot .project-poster {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-/* Scroll parallax outer layer — GSAP ScrollTrigger controls Y transform */
-.pcard__parallax {
-  display: block;
-  width: 100%;
-  height: 100%;
-  will-change: transform;
-}
-/* Mouse parallax inner layer — GSAP controls transform for cursor-based movement */
-.pcard__mouse {
-  display: block;
-  width: 100%;
-  height: 100%;
-  will-change: transform;
-}
-.pcard__shot .project-poster {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-/* A project with no captured screenshot gets a tinted plate carrying its
-   number, not a second copy of the title and category the card already
-   prints directly beneath the frame. */
-.pcard__shot .project-poster {
-  justify-content: center;
-  align-items: center;
-}
-.pcard__shot .project-poster__title,
-.pcard__shot .project-poster__meta {
-  display: none;
-}
-.pcard__shot .project-poster__no {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 22cqi, 6rem);
-  letter-spacing: -0.03em;
-  color: rgb(201 242 77 / 22%);
-}
 .pcard__shot {
-  transition: transform var(--duration-cinematic) var(--ease-out-expo);
+  filter: saturate(0.85) brightness(0.68) contrast(1.05);
+  transition:
+    scale var(--duration-cinematic) var(--ease-out-expo),
+    filter var(--duration-interaction) var(--ease-out-quart);
 }
 .pcard__link:hover .pcard__shot,
 .pcard__link:focus-visible .pcard__shot {
-  transform: scale(1.04);
+  filter: saturate(1) brightness(0.92) contrast(1.02);
 }
+.pcard__link:hover .pcard__shot,
+.pcard__link:focus-visible .pcard__shot {
+  scale: 1.04;
+}
+
+/* A gradient rather than a flat wash: the index and the glyph sit in the top
+   corners, so that is where the cover needs to be darkest. */
 .pcard__veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 45%, rgb(10 10 12 / 55%));
-  opacity: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(10 10 12 / 82%) 0%,
+    rgb(10 10 12 / 46%) 45%,
+    rgb(10 10 12 / 78%) 100%
+  );
+  pointer-events: none;
   transition: opacity var(--duration-interaction) var(--ease-out-quart);
 }
+/* Hovering lifts the scrim rather than adding a second effect: the cover is
+   the reward for reaching the card. */
 .pcard__link:hover .pcard__veil,
 .pcard__link:focus-visible .pcard__veil {
-  opacity: 1;
+  opacity: 0.72;
 }
 .pcard__no {
   position: absolute;
-  top: var(--space-4);
-  left: var(--space-4);
+  top: 0.9rem;
+  left: 1.1rem;
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.16em;
-  padding: 0.3rem 0.55rem;
-  border-radius: var(--radius-sm);
-  background: rgb(10 10 12 / 72%);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
   color: var(--color-accent);
+  font-weight: 600;
 }
-.pcard__body {
-  display: grid;
-  align-content: start;
-  gap: var(--space-3);
-  padding: var(--space-6);
-}
-.pcard__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-.pcard__cat {
-  color: var(--color-accent);
-}
-.pcard__dot {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: currentColor;
-}
-.pcard__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  line-height: var(--leading-snug);
-  letter-spacing: -0.015em;
-}
-.pcard__tagline {
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-  color: var(--color-text-muted);
-}
-/* The metadata that appears on approach. It reserves no height when hidden,
-   so a grid of cards keeps one rhythm; the row animates its own box. */
-.pcard__reveal {
-  display: grid;
-  gap: var(--space-1);
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition:
-    max-height var(--duration-interaction) var(--ease-out-quart),
-    opacity var(--duration-interaction) var(--ease-out-quart);
-}
-.pcard__link:hover .pcard__reveal,
-.pcard__link:focus-visible .pcard__reveal {
-  max-height: 4rem;
-  opacity: 1;
-}
-.pcard__foot {
-  margin-top: var(--space-3);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-.pcard__stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-.pcard__tech {
-  padding: 0.25rem 0.55rem;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-}
-.pcard__tech--more {
-  color: var(--color-accent);
-}
-.pcard__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  color: var(--color-accent);
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity var(--duration-interaction) var(--ease-out-quart),
-    transform var(--duration-interaction) var(--ease-out-quart);
-}
-.pcard__cta svg {
-  width: 13px;
-  height: 13px;
-}
-.pcard__link:hover .pcard__cta,
-.pcard__link:focus-visible .pcard__cta {
-  opacity: 1;
-  transform: none;
-}
-/* Touch has no hover state to reach the metadata with, so it is always on. */
-@media (hover: none) {
-  .pcard__reveal,
-  .pcard__cta {
-    max-height: 4rem;
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* --- Card title arrow (slides in on hover) --- */
-.pcard__title {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.pcard__arrow {
-  display: inline-flex;
-  flex-shrink: 0;
-  opacity: 0;
-  transform: translate(-6px, 6px);
-  transition:
-    opacity var(--duration-interaction) var(--ease-out-quart),
-    transform var(--duration-interaction) var(--ease-out-quart);
-}
-.pcard__arrow svg {
-  width: 16px;
-  height: 16px;
-}
-.pcard__link:hover .pcard__arrow,
-.pcard__link:focus-visible .pcard__arrow {
-  opacity: 1;
-  transform: none;
-}
-
-/* --- Card shine sweep (subtle highlight on hover) --- */
-.pcard__shine {
+.pcard__launch {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    rgb(255 255 255 / 6%) 45%,
-    rgb(255 255 255 / 10%) 50%,
-    rgb(255 255 255 / 6%) 55%,
-    transparent 60%
-  );
-  opacity: 0;
-  transform: translateX(-100%);
+  top: 0.75rem;
+  right: 0.9rem;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgb(201 242 77 / 32%);
+  border-radius: var(--radius-sm);
+  background: rgb(10 10 12 / 55%);
+  color: var(--color-accent);
   transition:
-    opacity 0.4s ease,
-    transform 0.6s ease;
-  pointer-events: none;
+    background-color var(--duration-ui) var(--ease-out-quart),
+    color var(--duration-ui) var(--ease-out-quart);
 }
-.pcard__link:hover .pcard__shine {
-  opacity: 1;
-  transform: translateX(100%);
-}
-
-/* ============================================================
-   WORK SECTION GSAP ENTRANCE HELPERS
-   ============================================================ */
-.wx__title,
-.wx__lede,
-.wx__controls,
-.wx__kicker {
-  will-change: transform, opacity;
-}
-
-/* ============================================================
-   WORK PAGE  (/work)
-   ============================================================ */
-
-.wfeat {
-  padding: var(--space-16) 0 var(--space-12);
-}
-.wfeat__grid {
-  margin-top: var(--space-8);
-  display: grid;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: center;
-}
-@media (min-width: 1024px) {
-  .wfeat__grid {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  }
-}
-.wfeat__frame {
-  position: relative;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--color-surface);
-  aspect-ratio: 16 / 10;
-  box-shadow: 0 28px 80px -44px rgb(0 0 0 / 90%);
-}
-.wfeat__frame img,
-.wfeat__frame .project-poster {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.wfeat__frame-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(200deg, transparent 55%, rgb(10 10 12 / 45%));
-}
-.wfeat__counter {
-  margin: 0 0 var(--space-4);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  letter-spacing: 0.14em;
-  color: var(--color-accent);
-}
-.wfeat__counter span {
-  color: var(--color-text-faint);
-  margin: 0 0.35rem;
-}
-.wfeat__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-3xl);
-  line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
-}
-.wfeat__title a:hover {
-  color: var(--color-accent);
-}
-.wfeat__cat {
-  margin: var(--space-3) 0 0;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-.wfeat__tagline {
-  margin: var(--space-5) 0 0;
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  line-height: var(--leading-snug);
-  color: var(--color-accent);
-}
-.wfeat__body {
-  margin: var(--space-4) 0 0;
-  max-width: 56ch;
-  line-height: var(--leading-normal);
-  color: var(--color-text-muted);
-}
-.wfeat__facts {
-  margin: var(--space-8) 0 0;
-  display: grid;
-  gap: var(--space-5);
-  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
-}
-.wfeat__facts dt {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-.wfeat__facts dd {
-  margin: var(--space-2) 0 0;
-  font-size: var(--text-sm);
-  line-height: var(--leading-snug);
-}
-.wfeat__stack {
-  margin: var(--space-8) 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-.wfeat__stack li {
-  padding: 0.3rem 0.65rem;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-}
-.wfeat__cta {
-  margin-top: var(--space-8);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: 46px;
-  padding: 0 var(--space-6);
-  border-radius: 999px;
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-  font-size: var(--text-sm);
-  transition: background var(--duration-ui) var(--ease-out-quart);
-}
-.wfeat__cta svg {
+.pcard__launch svg {
   width: 14px;
   height: 14px;
 }
-.wfeat__cta:hover {
-  background: var(--color-accent-dim);
-}
-
-.wall {
-  padding: var(--space-16) 0 var(--space-20);
-  border-top: 1px solid var(--color-line);
-}
-.wall__title {
-  margin: var(--space-4) 0 0;
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  letter-spacing: -0.015em;
-}
-
-/* --- explorer --- */
-.wex {
-  margin-top: var(--space-8);
-}
-.wex__filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-.wex__filter {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: 40px;
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  transition:
-    border-color var(--duration-ui) var(--ease-out-quart),
-    color var(--duration-ui) var(--ease-out-quart),
-    background var(--duration-ui) var(--ease-out-quart);
-}
-.wex__filter:hover {
-  border-color: var(--color-line-strong);
-  color: var(--color-text);
-}
-.wex__filter.is-on {
+.pcard__link:hover .pcard__launch,
+.pcard__link:focus-visible .pcard__launch {
   background: var(--color-accent);
-  border-color: var(--color-accent);
   color: var(--color-accent-contrast);
 }
-.wex__filter-count {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  opacity: 0.7;
-}
-.wex__count {
-  margin: var(--space-5) 0 var(--space-6);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-.wex__grid {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+
+/* --- body --- */
+
+.pcard__body {
   display: grid;
-  gap: var(--space-6);
-  grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.4rem;
+  padding: clamp(1.1rem, 2.2vw, 1.4rem);
 }
-.wex__grid > li {
-  min-width: 0;
-}
-@media (min-width: 1180px) {
-  .wex__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-.wex__empty {
-  padding: var(--space-16) var(--space-6);
-  border: 1px dashed var(--color-line-strong);
-  border-radius: var(--radius-lg);
-  text-align: center;
-}
-.wex__empty-title {
-  margin: 0;
-  font-family: var(--font-display);
+/* Two lines are reserved whether or not the title needs both, so the category,
+   the copy and the CTA sit on the same baseline right across a row. */
+.pcard__title {
   font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  min-height: 2.5em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-wrap: pretty;
 }
-.wex__empty-body {
-  margin: var(--space-3) 0 var(--space-6);
-  color: var(--color-text-muted);
-}
-.wex__empty-btn {
-  min-height: 44px;
-  padding: 0 var(--space-6);
-  border: 1px solid var(--color-accent);
-  border-radius: 999px;
-  color: var(--color-accent);
+.pcard__cat {
   font-size: var(--text-sm);
-}
-.wex__foot {
-  margin: var(--space-12) 0 0;
-  font-size: var(--text-sm);
-}
-.wex__foot-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
   color: var(--color-text-faint);
 }
-.wex__foot-link:hover {
+.pcard__tagline {
+  margin-top: 0.5rem;
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pcard__cta {
+  display: inline-flex;
+  align-self: start;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
   color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.pcard__cta svg {
+  width: 20px;
+  height: 12px;
+  transition: translate var(--duration-ui) var(--ease-out-quart);
+}
+.pcard__link:hover .pcard__cta svg,
+.pcard__link:focus-visible .pcard__cta svg {
+  translate: 4px 0;
 }
 
-/* Motion is decoration on every one of these: each state also reads from
-   colour, border or opacity, so removing the movement removes nothing. */
+/* Every one of these states also reads from colour, border or opacity, so
+   removing the movement removes nothing. */
 @media (prefers-reduced-motion: reduce) {
-  .pcard__link,
   .pcard__shot,
-  .pcard__cta,
-  .pcard__reveal,
-  .pcard__arrow,
-  .pcard__shine,
-  .wx__stage-mouse,
-  .pcard__parallax,
-  .pcard__mouse,
-  .cgal__btn img {
+  .pcard__cta svg,
+  .wex__more svg {
     transition: none !important;
-    transform: none !important;
-  }
-  .pcard__reveal,
-  .pcard__cta {
-    max-height: 4rem;
-    opacity: 1;
+    scale: none !important;
+    translate: none !important;
   }
 }
 
@@ -10260,7 +10171,7 @@ html {
 /* --- process page orbital card --- */
 .pr__orbital-shell {
   margin-top: clamp(2.5rem, 6vw, 4.5rem);
-  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
 }
 .pr__orbital-card {
   background: var(--color-bg-elevated);
