@@ -83,16 +83,6 @@ export function ServicesHorizontalScroll({
               end: () => `+=${distance()}`,
               invalidateOnRefresh: true,
               anticipatePin: 1,
-              /* Cards settle on a card boundary rather than wherever the
-                 scroll happened to stop, so the rail never rests showing two
-                 half-cut cards. Directional, and short enough to feel like
-                 settling rather than a second animation. */
-              snap: {
-                snapTo: 1 / (total - 1),
-                duration: { min: 0.15, max: 0.35 },
-                delay: 0.05,
-                ease: "power2.out",
-              },
               onUpdate: (self) => {
                 setActiveIndex(Math.round(self.progress * (total - 1)));
                 /* The bar is written directly rather than through state — it

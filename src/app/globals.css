@@ -89,6 +89,16 @@
   /* --- layout --- */
   --gutter: clamp(1.25rem, 3.6vw, 4rem);
   --container-max: 1360px;
+  /* Left offset of a centred .shell, as a length any section can align to.
+     Sections that lay out their own full-bleed grid (the pinned services
+     rail) need this number but cannot use `.shell`'s percentage width, since
+     a percentage would resolve against their own inner box instead of the
+     page. Registering --sbw below makes `100% ` resolve once, on <html>, so
+     this stays honest whether or not a classic scrollbar is present. */
+  --shell-edge: max(
+    var(--gutter),
+    calc((100vw - var(--sbw) - var(--container-max)) / 2)
+  );
   --col-gap: clamp(1rem, 2vw, 1.5rem);
   --section-y: clamp(1.75rem, 1rem + 2.2vw, 3.25rem);
   --header-h: 72px;
@@ -167,6 +177,19 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
 }
+@property --sbw {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+html {
+  /* Width of the classic scrollbar, or 0px where the scrollbar overlays.
+     Registered above so the percentage resolves against <html>'s own box at
+     computed-value time rather than being substituted into each user. */
+  --sbw: calc(100vw - 100%);
+}
+
 body {
   min-height: 100dvh;
   font-family: var(--font-sans);
