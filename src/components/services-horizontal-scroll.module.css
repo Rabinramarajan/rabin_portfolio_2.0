@@ -171,10 +171,13 @@
      gives every card the height of the tallest one; the rail as a whole is
      then centred by .viewport instead. */
   align-items: stretch;
-  /* The band is a fixed slice of 100vh, so the cards size to it rather than
-     the other way round - content-sized cards grew past the band and were
-     clipped at both edges. */
-  height: 100%;
+  /* Content-sized, capped by the band. `stretch` above still levels every
+     card to the tallest of them, so they stay identical - but the rail no
+     longer inflates to the whole band and leaves a hole between each card's
+     copy and its chip row. The cap keeps the earlier clipping fix: the rail
+     can never grow past the slice of 100vh it was given. */
+  height: auto;
+  max-height: 100%;
   gap: var(--card-gap);
   /* Trailing gutter carries the fade width on top of --edge: without it the
      last card comes to rest inside the mask's right fade and reads as cut off
