@@ -1727,6 +1727,9 @@ code {
   position: relative;
   overflow: clip;
   isolation: isolate;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Ambient light behind the orbit — two soft radials, no blur filters. */
@@ -1741,8 +1744,11 @@ code {
 }
 
 .skd__shell {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: clamp(1.25rem, 2.4vw, 2.25rem);
+  flex: 1;
+  min-height: 0;
 }
 .skd__top {
   display: flex;
@@ -1759,7 +1765,6 @@ code {
   /* One viewport tall on a monitor: the deck takes the height left over after
      the header and the section padding, and centres inside it. */
   .skd__shell {
-    min-height: calc(100svh - var(--header-h) - var(--section-y) * 2);
     align-content: center;
   }
   .skd__grid {
@@ -12280,11 +12285,19 @@ a.premium-contact-left-column__detail-value:hover {
    INTERACTIVE TECH ECOSYSTEM — DIGITAL TREE & STICKY NOTES (.eco-*)
    ============================================================ */
 
+/* The ecosystem is now the whole Skills section, so it owns a full viewport:
+   header first, stage taking whatever height is left. The flex chain from
+   `.skd` down to the svg is what keeps the tree inside the viewport instead of
+   sizing itself from its own 1100x740 aspect ratio. */
 .eco {
-  margin-top: clamp(4rem, 8vw, 7rem);
-  padding-top: clamp(3rem, 6vw, 5rem);
-  border-top: 1px solid var(--color-line);
   position: relative;
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .eco__header {
@@ -12379,6 +12392,8 @@ a.premium-contact-left-column__detail-value:hover {
 .eco__stage-container {
   position: relative;
   width: 100%;
+  flex: 1;
+  min-height: 320px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: radial-gradient(circle at 50% 60%, #151A21 0%, #0F1117 65%, #0A0C10 100%);
@@ -12386,16 +12401,27 @@ a.premium-contact-left-column__detail-value:hover {
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
 }
 
+/* Pinned to the stage rather than laid out in it: an in-flow <svg> with a
+   viewBox sizes itself from its 1100x740 ratio and blows past the viewport,
+   so the canvas is taken out of flow and the svg simply fills it. */
 .eco__canvas-wrap {
-  width: 100%;
-  position: relative;
+  position: absolute;
+  inset: 0;
 }
 
 .eco__tree-svg {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
-  min-height: 520px;
+}
+
+/* Under 960px the canvas is swapped for the mobile deck, so the section stops
+   being viewport-locked and flows at its natural height again. */
+@media (max-width: 959px) {
+  .skd {
+    min-height: 0;
+    display: block;
+  }
 }
 
 /* Ambient Orbit & Guides */
