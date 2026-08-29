@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import { serviceOfferings } from "@/content/serviceOfferings";
 import { ServiceIcon } from "@/components/pages/ServiceIcons";
 import { useMotionTier } from "@/lib/motion-tier";
+import { SectionKicker } from "@/components/ui";
+import { sections } from "@/content/sections";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import styles from "./services-horizontal-scroll.module.css";
 
@@ -28,6 +30,7 @@ export function ServicesHorizontalScroll({
   headingLevel?: "h1" | "h2";
 } = {}) {
   const Heading = headingLevel;
+  const intro = sections.services;
   const pinWrapperRef = useRef<HTMLElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLUListElement | null>(null);
@@ -146,12 +149,27 @@ export function ServicesHorizontalScroll({
       className={styles.pin}
       aria-labelledby={`${id}-rail-label`}
     >
-      <div className={styles.eyebrow}>
-        <span className={styles.eyebrowRule} aria-hidden />
-        <Heading className={styles.eyebrowText} id={`${id}-rail-label`}>
-          Services
+      <header className={styles.head}>
+        <SectionKicker index={intro.index} label={intro.label} className={styles.kicker} />
+
+        {/* Same run-based title as the work block: each run is a span, an
+            `accent` run takes the accent colour and a `newline` run starts a
+            visual line, so the break lives in the copy rather than here. */}
+        <Heading className={styles.title} id={`${id}-rail-label`}>
+          {intro.title.map((line, i) => (
+            <span key={line.text}>
+              {line.newline ? <br /> : i > 0 ? " " : null}
+              {line.accent ? (
+                <span className={styles.titleAccent}>{line.text}</span>
+              ) : (
+                line.text
+              )}
+            </span>
+          ))}
         </Heading>
-      </div>
+
+        <p className={styles.lede}>{intro.lede}</p>
+      </header>
 
       <div ref={viewportRef} className={styles.viewport}>
         <ul ref={trackRef} className={styles.track}>
@@ -179,15 +197,17 @@ export function ServicesHorizontalScroll({
         </ul>
       </div>
 
-      <div className={styles.progressRail} aria-hidden>
-        <div ref={progressRef} className={styles.progressBar} />
-      </div>
+      <div className={styles.foot}>
+        <div className={styles.progressRail} aria-hidden>
+          <div ref={progressRef} className={styles.progressBar} />
+        </div>
 
-      <p className={styles.counter} aria-hidden>
-        <span className={styles.counterCurrent}>{pad(activeIndex + 1)}</span>
-        <span>/</span>
-        <span>{pad(total)}</span>
-      </p>
+        <p className={styles.counter} aria-hidden>
+          <span className={styles.counterCurrent}>{pad(activeIndex + 1)}</span>
+          <span>/</span>
+          <span>{pad(total)}</span>
+        </p>
+      </div>
     </section>
   );
 }
