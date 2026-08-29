@@ -751,6 +751,21 @@ code {
    ============================================================ */
 
 /* --- cinematic hero: full-bleed reel + editorial overlay --- */
+/* Scroll-scrub track — the extra height below the viewport is the scroll
+   distance that drives `video.currentTime` in Hero.tsx. Only rendered on the
+   full motion tier; the basic tier keeps the plain 100vh hero. */
+.chero-track {
+  position: relative;
+  height: 240vh;
+}
+@media (min-width: 768px) {
+  .chero-track {
+    /* 400vh over a 60fps 10s reel is ~1.7 scroll-pixels per frame, so the
+       reel advances on almost every wheel tick rather than jumping. */
+    height: 400vh;
+  }
+}
+
 .chero {
   position: relative;
   min-height: 100vh;
@@ -759,6 +774,14 @@ code {
   justify-content: center;
   overflow: clip;
   isolation: isolate;
+}
+/* Pinned variant used inside .chero-track. Declared after `.chero` on
+   purpose: same specificity, so source order is what lets `sticky` win. */
+.chero--scrub {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 0;
 }
 .chero__stage {
   position: absolute;
@@ -770,11 +793,17 @@ code {
 }
 .chero__reel {
   position: absolute;
-  inset: -6% 0;
+  /* Was inset:-6% / height:112% to give a mouse parallax room to move. That
+     parallax is gone, and on a 720p source the extra 12% was pure upscale
+     blur, so the reel now sits at its natural size. */
+  inset: 0;
   width: 100%;
-  height: 112%;
+  height: 100%;
   object-fit: cover;
-  object-position: center 22%;
+  /* Biased left of centre so the visible crop keeps the subject clear of the
+     headline - the reel frames him on the right, and `center` pulled him far
+     enough in to collide with "EXPERIENCES". */
+  object-position: 34% 20%;
   will-change: transform;
   /* Dissolve the banner's hard waist-cut into the page background */
   -webkit-mask-image: linear-gradient(
@@ -803,8 +832,8 @@ code {
       90deg,
       rgb(10 10 12 / 88%) 0%,
       rgb(10 10 12 / 62%) 34%,
-      rgb(10 10 12 / 8%) 58%,
-      rgb(10 10 12 / 38%) 100%
+      rgb(10 10 12 / 6%) 58%,
+      rgb(10 10 12 / 14%) 100%
     ),
     linear-gradient(
       180deg,
@@ -820,8 +849,8 @@ code {
   inset: 0;
   background: radial-gradient(
     ellipse at 62% 34%,
-    transparent 28%,
-    rgb(10 10 12 / 55%) 100%
+    transparent 40%,
+    rgb(10 10 12 / 30%) 100%
   );
   will-change: background;
 }

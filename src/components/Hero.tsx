@@ -6,11 +6,26 @@ import { hero } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Btn } from "@/components/ui";
 import { Magnetic } from "@/components/motion";
+import { useHydrated } from "@/lib/useHydrated";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { ScrollVideoPlayer } from "@/components/ScrollVideoPlayer";
 
 export function Hero() {
   const reduce = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+
+  /* The scrub is gated on prefers-reduced-motion alone.
+
+     It used to also require the "full" motion tier, but that tier drops to
+     "basic" on <=4 cores, <=2 GB, or a stored rr-motion-tier preference - so a
+     stale localStorage value silently turned the hero into a static image with
+     no way to tell why. A hero video is the point of the page; only an
+     explicit reduced-motion request should switch it off.
+
+     `reduce` is null during SSR and on the client's first render, so the
+     initial render must assume the scrub and settle afterwards. */
+  const hydrated = useHydrated();
+  const scrub = hydrated ? !reduce : true;
 
   const t = (delay: number) => ({
     duration: reduce ? duration.micro : duration.section,
@@ -18,9 +33,29 @@ export function Hero() {
     ease,
   });
 
-  /* ── GSAP animations removed - all animations disabled via CSS ── */
-
-  /* ── Mouse parallax removed - all animations disabled via CSS ── */
+  /* The reel itself is scrubbed by ScrollVideoPlayer. All that is left here
+     is the hero-specific chrome: the SCROLL indicator fades out over the first
+     stretch of the same track. */
+  useGSAP(
+    () => {
+      if (!scrub) return;
+      const tween = gsap.to(scrollIndicatorRef.current, {
+        autoAlpha: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".chero-track",
+          start: "top top",
+          end: "12% top",
+          scrub: true,
+        },
+      });
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
+    },
+    { dependencies: [scrub], revertOnUpdate: true },
+  );
 
   const lines =
     hero.displayLines ??
@@ -29,33 +64,28 @@ export function Hero() {
   const quote = hero.quote;
 
   return (
-    <section
-      id="hero"
-      ref={sectionRef}
-      className="chero"
-      aria-labelledby="hero-heading"
-    >
-      {/* ── full-bleed reel ── */}
-      <div className="chero__stage" aria-hidden>
-        {hero.reel ? (
-          <video
-            className="chero__reel"
-            src={hero.reel.src}
-            poster={hero.reel.poster}
-            autoPlay={!reduce}
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            tabIndex={-1}
-          />
-        ) : null}
-        <div className="chero__scrim" />
-        <div className="chero__vignette" />
-        <div className="chero__haze" />
-        <div className="chero__blend" />
-      </div>
-
+    <ScrollVideoPlayer
+      mode={scrub ? "scroll" : "autoplay"}
+      src={hero.reel?.src ?? ""}
+      poster={hero.reel?.poster}
+      loop
+      as="section"
+      containerProps={{ id: "hero", "aria-labelledby": "hero-heading" }}
+      trackClassName="chero-track"
+      className={scrub ? "chero chero--scrub" : "chero"}
+      mediaClassName="chero__stage"
+      videoClassName="chero__reel"
+      posterClassName="chero__reel"
+      layers={
+        <>
+          <div className="chero__scrim" />
+          <div className="chero__vignette" />
+          <div className="chero__haze" />
+          <div className="chero__blend" />
+        </>
+      }
+      overlay={
+        <>
       {/* ── editorial layer ── */}
       <div className="shell chero__shell">
         <div className="chero__copy">
@@ -153,11 +183,13 @@ export function Hero() {
         ) : null}
       </div>
 
-      {/* ── scroll indicator ── */}
-      <div className="chero__scroll" ref={scrollIndicatorRef} aria-hidden>
-        <span className="chero__scroll-text">SCROLL</span>
-        <span className="chero__scroll-line" />
-      </div>
-    </section>
+          {/* ── scroll indicator ── */}
+          <div className="chero__scroll" ref={scrollIndicatorRef} aria-hidden>
+            <span className="chero__scroll-text">SCROLL</span>
+            <span className="chero__scroll-line" />
+          </div>
+        </>
+      }
+    />
   );
 }

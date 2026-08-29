@@ -110,7 +110,7 @@ export const hero: HeroContent = {
     lines: ["Code is my craft.", "Impact is my goal."],
     signature: profile.shortName,
   },
-  reel: { src: "/media/hero/banner_v.mp4", poster: "/media/hero/banner-poster.webp" },
+  reel: { src: "/media/hero/banner_v.scrub.mp4", poster: "/media/hero/banner-poster.webp" },
   description:
     "Frontend engineer specializing in Angular and modern web application architecture, with a strong focus on performance, usability and product quality.",
   primaryCta: { label: "Let's Work Together", href: "/contact" },
