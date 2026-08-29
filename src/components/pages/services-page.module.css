@@ -1,0 +1,595 @@
+/* ============================================================
+   /services — hero orbit, offer cards, credibility strip.
+   Scoped module so the page owns its layout without growing the
+   global sheet. Colors and spacing come from the design tokens.
+   ============================================================ */
+
+.page {
+  --svp-card-bg: #0e0e12;
+  --svp-card-line: rgb(255 255 255 / 8%);
+  position: relative;
+  background: var(--color-bg);
+  padding-bottom: clamp(3rem, 6vw, 5.5rem);
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  position: relative;
+  padding: calc(var(--header-h) + clamp(1.5rem, 4vw, 3rem)) 0 clamp(2rem, 4vw, 3.5rem);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 3rem);
+  align-items: center;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.kickerSlash {
+  color: var(--color-text-faint);
+}
+
+.kickerLabel {
+  color: var(--color-text-muted);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 1.2rem + 3.6vw, 4rem);
+  font-weight: var(--weight-medium);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  color: var(--color-text);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.titleAccent {
+  color: var(--color-accent);
+}
+
+.lede {
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+  max-width: 36ch;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-12);
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 2%);
+  color: var(--color-text);
+  font-size: var(--type-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-quart),
+    background var(--duration-ui) var(--ease-out-quart),
+    transform var(--duration-ui) var(--ease-out-quart);
+}
+
+.cta:hover {
+  border-color: var(--color-accent);
+  background: rgb(201 242 77 / 8%);
+  transform: translateY(-2px);
+}
+
+.ctaDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 12px rgb(201 242 77 / 60%);
+}
+
+.ctaArrow {
+  width: 16px;
+  height: 16px;
+  color: var(--color-accent);
+  transition: transform var(--duration-ui) var(--ease-out-quart);
+}
+
+.cta:hover .ctaArrow {
+  transform: translateX(4px);
+}
+
+/* ---------- orbit visual ---------- */
+
+.orbit {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  aspect-ratio: 1;
+}
+
+.orbitRings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--color-accent);
+}
+
+.ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.16;
+  stroke-width: 0.5;
+}
+
+.ringDim {
+  stroke-opacity: 0.07;
+}
+
+.spoke {
+  stroke: currentColor;
+  stroke-opacity: 0.09;
+  stroke-width: 0.4;
+}
+
+.node {
+  fill: currentColor;
+  fill-opacity: 0.6;
+}
+
+.rotor {
+  transform-origin: 50% 50%;
+  animation: svpSpin 42s linear infinite;
+}
+
+.rotorReverse {
+  transform-origin: 50% 50%;
+  animation: svpSpin 64s linear infinite reverse;
+}
+
+@keyframes svpSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbitCore {
+  position: absolute;
+  inset: 34%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgb(201 242 77 / 28%);
+  background: radial-gradient(circle, rgb(201 242 77 / 12%), transparent 70%);
+  box-shadow: 0 0 60px rgb(201 242 77 / 14%);
+}
+
+.orbitMark {
+  width: 58%;
+  height: auto;
+}
+
+.orbitLabel {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  background: rgb(14 14 18 / 88%);
+  backdrop-filter: blur(var(--glass-blur));
+  font-size: var(--type-xs);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.orbitLabel::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-accent);
+}
+
+.orbitLabel:nth-of-type(1) {
+  top: 4%;
+  left: 24%;
+}
+
+.orbitLabel:nth-of-type(2) {
+  top: 22%;
+  right: -2%;
+}
+
+.orbitLabel:nth-of-type(3) {
+  bottom: 32%;
+  left: -2%;
+}
+
+.orbitLabel:nth-of-type(4) {
+  bottom: 8%;
+  right: 10%;
+}
+
+/* ---------- section label ---------- */
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.sectionLabel::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-line), transparent);
+}
+
+.sectionLabelDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: rotate(45deg);
+}
+
+/* ---------- cards ---------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: clamp(1.25rem, 2.2vw, 2rem);
+  border: 1px solid var(--svp-card-line);
+  border-radius: var(--radius-lg);
+  background: var(--svp-card-bg);
+  transition:
+    border-color var(--duration-ui) var(--ease-out-quart),
+    transform var(--duration-ui) var(--ease-out-quart),
+    box-shadow var(--duration-ui) var(--ease-out-quart);
+}
+
+.card:hover {
+  border-color: rgb(201 242 77 / 32%);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+.cardNum {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--type-sm);
+  color: var(--color-text-faint);
+}
+
+.cardIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 8vw, 104px);
+  height: clamp(72px, 9vw, 118px);
+  margin-inline: auto;
+  color: var(--color-accent);
+}
+
+.cardIconHex {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: rgb(201 242 77 / 4%);
+  stroke: rgb(201 242 77 / 45%);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 12px rgb(201 242 77 / 22%));
+}
+
+.cardIconGlyph {
+  position: relative;
+  width: 38%;
+  height: auto;
+}
+
+.cardTitle {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.6rem);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.cardDesc {
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+}
+
+.cardList {
+  display: grid;
+  gap: var(--space-8);
+  margin: 0;
+  padding: var(--space-16) 0 0;
+  border-top: 1px solid var(--color-line);
+  list-style: none;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.cardList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.cardList li::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex: none;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-top: auto;
+  align-self: center;
+  padding-top: var(--space-8);
+  color: var(--color-accent);
+  font-size: var(--type-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+}
+
+.cardLink svg {
+  width: 15px;
+  height: 15px;
+  transition: transform var(--duration-ui) var(--ease-out-quart);
+}
+
+.cardLink:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- stats ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin: clamp(1.25rem, 2.5vw, 2rem) 0 0;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border: 1px solid var(--svp-card-line);
+  border-radius: var(--radius-lg);
+  background: var(--svp-card-bg);
+  list-style: none;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.statIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 50px;
+  flex: none;
+  color: var(--color-accent);
+}
+
+.statIcon .cardIconHex {
+  stroke-width: 3;
+}
+
+.statIcon .cardIconGlyph {
+  width: 42%;
+}
+
+.statValue {
+  display: block;
+  font-size: clamp(1.35rem, 1rem + 1.2vw, 2rem);
+  font-weight: var(--weight-semibold);
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.statLabel {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---------- section rail ---------- */
+
+.rail {
+  display: none;
+}
+
+/* ---------- responsive ---------- */
+
+@media (min-width: 700px) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .stat + .stat {
+    border-left: 1px solid var(--color-line);
+    padding-left: clamp(1rem, 2vw, 1.75rem);
+  }
+}
+
+/* Laptop band — hero splits in two, cards become wide rows. */
+@media (min-width: 960px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  }
+
+  .card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    row-gap: var(--space-8);
+  }
+
+  .cardIcon {
+    grid-row: 1 / span 3;
+    grid-column: 1;
+    margin: 0;
+  }
+
+  .cardNum {
+    grid-column: 2;
+    align-self: end;
+  }
+
+  .cardTitle,
+  .cardDesc {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .cardList {
+    display: none;
+  }
+
+  .cardLink {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+    align-self: center;
+    max-width: 8rem;
+    padding: 0 0 0 clamp(1rem, 2vw, 2rem);
+    border-left: 1px solid var(--color-line);
+  }
+}
+
+/* Wide desktop — the three-up column grid from the reference. */
+@media (min-width: 1240px) {
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cardNum {
+    align-self: flex-start;
+  }
+
+  .cardIcon {
+    margin-inline: auto;
+  }
+
+  .cardTitle,
+  .cardDesc {
+    text-align: center;
+  }
+
+  .cardList {
+    display: grid;
+  }
+
+  .cardLink {
+    max-width: none;
+    padding: var(--space-8) 0 0;
+    border-left: 0;
+  }
+
+  .rail {
+    position: absolute;
+    top: 50%;
+    right: clamp(0.5rem, 1.2vw, 1.25rem);
+    display: grid;
+    gap: var(--space-12);
+    transform: translateY(-50%);
+    font-size: var(--type-xs);
+    color: var(--color-text-faint);
+  }
+
+  .railItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    text-decoration: none;
+  }
+
+  .railItem::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .railItem[data-active="true"] {
+    color: var(--color-text);
+  }
+
+  .railItem[data-active="true"]::before {
+    background: var(--color-accent);
+    box-shadow: 0 0 10px rgb(201 242 77 / 60%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotor,
+  .rotorReverse {
+    animation: none;
+  }
+
+  .card:hover,
+  .cta:hover {
+    transform: none;
+  }
+}
