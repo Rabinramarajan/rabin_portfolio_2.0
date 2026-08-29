@@ -1,0 +1,197 @@
+/* ============================================================
+   PRIMITIVES
+   ============================================================ */
+
+.shell {
+  width: min(100% - (var(--gutter) * 2), var(--container-max));
+  margin-inline: auto;
+}
+.section {
+  padding: var(--section-y) 0;
+  position: relative;
+}
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.muted {
+  color: var(--color-text-muted);
+}
+.faint {
+  color: var(--color-text-faint);
+}
+.rule {
+  height: 1px;
+  background: var(--color-line);
+  border: 0;
+}
+
+/* --- tech-stack-icons (tech-stack-icons.com) --- */
+.stack-tech-icon {
+  display: inline-grid;
+  place-items: center;
+  line-height: 0;
+  flex: none;
+  width: 1.25em;
+  height: 1.25em;
+  max-width: 100%;
+  max-height: 100%;
+  filter: brightness(1.1) contrast(1.15);
+}
+.stack-tech-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: inherit;
+}
+
+/* --- project cover poster ---
+   Stands in for a case-study screenshot that was never captured, so the work
+   grid and case-study hero keep their frame instead of showing a broken image.
+   Fills its container exactly like the <img> it replaces. */
+.project-poster {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  padding: clamp(var(--space-4), 4cqi, var(--space-8));
+  container-type: inline-size;
+  background:
+    radial-gradient(120% 90% at 82% 8%, rgb(201 242 77 / 12%), transparent 62%),
+    linear-gradient(160deg, var(--color-surface), var(--color-bg-elevated));
+  border: 1px solid var(--color-line);
+  color: var(--color-text);
+  overflow: hidden;
+}
+.project-poster__no {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
+}
+.project-poster__title {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-lg), 7cqi, var(--text-3xl));
+  line-height: var(--leading-snug);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.project-poster__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+/* Thumbnails are ~120px wide — drop everything but the number and tint. */
+@container (max-width: 220px) {
+  .project-poster__title,
+  .project-poster__meta {
+    display: none;
+  }
+  .project-poster {
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-2);
+  }
+}
+
+/* --- section kicker --- */
+.sec-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.sec-kicker__index {
+  color: var(--color-accent);
+}
+.sec-kicker__label {
+  color: var(--color-text-muted);
+}
+.sec-title {
+  font-size: var(--text-3xl);
+  letter-spacing: -0.04em;
+  max-width: 18ch;
+  font-weight: 550;
+  text-wrap: balance;
+}
+.sec-lede {
+  max-width: 40rem;
+  color: var(--color-text-muted);
+  margin-top: 1rem;
+}
+
+/* --- buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 0.6rem;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition:
+    color var(--duration-ui) var(--ease-out-expo),
+    background var(--duration-ui) var(--ease-out-expo),
+    border-color var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-micro) var(--ease-out-expo);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn--solid {
+  padding: 0.8rem 1.4rem;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: 600;
+  min-height: 48px;
+  border-radius: var(--radius-sm);
+}
+.btn--solid:hover {
+  background: #d8fb66;
+}
+.btn--line {
+  min-height: 48px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.8rem 1.4rem;
+  color: var(--color-text);
+}
+.btn--line:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.btn__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.btn__arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--duration-ui) var(--ease-out-expo);
+}
+.btn:hover .btn__arrow {
+  transform: translateX(6px);
+}
+
+/* --- image frame --- */
+.shot {
+  overflow: hidden;
+  background: var(--color-surface);
+  position: relative;
+}
+.shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

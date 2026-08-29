@@ -1,0 +1,39 @@
+/* ============================================================
+   CASE STUDY / MISC PAGES
+   ============================================================ */
+
+.not-found {
+  min-height: 70dvh;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+  padding: var(--gutter);
+  text-align: center;
+}
+.page-enter {
+  animation: page-enter 0.5s var(--ease-out-expo) both;
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.2rem;
+  margin: 0.8rem 0 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.case-meta span:first-child {
+  color: var(--color-accent);
+}

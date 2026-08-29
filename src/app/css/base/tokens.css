@@ -1,0 +1,199 @@
+/* ============================================================
+   RABIN R — DESIGN SYSTEM
+   Near-black / warm white / single Rabin lime accent.
+   Unified typography: Inter (display, body, UI) · JetBrains Mono (code)
+   ============================================================ */
+
+:root {
+  /* --- color tokens --- */
+  --color-bg: #0a0a0c;
+  --color-bg-elevated: #101014;
+  --color-surface: #16161b;
+  --color-line: rgb(255 255 255 / 9%);
+  --color-line-strong: rgb(255 255 255 / 16%);
+  --color-text: #f2f1ec;
+  --color-text-muted: #9a9aa3;
+  /* 5.2:1 on --color-bg, 4.8:1 on --color-surface — the lighter of the two
+     backgrounds this token is read against (about panels). The original
+     #6e6e76 measured 3.8:1 / 3.5:1 and failed WCAG AA for normal-size text. */
+  --color-text-faint: #83838c;
+  --color-accent: #c9f24d;
+  --color-accent-dim: #9ec22f;
+  --color-accent-contrast: #0a0a0c;
+  --color-danger: #ff6b6b;
+
+  /* --- font families --- */
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-display: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-body: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-accent: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace;
+
+  /* --- type tokens (editorial hierarchy) --- */
+  --type-xs: 0.75rem;      /* 12px - labels */
+  --type-sm: 0.875rem;     /* 14px - small text */
+  --type-base: 1rem;       /* 16px - body default */
+  --type-lg: 1.125rem;     /* 18px - large body */
+  --type-xl: 1.25rem;      /* 20px - small heading */
+  --type-2xl: 1.5rem;      /* 24px - section heading */
+  --type-3xl: 2rem;        /* 32px - page heading */
+
+  /* --- font weights --- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+
+  /* --- line heights --- */
+  --leading-tight: 1.08;   /* headings */
+  --leading-snug: 1.25;    /* small text */
+  --leading-normal: 1.5;   /* body default */
+  --leading-relaxed: 1.75; /* long-form */
+
+  /* --- legacy type scale (deprecated) --- */
+  --text-xs: clamp(0.68rem, 0.66rem + 0.1vw, 0.75rem);
+  --text-sm: clamp(0.8rem, 0.77rem + 0.15vw, 0.875rem);
+  --text-base: clamp(0.94rem, 0.9rem + 0.2vw, 1rem);
+  --text-lg: clamp(1.05rem, 1rem + 0.28vw, 1.2rem);
+  --text-xl: clamp(1.2rem, 1.08rem + 0.55vw, 1.55rem);
+  --text-2xl: clamp(1.55rem, 1.2rem + 1.2vw, 2.35rem);
+  --text-3xl: clamp(2rem, 1.35rem + 2.4vw, 3.4rem);
+  --text-4xl: clamp(2.4rem, 1.4rem + 3.2vw, 4.2rem);
+  --text-display: clamp(2.6rem, 1.3rem + 4.6vw, 5.4rem);
+
+  /* --- 8dp spacing scale (unified) --- */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-80: 80px;
+
+  /* --- legacy spacing scale (deprecated) --- */
+  --space-1: 0.25rem;
+  --space-3: 0.75rem;
+  --space-5: 1.25rem;
+
+  /* --- layout --- */
+  --gutter: clamp(1.25rem, 3.6vw, 4rem);
+  --container-max: 1360px;
+  /* Left offset of a centred .shell, as a length any section can align to.
+     Sections that lay out their own full-bleed grid (the pinned services
+     rail) need this number but cannot use `.shell`'s percentage width, since
+     a percentage would resolve against their own inner box instead of the
+     page. Registering --sbw below makes `100% ` resolve once, on <html>, so
+     this stays honest whether or not a classic scrollbar is present. */
+  --shell-edge: max(
+    var(--gutter),
+    calc((100vw - var(--sbw) - var(--container-max)) / 2)
+  );
+  --col-gap: clamp(1rem, 2vw, 1.5rem);
+  --section-y: clamp(1.75rem, 1rem + 2.2vw, 3.25rem);
+  --header-h: 72px;
+
+  /* --- radius --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* --- motion --- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --duration-micro: 0.18s;
+  --duration-ui: 0.28s;
+  --duration-interaction: 0.38s;
+  --duration-section: 0.6s;
+  --duration-cinematic: 0.85s;
+  --z-header: 200;
+  --z-menu: 300;
+  --z-overlay: 500;
+
+  /* --- premium contact design tokens --- */
+  --premium-primary: #1C1917;
+  --premium-on-primary: #FFFFFF;
+  --premium-secondary: #44403C;
+  --premium-accent: #c9f24d;
+  --premium-bg: #FAFAF9;
+  --premium-foreground: #0C0A09;
+  --premium-muted: #E8ECF0;
+  --premium-border: #D6D3D1;
+  --premium-backdrop-blur: 12px;
+  --premium-spacing-xs: 12px;
+  --premium-spacing-sm: 16px;
+  --premium-spacing-md: 24px;
+  --premium-spacing-lg: 32px;
+  --premium-spacing-xl: 48px;
+  --premium-spacing-2xl: 64px;
+
+  /* --- premium upgrade tokens --- */
+  --grain-opacity: 0.025;
+  --glass-bg: rgb(255 255 255 / 3%);
+  --glass-border: rgb(255 255 255 / 6%);
+  --glass-blur: 16px;
+  --shadow-depth-sm: 0 2px 8px rgb(0 0 0 / 20%);
+  --shadow-depth-md: 0 8px 32px rgb(0 0 0 / 30%);
+  --shadow-depth-lg: 0 24px 64px rgb(0 0 0 / 45%);
+  --shadow-glow: 0 0 40px rgb(201 242 77 / 8%);
+  --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-accent: var(--color-accent);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1.5rem);
+  color-scheme: dark;
+}
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+@property --sbw {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+html {
+  /* Width of the classic scrollbar, or 0px where the scrollbar overlays.
+     Registered above so the percentage resolves against <html>'s own box at
+     computed-value time rather than being substituted into each user. */
+  --sbw: calc(100vw - 100%);
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

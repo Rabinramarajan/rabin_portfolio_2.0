@@ -1,0 +1,21 @@
+/* ============================================================
+   TECHNOLOGY BADGE
+   Shared by the services page and the case studies. Values are
+   lifted verbatim from the old `.svc__tech-chip` so the services
+   page renders identically.
+   ============================================================ */
+
+.techbadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 3%);
+  font-size: var(--text-sm);
+}
+.techbadge__icon {
+  width: 14px;
+  height: 14px;
+}

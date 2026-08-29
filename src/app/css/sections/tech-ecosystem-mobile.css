@@ -1,0 +1,150 @@
+/* ============================================================
+   MOBILE DECK (<960px)
+   ============================================================ */
+
+.eco__mobile-deck {
+  display: none;
+  padding: 1.25rem;
+}
+
+.eco__mobile-nucleus-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: #11151C;
+  border: 1px solid var(--color-line-strong);
+  margin-bottom: 1.25rem;
+}
+
+.eco__mobile-r-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #151A21;
+  border: 1.5px solid #C8FF00;
+  display: grid;
+  place-items: center;
+  color: #C8FF00;
+  filter: drop-shadow(0 0 10px rgba(200, 255, 0, 0.4));
+}
+
+.eco__mobile-mark-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.eco__mobile-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: #C8FF00;
+  display: block;
+}
+
+.eco__mobile-tree-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.eco__mobile-branches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.eco__mobile-branch-card {
+  border-radius: var(--radius-sm);
+  background: #11151C;
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+}
+
+.eco__mobile-branch-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background: #151A21;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.eco__mobile-branch-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.eco__mobile-branch-icon {
+  font-size: 1rem;
+}
+
+.eco__mobile-branch-count {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-faint);
+}
+
+.eco__mobile-branch-toggle {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: #C8FF00;
+}
+
+.eco__mobile-nodes-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.85rem;
+}
+
+.eco__mobile-node-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-sm);
+  background: #151A21;
+  border: 1px solid var(--color-line);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.eco__mobile-node-btn--active {
+  background: #C8FF00;
+  border-color: #C8FF00;
+  color: #0A0A0C;
+  font-weight: 600;
+}
+
+.eco__mobile-node-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.eco__mobile-active-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0A0A0C;
+}
+
+@media (max-width: 959px) {
+  .eco__canvas-wrap {
+    display: none;
+  }
+  .eco__mobile-deck {
+    display: block;
+  }
+}

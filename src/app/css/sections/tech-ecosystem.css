@@ -1,0 +1,187 @@
+/* ============================================================
+   TECHNOLOGY ECOSYSTEM & STICKY NOTE DESIGN
+   ============================================================ */
+
+.eco {
+  --eco-line: rgb(255 255 255 / 8%);
+  --eco-line-strong: rgb(255 255 255 / 14%);
+  --eco-glow: rgb(201 242 77 / 0.25);
+  --eco-glow-strong: rgb(201 242 77 / 0.4);
+  --eco-accent-soft: rgb(201 242 77 / 0.15);
+  padding-top: var(--space-8);
+  position: relative;
+}
+
+/* ---------- header ---------- */
+
+.eco__header {
+  text-align: center;
+  max-width: 58ch;
+  margin-inline: auto;
+  margin-bottom: var(--space-7);
+}
+.eco__title {
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 1.18;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  margin-top: var(--space-4);
+  color: var(--color-text);
+}
+.eco__title em {
+  font-style: normal;
+  color: var(--color-accent);
+  text-shadow: 0 0 30px rgba(201, 242, 77, 0.35);
+}
+.eco__lede {
+  margin-top: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: clamp(0.95rem, 1vw, 1.05rem);
+  line-height: 1.65;
+  max-width: 48ch;
+  margin-inline: auto;
+}
+
+/* ---------- filter pills ---------- */
+
+.eco__filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-8);
+  padding: 0 var(--space-4);
+}
+.eco__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.05rem;
+  border: 1px solid var(--eco-line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease-out-quart),
+    color 200ms var(--ease-out-quart),
+    background 200ms var(--ease-out-quart),
+    box-shadow 200ms var(--ease-out-quart),
+    transform 200ms var(--ease-out-quart);
+  position: relative;
+}
+.eco__pill-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.eco__pill:hover {
+  border-color: var(--eco-glow-strong);
+  color: var(--color-text);
+  background: rgba(201, 242, 77, 0.06);
+  box-shadow: 0 0 16px rgba(201, 242, 77, 0.15);
+  transform: translateY(-1px);
+}
+
+/* interactive skill nodes */
+.eco__node {
+  cursor: pointer;
+  transition:
+    opacity 220ms var(--ease-out-quart),
+    filter 220ms var(--ease-out-quart);
+}
+
+.eco__node-aura {
+  fill: rgba(201, 242, 77, 0.12);
+  stroke: rgba(201, 242, 77, 0.3);
+  stroke-width: 1;
+  animation: ecoAuraPulse 2s ease-in-out infinite;
+}
+@keyframes ecoAuraPulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.eco__node-icon {
+  pointer-events: none;
+  overflow: visible;
+  transition: transform 180ms ease;
+}
+.eco__node:hover .eco__node-icon,
+.eco__node--selected .eco__node-icon {
+  transform: scale(1.08);
+}
+.eco__node-icon svg,
+.eco__node-icon span {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------- responsive ---------- */
+
+
+@media (max-width: 959px) {
+  .eco {
+    --eco-line: rgb(255 255 255 / 7%);
+    --eco-line-strong: rgb(255 255 255 / 10%);
+  }
+  .eco__header {
+    margin-bottom: var(--space-6);
+  }
+  .eco__title {
+    font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+  }
+  .eco__filter {
+    margin-top: var(--space-5);
+    margin-bottom: var(--space-6);
+    gap: 0.45rem;
+  }
+}
+
+@media (max-width: 640px) {
+
+  .eco {
+    padding-top: var(--space-6);
+  }
+  .eco__header {
+    margin-bottom: var(--space-5);
+  }
+  .eco__title {
+    font-size: clamp(1.5rem, 3vw, 1.8rem);
+  }
+  .eco__lede {
+    font-size: 0.95rem;
+    margin-top: var(--space-3);
+  }
+  .eco__filter {
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-5);
+    gap: 0.35rem;
+    padding: 0;
+  }
+  .eco__pill {
+    padding: 0.5rem 1rem;
+    font-size: 0.62rem;
+  }
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .eco__node,
+  .eco__node-ring,
+  .eco__node-label,
+  .eco__pill,
+  .eco__detail-close,
+  .eco__detail-projects li a,
+  .eco__connection,
+  .eco__cat-label {
+    transition: none;
+  }
+}

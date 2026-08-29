@@ -1,0 +1,33 @@
+/* ============================================================
+   TOUCH TARGETS
+   Standalone links that rendered ~16-20px tall — below the 24px
+   WCAG 2.2 (2.5.8) floor and well below a comfortable 44px thumb
+   target. Links sitting inside a sentence are deliberately left
+   alone: the spec exempts them, and padding them would break the
+   line box of the prose they belong to.
+
+   Two techniques, chosen per case:
+   a) An invisible ::after hit area, where growing the box would
+      shift the surrounding layout.
+   b) A real min-height, where the block has room to grow.
+   ============================================================ */
+
+/* (a) Breadcrumbs sit directly above every subpage hero, so the row
+   height has to stay put — the target grows without it. Expansion is
+   vertical only, and the 0.5rem inline gap keeps siblings apart. */
+.crumbs a {
+  position: relative;
+}
+.crumbs a::after {
+  content: "";
+  position: absolute;
+  inset: -0.8rem 0;
+}
+
+/* (b) Both blocks are sparse enough to absorb the extra height. */
+.nf-links a,
+.cp-channel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

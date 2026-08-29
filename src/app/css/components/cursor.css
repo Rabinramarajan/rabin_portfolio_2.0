@@ -1,0 +1,149 @@
+/* ============================================================
+   CUSTOM CURSOR — Premium Desktop Only
+   Small dot + ring with spring physics and contextual labels
+   ============================================================ */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  will-change: transform;
+  mix-blend-mode: difference;
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgb(201 242 77 / 50%);
+}
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgb(201 242 77 / 50%);
+  background: transparent;
+  transition:
+    width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: grid;
+  place-items: center;
+}
+.cursor-ring[data-state="project"] {
+  width: 110px;
+  height: 110px;
+  border-color: var(--color-accent);
+  background: rgb(201 242 77 / 10%);
+  box-shadow: 0 0 40px rgb(201 242 77 / 20%);
+}
+.cursor-ring[data-state="button"] {
+  width: 60px;
+  height: 60px;
+  border-color: var(--color-accent);
+  background: rgb(201 242 77 / 8%);
+  box-shadow: 0 0 25px rgb(201 242 77 / 15%);
+}
+.cursor-ring[data-state="link"] {
+  width: 50px;
+  height: 50px;
+  border-color: rgb(201 242 77 / 70%);
+  background: rgb(201 242 77 / 5%);
+}
+.cursor-ring[data-state="text"] {
+  width: 4px;
+  height: 28px;
+  border-radius: 2px;
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+.cursor-ring[data-state="image"] {
+  width: 80px;
+  height: 80px;
+  border-color: var(--color-accent);
+  background: rgb(201 242 77 / 12%);
+  box-shadow: 0 0 30px rgb(201 242 77 / 18%);
+}
+.cursor-ring[data-state="explore"] {
+  width: 52px;
+  height: 52px;
+  border-color: var(--color-accent);
+  background: rgb(201 242 77 / 10%);
+  box-shadow: 0 0 24px rgb(201 242 77 / 20%);
+}
+.cursor-ring[data-state="hidden"] {
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+.cursor-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.cursor-ring[data-state="button"] .cursor-label,
+.cursor-ring[data-state="project"] .cursor-label,
+.cursor-ring[data-state="explore"] .cursor-label,
+.cursor-ring[data-state="image"] .cursor-label {
+  opacity: 1;
+}
+.cursor-dot[data-cursor-comp="dot"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  pointer-events: none;
+  will-change: transform;
+}
+.cursor-ring[data-cursor-comp="ring"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  will-change: transform;
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
+
+/* Focus ring enhancement */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Selection highlight */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1.5rem);
+}
+
+/* The reduced-motion override for `html` lives in base/motion.css. */

@@ -1,0 +1,48 @@
+/* ============================================================
+   CONTACT
+   ============================================================ */
+
+/* ---- Homepage contact panel (#contact) ---- */
+
+.cx {
+  --cx-card: #101015;
+  --cx-card-2: #0d0d11;
+  --cx-field: rgb(255 255 255 / 3.5%);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hp {
+  position: absolute;
+  left: -9999px;
+  height: 0;
+  overflow: hidden;
+}
+
+.form__spin {
+  animation: form-spin 0.9s linear infinite;
+}
+@keyframes form-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form__spin {
+    animation: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

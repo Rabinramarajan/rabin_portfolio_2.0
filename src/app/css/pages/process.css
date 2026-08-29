@@ -1,0 +1,851 @@
+/* ============================================================
+   PROCESS — "From idea to production."
+   Editorial journey: intro composition, sticky path journey,
+   dedicated mobile timeline, completion moment, CTA.
+   ============================================================ */
+
+.pr {
+  position: relative;
+  overflow: clip;
+}
+
+/* --- intro composition --- */
+.pr__intro {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  align-items: end;
+}
+@media (min-width: 960px) {
+  .pr__intro {
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 2.75rem);
+  }
+}
+.pr__display {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.045em;
+  font-weight: 500;
+  text-wrap: balance;
+}
+.pr__display-accent {
+  color: var(--color-accent);
+}
+.pr__lede {
+  margin-top: 1.25rem;
+  max-width: 34rem;
+  color: var(--color-text-muted);
+}
+.pr__intro-actions {
+  margin-top: 1.5rem;
+}
+
+/* --- operating principles: hairline instrument band --- */
+.pprin {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+.pprin__head {
+  display: grid;
+  gap: 0.6rem;
+  padding-bottom: clamp(1.1rem, 2.4vw, 1.75rem);
+}
+@media (min-width: 900px) {
+  .pprin__head {
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    align-items: baseline;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+  }
+}
+.pprin__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+.pprin__kicker span {
+  color: var(--color-accent);
+  margin-right: 0.35rem;
+}
+.pprin__intro {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  max-width: 44rem;
+}
+
+/* Column counts are chosen so the final row is never left with an orphan:
+   5 across wide, 2 across with the fifth spanning at mid widths, 1 on phones. */
+.pprin__band {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-bottom: 1px solid var(--color-line);
+}
+@media (min-width: 640px) {
+  .pprin__band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pprin__cell:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 1160px) {
+  .pprin__band {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .pprin__cell:last-child {
+    grid-column: auto;
+  }
+}
+
+/* Cells are flush to the shell edge by default, which is correct for the
+   single-column case; the inner gutter is added back only to cells that
+   actually sit in a second or later column. */
+.pprin__cell {
+  --pprin-gutter: clamp(1rem, 1.6vw, 1.35rem);
+  position: relative;
+  padding: clamp(1.1rem, 2vw, 1.4rem) var(--pprin-gutter) clamp(1.25rem, 2.2vw, 1.6rem) 0;
+  border-top: 1px solid var(--color-line);
+}
+@media (min-width: 640px) {
+  .pprin__cell:nth-child(2n) {
+    border-left: 1px solid var(--color-line);
+    padding-left: var(--pprin-gutter);
+  }
+}
+@media (min-width: 1160px) {
+  .pprin__cell {
+    border-left: 1px solid var(--color-line);
+    padding-left: var(--pprin-gutter);
+  }
+  .pprin__cell:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+/* Hover lights the cell's own rule rather than lifting a card. */
+.pprin__scan {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-interaction) var(--ease-out-expo);
+}
+.pprin__cell:hover .pprin__scan,
+.pprin__cell:focus-within .pprin__scan {
+  transform: scaleX(1);
+}
+
+.pprin__ord {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--color-line-strong);
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.pprin__cell:hover .pprin__ord {
+  color: var(--color-accent);
+}
+.pprin__icon {
+  display: block;
+  margin-top: 0.9rem;
+  color: var(--color-accent-dim);
+  transition:
+    color var(--duration-ui) var(--ease-out-expo),
+    filter var(--duration-interaction) var(--ease-out-expo);
+}
+@media (min-width: 1160px) {
+  .pprin__icon {
+    margin-top: clamp(1.5rem, 2.6vw, 2.25rem);
+  }
+}
+.pprin__cell:hover .pprin__icon {
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent) 45%, transparent));
+}
+.pprin__title {
+  margin-top: 0.8rem;
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 560;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+.pprin__body {
+  margin-top: 0.45rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+@media (min-width: 640px) and (max-width: 1159px) {
+  .pprin__body {
+    max-width: 34rem;
+  }
+}
+
+/* --- journey shell --- */
+.pj {
+  position: relative;
+  margin-top: clamp(1.75rem, 4vw, 3rem);
+  margin-bottom: clamp(2rem, 6vw, 4rem);
+}
+.pj__sticky,
+.pj__spacer {
+  display: none;
+}
+.pj__mobile {
+  display: block;
+}
+
+@media (min-width: 960px) {
+  .pj__sticky {
+    position: sticky;
+    top: calc(var(--header-h) + 1.25rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) 7.5rem minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    /* `align-items: center` would re-center — and therefore move — both columns
+       every time a step swaps in copy of a different length, which is layout
+       shift on every step transition. Stretching the columns to the full row
+       and centering *inside* them keeps the same look with zero shift. */
+    align-items: stretch;
+    height: calc(100dvh - var(--header-h) - 2.5rem);
+    min-height: 34rem;
+  }
+  .pj__sticky > .pj__info,
+  .pj__sticky > .pj__aside {
+    height: 100%;
+    align-content: center;
+  }
+  /* Same reason, one level down: the step copy varies in length, so reserve the
+     tallest step's box and let text fill it from the top instead of resizing. */
+  .pj__sticky .pj__head {
+    min-height: 26rem;
+    align-content: start;
+  }
+  .pj__spacer {
+    display: block;
+    height: 490vh;
+  }
+  .pj__mobile {
+    display: none;
+  }
+}
+
+.pj__anchors {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(100% - 100dvh);
+  pointer-events: none;
+}
+.pj__anchor {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+}
+
+/* left column: index + number + copy */
+.pj__info {
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  min-width: 0;
+}
+.pj__head {
+  display: grid;
+  gap: 0.75rem;
+}
+.pj__num {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  font-weight: 500;
+  color: var(--color-accent);
+}
+.pj__copy {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.pj__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  letter-spacing: -0.035em;
+  line-height: var(--leading-snug);
+  font-weight: 500;
+}
+.pj__purpose {
+  font-size: var(--text-lg);
+  color: var(--color-text);
+  max-width: 32ch;
+  line-height: 1.4;
+}
+.pj__desc {
+  color: var(--color-text-muted);
+  max-width: 46ch;
+  font-size: var(--text-sm);
+  line-height: 1.65;
+}
+.pj__happens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin-top: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.pj__happens li {
+  position: relative;
+  padding-left: 0.85rem;
+}
+.pj__happens li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.45rem;
+  height: 1px;
+  background: var(--color-accent-dim);
+}
+
+/* center column: the path */
+.pj__path {
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+.ps {
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  overflow: visible;
+}
+.ps__track {
+  stroke: var(--color-line-strong);
+  stroke-width: 1.25;
+}
+.ps__drawn {
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.ps__ghost {
+  stroke: var(--color-text-faint);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+  opacity: 0.55;
+  transition: opacity var(--duration-section) var(--ease-out-expo);
+}
+.ps__ghost[data-state="past"] {
+  opacity: 0;
+}
+.ps__ticks line {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+}
+.ps__ticks {
+  opacity: 0.5;
+  transition: opacity var(--duration-section) var(--ease-out-expo);
+}
+.ps__ticks[data-state="on"] {
+  opacity: 1;
+}
+.ps__ticks[data-state="on"] line {
+  stroke: var(--color-accent-dim);
+}
+.ps__fan path {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+}
+.ps__fan {
+  opacity: 0;
+  transition: opacity var(--duration-cinematic) var(--ease-out-expo);
+}
+.ps__fan[data-state="on"] {
+  opacity: 1;
+}
+.ps__fan[data-state="on"] path {
+  stroke: var(--color-accent-dim);
+}
+.ps__node-rule {
+  stroke: var(--color-line);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity var(--duration-section) var(--ease-out-expo);
+}
+.ps__node-halo {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 1;
+  transition: stroke var(--duration-section) var(--ease-out-expo);
+}
+.ps__node-dot {
+  fill: var(--color-bg);
+  stroke: var(--color-line-strong);
+  stroke-width: 1.5;
+  transition:
+    fill var(--duration-section) var(--ease-out-expo),
+    stroke var(--duration-section) var(--ease-out-expo);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.ps__node[data-state="past"] .ps__node-dot {
+  stroke: var(--color-accent-dim);
+  fill: var(--color-accent-dim);
+}
+.ps__node[data-state="now"] .ps__node-dot {
+  stroke: var(--color-accent);
+  fill: var(--color-accent);
+}
+.ps__node[data-state="now"] .ps__node-halo {
+  stroke: var(--color-accent-dim);
+}
+.ps__node[data-state="now"] .ps__node-rule,
+.ps__node[data-state="past"] .ps__node-rule {
+  opacity: 1;
+}
+.ps__node-pulse {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1;
+}
+
+/* right column: visual + deliverables + outcome */
+.pj__aside {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  min-width: 0;
+}
+.pj__stage {
+  position: relative;
+  aspect-ratio: 320 / 220;
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 20, 0.65) 0%,
+    rgba(10, 10, 10, 0.85) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(255, 107, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+}
+.pj__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 107, 0, 0.02) 0%,
+      transparent 80%
+    ),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    20px 20px,
+    20px 20px;
+  background-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.pj__stage::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+  animation: pr-pulse 2s infinite ease-in-out;
+  z-index: 2;
+}
+.pj__visual {
+  position: absolute;
+  inset: 0;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.pj__visual img {
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.pj__meta {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.pv,
+.pv--idle {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 320 / 220;
+}
+
+/* deliverables — editorial rows, no chips */
+.pdel__k,
+.pout__k {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: 0.5rem;
+}
+.pdel__list {
+  display: grid;
+  border-top: 1px solid var(--color-line);
+}
+.pdel__list li {
+  padding: 0.42rem 0;
+  border-bottom: 1px solid var(--color-line);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+.pdel__out {
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  line-height: 1.7;
+}
+.pout__text {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  max-width: 40ch;
+  border-left: 1px solid var(--color-accent);
+  padding-left: 0.85rem;
+  line-height: 1.55;
+}
+
+/* --- process navigation (editorial index, never pills) --- */
+.pnav__list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.pnav[data-orientation="vertical"] .pnav__list {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0 0.75rem;
+  border-top: 1px solid var(--color-line);
+}
+.pnav[data-orientation="vertical"] .pnav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.15rem;
+  padding: 0.8rem 0 0.5rem;
+  min-height: auto;
+}
+.pnav[data-orientation="vertical"] .pnav__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pnav[data-orientation="horizontal"] .pnav__list {
+  flex-direction: row;
+  gap: 0;
+  overflow: hidden;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+.pnav[data-orientation="horizontal"] li {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.pnav__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  width: 100%;
+  padding: 0.2rem 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--color-text-faint);
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.pnav[data-orientation="horizontal"] .pnav__item {
+  justify-content: center;
+}
+.pnav__item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  height: 1px;
+  width: 0;
+  background: var(--color-accent);
+  transition: width var(--duration-interaction) var(--ease-out-expo);
+}
+.pnav__item[data-state="past"] {
+  color: var(--color-accent-dim);
+}
+.pnav__item[data-state="past"]::after {
+  width: 100%;
+  background: var(--color-accent-dim);
+}
+.pnav__item[data-state="now"] {
+  color: var(--color-accent);
+}
+.pnav__item[data-state="now"]::after {
+  width: 100%;
+}
+.pnav__item:hover {
+  color: var(--color-text);
+}
+.pnav__item:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.pnav__label {
+  text-transform: uppercase;
+  font-size: 0.58rem;
+  color: inherit;
+  opacity: 0.75;
+}
+@media (max-width: 599px) {
+  .pnav__label {
+    display: none;
+  }
+}
+
+/* --- mobile journey --- */
+.pjm {
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  display: grid;
+}
+.pjm__item {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  gap: 0.9rem;
+  padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+.pjm__item:last-child {
+  padding-bottom: 0;
+}
+.pjm__rail {
+  position: relative;
+  width: 1px;
+  margin-left: 0.5rem;
+  background: var(--color-line-strong);
+}
+.pjm__item:last-child .pjm__rail {
+  background: linear-gradient(var(--color-line-strong), transparent);
+}
+.pjm__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent-dim);
+  transform-origin: top;
+}
+.pjm__marker {
+  position: absolute;
+  top: 0.35rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-line-strong);
+  transition:
+    border-color var(--duration-section) var(--ease-out-expo),
+    background var(--duration-section) var(--ease-out-expo);
+  z-index: 1;
+}
+.pjm__item[data-state="on"] .pjm__marker {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+.pjm__body {
+  min-width: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+.pjm__k {
+  display: flex;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.pjm__k span:first-child {
+  color: var(--color-accent);
+}
+.pjm__title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: -0.03em;
+  line-height: var(--leading-snug);
+  font-weight: 500;
+}
+.pjm__purpose {
+  color: var(--color-text);
+  font-size: var(--text-base);
+  line-height: 1.45;
+}
+.pjm__desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+}
+.pjm__visual {
+  position: relative;
+  aspect-ratio: 320 / 220;
+  margin: 0.75rem 0 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 20, 0.65) 0%,
+    rgba(10, 10, 10, 0.85) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 107, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pjm__visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 107, 0, 0.02) 0%,
+      transparent 80%
+    ),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    20px 20px,
+    20px 20px;
+  background-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.pjm__visual::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+  animation: pr-pulse 2s infinite ease-in-out;
+  z-index: 2;
+}
+.pjm__visual img {
+  border-radius: 6px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+/* --- final CTA --- */
+.pr__cta {
+  margin-top: clamp(1.75rem, 4vw, 3rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+  border-top: 1px solid var(--color-line);
+  text-align: center;
+  position: relative;
+}
+.pr__cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 50% 80% at 50% 0%,
+    color-mix(in srgb, var(--color-accent) 4%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+.pr__cta-title {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  letter-spacing: -0.045em;
+  line-height: var(--leading-tight);
+  font-weight: 500;
+  text-shadow: 0 0 40px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+.pr__cta-lede {
+  position: relative;
+  margin-top: 0.9rem;
+  color: var(--color-text-muted);
+  max-width: 32rem;
+  /* The block is centred, so the measure has to be centred with it — without
+     the auto inline margins a 32rem cap just pins the text to the left edge. */
+  margin-inline: auto;
+}
+.pr__cta-actions {
+  position: relative;
+  margin-top: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 2rem;
+}
+
+/* --- clip-path line reveal --- */
+.lrev {
+  display: block;
+}
+.lrev__line {
+  display: block;
+  overflow: hidden;
+}
+.lrev__inner {
+  display: block;
+  will-change: clip-path;
+}

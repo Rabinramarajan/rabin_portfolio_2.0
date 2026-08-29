@@ -1,0 +1,83 @@
+/* ==========================================================================
+   CINEMATIC PROCESS PAGE STYLING
+   ========================================================================== */
+
+/* --- process page hero --- */
+.pr__hero {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+@media (min-width: 960px) {
+  .pr__hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  }
+}
+.pr__hero-visual-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 50px rgba(255, 107, 0, 0.05); /* Glow using accent theme color */
+}
+.pr__hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pr__hero-visual-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 60%,
+    rgba(10, 10, 10, 0.8) 100%
+  );
+  pointer-events: none;
+}
+
+/* --- process page orbital card --- */
+.pr__orbital-shell {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+.pr__orbital-card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-line);
+  border-radius: 16px;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+/* The conduit needs the full card width, so the header sits above it rather
+   than beside it. */
+.pr__orbital-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 46rem;
+}
+.pr__orbital-card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.pr__orbital-card-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  max-width: 60ch;
+}
+.pr__orbital-card-visual {
+  width: 100%;
+}

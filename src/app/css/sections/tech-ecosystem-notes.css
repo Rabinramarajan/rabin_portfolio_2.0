@@ -1,0 +1,504 @@
+/* ============================================================
+   DIGITAL STICKY NOTES EXPLORE OVERLAY
+   ============================================================ */
+
+.eco__explore-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 17, 23, 0.94);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  overflow-y: auto;
+  border-radius: inherit;
+}
+
+.eco__explore-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-line);
+  margin-bottom: 1.5rem;
+}
+
+.eco__explore-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eco__explore-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #C8FF00;
+  box-shadow: 0 0 10px #C8FF00;
+}
+
+.eco__explore-branch-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C8FF00;
+  font-weight: 600;
+}
+
+.eco__explore-spec {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--color-text-faint);
+}
+
+.eco__explore-close-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: #151A21;
+  border: 1px solid var(--color-line-strong);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--duration-ui) var(--ease-out-expo);
+}
+
+.eco__explore-close-btn:hover {
+  border-color: #C8FF00;
+  color: #C8FF00;
+  transform: translateX(-2px);
+}
+
+/* Organic Cluster Grid for Sticky Notes */
+.eco__notes-cluster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+  flex: 1;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 1080px) {
+  .eco__notes-cluster {
+    grid-template-columns: 1.1fr 1fr 1fr 1fr;
+  }
+}
+
+/* Individual Engineering Sticky Note Card */
+.eco__note-card {
+  position: relative;
+  background: #11151C;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.eco__note-card:hover {
+  transform: translateY(-4px) rotate(0deg) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 0 20px rgba(200, 255, 0, 0.08);
+  border-color: rgba(200, 255, 0, 0.3);
+}
+
+/* Folded Corner (Dog-Ear) */
+.eco__note-dogear {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, transparent 50%, rgba(200, 255, 0, 0.15) 50%);
+  border-bottom-left-radius: 4px;
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Note Pin */
+.eco__note-pin {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 4px;
+  background: rgba(200, 255, 0, 0.25);
+  border-radius: 2px;
+}
+
+.eco__note-pin-dot {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #C8FF00;
+  margin: 0 auto;
+}
+
+/* Note Content Typography & Sections */
+.eco__note-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.eco__note-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: #151A21;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.eco__note-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #C8FF00;
+  margin-bottom: 0.25rem;
+}
+
+.eco__note-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.eco__note-role {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
+.eco__note-section-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.eco__note-body {
+  flex: 1;
+  margin-bottom: 1.25rem;
+}
+
+/* Memo Quote in Note 1 */
+.eco__note-memo {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid #C8FF00;
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 1rem;
+}
+
+.eco__memo-quote {
+  position: absolute;
+  top: -4px;
+  left: 6px;
+  font-size: 1.5rem;
+  color: #C8FF00;
+  opacity: 0.3;
+  line-height: 1;
+  font-family: var(--font-display);
+}
+
+.eco__memo-text {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+}
+
+.eco__note-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 1rem 0;
+}
+
+.eco__note-meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.eco__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.eco__meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.eco__meta-val {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* Note Footer & Stamp */
+.eco__note-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.eco__verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #C8FF00;
+}
+
+.eco__badge-check {
+  color: #C8FF00;
+}
+
+.eco__handwriting-sign {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: #C8FF00;
+  opacity: 0.85;
+}
+
+.eco__note-mono-stamp {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--color-text-faint);
+}
+
+.eco__note-hint {
+  font-size: 0.68rem;
+  color: var(--color-text-faint);
+}
+
+/* Project Checklist (Note 2) */
+.eco__project-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eco__project-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: #151A21;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.eco__project-link:hover {
+  border-color: #C8FF00;
+  background: rgba(200, 255, 0, 0.04);
+  transform: translateX(3px);
+}
+
+.eco__project-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.eco__project-bullet {
+  color: #C8FF00;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.eco__project-title {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.eco__project-summary {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  line-height: 1.3;
+  margin-top: 0.15rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.eco__project-arrow {
+  color: #C8FF00;
+  flex: none;
+}
+
+.eco__empty-projects,
+.eco__exp-fallback {
+  padding: 0.5rem 0;
+}
+
+.eco__empty-text,
+.eco__exp-fallback-text {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin-bottom: 0.85rem;
+}
+
+.eco__view-all-work-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #C8FF00;
+}
+
+.eco__view-all-work-btn:hover {
+  text-decoration: underline;
+}
+
+/* Experience List (Note 3) */
+.eco__exp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eco__exp-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: #151A21;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.eco__exp-item:hover {
+  border-color: #C8FF00;
+  background: rgba(200, 255, 0, 0.04);
+  transform: translateX(3px);
+}
+
+.eco__exp-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.eco__exp-company {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.eco__exp-role {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+}
+
+.eco__exp-arrow {
+  color: #C8FF00;
+}
+
+/* Companion Chips Grid (Note 4) */
+.eco__synergy-lede {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin-bottom: 0.85rem;
+}
+
+.eco__companion-chips-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eco__companion-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: #151A21;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.eco__companion-chip:hover {
+  border-color: #C8FF00;
+  background: rgba(200, 255, 0, 0.05);
+  color: #C8FF00;
+}
+
+.eco__chip-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.eco__chip-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+  margin-right: auto;
+}
+
+.eco__chip-arrow {
+  font-size: 0.8rem;
+  color: #C8FF00;
+}

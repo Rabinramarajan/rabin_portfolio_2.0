@@ -1,0 +1,700 @@
+/* ============================================================
+   THE STACK EVOLVED — horizontal technical stream
+   ============================================================ */
+
+.xstk {
+  --xstk-label: 8.5rem;
+  --xstk-meta: 0;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.xstk__years {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-left: var(--xstk-label);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-line);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+.xstk__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.xstk__row {
+  display: grid;
+  grid-template-columns: var(--xstk-label) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.xstk__label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding-right: 0.75rem;
+}
+.xstk__row[data-active="true"] .xstk__label {
+  color: var(--color-text);
+}
+.xstk__track {
+  position: relative;
+  display: block;
+  height: 1px;
+  width: 100%;
+}
+.xstk__stream {
+  position: absolute;
+  left: var(--start);
+  top: 0;
+  width: var(--width);
+  height: 1px;
+  background: var(--color-line-strong);
+  transform-origin: left center;
+  display: block;
+}
+.xstk__row[data-active="true"] .xstk__stream {
+  background: var(--color-accent-dim);
+}
+.xstk__node {
+  position: absolute;
+  left: var(--start);
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--color-text-faint);
+  display: block;
+}
+.xstk__row[data-active="true"] .xstk__node {
+  background: var(--color-accent);
+}
+.xstk__meta {
+  display: none;
+}
+@media (min-width: 900px) {
+  .xstk {
+    --xstk-label: 11rem;
+  }
+  .xstk__row {
+    grid-template-columns: var(--xstk-label) minmax(0, 1fr) 10rem;
+  }
+  .xstk__years {
+    margin-right: 10rem;
+  }
+  .xstk__meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    padding-left: 1rem;
+  }
+  .xstk__entered {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+}
+.xstk__foot {
+  margin-top: 1.5rem;
+  color: var(--color-text-faint);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  max-width: 40rem;
+}
+
+/* ============================================================
+   WHAT CHANGED — capability evolution
+   ============================================================ */
+
+.xcap {
+  list-style: none;
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+  padding: 0;
+  /*
+   * Rows reveal from alternating directions, so a row still waiting below the
+   * fold sits translated sideways. `clip` (not `hidden`) contains that without
+   * creating a scroll container or trapping the rows' focus styles.
+   */
+  overflow-x: clip;
+}
+.xcap__row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding: clamp(2rem, 4vw, 3rem) 0;
+  border-top: 1px solid var(--color-line);
+}
+.xcap__row:last-child {
+  border-bottom: 1px solid var(--color-line);
+}
+.xcap__num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--color-accent);
+  padding-top: 0.5rem;
+}
+.xcap__body {
+  min-width: 0;
+}
+.xcap__title-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.xcap__key {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5.5vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-weight: 500;
+}
+.xcap__rule {
+  display: block;
+  height: 1px;
+  width: 100%;
+  max-width: 26rem;
+  margin: 1.1rem 0 1.3rem;
+  background: var(--color-line-strong);
+  transform-origin: left center;
+}
+.xcap__lead {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+.xcap__desc {
+  margin-top: 0.7rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.72;
+  max-width: 40rem;
+}
+.xcap__evidence {
+  margin-top: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+@media (min-width: 900px) {
+  .xcap__row {
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: 0 2.5rem;
+  }
+}
+
+/* ============================================================
+   MILESTONE BLIPS - turning points spike up from a baseline
+   ============================================================ */
+
+.xbl {
+  list-style: none;
+  margin: clamp(2rem, 4vw, 3.5rem) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--color-line);
+}
+.xbl__row {
+  display: grid;
+  grid-template-columns: 3rem 4.5rem minmax(0, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: start;
+  padding: clamp(1.6rem, 3vw, 2.2rem) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.xbl__spike {
+  position: relative;
+  display: block;
+  height: 3.6rem;
+  width: 2px;
+  margin-left: 1.1rem;
+  background: var(--color-line-strong);
+  overflow: hidden;
+}
+.xbl__spike-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--color-accent),
+    var(--color-accent-dim)
+  );
+  transform-origin: bottom center;
+}
+.xbl__dot {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 12px rgb(201 242 77 / 0.6);
+}
+.xbl__year {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
+  padding-top: 0.15rem;
+  font-variant-numeric: tabular-nums;
+}
+.xbl__event {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  letter-spacing: -0.02em;
+  font-weight: 550;
+  line-height: 1.25;
+}
+.xbl__why {
+  margin-top: 0.45rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  max-width: 40rem;
+}
+
+@media (min-width: 760px) {
+  .xbl__row {
+    grid-template-columns: 3rem 6rem minmax(0, 1fr);
+  }
+  .xbl__spike {
+    margin-left: 1.6rem;
+  }
+  .xbl__event {
+    max-width: 34rem;
+  }
+}
+
+/* ============================================================
+   CURRENT CHAPTER
+   ============================================================ */
+
+.xsec--current {
+  position: relative;
+  overflow: clip;
+}
+.xcur {
+  position: relative;
+  padding-top: clamp(1rem, 2vw, 2rem);
+}
+.xcur__grid {
+  position: absolute;
+  inset: -6% -4%;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(70% 60% at 50% 45%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(
+    70% 60% at 50% 45%,
+    #000 20%,
+    transparent 78%
+  );
+}
+.xcur__inner {
+  position: relative;
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+@media (min-width: 1024px) {
+  .xcur__inner {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+}
+.xcur__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.6rem;
+}
+.xcur__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.xcur__roles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 3.5rem);
+}
+.xcur__role {
+  border-top: 1px solid var(--color-line-strong);
+  padding-top: 1.6rem;
+}
+.xcur__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 4vw, 2.7rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+.xcur__company {
+  margin-top: 0.6rem;
+  color: var(--color-accent-dim);
+  font-size: var(--text-sm);
+}
+.xcur__company-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.6rem;
+}
+.xcur__company-row .xcur__company {
+  margin-top: 0;
+}
+.xcur__logo {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  object-fit: contain;
+  color: var(--color-accent-dim);
+}
+.xcur__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-line);
+}
+.xcur__facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+.xcur__facts dd {
+  margin: 0.35rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+.xcur__desc {
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.72;
+  max-width: 42rem;
+}
+.xcur__resp {
+  margin-top: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  max-width: 42rem;
+}
+.xcur__resp li {
+  position: relative;
+  padding-left: 1.1rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+}
+.xcur__resp li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 0.5rem;
+  height: 1px;
+  background: var(--color-accent-dim);
+}
+.xcur__tech {
+  margin-top: 1.5rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+.xcur__tech-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.xcur__tech-icon {
+  width: 14px;
+  height: 14px;
+}
+.xcur__aside {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  align-content: start;
+}
+.xcur__arch {
+  max-width: 22rem;
+}
+/* pointer drift lives here so it does not fight the scroll-depth translate */
+.xcur__arch-drift {
+  will-change: transform;
+}
+.xcur__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 260 / 220;
+}
+.xcur__meta {
+  display: grid;
+  gap: 1.1rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 1.3rem;
+}
+.xcur__meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+.xcur__meta dd {
+  margin: 0.35rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+/* ============================================================
+   THE ENGINEERING MAP
+   ============================================================ */
+
+.xmap {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+.xmap__svg {
+  display: none;
+}
+.xmap__spine {
+  stroke: var(--color-line-strong);
+  stroke-width: 1.2;
+}
+.xmap__core {
+  fill: var(--color-accent);
+}
+.xmap__branch {
+  stroke: var(--color-text-faint);
+  stroke-width: 1.2;
+}
+.xmap__twig {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+}
+.xmap__leaf {
+  fill: var(--color-text-faint);
+}
+.xmap__branch-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  fill: var(--color-accent);
+}
+.xmap__leaf-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  fill: var(--color-text);
+}
+.xmap__text {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--color-line);
+}
+.xmap__text > li {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.6rem;
+}
+.xmap__text-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.xmap__text-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.xmap__text-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.xmap__text-icon {
+  width: 14px;
+  height: 14px;
+}
+@media (min-width: 1024px) {
+  .xmap__svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 620 / 470;
+    max-width: 62rem;
+    margin-inline: auto;
+  }
+  .xmap__text {
+    /* the SVG carries it visually; the list stays for assistive tech */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ============================================================
+   CLOSING STATEMENT + NEXT CHAPTER
+   ============================================================ */
+
+.xsec--next {
+  overflow: clip;
+}
+.xnext {
+  position: relative;
+}
+.xnext__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.4rem;
+}
+.xnext__lede {
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.72;
+  max-width: 40rem;
+}
+/* the rail leaves the page — the journey does not end at the fold */
+.xnext__line {
+  position: relative;
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  height: 1px;
+  width: calc(100% + var(--gutter));
+}
+.xnext__line-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-accent),
+    rgb(201 242 77 / 0%)
+  );
+  transform-origin: left center;
+  display: block;
+}
+.xnext__line-node {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  display: block;
+}
+
+/* ============================================================
+   REDUCED MOTION — the page must read completely without motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /*
+   * The side index stays. Reduced motion means less animation, not fewer
+   * ways to navigate — its smooth scroll already falls back to an instant
+   * jump in the component itself.
+   */
+  .ctl__rail-fill,
+  .xstk__stream,
+  .xcap__rule,
+  .xnext__line-fill {
+    transform: none !important;
+  }
+  .ctl__item[data-state="now"] .ctl__marker,
+  .ctl__item[data-state="past"] .ctl__marker {
+    transform: none;
+  }
+  .ctl__card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .ctl__tags li:hover {
+    transform: none;
+  }
+  .ctl__badge {
+    animation: none;
+  }
+  .xbl__row:hover .xbl__body,
+  .xbl__row:hover .xbl__marker {
+    transform: none;
+  }
+  .xcur__svg,
+  .xmap__svg {
+    opacity: 1;
+  }
+}
+
+/* ---------- reduced motion for the redesigned pages ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .arrow-link svg {
+    transform: none !important;
+  }
+  .pf-cta .btn__arrow,
+  .btn__arrow {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,338 @@
+/* ============================================================
+   WORK — "Work that makes an impact."
+   Statement header with the orbital field beside it, then a row
+   of project cards: numbered badge and launch glyph over the
+   cover, title, category and one line of copy beneath.
+   Lime-on-near-black, shared with the services block.
+   ============================================================ */
+
+.wx {
+  --wx-panel: #0d0d11;
+  --wx-line: rgb(255 255 255 / 8%);
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(4rem, 9vw, 7.5rem);
+  background: var(--color-bg);
+  overflow: clip;
+}
+.wx--page {
+  padding-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+.wx__shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+/* A single lime haze behind the orbit, so the right half of the header
+   glows without a second background layer. */
+.wx__aura {
+  position: absolute;
+  top: -10%;
+  right: -8%;
+  width: min(760px, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 12%, transparent),
+    transparent 68%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- header ------------------------------------------------ */
+
+.wx__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+.wx__intro-copy {
+  display: grid;
+  justify-items: start;
+  gap: 1.1rem;
+}
+.wx__kicker {
+  margin: 0;
+}
+.wx__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+.wx__title-accent {
+  color: var(--color-accent);
+}
+.wx__lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+/* The pill into the catalogue: hairline ring, lime dot, arrow that steps. */
+.wx__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.4rem;
+  padding: 0.7rem 1.35rem;
+  border: 1px solid var(--wx-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--wx-panel) 70%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-quart),
+    color var(--duration-ui) var(--ease-out-quart),
+    background-color var(--duration-ui) var(--ease-out-quart);
+}
+.wx__all-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 60%, transparent);
+}
+.wx__all svg {
+  width: 20px;
+  height: 12px;
+  transition: transform var(--duration-ui) var(--ease-out-quart);
+}
+.wx__all:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+.wx__all:hover svg {
+  transform: translateX(5px);
+}
+
+.wx__orbit {
+  display: flex;
+  justify-content: center;
+}
+
+/* --- card row ---------------------------------------------- */
+
+.wx__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.8vw, 1.6rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.wx__grid > li {
+  display: flex;
+}
+
+.wcard {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--wx-line);
+  border-radius: 14px;
+  background: var(--wx-panel);
+  overflow: hidden;
+  transition:
+    border-color var(--duration-interaction) var(--ease-out-quart),
+    transform var(--duration-interaction) var(--ease-out-quart);
+}
+.wcard:hover,
+.wcard:focus-within {
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  transform: translateY(-4px);
+}
+.wcard__link {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.wcard__frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #08080a;
+}
+.wcard__shot {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.wcard__shot img,
+.wcard__shot .project-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Covers are bright product screenshots; they are dimmed so the card sits
+     in the same near-black register as the rest of the block. */
+  filter: brightness(0.62) saturate(0.9);
+  transition: transform var(--duration-section) var(--ease-out-quart);
+}
+.wcard:hover .wcard__shot img,
+.wcard:focus-within .wcard__shot img {
+  transform: scale(1.05);
+}
+/* The cover reads as a still under the copy, not as a photo band — the veil
+   darkens its lower half so the card body and the frame share one tone. */
+.wcard__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 55%) 0%,
+    rgb(0 0 0 / 30%) 28%,
+    rgb(0 0 0 / 55%) 62%,
+    var(--wx-panel) 100%
+  );
+}
+.wcard__no {
+  position: absolute;
+  z-index: 1;
+  top: 0.85rem;
+  left: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+}
+.wcard__launch {
+  position: absolute;
+  z-index: 1;
+  top: 0.7rem;
+  right: 0.8rem;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, #000 55%, transparent);
+  color: var(--color-accent);
+  transition:
+    background-color var(--duration-ui) var(--ease-out-quart),
+    transform var(--duration-ui) var(--ease-out-quart);
+}
+.wcard__launch svg {
+  width: 14px;
+  height: 14px;
+}
+.wcard:hover .wcard__launch,
+.wcard:focus-within .wcard__launch {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  transform: translate(2px, -2px);
+}
+
+.wcard__body {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 0 1.35rem 1.35rem;
+  /* The frame's veil ends on the panel colour, so the body starts flush
+     against it and the two read as one surface. */
+  margin-top: -2.6rem;
+  position: relative;
+  z-index: 1;
+}
+.wcard__title {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.wcard__cat {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+}
+.wcard__copy {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.wcard__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+  transition: color var(--duration-ui) var(--ease-out-quart);
+}
+.wcard__cta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.wcard__cta svg {
+  width: 20px;
+  height: 12px;
+  transition: transform var(--duration-ui) var(--ease-out-quart);
+}
+.wcard:hover .wcard__cta,
+.wcard:focus-within .wcard__cta {
+  color: var(--color-accent);
+}
+.wcard:hover .wcard__cta svg,
+.wcard:focus-within .wcard__cta svg {
+  transform: translateX(5px);
+}
+
+/* --- responsive -------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .wx__intro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wx__orbit {
+    display: none;
+  }
+  .wx__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .wx__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wcard,
+  .wcard:hover,
+  .wcard:focus-within,
+  .wcard:hover .wcard__shot img,
+  .wcard:hover .wcard__launch,
+  .wcard:hover .wcard__cta svg,
+  .wx__all:hover svg {
+    transform: none;
+    transition: none;
+  }
+}

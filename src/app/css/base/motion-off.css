@@ -1,0 +1,63 @@
+/* ============================================================
+   DISABLE ALL MOTION EFFECTS GLOBALLY
+   ============================================================ */
+
+/* Remove all animations, transitions, and motion properties */
+* {
+  animation: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition: none !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* Disable will-change optimizations */
+[style*="will-change"] {
+  will-change: auto !important;
+}
+
+/* Disable scroll behavior animation */
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Remove box-shadow transitions and hovers */
+*:hover {
+  box-shadow: none !important;
+}
+
+/* Ensure all keyframe animations are disabled */
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0 !important; }
+  50% { opacity: 1 !important; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1 !important; }
+  50% { opacity: 1 !important; }
+}
+
+@keyframes ecoAuraPulse {
+  0%, 100% { opacity: 0.3 !important; }
+  50% { opacity: 0.3 !important; }
+}
+
+@keyframes form-spin {
+  from { transform: none !important; }
+  to { transform: none !important; }
+}
+
+@keyframes page-enter {
+  from { opacity: 1 !important; }
+  to { opacity: 1 !important; }
+}
+
+@keyframes chat-pulse {
+  0%, 100% { opacity: 1 !important; }
+  50% { opacity: 1 !important; }
+}
+
+@keyframes chat-cursor-blink {
+  0%, 50%, 100% { opacity: 1 !important; }
+}

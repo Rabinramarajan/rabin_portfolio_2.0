@@ -1,0 +1,509 @@
+/* ============================================================
+   HERO
+   ============================================================ */
+
+/* --- cinematic hero: full-bleed reel + editorial overlay --- */
+/* Scroll-scrub track — the extra height below the viewport is the scroll
+   distance that drives `video.currentTime` in Hero.tsx. Only rendered on the
+   full motion tier; the basic tier keeps the plain 100vh hero. */
+.chero-track {
+  position: relative;
+  height: 240vh;
+}
+@media (min-width: 768px) {
+  .chero-track {
+    /* 400vh over a 60fps 10s reel is ~1.7 scroll-pixels per frame, so the
+       reel advances on almost every wheel tick rather than jumping. */
+    height: 400vh;
+  }
+}
+
+.chero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: clip;
+  isolation: isolate;
+}
+/* Pinned variant used inside .chero-track. Declared after `.chero` on
+   purpose: same specificity, so source order is what lets `sticky` win. */
+.chero--scrub {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 0;
+}
+.chero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-bg);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+.chero__reel {
+  position: absolute;
+  /* Was inset:-6% / height:112% to give a mouse parallax room to move. That
+     parallax is gone, and on a 720p source the extra 12% was pure upscale
+     blur, so the reel now sits at its natural size. */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Biased left of centre so the visible crop keeps the subject clear of the
+     headline - the reel frames him on the right, and `center` pulled him far
+     enough in to collide with "EXPERIENCES". */
+  object-position: 34% 20%;
+  will-change: transform;
+  /* Dissolve the banner's hard waist-cut into the page background */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 48%,
+    rgb(0 0 0 / 0.92) 62%,
+    rgb(0 0 0 / 0.45) 78%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 48%,
+    rgb(0 0 0 / 0.92) 62%,
+    rgb(0 0 0 / 0.45) 78%,
+    transparent 100%
+  );
+}
+/* Legibility scrim — heavy on the copy side, clear over the subject */
+.chero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(10 10 12 / 88%) 0%,
+      rgb(10 10 12 / 62%) 34%,
+      rgb(10 10 12 / 6%) 58%,
+      rgb(10 10 12 / 14%) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(10 10 12 / 82%) 0%,
+      transparent 28%,
+      transparent 52%,
+      rgb(10 10 12 / 55%) 78%,
+      var(--color-bg) 100%
+    );
+}
+.chero__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 62% 34%,
+    transparent 40%,
+    rgb(10 10 12 / 30%) 100%
+  );
+  will-change: background;
+}
+/* Floor blend — the last stop is opaque page bg so the next section has no seam */
+.chero__blend {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 42%,
+      rgb(10 10 12 / 0.18) 56%,
+      rgb(10 10 12 / 0.62) 72%,
+      rgb(10 10 12 / 0.92) 86%,
+      var(--color-bg) 100%
+    ),
+    radial-gradient(120% 48% at 50% 100%, var(--color-bg) 22%, transparent 70%);
+}
+@media (max-width: 959px) {
+  .chero__reel {
+    object-position: center 14%;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 42%,
+      rgb(0 0 0 / 0.8) 58%,
+      rgb(0 0 0 / 0.3) 76%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 42%,
+      rgb(0 0 0 / 0.8) 58%,
+      rgb(0 0 0 / 0.3) 76%,
+      transparent 100%
+    );
+  }
+  .chero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(10 10 12 / 78%) 0%,
+      rgb(10 10 12 / 28%) 36%,
+      rgb(10 10 12 / 72%) 70%,
+      var(--color-bg) 100%
+    );
+  }
+}
+.chero__shell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 2.5rem;
+  align-items: end;
+  justify-content: center;
+  padding-top: clamp(1.5rem, 4vh, 2.75rem);
+  padding-bottom: clamp(3.5rem, 7vh, 5.5rem);
+  will-change: transform;
+}
+@media (min-width: 960px) {
+  .chero__shell {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
+.chero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.9rem, 1rem + 8.4vw, 7.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  text-transform: uppercase;
+  max-width: 12ch;
+}
+.chero__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.chero__word {
+  display: block;
+  background: linear-gradient(178deg, #ffffff 0%, #cfcec8 52%, #8e8d88 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.chero__word--accent {
+  background: linear-gradient(
+    178deg,
+    var(--color-accent) 0%,
+    var(--color-accent-dim) 55%,
+    rgb(94 116 24 / 90%) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.chero__disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.chero__disciplines > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.chero__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.8;
+}
+.chero__lede {
+  max-width: 34rem;
+  margin-top: 1.25rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  line-height: 1.62;
+  text-wrap: balance;
+}
+.chero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+/* --- pull quote + signature --- */
+.chero__quote {
+  position: relative;
+  max-width: 20rem;
+  padding-top: 0.5rem;
+}
+@media (min-width: 960px) {
+  .chero__quote {
+    justify-self: end;
+    text-align: left;
+  }
+}
+.chero__quote-mark {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 0.4;
+  color: var(--color-accent);
+  opacity: 0.7;
+}
+.chero__quote blockquote {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+.chero__quote-rule {
+  display: block;
+  width: 5.5rem;
+  height: 1px;
+  margin: 1.1rem 0 0.9rem;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+}
+.chero__signature {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+/* --- scroll indicator --- */
+.chero__scroll {
+  position: absolute;
+  bottom: clamp(1.5rem, 3vh, 2.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+  pointer-events: none;
+}
+.chero__scroll-text {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.chero__scroll-line {
+  display: block;
+  width: 1px;
+  height: 2rem;
+  background: linear-gradient(to bottom, var(--color-accent), transparent);
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(0.6); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+@media (max-width: 959px) {
+  .chero__scroll {
+    bottom: clamp(1rem, 2vh, 1.5rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chero__scroll-line {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* --- availability chip above the headline --- */
+.chero__status {
+  width: fit-content;
+  margin: 0 0 clamp(1rem, 2.2vh, 1.6rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border: 1px solid rgb(201 242 77 / 22%);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  background: rgb(10 10 12 / 55%);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  line-height: 1;
+}
+/* letter-spacing adds a trailing gap after the last glyph; pull it back so the
+   label sits optically centred between the dot and the pill's right edge */
+.chero__status-label {
+  margin-right: -0.2em;
+}
+.chero__pulse {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 0.5rem;
+  min-width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow:
+    0 0 0 0.18rem rgb(201 242 77 / 18%),
+    0 0 0.5rem rgb(201 242 77 / 65%);
+  animation: pulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@media (max-width: 959px) {
+  .chero__status {
+    display: none;
+  }
+}
+
+.hero {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--header-h) + 0.5rem) 0 1.25rem;
+  overflow: clip;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 82% 12%,
+    rgb(201 242 77 / 0.05),
+    transparent 46%
+  );
+  z-index: 0;
+}
+.hero__grid {
+  position: relative;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+  z-index: 1;
+}
+@media (min-width: 960px) {
+  .hero__grid {
+    grid-template-columns: 1.35fr 0.65fr;
+    gap: 2.75rem;
+    align-items: center;
+  }
+}
+.hero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid rgb(201 242 77 / 22%);
+  border-radius: 999px;
+  padding: 0.45rem 0.95rem;
+  background: rgb(201 242 77 / 4%);
+}
+.hero__pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: pulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+.hero__line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.hero__line .hl {
+  color: var(--color-text);
+}
+.hero__lede {
+  max-width: 38rem;
+  color: var(--color-text-muted);
+  margin-top: 1.15rem;
+  font-size: var(--text-lg);
+  line-height: 1.62;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.35rem;
+}
+.hero__meta {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1.5rem;
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-line);
+  z-index: 1;
+}
+@media (min-width: 800px) {
+  .hero__meta {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.hero__meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+.hero__meta dd {
+  margin-top: 0.4rem;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+/* --- hero visual --- */
+.hero-visual {
+  position: relative;
+  max-width: 420px;
+  margin-left: auto;
+}
+@media (max-width: 959px) {
+  .hero-visual {
+    order: -1;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+}

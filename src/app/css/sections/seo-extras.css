@@ -1,0 +1,394 @@
+/* ============================================================
+   SEO / semantic additions — FAQ, breadcrumbs, 404 navigation
+   ============================================================ */
+
+.faqx {
+  position: relative;
+  overflow: clip;
+}
+
+/* Ambient accent wash behind the section, mirroring the reference's soft
+   top-left bloom. Painted, never animated. */
+.faqx::before {
+  content: "";
+  position: absolute;
+  inset: -10% -20% auto -25%;
+  height: 70%;
+  background: radial-gradient(
+    60% 60% at 30% 30%,
+    rgb(201 242 77 / 6%),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.faqx__grid {
+  position: relative;
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .faqx__grid {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    gap: clamp(3rem, 5vw, 5.5rem);
+  }
+  .faqx__rail {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+}
+
+.faqx__rail {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.faqx__rail-top {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.faqx__title {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 500;
+  line-height: var(--leading-snug);
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.faqx__rule {
+  display: block;
+  width: 3.25rem;
+  height: 2px;
+  background: var(--color-accent);
+  border-radius: 2px;
+}
+
+.faqx__lede {
+  max-width: 34ch;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
+/* ---- decorative orbital artwork ---- */
+
+.faqx-orbit {
+  position: relative;
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+  aspect-ratio: 3 / 2;
+  pointer-events: none;
+}
+
+/* Accent bloom under the artwork, so the mask fade reads as light rather
+   than as a cut-off edge. */
+.faqx-orbit__bloom {
+  position: absolute;
+  inset: 6% 2%;
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgb(201 242 77 / 16%),
+    transparent 70%
+  );
+  filter: blur(28px);
+}
+
+/*
+ * The source is a square raster on a near-black ground. A radial mask
+ * dissolves its edges into the page instead of showing a hard frame, and
+ * `screen` drops the remaining black so only the glow survives.
+ */
+.faqx-orbit__art {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(68% 68% at 50% 50%, #000 42%, transparent 82%);
+  animation: faqx-float 11s var(--ease-out-cubic) infinite;
+}
+
+.faqx-orbit--still .faqx-orbit__art {
+  animation: none;
+}
+
+@keyframes faqx-float {
+  0%,
+  100% {
+    transform: translateY(-6px) scale(1);
+  }
+  50% {
+    transform: translateY(6px) scale(1.012);
+  }
+}
+
+/* ---- accordion ---- */
+
+.faqx__list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.faqx__row {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  transition:
+    border-color var(--duration-ui) var(--ease-out-quart),
+    background-color var(--duration-ui) var(--ease-out-quart),
+    box-shadow var(--duration-ui) var(--ease-out-quart);
+}
+.faqx__row:hover {
+  border-color: var(--color-line-strong);
+  background: var(--color-surface);
+}
+.faqx__row.is-open {
+  border-color: rgb(201 242 77 / 55%);
+  background:
+    radial-gradient(90% 140% at 100% 0%, rgb(201 242 77 / 8%), transparent 62%),
+    var(--color-surface);
+  box-shadow:
+    0 0 0 1px rgb(201 242 77 / 12%),
+    0 18px 48px -28px rgb(201 242 77 / 45%);
+}
+
+.faqx__q {
+  margin: 0;
+  font: inherit;
+}
+
+.faqx__trigger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  width: 100%;
+  padding: clamp(1rem, 2vw, 1.35rem) clamp(1rem, 2.2vw, 1.5rem);
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+.faqx__trigger:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-md);
+}
+
+.faqx__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+  padding-right: clamp(0.85rem, 2vw, 1.5rem);
+  border-right: 1px solid var(--color-line);
+  transition: color var(--duration-ui) var(--ease-out-quart);
+}
+.faqx__row.is-open .faqx__num,
+.faqx__trigger:hover .faqx__num {
+  color: var(--color-accent);
+}
+
+.faqx__label {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.faqx__icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  color: var(--color-accent);
+  transition: transform var(--duration-interaction) var(--ease-out-expo);
+}
+.faqx__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.faqx__icon-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform var(--duration-interaction) var(--ease-out-expo),
+    opacity var(--duration-ui) var(--ease-out-quart);
+}
+.faqx__row.is-open .faqx__icon {
+  transform: rotate(180deg);
+}
+.faqx__row.is-open .faqx__icon-bar {
+  transform: scaleY(0);
+  opacity: 0;
+}
+
+/*
+ * The answer stays in the DOM at every state — `0fr` to `1fr` collapses it
+ * without removing it, so crawlers and structured data still see the text.
+ */
+.faqx__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-interaction)
+    var(--ease-out-expo);
+}
+.faqx__row.is-open .faqx__panel {
+  grid-template-rows: 1fr;
+}
+
+.faqx__panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.faqx__a {
+  max-width: 68ch;
+  margin: 0;
+  padding: 0 clamp(1rem, 2.2vw, 1.5rem) clamp(1.1rem, 2vw, 1.45rem);
+  padding-left: calc(
+    clamp(1rem, 2.2vw, 1.5rem) + 2.35rem + clamp(0.85rem, 2vw, 1.5rem)
+  );
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.75;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity var(--duration-ui) var(--ease-out-quart),
+    transform var(--duration-interaction) var(--ease-out-expo);
+}
+.faqx__row.is-open .faqx__a {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.08s;
+}
+
+@media (max-width: 639px) {
+  .faqx__num {
+    padding-right: 0.75rem;
+  }
+  .faqx__a {
+    padding-left: clamp(1rem, 2.2vw, 1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faqx__panel,
+  .faqx__a,
+  .faqx__icon,
+  .faqx__icon-bar {
+    transition-duration: 0.01ms;
+  }
+  .faqx-orbit__art {
+    animation: none;
+  }
+}
+
+.crumbs {
+  margin-bottom: 1.5rem;
+  font-size: var(--text-sm);
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-muted);
+}
+
+.crumbs li + li::before {
+  content: "/";
+  margin-right: 0.5rem;
+  opacity: 0.45;
+}
+
+.crumbs a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.crumbs a:hover,
+.crumbs a:focus-visible {
+  color: var(--color-text);
+  border-bottom-color: currentColor;
+}
+
+.crumbs [aria-current="page"] {
+  color: var(--color-text);
+}
+
+.nf-links {
+  margin: 1.5rem 0 2rem;
+}
+
+.nf-links ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nf-links a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.nf-links a:hover,
+.nf-links a:focus-visible {
+  color: var(--color-text);
+  border-bottom-color: currentColor;
+}
+
+/* --- Performance engineering ------------------------------------------------
+   Progressive motion tiers, blur-up images, containment, and the dev FPS HUD.
+   Everything here is additive — nothing below alters existing layout or the
+   full-motion visuals. ------------------------------------------------------------------------ */
+
+/* Blur-up: the tone placeholder paints immediately; the real frame fades in. */
+.smart-image {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.smart-image.is-loaded,
+.smart-image[fetchpriority="high"] {
+  opacity: 1;
+  transition: none;
+}
+
+/* Containment: isolate animated subtrees so style/layout/paint work stays
+   scoped to the element instead of invalidating the whole document. */
+.sdance,
+.plx,
+.plx__layer,
+.wcard,
+.image-reveal,
+.image-reveal__inner {
+  contain: layout style paint;
+}
+
+/* Sparing will-change: only the continuously-transformable layers earn a
+   compositor layer (transform runs on the GPU); .plx__layer is already
+   promoted via `transform` styles from Motion, keep it explicit for clarity. */
+.image-reveal,
+.magnetic,
+.plx__layer {
+  will-change: transform;
+}

@@ -1,0 +1,273 @@
+/* ============================================================
+   WORK PAGE  (/work)
+   Hero (headline + orbital field) · filter row · card grid.
+   One column of rhythm: the hero, the filter, the grid, the
+   reveal. Nothing between them competes for the same job.
+   ============================================================ */
+
+.wpage {
+  padding: calc(var(--header-h) + clamp(0.75rem, 1.8vw, 1.5rem)) 0
+    clamp(2.5rem, 5vw, 4rem);
+  position: relative;
+  overflow: clip;
+}
+
+/* ---------- hero ---------- */
+
+.wpage__hero {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  align-items: center;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+@media (min-width: 900px) {
+  .wpage__hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+}
+.wpage__copy {
+  min-width: 0;
+}
+.wpage__title {
+  margin-top: 0.9rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.2vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+.wpage__line {
+  display: block;
+}
+.wpage__lede {
+  margin-top: clamp(1rem, 2vw, 1.5rem);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  max-width: 34rem;
+}
+
+/* ---------- orbital field ----------
+   Decorative. Rings and nodes are drawn in one SVG; the brand mark sits at
+   the centre of the same square so the two can never drift apart. */
+
+.worbit {
+  position: relative;
+  aspect-ratio: 1;
+  width: min(100%, 24rem);
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.worbit__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.worbit__ring {
+  stroke: var(--color-accent);
+  stroke-width: 0.35;
+  fill: none;
+}
+.worbit__chord {
+  stroke: var(--color-accent);
+  stroke-width: 0.25;
+  opacity: 0.16;
+}
+.worbit__node {
+  fill: var(--color-accent);
+  opacity: 0.6;
+}
+.worbit__dust {
+  fill: var(--color-accent);
+  opacity: 0.28;
+}
+/* The mark is one node in the field, not a badge in front of it: small
+   enough that the outer rings still read as the subject. */
+.worbit__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 17%;
+}
+.worbit__mark .monogram {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 18px rgb(201 242 77 / 16%));
+}
+
+/* The field is the first thing a narrow screen can afford to lose height on:
+   it keeps its meaning at half the size, and the headline gets the fold. */
+@media (max-width: 899px) {
+  .worbit {
+    width: min(100%, 18rem);
+    opacity: 0.85;
+  }
+}
+
+/* ---------- filter row ----------
+   A single pill rail, centred, with the live bucket filled in the accent.
+   Below 720px the rail is replaced by a native select. */
+
+.wex__filters {
+  display: none;
+}
+@media (min-width: 720px) {
+  .wex__filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    margin-inline: auto;
+    margin-bottom: clamp(1.25rem, 2.6vw, 1.75rem);
+    padding: 0.3rem;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-bg-elevated);
+  }
+}
+.wex__filter {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color var(--duration-ui) var(--ease-out-quart),
+    background-color var(--duration-ui) var(--ease-out-quart);
+}
+.wex__filter:hover {
+  color: var(--color-text);
+}
+.wex__filter.is-on {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: 600;
+}
+
+/* ---------- filter, narrow ---------- */
+
+.wex__picker {
+  position: relative;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+}
+@media (min-width: 720px) {
+  .wex__picker {
+    display: none;
+  }
+}
+.wex__select {
+  appearance: none;
+  width: 100%;
+  padding: 0.95rem 2.75rem 0.95rem 1.1rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.wex__picker svg {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  translate: 0 -50%;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+/* ---------- grid ---------- */
+
+.wex__grid {
+  list-style: none;
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .wex__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1180px) {
+  .wex__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.wex__grid > li {
+  min-width: 0;
+}
+
+.wex__empty {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+}
+.wex__empty-title {
+  font-size: var(--text-lg);
+}
+.wex__empty-body {
+  margin: 0.5rem 0 1.5rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- reveal ---------- */
+
+.wex__foot {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+.wex__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.9rem 1.9rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-quart),
+    color var(--duration-ui) var(--ease-out-quart),
+    background-color var(--duration-ui) var(--ease-out-quart);
+}
+.wex__more svg {
+  width: 20px;
+  height: 12px;
+  transition: translate var(--duration-ui) var(--ease-out-quart);
+}
+.wex__more:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+.wex__more:hover svg {
+  translate: 4px 0;
+}

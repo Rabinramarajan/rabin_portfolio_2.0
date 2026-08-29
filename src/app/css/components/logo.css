@@ -1,0 +1,46 @@
+/* ============================================================
+   LOGO
+   ============================================================ */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 44px;
+  color: var(--color-text);
+}
+/* The badge carries its own ring and glow, so the frame stays circular and
+   bare — a square chip would fight the mark's own outline. */
+.logo__mark {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition:
+    filter var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-ui) var(--ease-out-expo);
+}
+.logo__mark img,
+.logo__mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.logo:hover .logo__mark {
+  filter: drop-shadow(0 0 8px rgb(201 242 77 / 45%));
+  transform: scale(1.04);
+}
+.logo__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.logo__name em {
+  font-style: normal;
+  color: var(--color-accent);
+}

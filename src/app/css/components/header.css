@@ -1,0 +1,249 @@
+/* ============================================================
+   HEADER / NAVBAR — Premium scroll-reactive
+   ============================================================ */
+
+.hd {
+  --scroll-factor: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: var(--z-header);
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-line);
+  background: rgb(8 8 10 / 82%);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  will-change: auto;
+}
+.hd__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: min(100% - (var(--gutter) * 2), var(--container-max));
+  margin-inline: auto;
+}
+.hd__nav {
+  margin-left: auto;
+  display: none;
+}
+.hd__nav ul {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.hd__nav a {
+  position: relative;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.65rem;
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hd__nav a::after {
+  content: "";
+  position: absolute;
+  left: 0.65rem;
+  right: 0.65rem;
+  bottom: 8px;
+  height: 1.5px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hd__nav a:hover {
+  color: var(--color-text);
+}
+.hd__nav a.is-active {
+  color: var(--color-text);
+}
+.hd__nav a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* Sliding indicator */
+.hd__indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 1.5px;
+  background: var(--color-accent);
+  border-radius: 1px;
+  will-change: transform, width, opacity;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease;
+  pointer-events: none;
+}
+.hd__cta {
+  display: none;
+  margin-left: 1rem;
+}
+.hd__cta .btn {
+  min-height: 40px;
+  padding: 0.5rem 1rem;
+  font-size: 0.78rem;
+}
+.hd__toggle {
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-content: center;
+  gap: 5px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--duration-ui) var(--ease-out-expo);
+}
+.hd__toggle:hover {
+  border-color: var(--color-accent);
+}
+.hd__toggle span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--color-text);
+  transition:
+    transform var(--duration-ui) var(--ease-out-expo),
+    background var(--duration-ui) var(--ease-out-expo);
+}
+.hd__toggle.is-open span:first-child {
+  transform: translateY(3.25px) rotate(45deg);
+}
+.hd__toggle.is-open span:last-child {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+@media (min-width: 1200px) {
+  .hd__nav,
+  .hd__cta {
+    display: flex;
+  }
+  .hd__toggle {
+    display: none;
+  }
+}
+
+/* --- mobile menu --- Premium fullscreen overlay with staggered animations */
+.mm {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-menu);
+  background: #08080a;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--gutter) var(--gutter);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Premium backdrop blur effect */
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+}
+/* Ambient glow behind menu */
+.mm::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgb(201 242 77 / 8%),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+.mm__top {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.mm__nav {
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--color-line);
+}
+.mm__nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 7.5vw, 3rem);
+  min-height: 60px;
+  letter-spacing: -0.04em;
+  border-bottom: 1px solid var(--color-line);
+  padding: 0.4rem 0;
+  transition:
+    color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mm__nav a:hover,
+.mm__nav a:focus-visible,
+.mm__nav a.is-active {
+  color: var(--color-accent);
+  padding-left: 1rem;
+  transform: translateX(4px);
+}
+/* Hover underline effect for mobile nav */
+.mm__nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mm__nav a:hover::after,
+.mm__nav a.is-active::after {
+  width: 100%;
+}
+/* Short viewports (landscape phones): shrink the display-size links so the
+   nav and the CTA footer both fit without scrolling where possible. */
+@media (max-height: 700px) {
+  .mm__nav {
+    margin-top: var(--space-4);
+  }
+  .mm__nav a {
+    font-size: clamp(1.5rem, 6.5vh, 2.4rem);
+    min-height: 48px;
+    padding: 0.25rem 0;
+  }
+}
+.mm__index {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-accent);
+  letter-spacing: 0.16em;
+  font-weight: 600;
+}
+.mm__foot {
+  margin-top: auto;
+  display: grid;
+  gap: 0.75rem;
+  padding-top: var(--space-6);
+}
+.mm__email {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+.mm__email:hover {
+  color: var(--color-accent);
+}

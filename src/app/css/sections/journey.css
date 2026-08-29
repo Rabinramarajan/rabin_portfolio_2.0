@@ -1,0 +1,108 @@
+/* ============================================================
+   JOURNEY SECTION — the timeline as a home page section
+   ============================================================ */
+.jsec {
+  position: relative;
+}
+.jsec__intro {
+  margin-bottom: 0;
+}
+.jsec__art {
+  border-color: rgb(201 242 77 / 16%);
+}
+.jsec .xhero__stats--section {
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+.jsec .ctl {
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+/* ---------- section frame ---------- */
+.xsec {
+  position: relative;
+}
+.xsec__statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 3.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: 500;
+  max-width: 18ch;
+  margin-top: -0.5rem;
+}
+.xsec__lede {
+  margin-top: 1.3rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  max-width: 38rem;
+}
+
+/* ---------- section index (desktop side navigation) ---------- */
+.xnav {
+  display: none;
+}
+@media (min-width: 1180px) {
+  .xnav {
+    display: block;
+    position: fixed;
+    left: clamp(1rem, 2vw, 1.75rem);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 120;
+  }
+  .xnav__list {
+    display: grid;
+    gap: 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--color-line);
+  }
+  .xnav__item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 30px;
+    padding: 0 0.4rem 0 0;
+    color: var(--color-text-faint);
+    transition: color var(--duration-ui) var(--ease-out-expo);
+  }
+  .xnav__tick {
+    width: 0.85rem;
+    height: 1px;
+    background: var(--color-line-strong);
+    transform-origin: left center;
+    transition:
+      transform var(--duration-ui) var(--ease-out-expo),
+      background var(--duration-ui) var(--ease-out-expo);
+  }
+  .xnav__label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition:
+      opacity var(--duration-ui) var(--ease-out-expo),
+      transform var(--duration-ui) var(--ease-out-expo);
+  }
+  .xnav__item[data-state="now"] {
+    color: var(--color-accent);
+  }
+  .xnav__item[data-state="now"] .xnav__tick {
+    background: var(--color-accent);
+    transform: scaleX(1.7);
+  }
+  .xnav__item[data-state="now"] .xnav__label,
+  .xnav:hover .xnav__label,
+  .xnav__item:focus-visible .xnav__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .xnav__item:hover,
+  .xnav__item:focus-visible {
+    color: var(--color-text);
+  }
+}
