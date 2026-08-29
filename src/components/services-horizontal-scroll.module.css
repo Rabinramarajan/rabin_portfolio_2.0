@@ -6,6 +6,9 @@
   --card-w: clamp(320px, 40vw, 480px);
   --card-gap: clamp(48px, 4vw, 64px);
   --edge: clamp(24px, 6vw, 96px);
+  /* width of the viewport's soft clip fade, shared with .viewport's mask so
+     the track can pad itself clear of it */
+  --fade: clamp(24px, 5vw, 80px);
 
   position: relative;
   height: 100vh;
@@ -17,6 +20,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* The eyebrow, progress rail and counter are absolutely positioned, so
+     without these the track centres against the full 100vh and ignores the
+     bands that chrome actually occupies - it reads as a large dead gap under
+     the cards. Padding reserves those bands so `justify-content: center`
+     centres the rail in what is left. */
+  padding-top: calc(var(--header-h, 72px) + clamp(3rem, 9vh, 5.5rem));
+  padding-bottom: clamp(6rem, 13vh, 9.5rem);
 }
 
 /* soft radial wash behind the whole rail */
@@ -114,8 +124,8 @@
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 clamp(24px, 5vw, 80px),
-    #000 calc(100% - clamp(24px, 5vw, 80px)),
+    #000 var(--fade),
+    #000 calc(100% - var(--fade)),
     transparent 100%
   );
 }
@@ -127,7 +137,11 @@
   padding-block: 0;
   align-items: center;
   gap: var(--card-gap);
-  padding-inline: var(--edge);
+  /* Trailing gutter carries the fade width on top of --edge: without it the
+     last card comes to rest inside the mask's right fade and reads as cut off
+     under the sidebar. The pin's travel is measured from paddingInlineEnd, so
+     widening it here moves the end stop with no JS change. */
+  padding-inline: var(--edge) calc(var(--edge) + var(--fade));
   width: max-content;
   will-change: transform;
 }
@@ -250,6 +264,8 @@
     height: auto;
     overflow: visible;
     padding-block: clamp(4rem, 12vh, 7rem);
+    padding-top: clamp(4rem, 12vh, 7rem);
+    padding-bottom: clamp(4rem, 12vh, 7rem);
   }
 
   .eyebrow,
@@ -302,6 +318,8 @@
     height: auto;
     overflow: visible;
     padding-block: clamp(4rem, 12vh, 7rem);
+    padding-top: clamp(4rem, 12vh, 7rem);
+    padding-bottom: clamp(4rem, 12vh, 7rem);
   }
 
   .eyebrow,
