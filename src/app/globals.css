@@ -3773,8 +3773,7 @@ html {
   .shot img {
     transform: none !important;
   }
-  .services__timeline-cta svg,
-  .wx__btn svg {
+  .services__timeline-cta svg {
     transform: none !important;
   }
 }
@@ -7022,8 +7021,7 @@ html {
 .sdance,
 .plx,
 .plx__layer,
-.wx__stage-frame,
-.wx__chapter,
+.wcard,
 .image-reveal,
 .image-reveal__inner {
   contain: layout style paint;
@@ -7039,763 +7037,341 @@ html {
 }
 
 /* ============================================================
-   WORK — "Work that solves real problems."
-   A cinematic stage: statement header with filter pills and a
-   transport counter, one large project frame with a title card
-   riding its bottom edge, a detail column alongside, a numbered
-   chapter index below, closed by a stats bar with the monogram
-   straddling its top edge.
+   WORK — "Work that makes an impact."
+   Statement header with the orbital field beside it, then a row
+   of project cards: numbered badge and launch glyph over the
+   cover, title, category and one line of copy beneath.
    Lime-on-near-black, shared with the services block.
    ============================================================ */
 
-/* Registering the tint makes it an animatable custom property, so cutting to
-   a project in another category cross-fades every accent that reads from it
-   (rim light, chips, pulse, aura) instead of snapping. Browsers without
-   @property still get the colour, just without the transition. */
-@property --wx-tint {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #c9f24d;
-}
-
 .wx {
   --wx-panel: #0d0d11;
-  --wx-panel-line: rgb(255 255 255 / 7%);
-  /* Stage height is driven off the viewport so the whole block — header,
-     stage, index, stats — lands inside one 100vh screen on a desktop monitor
-     and simply grows taller on short laptops. */
-  --wx-stage-h: clamp(240px, 38dvh, 430px);
+  --wx-line: rgb(255 255 255 / 8%);
   position: relative;
-  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  isolation: isolate;
+  padding-block: clamp(4rem, 9vw, 7.5rem);
+  background: var(--color-bg);
   overflow: clip;
-  transition: --wx-tint var(--duration-section) var(--ease-out-quart);
 }
-/* Page-hero variant clears the fixed header and earns a taller stage, since
-   it is the only block on the route. */
 .wx--page {
-  --wx-stage-h: clamp(260px, 42dvh, 500px);
-  padding-top: calc(var(--header-h) + clamp(0.75rem, 1.6vw, 1.4rem));
+  padding-top: clamp(2.5rem, 6vw, 4.5rem);
 }
 .wx__shell {
   position: relative;
   z-index: 1;
+  display: grid;
+  gap: clamp(2.25rem, 4vw, 3.5rem);
 }
 
-/* --- ambience: tinted bloom + hairline rules --------------- */
-
+/* A single lime haze behind the orbit, so the right half of the header
+   glows without a second background layer. */
 .wx__aura {
   position: absolute;
-  inset: -10% -15% auto -15%;
-  height: 90%;
-  background:
-    radial-gradient(
-      38% 46% at 74% 30%,
-      color-mix(in srgb, var(--wx-tint) 20%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      34% 40% at 14% 62%,
-      color-mix(in srgb, var(--wx-tint) 11%, transparent),
-      transparent 72%
-    );
-  filter: blur(60px);
-  opacity: 0.75;
-  pointer-events: none;
-}
-/* Faint vertical rules — a film-gate grid that fades out before it reaches
-   the copy, so it reads as texture rather than as a table. */
-.wx__rules {
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgb(255 255 255 / 3.5%) 0 1px,
-    transparent 1px calc(100% / 12)
-  );
-  mask-image: linear-gradient(
-    180deg,
-    transparent,
-    #000 22%,
-    #000 72%,
-    transparent
+  top: -10%;
+  right: -8%;
+  width: min(760px, 70vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 12%, transparent),
+    transparent 68%
   );
   pointer-events: none;
+  z-index: 0;
 }
 
-/* --- top row: index kicker + "view all" ------------------- */
-
-.wx__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-}
-.wx__kicker {
-  flex: 1;
-  min-width: 0;
-}
-.wx__all {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.7rem 1.35rem;
-  border: 1px solid var(--color-accent);
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--color-text);
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    background-color var(--duration-ui) var(--ease-out-quart),
-    color var(--duration-ui) var(--ease-out-quart),
-    box-shadow var(--duration-ui) var(--ease-out-quart);
-}
-.wx__all svg {
-  width: 15px;
-  height: 15px;
-  color: var(--color-accent);
-  transition: color var(--duration-ui) var(--ease-out-quart);
-}
-.wx__all:hover {
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-  box-shadow: 0 0 26px rgb(201 242 77 / 30%);
-}
-.wx__all:hover svg {
-  color: var(--color-accent-contrast);
-}
-
-/* --- statement + transport controls ------------------------ */
+/* --- header ------------------------------------------------ */
 
 .wx__intro {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  align-items: end;
-  gap: clamp(1.25rem, 3.5vw, 3rem);
-  margin-top: clamp(1rem, 2.2vw, 1.75rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+.wx__intro-copy {
+  display: grid;
+  justify-items: start;
+  gap: 1.1rem;
+}
+.wx__kicker {
+  margin: 0;
 }
 .wx__title {
-  font-family: var(--font-display);
-  font-size: clamp(2.1rem, 1.2rem + 3.2vw, 3.7rem);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.035em;
+  margin: 0;
+  font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: var(--color-text);
   text-wrap: balance;
 }
 .wx__title-accent {
   color: var(--color-accent);
 }
 .wx__lede {
-  max-width: 36ch;
-  margin-top: clamp(0.75rem, 1.4vw, 1.1rem);
-  font-size: var(--text-sm);
-  line-height: 1.6;
+  margin: 0;
+  max-width: 46ch;
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.65;
   color: var(--color-text-muted);
-  text-wrap: pretty;
 }
-.wx__controls {
-  display: flex;
-  flex-wrap: wrap;
+
+/* The pill into the catalogue: hairline ring, lime dot, arrow that steps. */
+.wx__all {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-.wx__filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.wx__filter {
-  padding: 0.55rem 1.05rem;
-  border: 1px solid var(--color-line);
+  gap: 0.7rem;
+  margin-top: 0.4rem;
+  padding: 0.7rem 1.35rem;
+  border: 1px solid var(--wx-line);
   border-radius: 999px;
-  background: rgb(255 255 255 / 2%);
-  font-size: 0.76rem;
-  color: var(--color-text-muted);
-  cursor: pointer;
+  background: color-mix(in srgb, var(--wx-panel) 70%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
   transition:
-    color var(--duration-ui) var(--ease-out-quart),
     border-color var(--duration-ui) var(--ease-out-quart),
+    color var(--duration-ui) var(--ease-out-quart),
     background-color var(--duration-ui) var(--ease-out-quart);
 }
-.wx__filter:hover {
-  color: var(--color-text);
-  border-color: var(--color-line-strong);
-}
-.wx__filter.is-on {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-  background: rgb(201 242 77 / 8%);
-  box-shadow: 0 0 20px rgb(201 242 77 / 18%);
-}
-
-/* Transport: counter + prev/next, reading like a film scrubber. */
-.wx__nav {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-.wx__counter {
-  margin-right: 0.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  color: var(--color-text-faint);
-  font-variant-numeric: tabular-nums;
-}
-.wx__nav-btn {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  flex: none;
-  border: 1px solid var(--color-line-strong);
-  border-radius: 50%;
-  background: rgb(255 255 255 / 2%);
-  color: var(--color-text);
-  cursor: pointer;
-  transition:
-    background-color var(--duration-ui) var(--ease-out-quart),
-    border-color var(--duration-ui) var(--ease-out-quart),
-    color var(--duration-ui) var(--ease-out-quart),
-    transform var(--duration-ui) var(--ease-out-quart);
-}
-.wx__nav-btn svg {
-  width: 15px;
-  height: 15px;
-}
-.wx__nav-btn:hover {
-  transform: scale(1.06);
-  border-color: var(--color-accent);
-  background: rgb(201 242 77 / 10%);
-  color: var(--color-accent);
-}
-
-/* --- body: stage + detail column --------------------------- */
-
-.wx__body {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-  align-items: stretch;
-  gap: clamp(0.9rem, 1.8vw, 1.5rem);
-  margin-top: clamp(1.25rem, 2.6vw, 2rem);
-}
-
-/* --- the stage ------------------------------------------- */
-
-.wx__stage {
-  position: relative;
-  isolation: isolate;
-}
-/* Tinted rim light bleeding out from behind the frame. */
-.wx__stage-rim {
-  position: absolute;
-  inset: 6% 2% -4%;
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--wx-tint) 45%, transparent);
-  filter: blur(44px);
-  opacity: 0.42;
-  pointer-events: none;
-}
-.wx__stage-frame {
-  position: relative;
-  height: 100%;
-  min-height: var(--wx-stage-h);
-  border: 1px solid color-mix(in srgb, var(--wx-tint) 26%, transparent);
-  border-radius: var(--radius-lg);
-  background: var(--wx-panel);
-  overflow: hidden;
-  box-shadow:
-    0 30px 70px rgb(0 0 0 / 55%),
-    inset 0 1px 0 rgb(255 255 255 / 6%);
-}
-/* Frames stack rather than flow, so the outgoing shot can dissolve under the
-   incoming one without the box changing height mid-cut. */
-.wx__stage-shot {
-  position: absolute;
-  inset: 0;
-}
-.wx__stage-shot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 22%;
-}
-/* Mouse parallax inner layer — GSAP controls transform for cursor-based movement */
-.wx__stage-mouse {
-  display: block;
-  width: 100%;
-  height: 100%;
-  will-change: transform;
-}
-.wx__stage-mouse img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 22%;
-}
-.wx__stage-scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgb(10 10 12 / 42%) 0%,
-      transparent 26%,
-      rgb(10 10 12 / 82%) 78%,
-      rgb(10 10 12 / 96%) 100%
-    ),
-    linear-gradient(90deg, rgb(10 10 12 / 55%), transparent 42%);
-  pointer-events: none;
-}
-
-/* Title card riding the bottom edge of the frame. */
-.wx__card {
-  position: absolute;
-  inset: auto 0 0 0;
-  padding: clamp(1rem, 2vw, 1.75rem);
-}
-.wx__card-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-.wx__card-no {
-  color: var(--wx-tint);
-}
-.wx__card-sep {
-  width: 14px;
-  height: 1px;
-  flex: none;
-  background: var(--color-line-strong);
-}
-.wx__card-role {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.wx__card-tagline {
-  margin-top: 0.5rem;
-  max-width: 30ch;
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 0.85rem + 0.7vw, 1.6rem);
-  font-weight: 650;
-  line-height: 1.18;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-/* --- detail column ---------------------------------------- */
-
-.wx__detail {
-  display: flex;
-  flex-direction: column;
-  padding: clamp(1.25rem, 2.2vw, 1.85rem);
-  border: 1px solid var(--wx-panel-line);
-  border-radius: var(--radius-lg);
-  background:
-    radial-gradient(
-      120% 90% at 100% 0%,
-      color-mix(in srgb, var(--wx-tint) 7%, transparent),
-      transparent 60%
-    ),
-    var(--wx-panel);
-}
-.wx__detail-kicker {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-.wx__detail-pulse {
+.wx__all-dot {
   width: 7px;
   height: 7px;
-  flex: none;
   border-radius: 50%;
-  background: var(--wx-tint);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--wx-tint) 60%, transparent);
-  animation: wx-pulse 2.6s var(--ease-out-quart) infinite;
-}
-.wx__detail-rule {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--wx-tint) 70%, transparent),
-    transparent
-  );
-  opacity: 0.6;
-}
-.wx__detail-title {
-  margin-top: clamp(0.75rem, 1.4vw, 1.15rem);
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 0.95rem + 0.85vw, 1.7rem);
-  font-weight: 650;
-  line-height: 1.14;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-.wx__detail-body {
-  margin-top: 0.75rem;
-  max-width: 44ch;
-  font-size: var(--text-sm);
-  line-height: 1.6;
-  color: var(--color-text-muted);
-  text-wrap: pretty;
-  /* Overviews vary in length; clamping keeps the column the same height as
-     the stage beside it whichever project is playing. */
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.wx__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 1rem;
-  padding: 0;
-  list-style: none;
-}
-.wx__chip {
-  padding: 0.32rem 0.7rem;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  color: var(--color-text-muted);
-}
-.wx__highlights {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin: 1rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-.wx__highlight {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.78rem;
-  line-height: 1.4;
-  color: var(--color-text-muted);
-}
-.wx__highlight svg {
-  width: 14px;
-  height: 14px;
-  flex: none;
-  color: var(--wx-tint);
-}
-.wx__detail-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  /* Pins the buttons to the foot of the column whatever the copy above does. */
-  margin-top: auto;
-  padding-top: clamp(1rem, 2vw, 1.5rem);
-}
-.wx__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.8rem 1.4rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.83rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition:
-    transform var(--duration-ui) var(--ease-out-quart),
-    box-shadow var(--duration-ui) var(--ease-out-quart),
-    background-color var(--duration-ui) var(--ease-out-quart);
-}
-.wx__btn svg {
-  width: 15px;
-  height: 15px;
-}
-.wx__btn--solid {
   background: var(--color-accent);
-  color: var(--color-accent-contrast);
-  box-shadow: 0 0 30px rgb(201 242 77 / 28%);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 60%, transparent);
 }
-.wx__btn--solid:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 40px rgb(201 242 77 / 45%);
+.wx__all svg {
+  width: 20px;
+  height: 12px;
+  transition: transform var(--duration-ui) var(--ease-out-quart);
 }
-.wx__btn--ghost {
-  border: 1px solid var(--color-accent);
+.wx__all:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
   color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
 }
-.wx__btn--ghost:hover {
-  transform: translateY(-2px);
-  background: rgb(201 242 77 / 10%);
+.wx__all:hover svg {
+  transform: translateX(5px);
 }
 
-/* --- chapter index ---------------------------------------- */
-
-.wx__index {
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
-}
-.wx__index-label {
+.wx__orbit {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
+  justify-content: center;
 }
-.wx__index-rule {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--color-line-strong), transparent);
-}
-.wx__chapters {
+
+/* --- card row ---------------------------------------------- */
+
+.wx__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 0.65rem;
-  margin: 0.9rem 0 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.8vw, 1.6rem);
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.wx__chapter-cell {
+.wx__grid > li {
   display: flex;
-  min-width: 0;
 }
-.wx__chapter {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.75rem;
+
+.wcard {
+  display: flex;
   width: 100%;
-  align-content: center;
-  padding: 0.6rem 0.7rem 0.7rem;
-  border: 1px solid var(--wx-panel-line);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--wx-line);
+  border-radius: 14px;
   background: var(--wx-panel);
-  text-align: left;
-  cursor: pointer;
   overflow: hidden;
   transition:
-    transform var(--duration-ui) var(--ease-out-quart),
-    border-color var(--duration-ui) var(--ease-out-quart),
-    background-color var(--duration-ui) var(--ease-out-quart);
+    border-color var(--duration-interaction) var(--ease-out-quart),
+    transform var(--duration-interaction) var(--ease-out-quart);
 }
-.wx__chapter:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--wx-chapter-tint) 32%, transparent);
-  background: #101016;
+.wcard:hover,
+.wcard:focus-within {
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  transform: translateY(-4px);
 }
-.wx__chapter.is-on {
-  border-color: color-mix(in srgb, var(--wx-chapter-tint) 55%, transparent);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--wx-chapter-tint) 9%, transparent),
-      transparent 70%
-    ),
-    #101016;
+.wcard__link {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
 }
-.wx__chapter-thumb {
+
+.wcard__frame {
+  position: relative;
   display: block;
-  width: 62px;
-  aspect-ratio: 16 / 11;
-  flex: none;
-  border: 1px solid var(--wx-panel-line);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg-elevated);
+  aspect-ratio: 16 / 10;
   overflow: hidden;
+  background: #08080a;
 }
-.wx__chapter-thumb img {
+.wcard__shot {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.wcard__shot img,
+.wcard__shot .project-poster {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-interaction) var(--ease-out-quart);
+  /* Covers are bright product screenshots; they are dimmed so the card sits
+     in the same near-black register as the rest of the block. */
+  filter: brightness(0.62) saturate(0.9);
+  transition: transform var(--duration-section) var(--ease-out-quart);
 }
-.wx__chapter:hover .wx__chapter-thumb img,
-.wx__chapter.is-on .wx__chapter-thumb img {
-  transform: scale(1.07);
+.wcard:hover .wcard__shot img,
+.wcard:focus-within .wcard__shot img {
+  transform: scale(1.05);
 }
-.wx__chapter-copy {
-  display: block;
-  min-width: 0;
-}
-.wx__chapter-no {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
-  color: var(--color-text-faint);
-}
-.wx__chapter.is-on .wx__chapter-no {
-  color: var(--wx-chapter-tint);
-}
-.wx__chapter-title {
-  margin-top: 0.15rem;
-  font-family: var(--font-display);
-  font-size: 0.92rem;
-  font-weight: 650;
-  line-height: 1.22;
-  letter-spacing: -0.02em;
-  color: var(--color-text);
-  /* Two lines keeps every chapter the same height whatever the title length. */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.wx__chapter-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.28rem;
-  font-size: 0.66rem;
-  color: var(--color-text-muted);
-}
-.wx__chapter-dot {
-  width: 6px;
-  height: 6px;
-  flex: none;
-  border-radius: 50%;
-  background: var(--wx-chapter-tint);
-}
-/* Progress hairline along the foot of the chapter, filled while it is playing. */
-.wx__chapter-bar {
+/* The cover reads as a still under the copy, not as a photo band — the veil
+   darkens its lower half so the card body and the frame share one tone. */
+.wcard__veil {
   position: absolute;
-  inset: auto 0 0 0;
-  height: 2px;
-  background: var(--wx-chapter-tint);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--duration-interaction) var(--ease-out-quart);
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 55%) 0%,
+    rgb(0 0 0 / 30%) 28%,
+    rgb(0 0 0 / 55%) 62%,
+    var(--wx-panel) 100%
+  );
 }
-.wx__chapter.is-on .wx__chapter-bar {
-  transform: scaleX(1);
-}
-.wx__index-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.85rem;
+.wcard__no {
+  position: absolute;
+  z-index: 1;
+  top: 0.85rem;
+  left: 1rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.85rem;
   letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  transition: color var(--duration-ui) var(--ease-out-quart);
-}
-.wx__index-more svg {
-  width: 13px;
-  height: 13px;
-}
-.wx__index-more:hover {
   color: var(--color-accent);
 }
-
-@keyframes wx-pulse {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--wx-tint) 55%, transparent);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 8px transparent;
-  }
+.wcard__launch {
+  position: absolute;
+  z-index: 1;
+  top: 0.7rem;
+  right: 0.8rem;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, #000 55%, transparent);
+  color: var(--color-accent);
+  transition:
+    background-color var(--duration-ui) var(--ease-out-quart),
+    transform var(--duration-ui) var(--ease-out-quart);
+}
+.wcard__launch svg {
+  width: 14px;
+  height: 14px;
+}
+.wcard:hover .wcard__launch,
+.wcard:focus-within .wcard__launch {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  transform: translate(2px, -2px);
 }
 
-/* --- responsive ------------------------------------------- */
+.wcard__body {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 0 1.35rem 1.35rem;
+  /* The frame's veil ends on the panel colour, so the body starts flush
+     against it and the two read as one surface. */
+  margin-top: -2.6rem;
+  position: relative;
+  z-index: 1;
+}
+.wcard__title {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.wcard__cat {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+}
+.wcard__copy {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.wcard__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+  transition: color var(--duration-ui) var(--ease-out-quart);
+}
+.wcard__cta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.wcard__cta svg {
+  width: 20px;
+  height: 12px;
+  transition: transform var(--duration-ui) var(--ease-out-quart);
+}
+.wcard:hover .wcard__cta,
+.wcard:focus-within .wcard__cta {
+  color: var(--color-accent);
+}
+.wcard:hover .wcard__cta svg,
+.wcard:focus-within .wcard__cta svg {
+  transform: translateX(5px);
+}
 
-/* Tablet and below: the stage takes the full width and the detail column
-   reads underneath it, so neither is squeezed. */
+/* --- responsive -------------------------------------------- */
+
 @media (max-width: 1100px) {
-  .wx {
-    --wx-stage-h: clamp(220px, 34dvh, 380px);
-  }
-  .wx__body {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .wx__intro {
     grid-template-columns: minmax(0, 1fr);
-    align-items: start;
   }
-  .wx__controls {
-    justify-content: flex-start;
+  .wx__orbit {
+    display: none;
   }
-  .wx__nav {
-    margin-left: auto;
-  }
-  .wx__detail-body {
-    -webkit-line-clamp: 4;
-    max-width: 68ch;
+  .wx__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Phones: the chapter index becomes a snap rail rather than a tall stack. */
 @media (max-width: 720px) {
-  .wx__stage-frame {
-    min-height: 0;
-    aspect-ratio: 3 / 2;
-  }
-  .wx__chapters {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: min(74%, 260px);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    /* The scroll container would clip the 3px focus ring against its own
-       edges, so the rail is inset and pulled back out by the same amount. */
-    padding: 4px;
-    margin-inline: -4px;
-    scrollbar-width: none;
-  }
-  .wx__chapters::-webkit-scrollbar {
-    display: none;
-  }
-  .wx__chapter-cell {
-    scroll-snap-align: start;
-  }
-}
-@media (max-width: 560px) {
-  .wx__top {
-    flex-wrap: wrap;
-  }
-  .wx__rules {
-    display: none;
-  }
-  .wx__card-role,
-  .wx__card-meta span:nth-of-type(4) {
-    display: none;
-  }
-  .wx__detail-actions .wx__btn {
-    flex: 1 1 auto;
-    justify-content: center;
+  .wx__grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wx {
-    transition: none;
-  }
-  .wx__detail-pulse {
-    animation: none;
-  }
-  .wx__chapter:hover,
-  .wx__btn:hover,
-  .wx__nav-btn:hover,
-  .wx__chapter:hover .wx__chapter-thumb img,
-  .wx__chapter.is-on .wx__chapter-thumb img {
+  .wcard,
+  .wcard:hover,
+  .wcard:focus-within,
+  .wcard:hover .wcard__shot img,
+  .wcard:hover .wcard__launch,
+  .wcard:hover .wcard__cta svg,
+  .wx__all:hover svg {
     transform: none;
+    transition: none;
   }
 }
 /* ============================================================
@@ -10105,12 +9681,10 @@ html {
 /* (a) Breadcrumbs sit directly above every subpage hero, so the row
    height has to stay put — the target grows without it. Expansion is
    vertical only, and the 0.5rem inline gap keeps siblings apart. */
-.crumbs a,
-.wx__index-more {
+.crumbs a {
   position: relative;
 }
-.crumbs a::after,
-.wx__index-more::after {
+.crumbs a::after {
   content: "";
   position: absolute;
   inset: -0.8rem 0;

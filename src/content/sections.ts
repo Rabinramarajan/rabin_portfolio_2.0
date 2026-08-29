@@ -75,9 +75,10 @@ const COPY: Record<SectionId, IntroCopy> = {
     lede: "",
   },
   work: {
-    label: "Work",
-    title: [{ text: "Work that solves" }, { text: "real problems.", accent: true, newline: true }],
-    lede: "I build digital experiences that are fast, scalable, accessible and create real impact.",
+    label: "Selected Work",
+    title: [{ text: "Work that" }, { text: "makes an", newline: true }, { text: "impact.", accent: true }],
+    lede:
+      "A selection of digital products I've engineered for startups and businesses across industries.",
   },
   services: {
     label: "Our Services",

@@ -23,7 +23,7 @@ export function HomePage() {
     <>
       <Hero />
       <ServicesHorizontalScroll id="services" />
-      <WorkSection id="work" limit={4} />
+      <WorkSection id="work" limit={3} />
       <JourneySection />
       <SkillsSection />
       <ProcessSection />
