@@ -163,7 +163,40 @@ export interface Project {
   decisions?: EngineeringDecision[];
   /** Layered stack readout for the engineering section. */
   stack?: StackLayer[];
+  /**
+   * The delivery strip under the case-study hero. Every field is optional and
+   * every absent field simply drops its cell — the strip narrows rather than
+   * filling itself with an invented duration, headcount or status.
+   */
+  timeline?: string;
+  team?: string;
+  status?: string;
+  /**
+   * The named pressures behind `problem`, shown as the numbered challenge
+   * cards. Omit it and the challenge section falls back to the single
+   * `challenge` note instead of splitting one sentence into three cards.
+   */
+  challenges?: ProjectChallenge[];
+  /**
+   * Key features written out with a description and, where one exists, a
+   * frame. Omit it and the feature rail is built from the `features` strings
+   * as title-only cards — nothing is described that the record does not say.
+   */
+  keyFeatures?: ProjectFeature[];
   seo: { title: string; description: string };
+}
+
+/** One named pressure on the project, shown as a numbered challenge card. */
+export interface ProjectChallenge {
+  title: string;
+  description: string;
+}
+
+/** One key feature, optionally illustrated by a captured frame. */
+export interface ProjectFeature {
+  title: string;
+  description: string;
+  image?: Required<MediaRef>;
 }
 
 /** One evidenced outcome. `note` sources the claim so it can be traced. */
