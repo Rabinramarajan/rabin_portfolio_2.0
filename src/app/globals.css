@@ -877,32 +877,6 @@ code {
   );
   will-change: background;
 }
-/* Accent haze — neon trails melt into the page instead of clipping */
-.chero__haze {
-  position: absolute;
-  inset: auto 0 0;
-  height: 46%;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
-  background:
-    radial-gradient(
-      ellipse 58% 70% at 74% 8%,
-      rgb(201 242 77 / 0.14),
-      transparent 58%
-    ),
-    radial-gradient(
-      ellipse 42% 60% at 28% 18%,
-      rgb(201 242 77 / 0.08),
-      transparent 52%
-    );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    rgb(0 0 0 / 0.85),
-    transparent 88%
-  );
-  mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.85), transparent 88%);
-}
 /* Floor blend — the last stop is opaque page bg so the next section has no seam */
 .chero__blend {
   position: absolute;
@@ -949,17 +923,7 @@ code {
       var(--color-bg) 100%
     );
   }
-  .chero__haze {
-    mix-blend-mode: normal;
-    opacity: 0.55;
-  }
 }
-@media (prefers-reduced-motion: reduce) {
-  .chero__haze {
-    mix-blend-mode: normal;
-  }
-}
-
 .chero__shell {
   position: relative;
   z-index: 1;

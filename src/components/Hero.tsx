@@ -80,7 +80,6 @@ export function Hero() {
         <>
           <div className="chero__scrim" />
           <div className="chero__vignette" />
-          <div className="chero__haze" />
           <div className="chero__blend" />
         </>
       }
