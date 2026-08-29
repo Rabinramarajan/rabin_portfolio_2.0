@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { serviceOfferings } from "@/content/serviceOfferings";
 import { ServiceIcon } from "@/components/pages/ServiceIcons";
 import { useMotionTier } from "@/lib/motion-tier";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import styles from "./services-horizontal-scroll.module.css";
 
 const total = serviceOfferings.length;
@@ -55,8 +55,22 @@ export function ServicesHorizontalScroll({
              re-evaluates x and end on every refresh, so a resize or a late
              font load recomputes the travel instead of leaving the rail
              short. */
-          const distance = () =>
-            Math.max(0, track.scrollWidth - viewport.clientWidth);
+          /* scrollWidth is unreliable here: several engines drop a flex
+             container's trailing `padding-inline` from it, which parks the
+             last card flush against the clip edge (and, above 1400px, under
+             the fixed sidebar) instead of resting on the same `--edge` gutter
+             card 01 starts from. Measuring the last card's own right edge and
+             adding the gutter back makes the end state symmetric with the
+             start by construction. */
+          const distance = () => {
+            const last = track.lastElementChild as HTMLElement | null;
+            if (!last) return 0;
+            const gutter = parseFloat(
+              getComputedStyle(track).paddingInlineEnd || "0",
+            );
+            const railEnd = last.offsetLeft + last.offsetWidth + gutter;
+            return Math.max(0, railEnd - viewport.clientWidth);
+          };
 
           const tween = gsap.to(track, {
             x: () => -distance(),
@@ -69,6 +83,16 @@ export function ServicesHorizontalScroll({
               end: () => `+=${distance()}`,
               invalidateOnRefresh: true,
               anticipatePin: 1,
+              /* Cards settle on a card boundary rather than wherever the
+                 scroll happened to stop, so the rail never rests showing two
+                 half-cut cards. Directional, and short enough to feel like
+                 settling rather than a second animation. */
+              snap: {
+                snapTo: 1 / (total - 1),
+                duration: { min: 0.15, max: 0.35 },
+                delay: 0.05,
+                ease: "power2.out",
+              },
               onUpdate: (self) => {
                 setActiveIndex(Math.round(self.progress * (total - 1)));
                 /* The bar is written directly rather than through state — it
@@ -80,7 +104,40 @@ export function ServicesHorizontalScroll({
             },
           });
 
+          /* The pin's start position depends on the height of everything
+             above it, and its travel on the track's laid-out width. Both
+             settle *after* this effect runs: web fonts swap in, the scroll
+             video's poster resolves, and ScrollVideoPlayer builds its own
+             trigger on `loadedmetadata`. Without a refresh the rail keeps
+             stale measurements and unpins mid-section — the intermittent
+             failure. `invalidateOnRefresh` above makes each refresh recompute
+             x and end, so all this has to do is ask for one.
+
+             rAF-coalesced: a font swap plus a resize in the same frame is one
+             refresh, not two. */
+          let queued = 0;
+          const refresh = () => {
+            if (queued) return;
+            queued = requestAnimationFrame(() => {
+              queued = 0;
+              ScrollTrigger.refresh();
+            });
+          };
+
+          /* Fires when the track is re-laid-out (font swap, card reflow) and
+             when the viewport resizes, which also covers the mobile URL-bar
+             height change that ScrollTrigger's own resize handler ignores. */
+          const observer = new ResizeObserver(refresh);
+          observer.observe(track);
+          observer.observe(viewport);
+
+          document.fonts?.ready.then(refresh).catch(() => {});
+          window.addEventListener("load", refresh);
+
           return () => {
+            observer.disconnect();
+            window.removeEventListener("load", refresh);
+            if (queued) cancelAnimationFrame(queued);
             tween.scrollTrigger?.kill();
             tween.kill();
           };

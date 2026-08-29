@@ -4821,6 +4821,7 @@ html {
 /* ---------- final CTA band ---------- */
 .pf-cta {
   border-top: 1px solid var(--color-line);
+  text-align: center;
   padding: clamp(2.25rem, 5vw, 4rem) 0;
   position: relative;
 }
@@ -4839,12 +4840,14 @@ html {
   line-height: 1.02;
   font-weight: 500;
   max-width: 16ch;
+  margin-inline: auto;
   text-wrap: balance;
 }
 .pf-cta__lede {
   margin-top: 1.2rem;
   color: var(--color-text-muted);
   max-width: 30rem;
+  margin-inline: auto;
   line-height: 1.65;
 }
 .pf-cta__actions {
@@ -4852,6 +4855,7 @@ html {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 0.9rem 1.6rem;
 }
 
