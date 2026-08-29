@@ -1,6 +1,6 @@
 import { profile } from "@/content/profile";
 import { budgetRanges, timelines } from "@/content/pricing";
-import { INQUIRY_TYPES, PREFERRED_CONTACT_METHODS, type InquiryType } from "@/types/contact";
+import { INQUIRY_TYPES, PREFERRED_CONTACT_METHODS } from "@/types/contact";
 
 export const contactCopy = {
   hero: {
@@ -126,21 +126,6 @@ export const contactCopy = {
     messageMax: 3000,
   },
 } as const;
-
-const INTENT_TO_INQUIRY: Record<string, InquiryType> = {
-  angular: "Project",
-  frontend: "Project",
-  react: "Project",
-  ionic: "Project",
-  ui: "Project",
-  performance: "Consultation",
-  systems: "Consultation",
-};
-
-export function inquiryFromIntent(intent?: string): InquiryType | undefined {
-  if (!intent) return undefined;
-  return INTENT_TO_INQUIRY[intent] ?? "Project";
-}
 
 export const contactInfo = {
   email: profile.email,

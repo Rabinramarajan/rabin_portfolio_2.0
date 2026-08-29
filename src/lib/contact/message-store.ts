@@ -20,14 +20,6 @@ export interface MessageStore {
   get(referenceId: string): Promise<StoredContact | undefined>;
 }
 
-export interface MessageSummary {
-  referenceId: string;
-  receivedAt: string;
-  notificationStatus: StoredContact["notificationStatus"];
-  acknowledgementStatus: StoredContact["acknowledgementStatus"];
-  lastAttemptAt: string;
-}
-
 /** Most recent messages kept in memory before the oldest are dropped. */
 const MEMORY_STORE_LIMIT = 200;
 

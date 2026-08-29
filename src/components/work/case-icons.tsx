@@ -155,14 +155,6 @@ export function IconGauge(p: IconProps) {
   );
 }
 
-export function IconArrow(p: IconProps) {
-  return (
-    <Svg {...p}>
-      <path d="M4.5 12h15M14 6.5 19.5 12 14 17.5" />
-    </Svg>
-  );
-}
-
 export function IconSpark(p: IconProps) {
   return (
     <Svg {...p}>

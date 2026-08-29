@@ -638,22 +638,3 @@ export function projectFilters(source: Project[] = projects): FilterOption[] {
     })),
   ];
 }
-
-/**
- * The one project that leads the work experience. `featured` is true on every
- * record today, so leading by catalogue position keeps a single hero rather
- * than silently promoting whichever project happens to sort first.
- */
-export function featuredProject(): Project {
-  return projects.find((p) => p.featured) ?? projects[0];
-}
-
-/** Distinct domains represented in the catalogue, for the honest stats row. */
-export function projectDomains(): string[] {
-  return Array.from(new Set(projects.map((p) => p.category)));
-}
-
-/** Distinct delivery platforms across every project. */
-export function projectPlatforms(): string[] {
-  return Array.from(new Set(projects.flatMap((p) => p.platform ?? [])));
-}

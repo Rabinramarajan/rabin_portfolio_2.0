@@ -25,8 +25,6 @@ export const chatRequestSchema = z.object({
     .optional(),
 });
 
-export type ChatRequest = z.infer<typeof chatRequestSchema>;
-
 /** Lead enquiry captured inside the chat, before it is handed to the contact pipeline. */
 export const chatLeadSchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -36,4 +34,3 @@ export const chatLeadSchema = z.object({
   message: z.string().trim().min(10).max(3000),
 });
 
-export type ChatLeadInput = z.infer<typeof chatLeadSchema>;

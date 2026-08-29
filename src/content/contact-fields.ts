@@ -74,7 +74,6 @@ export const ENGAGEMENTS = [
 
 export const REFERRAL_SOURCES = ["LinkedIn", "GitHub", "Google", "Referral", "Portfolio", "Other"] as const;
 
-export type ProjectType = (typeof PROJECT_TYPES)[number];
 export type ContactRole = (typeof CONTACT_ROLES)[number];
 export type ProjectStage = (typeof PROJECT_STAGES)[number];
 export type Technology = (typeof TECHNOLOGIES)[number];

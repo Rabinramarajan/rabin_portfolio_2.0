@@ -23,23 +23,6 @@ const SERVICE_PATHS: Record<ServiceOfferingIcon, string[]> = {
   ],
 };
 
-/** Glyphs for the stats bar under the grid. */
-const STAT_PATHS: Record<string, string[]> = {
-  people: [
-    "M9 11.2a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6z",
-    "M2.5 19.8c0-3.4 2.9-5.6 6.5-5.6s6.5 2.2 6.5 5.6",
-    "M16 5.3a3.1 3.1 0 0 1 0 5.9",
-    "M17.6 14.5c2.5.5 3.9 2.3 3.9 5.1",
-  ],
-  rocket: [
-    "M13.5 3.2c3 1 5.5 3.8 6.4 6.9l-7 7-4-1.4-1.9-4z",
-    "M7.6 15.2 4.4 19.7l4.4-3.2",
-    "M15.4 8.6h.01",
-  ],
-  award: ["M12 14.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11z", "M8.6 13.4 7.5 21l4.5-2.4 4.5 2.4-1.1-7.6"],
-  star: ["M12 3.2l2.7 5.6 6 .9-4.4 4.3 1.1 6.1-5.4-2.9-5.4 2.9 1.1-6.1L3.3 9.7l6-.9z"],
-};
-
 function Glyph({ paths, ...rest }: { paths: string[] } & SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -62,8 +45,4 @@ function Glyph({ paths, ...rest }: { paths: string[] } & SVGProps<SVGSVGElement>
 
 export function ServiceIcon({ name, ...rest }: { name: ServiceOfferingIcon } & SVGProps<SVGSVGElement>) {
   return <Glyph paths={SERVICE_PATHS[name] ?? SERVICE_PATHS.code} {...rest} />;
-}
-
-export function StatIcon({ name, ...rest }: { name: string } & SVGProps<SVGSVGElement>) {
-  return <Glyph paths={STAT_PATHS[name] ?? STAT_PATHS.star} {...rest} />;
 }
