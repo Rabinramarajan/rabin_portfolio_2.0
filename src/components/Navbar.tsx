@@ -216,14 +216,8 @@ export function Navbar() {
                 </li>
               ))}
               <li>
-                <Link href="/about" className={isActive({ href: "/about", label: "About" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
-                  <span className="mm__index">{String(navigation.length + 1).padStart(2, "0")}</span>
-                  About
-                </Link>
-              </li>
-              <li>
                 <Link href="/contact" className={isActive({ href: "/contact", label: "Contact" }) ? "is-active" : undefined} onClick={() => setOpen(false)}>
-                  <span className="mm__index">{String(navigation.length + 2).padStart(2, "0")}</span>
+                  <span className="mm__index">{String(navigation.length + 1).padStart(2, "0")}</span>
                   Contact
                 </Link>
               </li>

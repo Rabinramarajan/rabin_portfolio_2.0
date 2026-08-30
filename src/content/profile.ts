@@ -53,6 +53,7 @@ export const navigation: NavItem[] = [
   { href: "/experience", label: "Experience" },
   { href: "/#skills", label: "Skills", sectionId: "skills" },
   { href: "/#process", label: "Process", sectionId: "process" },
+  { href: "/about", label: "About" },
 ];
 
 export const sidebarNavigation: NavItem[] = [

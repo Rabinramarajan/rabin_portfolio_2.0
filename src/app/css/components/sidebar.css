@@ -113,13 +113,17 @@
   letter-spacing: 0.3px;
 }
 
-@media (min-width: 1400px) {
+/* The rail is fixed at `right: var(--gutter)`, so it only clears the centred
+   .shell once the page is wider than the container plus room for the rail on
+   both sides (1360 + ~2x170). Below that it sat on top of the content -- the
+   hero pull quote on a 1440px laptop. */
+@media (min-width: 1700px) {
   .sidebar {
     display: block;
   }
 }
 
-@media (max-width: 1600px) {
+@media (max-width: 1800px) {
   .sidebar__accent-line {
     height: 100px;
   }
