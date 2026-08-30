@@ -49,7 +49,6 @@
 
 /* Motion/React animations */
 .eco__pill,
-.eco__sidebar-item,
 .eco__node-item,
 .eco__branch,
 .eco__node-strand,
@@ -62,21 +61,10 @@
 }
 
 /* ========== TEXT REVEAL MASKS ========== */
-.tr__mask,
-.tr__line,
-.tr__word,
-.tr__word-mask,
-.tr__char,
-.tr__char-mask,
-.tr__fade-line {
+.tr__line {
   overflow: visible !important;
   opacity: 1 !important;
   transform: none !important;
-}
-
-.tr__mask .acc {
-  color: var(--accent, #00ff00);
-  font-weight: 600;
 }
 
 /* ========== PARALLAX & MOTION DISABLED ========== */
@@ -87,18 +75,6 @@
   opacity: 1 !important;
   transform: none !important;
   clip-path: none !important;
-}
-
-/* ========== SCROLL PROGRESS INDICATOR ========== */
-.scroll-track {
-  position: fixed;
-  top: 0;
-  right: 1.25rem;
-  width: 2px;
-  height: 100vh;
-  z-index: 150;
-  pointer-events: none;
-  background: rgb(255 255 255 / 6%);
 }
 
 /* ========== WORK SECTION CARDS ========== */

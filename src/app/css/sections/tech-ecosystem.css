@@ -112,8 +112,7 @@
   overflow: visible;
   transition: transform 180ms ease;
 }
-.eco__node:hover .eco__node-icon,
-.eco__node--selected .eco__node-icon {
+.eco__node:hover .eco__node-icon {
   transform: scale(1.08);
 }
 .eco__node-icon svg,
@@ -175,13 +174,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .eco__node,
-  .eco__node-ring,
-  .eco__node-label,
-  .eco__pill,
-  .eco__detail-close,
-  .eco__detail-projects li a,
-  .eco__connection,
-  .eco__cat-label {
+  .eco__pill {
     transition: none;
   }
 }

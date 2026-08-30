@@ -2,7 +2,6 @@ import { processIntro, processSteps } from "@/content/process";
 import { SectionKicker, Btn } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { ProcessFlow } from "@/components/process/ProcessFlow";
-// import { ProcessJourney } from "@/components/process/ProcessJourney";
 import { ProcessPrinciples } from "@/components/process/ProcessPrinciples";
 import { media } from "@/lib/media";
 

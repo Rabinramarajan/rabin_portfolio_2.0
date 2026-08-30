@@ -375,20 +375,13 @@
 
 /* Containment: isolate animated subtrees so style/layout/paint work stays
    scoped to the element instead of invalidating the whole document. */
-.sdance,
-.plx,
-.plx__layer,
-.wcard,
-.image-reveal,
-.image-reveal__inner {
+.wcard {
   contain: layout style paint;
 }
 
 /* Sparing will-change: only the continuously-transformable layers earn a
    compositor layer (transform runs on the GPU); .plx__layer is already
    promoted via `transform` styles from Motion, keep it explicit for clarity. */
-.image-reveal,
-.magnetic,
-.plx__layer {
+.magnetic {
   will-change: transform;
 }

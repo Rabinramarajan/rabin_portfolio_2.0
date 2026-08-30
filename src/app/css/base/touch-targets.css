@@ -25,8 +25,7 @@
 }
 
 /* (b) Both blocks are sparse enough to absorb the extra height. */
-.nf-links a,
-.cp-channel {
+.nf-links a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;

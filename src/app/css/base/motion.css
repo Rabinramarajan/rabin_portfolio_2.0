@@ -68,18 +68,6 @@
   .hd__indicator {
     transition: none !important;
   }
-  .pj__mobile {
-    display: block !important;
-  }
-  .pj__sticky,
-  .pj__spacer {
-    display: none !important;
-  }
-  .ps__ghost,
-  .ps__fan,
-  .pjm__fill {
-    transition: none !important;
-  }
   .page-enter {
     animation: none;
   }

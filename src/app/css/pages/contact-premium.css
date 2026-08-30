@@ -315,9 +315,7 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .premium-contact-hero__orb,
-  .premium-contact-hero__cta,
-  .premium-contact-cta__method {
+  .premium-contact-hero__orb {
     animation: none;
     transition: none;
   }
