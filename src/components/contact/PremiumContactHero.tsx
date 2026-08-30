@@ -1,5 +1,7 @@
 "use client";
 
+import { media } from "@/lib/media";
+
 export function PremiumContactHero() {
 
   return (
@@ -13,7 +15,7 @@ export function PremiumContactHero() {
         className="premium-contact-hero__video"
         aria-hidden="true"
       >
-        <source src="/media/contact/hero.mp4" type="video/mp4" />
+        <source src={media("other/contact/hero-loop.mp4")} type="video/mp4" />
       </video>
 
       {/* Animated background elements */}

@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { duration, ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 import { cn } from "@/lib/cn";
+import { media } from "@/lib/media";
 
 /**
  * Decorative orbital artwork beside the FAQ list — the brand mark inside a
@@ -29,7 +30,7 @@ export function FaqOrbit({ className }: { className?: string }) {
     >
       <span className="faqx-orbit__bloom" />
       <Image
-        src="/media/faq/banner_h.png"
+        src={media("other/faq/orbit.png")}
         alt=""
         width={1536}
         height={1024}

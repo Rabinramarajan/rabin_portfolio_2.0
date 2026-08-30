@@ -4,6 +4,7 @@ import type { SectionHeadingLevel } from "@/components/ui";
 import { ProcessFlow } from "@/components/process/ProcessFlow";
 // import { ProcessJourney } from "@/components/process/ProcessJourney";
 import { ProcessPrinciples } from "@/components/process/ProcessPrinciples";
+import { media } from "@/lib/media";
 
 /**
  * Server component. Only the orbital, the journey, the principles and the
@@ -37,7 +38,7 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
             </div>
             <div className="pr__hero-visual-frame">
               <img
-                src="/media/process/process_hero.png"
+                src={media("other/process/hero.png")}
                 alt="Product engineering process environment"
                 className="pr__hero-image"
               />

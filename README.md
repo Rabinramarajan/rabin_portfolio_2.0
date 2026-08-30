@@ -19,6 +19,31 @@ flags) and the assistant keys (`GEMINI_API_KEY`, `GROQ_API_KEY`,
 
 `RESEND_API_KEY` and `GEMINI_API_KEY` stay on the server. Never expose them as NEXT_PUBLIC_ vars.
 
+## Media (Vercel Blob)
+
+Production media — project frames, case-study galleries, service art, the hero
+reel and portraits — is served from Vercel Blob. `/public` keeps only the small
+static assets (favicons, PWA logos).
+
+```bash
+vercel env pull .env.local     # BLOB_READ_WRITE_TOKEN
+npm run blob:migrate:dry       # preview the upload
+npm run blob:migrate           # upload everything in the manifest
+```
+
+Then set `NEXT_PUBLIC_BLOB_BASE_URL` (the store's public origin) locally and on
+Vercel. Until it is set the app falls back to the legacy `/public/media` paths,
+so a fresh clone still renders.
+
+Assets are addressed through the type-safe manifest in `src/lib/media.ts` —
+`media("projects/galaxy-sofas/gallery-02.webp")` — never by a literal URL.
+`BLOB_READ_WRITE_TOKEN` is server-only (`src/lib/blob-server.ts` is marked
+`server-only`). Uploads go through `POST /api/blob/upload`, which requires an
+`Authorization: Bearer $BLOB_UPLOAD_SECRET` header and is disabled entirely
+while that secret is unset.
+
+Full guide: [docs/vercel-blob.md](docs/vercel-blob.md).
+
 ## Quality
 
 ```bash

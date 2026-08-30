@@ -1,16 +1,17 @@
 "use client";
 
 import type { ProcessVisualId } from "@/content/types";
+import { media } from "@/lib/media";
 
 export function ProcessVisual({ id }: { id: ProcessVisualId; reduce?: boolean }) {
   const images: Record<ProcessVisualId, string> = {
-    discover: "/media/process/discover.png",
-    define: "/media/process/Define.png",
-    design: "/media/process/Design.png",
-    build: "/media/process/Engineer.png",
-    test: "/media/process/Validate.png",
-    launch: "/media/process/Launch.png",
-    evolve: "/media/process/Evolve.png",
+    discover: media("other/process/discover.png"),
+    define: media("other/process/define.png"),
+    design: media("other/process/design.png"),
+    build: media("other/process/engineer.png"),
+    test: media("other/process/validate.png"),
+    launch: media("other/process/launch.png"),
+    evolve: media("other/process/evolve.png"),
   };
 
   return (

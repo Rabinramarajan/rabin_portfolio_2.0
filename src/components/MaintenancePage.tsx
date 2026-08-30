@@ -8,6 +8,7 @@ import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 import { useMotionTier } from "@/lib/motion-tier";
 import { profile } from "@/content/profile";
 import "./maintenance.css";
+import { media } from "@/lib/media";
 
 /* The window the countdown runs against. Kept as a single constant so the
    copy ("back in ~2.5 days") and the timer can never drift apart. */
@@ -357,7 +358,7 @@ export function MaintenancePage() {
             >
               <span className="mnt__art-glow" aria-hidden />
               <SmartImage
-                src="/media/under-maintain/1.png"
+                src={media("other/maintenance/cover.png")}
                 alt="A 3D construction scene: a crane lifting an “Upgrading experience” board over a glowing lime letter R, flanked by gears, a barrier and a traffic cone."
                 width={1536}
                 height={1024}

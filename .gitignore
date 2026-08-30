@@ -49,3 +49,6 @@ next-env.d.ts
 /.claude-flow/
 /.contact-messages/
 /.claude/
+
+.vercel
+.env*

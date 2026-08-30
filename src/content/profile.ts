@@ -1,4 +1,5 @@
 import type { Credentials, HeroContent, NavItem, Profile, SeoContent } from "@/content/types";
+import { media } from "@/lib/media";
 
 export const SITE_URL = "https://www.rabinr.in";
 
@@ -110,7 +111,7 @@ export const hero: HeroContent = {
     lines: ["Code is my craft.", "Impact is my goal."],
     signature: profile.shortName,
   },
-  reel: { src: "/media/hero/banner_v.scrub.mp4", poster: "/media/hero/banner-poster.webp" },
+  reel: { src: media("hero/home-reel.mp4"), poster: media("hero/home-poster.webp") },
   description:
     "Frontend engineer specializing in Angular and modern web application architecture, with a strong focus on performance, usability and product quality.",
   primaryCta: { label: "Let's Work Together", href: "/contact" },
@@ -121,9 +122,9 @@ export const hero: HeroContent = {
     { label: "Experience", value: profile.yearsExperienceLabel + " years" },
     { label: "Availability", value: "Select projects" },
   ],
-  portrait: { src: "/media/working/hero-portrait-640.webp", alt: "Portrait of Rabin R", width: 640, height: 800 },
+  portrait: { src: media("profile/rabin-hero.webp"), alt: "Portrait of Rabin R", width: 640, height: 800 },
   midground: {
-    src: "/media/fiji_internal_application/image3.png",
+    src: media("projects/fiji-immigration-internal/hero.png"),
     alt: "Fiji Immigration officer workflow interface",
     width: 1600,
     height: 1000,

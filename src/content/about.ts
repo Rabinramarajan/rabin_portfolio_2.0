@@ -1,5 +1,6 @@
 import type { AboutContent } from '@/content/types';
 import { credentials } from '@/content/profile';
+import { media } from '@/lib/media';
 
 /**
  * About content
@@ -50,7 +51,7 @@ export const about: AboutContent = {
   ],
   // Composed treatment: the cut-out portrait ships with its own glow rings,
   // monogram badge and signature, so the section renders it as a single layer.
-  portrait: { src: '/media/about/about-portrait.webp', alt: 'Rabin R, Frontend Angular Consultant', width: 1100, height: 1202 },
+  portrait: { src: media('profile/rabin-about.webp'), alt: 'Rabin R, Frontend Angular Consultant', width: 1100, height: 1202 },
   hero: {
     headline: ['THE ENGINEER', 'BEHIND THE', 'INTERFACE.'],
     statement:

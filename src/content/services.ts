@@ -1,4 +1,5 @@
 import type { Service } from "@/content/types";
+import { media } from "@/lib/media";
 
 export const services: Service[] = [
   {
@@ -12,10 +13,10 @@ export const services: Service[] = [
     deliverables: ["Component architecture", "Production-ready interfaces", "Design-system implementation"],
     technologies: ["TypeScript", "Angular", "React", "Next.js"],
     idealFor: "Product teams that need a senior frontend owner.",
-    image: { src: "/media/service/service_1.webp", alt: "Frontend engineering component architecture diagram" },
+    image: { src: media("services/frontend-engineering.webp"), alt: "Frontend engineering component architecture diagram" },
     media: {
       type: "image",
-      src: "/media/service/service_1.webp",
+      src: media("services/frontend-engineering.webp"),
       alt: "Frontend engineering component architecture showcase",
     },
   },
@@ -30,11 +31,11 @@ export const services: Service[] = [
     deliverables: ["Modern Angular applications", "Legacy migrations", "State and data-flow design"],
     technologies: ["Angular 17–22", "Signals", "Standalone APIs", "RxJS"],
     idealFor: "Government, insurance, and enterprise platforms.",
-    image: { src: "/media/service/service_2.webp", alt: "Angular enterprise application architecture" },
+    image: { src: media("services/angular-development.webp"), alt: "Angular enterprise application architecture" },
     media: {
       type: "video",
-      src: "/media/service/angular.mp4",
-      poster: "/media/service/service_2.webp",
+      src: media("services/angular-development.mp4"),
+      poster: media("services/angular-development.webp"),
       alt: "Enterprise Angular portal workflow walkthrough",
     },
   },
@@ -49,11 +50,11 @@ export const services: Service[] = [
     deliverables: ["App Router architecture", "Typed content models", "Performance-minded UI"],
     technologies: ["React 19", "Next.js", "TypeScript", "Tailwind CSS"],
     idealFor: "Marketing sites, product surfaces, and editorial web apps.",
-    image: { src: "/media/service/service_3.webp", alt: "React Next.js server-first application preview" },
+    image: { src: media("services/react-nextjs.webp"), alt: "React Next.js server-first application preview" },
     media: {
       type: "video",
-      src: "/media/service/react_application.mp4",
-      poster: "/media/service/service_3.webp",
+      src: media("services/react-nextjs.mp4"),
+      poster: media("services/react-nextjs.webp"),
       alt: "React Next.js digital experience preview",
     },
   },
@@ -68,10 +69,10 @@ export const services: Service[] = [
     deliverables: ["Accessible markup", "Interaction states", "Cross-browser consistency"],
     technologies: ["SCSS", "Tailwind CSS", "WCAG 2.1 AA", "Motion"],
     idealFor: "Teams who care how the product feels after launch day.",
-    image: { src: "/media/service/service_4.webp", alt: "UI engineering accessible interface showcase" },
+    image: { src: media("services/ui-engineering.webp"), alt: "UI engineering accessible interface showcase" },
     media: {
       type: "image",
-      src: "/media/service/service_4.webp",
+      src: media("services/ui-engineering.webp"),
       alt: "UI engineering design system component card",
     },
   },
@@ -86,11 +87,11 @@ export const services: Service[] = [
     deliverables: ["Core Web Vitals pass", "Bundle reduction", "Runtime profiling"],
     technologies: ["Lighthouse", "Code splitting", "SSR", "Image strategy"],
     idealFor: "Products that already work, but feel heavy.",
-    image: { src: "/media/service/service_5.webp", alt: "Performance optimization analytics dashboard" },
+    image: { src: media("services/performance-optimization.webp"), alt: "Performance optimization analytics dashboard" },
     media: {
       type: "video",
-      src: "/media/service/performance.mp4",
-      poster: "/media/service/service_5.webp",
+      src: media("services/performance-optimization.mp4"),
+      poster: media("services/performance-optimization.webp"),
       alt: "Performance profiling and Core Web Vitals demonstration",
     },
   },
@@ -105,7 +106,7 @@ export const services: Service[] = [
     deliverables: ["iOS & Android apps", "Capacitor integration", "Release support"],
     technologies: ["Ionic", "Angular", "Capacitor", "Native APIs"],
     idealFor: "Member apps and field tools that must live on a phone.",
-    image: { src: "/media/service/service_6.webp", alt: "Cross-platform mobile application screens" },
+    image: { src: media("services/mobile-development.webp"), alt: "Cross-platform mobile application screens" },
   },
   {
     id: "design-systems",
@@ -118,10 +119,10 @@ export const services: Service[] = [
     deliverables: ["Component architecture", "Design tokens", "Documentation", "Implementation support"],
     technologies: ["TypeScript", "Tailwind CSS", "Storybook", "Angular", "React"],
     idealFor: "Growing teams building multiple products or platforms.",
-    image: { src: "/media/service/service_7.webp", alt: "Design system component ecosystem" },
+    image: { src: media("services/design-systems.webp"), alt: "Design system component ecosystem" },
     media: {
       type: "image",
-      src: "/media/service/service_7.webp",
+      src: media("services/design-systems.webp"),
       alt: "Design system component layout and documentation",
     },
   },

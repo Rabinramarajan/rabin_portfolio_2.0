@@ -1,6 +1,7 @@
 import { profile } from "@/content/profile";
 import { budgetRanges, timelines } from "@/content/pricing";
 import { INQUIRY_TYPES, PREFERRED_CONTACT_METHODS } from "@/types/contact";
+import { media } from "@/lib/media";
 
 export const contactCopy = {
   hero: {
@@ -13,13 +14,13 @@ export const contactCopy = {
   },
   media: {
     hero: {
-      src: "/media/contact/hero_b.png",
+      src: media("other/contact/hero.png"),
       alt: "Dark workstation with a system map from frontend through API and data to production, marked available",
       width: 1672,
       height: 941,
     },
     conversation: {
-      src: "/media/contact/intelligent.png",
+      src: media("other/contact/conversation.png"),
       alt: "Editorial diagram of an idea becoming a product through conversation, frontend, API, database, and deployment",
       width: 1448,
       height: 1086,

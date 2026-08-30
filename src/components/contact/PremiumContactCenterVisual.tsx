@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useReducedMotion, motion } from "motion/react";
 import { duration, ease } from "@/lib/motion";
+import { media } from "@/lib/media";
 
 export interface PremiumContactCenterVisualProps {
   children?: React.ReactNode;
@@ -29,7 +30,7 @@ export function PremiumContactCenterVisual({ children }: PremiumContactCenterVis
         children
       ) : (
         <Image
-          src="/media/contact/contact_h.png"
+          src={media("other/contact/globe.png")}
           alt="Global orbital network visualization representing Rabin R's worldwide presence and connectivity"
           fill
           priority
