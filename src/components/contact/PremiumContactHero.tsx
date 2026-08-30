@@ -12,6 +12,8 @@ export function PremiumContactHero() {
         muted
         loop
         playsInline
+        preload="auto"
+        poster={media("other/contact/hero.png")}
         className="premium-contact-hero__video"
         aria-hidden="true"
       >

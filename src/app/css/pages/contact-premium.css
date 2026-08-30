@@ -12,6 +12,8 @@
   min-height: 400px;
   padding: 0 var(--gutter);
   overflow: hidden;
+  isolation: isolate;
+  background: #0a0a0c;
   margin-top: 0;
   padding-top: 0;
 }
@@ -23,13 +25,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -1;
+  z-index: 0;
 }
 
 .premium-contact-hero__bg {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 1;
   background: linear-gradient(
     135deg,
     rgba(10, 10, 12, 0.75) 0%,
@@ -101,7 +103,7 @@
 
 .premium-contact-hero__content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: flex-start;
