@@ -130,7 +130,8 @@ export function CustomCursor() {
     style.textContent = `
       @media (pointer: fine) {
         *, *::before, *::after { cursor: none !important; }
-        input, textarea, select, [contenteditable] { cursor: text !important; }
+        input, textarea, select, [contenteditable] { cursor: pointer !important; }
+        input:disabled, textarea:disabled, select:disabled { cursor: not-allowed !important; }
       }
     `;
     document.head.appendChild(style);

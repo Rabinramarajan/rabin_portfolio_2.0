@@ -35,6 +35,17 @@ button {
   border: 0;
   cursor: pointer;
 }
+input,
+select,
+textarea,
+label {
+  cursor: pointer;
+}
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
 a {
   color: inherit;
   text-decoration: none;

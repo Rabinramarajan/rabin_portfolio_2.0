@@ -113,9 +113,10 @@ export async function submitContact(
 
   const payload = normalized.payload;
 
-  // Header injection prevention - reject newlines in name/email/message
+  // Header injection prevention - reject newlines in fields that land in mail headers.
+  // The message body is not a header, so newlines there are legitimate.
   const hasNewline = (value: string) => /\r|\n/.test(value);
-  if (hasNewline(payload.name) || hasNewline(payload.email) || hasNewline(payload.message)) {
+  if (hasNewline(payload.name) || hasNewline(payload.email)) {
     console.error("[contact] Header injection attempt detected");
     return { ok: false, error: "Invalid request: contains forbidden characters." };
   }

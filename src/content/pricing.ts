@@ -11,5 +11,5 @@ export const pricingPlans: PricingPlan[] = [
   { id: 'contract', name: 'Contract / dedicated engineering', model: 'contract', currency: 'INR', startingFrom: null, startingLabel: 'Starting from — Let us discuss', scope: 'Dedicated frontend engineering inside your team.', timeline: 'Scoped per engagement', idealClient: 'Product teams that need a senior Angular / React engineer embedded for a season of work.', deliverables: ['Embedded frontend engineering', 'Architecture and delivery', 'Code reviews', 'Milestone-based timesheets'] },
 ];
 
-export const budgetRanges = ['Under \u20b925,000', '\u20b925,000 – \u20b950,000', '\u20b950,000 – \u20b91,00,000', '\u20b91,00,000 – \u20b92,50,000', '\u20b92,50,000 – \u20b95,00,000', '\u20b95,00,000+', 'Not sure yet'];
-export const timelines = ['ASAP', '1-2 weeks', '2-4 weeks', '1-2 months', '2-3 months', 'Flexible'];
+// Re-exported so the contact form and the contact schema share one vocabulary.
+export { BUDGET_RANGES as budgetRanges, TIMELINES as timelines } from '@/content/contact-fields';

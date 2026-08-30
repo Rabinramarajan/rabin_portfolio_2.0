@@ -53,15 +53,20 @@ export const TECHNOLOGIES = [
   "Other",
 ] as const;
 
-export const TIMELINES = ["ASAP", "1–2 weeks", "1 month", "1–3 months", "3–6 months", "Flexible"] as const;
+/**
+ * Canonical option vocabularies. The contact form renders these and the schema
+ * validates against them, so the two can never drift apart.
+ */
+export const TIMELINES = ["ASAP", "1-2 weeks", "2-4 weeks", "1-2 months", "2-3 months", "Flexible"] as const;
 
 export const BUDGET_RANGES = [
-  "Under ₹50K",
-  "₹50K – ₹1L",
-  "₹1L – ₹3L",
-  "₹3L – ₹5L",
-  "₹5L+",
-  "Let's discuss",
+  "Under ₹25,000",
+  "₹25,000 – ₹50,000",
+  "₹50,000 – ₹1,00,000",
+  "₹1,00,000 – ₹2,50,000",
+  "₹2,50,000 – ₹5,00,000",
+  "₹5,00,000+",
+  "Not sure yet",
 ] as const;
 
 export const ENGAGEMENTS = [
