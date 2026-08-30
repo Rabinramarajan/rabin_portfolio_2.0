@@ -52,7 +52,10 @@
 
 .faqx__title {
   font-family: var(--font-display);
-  font-size: var(--text-3xl);
+  /* One step down from --text-3xl: the rail is the narrower of the two
+     columns (0.82fr), so 3xl wrapped "Questions you might have." onto three
+     oversized lines and out-shouted the list it is only introducing. */
+  font-size: var(--text-2xl);
   font-weight: 500;
   line-height: var(--leading-snug);
   letter-spacing: -0.03em;
@@ -168,7 +171,7 @@
   align-items: center;
   gap: clamp(0.85rem, 2vw, 1.5rem);
   width: 100%;
-  padding: clamp(1rem, 2vw, 1.35rem) clamp(1rem, 2.2vw, 1.5rem);
+  padding: clamp(0.85rem, 1.5vw, 1.1rem) clamp(1rem, 2.2vw, 1.4rem);
   background: none;
   border: 0;
   text-align: left;
@@ -183,7 +186,7 @@
 
 .faqx__num {
   font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   letter-spacing: 0.06em;
   color: var(--color-text-faint);
   padding-right: clamp(0.85rem, 2vw, 1.5rem);
@@ -197,9 +200,11 @@
 
 .faqx__label {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
+  /* Questions are a scannable list, not headings -- body size keeps six of
+     them on screen at laptop heights. */
+  font-size: var(--text-base);
   font-weight: 500;
-  line-height: 1.35;
+  line-height: 1.4;
   letter-spacing: -0.01em;
   text-wrap: balance;
 }

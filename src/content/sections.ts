@@ -124,7 +124,7 @@ const COPY: Record<SectionId, IntroCopy> = {
   },
   faq: {
     label: "FAQ",
-    title: [{ text: "Questions you" }, { text: "might *have.*", newline: true }],
+    title: [{ text: "Questions you" }, { text: "might have.", newline: true, accent: true }],
     lede: "Straight answers about the work, the stack and how an engagement starts.",
   },
 };

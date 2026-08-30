@@ -1,5 +1,5 @@
 import { faqs } from "@/content/faq";
-import { sections, titleLines } from "@/content/sections";
+import { accentIndex, sections, titleLines } from "@/content/sections";
 import { SectionKicker, itemHeadingLevel, type SectionHeadingLevel } from "@/components/ui";
 import { TextReveal } from "@/components/motion";
 import { FaqAccordion } from "@/components/faq/FaqAccordion";
@@ -24,7 +24,12 @@ export function FaqSection({ headingLevel = "h2" }: { headingLevel?: SectionHead
         <div className="faqx__rail">
           <div className="faqx__rail-top">
             <SectionKicker index={intro.index} label={intro.label} />
-            <TextReveal as={headingLevel} className="faqx__title" lines={titleLines(intro)} />
+            <TextReveal
+              as={headingLevel}
+              className="faqx__title"
+              lines={titleLines(intro)}
+              accentIndex={accentIndex(intro)}
+            />
             <span className="faqx__rule" aria-hidden />
             <p className="faqx__lede" id="faq-title-lede">
               {intro.lede}
