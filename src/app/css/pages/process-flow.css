@@ -561,69 +561,53 @@
   opacity: 0.65;
 }
 
-/* --- conduit telemetry panel ---
-   Sits in the empty quadrant above the start of the ribbon. Percentages track
-   the same 1200x400 viewBox the nodes use, so it scales with the conduit. */
-.pf__telemetry {
-  position: absolute;
-  left: 0.5%;
-  top: 2%;
-  width: min(21%, 15rem);
-  padding-left: 0.85rem;
-  border-left: 1px solid var(--color-line-strong);
-  pointer-events: none;
-}
-.pf__telemetry-k {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-.pf__telemetry-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 8px var(--color-accent);
-  animation: pf-blink 2.6s var(--ease-out-cubic) infinite;
-}
-@keyframes pf-blink {
-  0%,
-  70%,
-  100% {
-    opacity: 1;
-  }
-  85% {
-    opacity: 0.25;
-  }
-}
-.pf__telemetry-list {
-  margin-top: 0.55rem;
-  display: grid;
-  gap: 0.3rem;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  line-height: 1.45;
-  color: var(--color-text-muted);
-}
-.pf__telemetry-list li {
-  position: relative;
-  padding-left: 0.7rem;
-  text-wrap: balance;
-}
-.pf__telemetry-list li::before {
-  content: "+";
-  position: absolute;
-  left: 0;
-  color: var(--color-accent);
-  opacity: 0.65;
-}
 @media (prefers-reduced-motion: reduce) {
   .pf__telemetry-dot {
     animation: none;
+  }
+}
+
+/* ---------- scroll-pinned conduit ----------
+   The track is one viewport per stage tall. The shell inside it sticks under
+   the header, so the conduit and its readout stay fixed on screen while the
+   page scrolls and each viewport of scroll advances one stage. Only worth the
+   scroll budget where the whole composition fits on screen, so it is opt-in
+   above 900px and collapses back to normal flow below that (and for anyone who
+   has asked for reduced motion). */
+.pf-track {
+  position: relative;
+}
+@media (min-width: 900px) {
+  .pf-track {
+    height: calc(100svh + (var(--pf-stages, 7) - 1) * 70svh);
+  }
+  .pf-track__pin {
+    position: sticky;
+    top: var(--header-h);
+    min-height: calc(100svh - var(--header-h));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(0.75rem, 2vh, 1.75rem);
+  }
+  /* Pinned, the conduit owns the whole viewport, so it should also own the
+     whole shell width — otherwise the ribbon's box sits inset from the readout
+     console beneath it and the two stop reading as one instrument. The height
+     cap stays, expressed as width (the box is a fixed 3:1), but it is raised to
+     the height the pin actually has: viewport minus header, readout and gaps. */
+  .pf[data-pinned="on"][data-fit="on"] .pf__stage {
+    max-width: min(100%, calc((100svh - var(--header-h) - 17rem) * 3));
+  }
+  .pf[data-pinned="on"] {
+    gap: clamp(1rem, 2.4vh, 1.75rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-track {
+    height: auto;
+  }
+  .pf-track__pin {
+    position: static;
+    min-height: 0;
   }
 }

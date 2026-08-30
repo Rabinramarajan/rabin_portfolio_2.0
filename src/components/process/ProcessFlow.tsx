@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ProcessStep } from "@/content/types";
 import { ease } from "@/lib/motion";
@@ -101,42 +101,113 @@ const GLYPHS: Record<string, React.ReactNode> = {
 const DWELL_MS = 5200;
 const SWAP = { duration: 0.45, ease } as const;
 
-export function ProcessFlow({ steps, fit = false }: { steps: ProcessStep[]; fit?: boolean }) {
+export function ProcessFlow({
+  steps,
+  fit = false,
+  pinned = false,
+}: {
+  steps: ProcessStep[];
+  fit?: boolean;
+  /** Pin the conduit to the viewport and drive the active stage from scroll. */
+  pinned?: boolean;
+}) {
   const reduce = useReducedMotionSafe();
   const [active, setActive] = useState(0);
   const [held, setHeld] = useState(false);
   const uid = useId().replace(/[:]/g, "");
+  const trackRef = useRef<HTMLDivElement>(null);
 
   const nodes = useMemo(() => steps.slice(0, POINTS.length), [steps]);
   const last = nodes.length - 1;
 
+  /* Timed carousel — only when the stage is not scroll-driven. */
   useEffect(() => {
-    if (reduce || held || nodes.length < 2) return;
+    if (pinned || reduce || held || nodes.length < 2) return;
     const id = window.setInterval(() => setActive((i) => (i + 1) % nodes.length), DWELL_MS);
     return () => window.clearInterval(id);
-  }, [reduce, held, nodes.length]);
+  }, [pinned, reduce, held, nodes.length]);
 
-  const select = useCallback((index: number) => {
-    setActive(index);
-    setHeld(true);
-  }, []);
+  /* Scroll-driven stage advance. The track is taller than the viewport; the
+     inner shell sticks, and the distance scrolled through the track maps
+     linearly onto the stage index. */
+  useEffect(() => {
+    if (!pinned || nodes.length < 2) return;
+    const track = trackRef.current;
+    if (!track) return;
+
+    let frame = 0;
+    const read = () => {
+      frame = 0;
+      const rect = track.getBoundingClientRect();
+      const span = rect.height - window.innerHeight;
+      if (span <= 0) return;
+      const p = Math.min(Math.max(-rect.top / span, 0), 1);
+      const next = Math.min(nodes.length - 1, Math.floor(p * nodes.length));
+      setActive((i) => (i === next ? i : next));
+    };
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(read);
+    };
+
+    read();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pinned, nodes.length]);
+
+  /* In pinned mode a node is a scroll target, so the pointer never fights the
+     scroll position; otherwise it selects directly and holds the carousel. */
+  const select = useCallback(
+    (index: number) => {
+      if (pinned) {
+        const track = trackRef.current;
+        if (!track) return;
+        const span = track.offsetHeight - window.innerHeight;
+        if (span <= 0) return;
+        const top = window.scrollY + track.getBoundingClientRect().top;
+        window.scrollTo({
+          top: top + (span * (index + 0.5)) / nodes.length,
+          behavior: reduce ? "auto" : "smooth",
+        });
+        return;
+      }
+      setActive(index);
+      setHeld(true);
+    },
+    [pinned, reduce, nodes.length],
+  );
 
   const onKeyNav = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key !== "ArrowRight" && e.key !== "ArrowLeft" && e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
       e.preventDefault();
       const dir = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : -1;
+      const next = (active + dir + nodes.length) % nodes.length;
+      if (pinned) {
+        select(next);
+        return;
+      }
       setHeld(true);
-      setActive((i) => (i + dir + nodes.length) % nodes.length);
+      setActive(next);
     },
-    [nodes.length],
+    [active, nodes.length, pinned, select],
   );
 
   const step = nodes[active];
   const progress = last > 0 ? active / last : 1;
 
-  return (
-    <div className="pf" data-fit={fit ? "on" : undefined} onPointerLeave={() => setHeld(false)}>
+  const flow = (
+    <div
+      className="pf"
+      data-fit={fit ? "on" : undefined}
+      data-pinned={pinned ? "on" : undefined}
+      onPointerLeave={() => setHeld(false)}
+    >
       {/* ---------------- conduit: wide layout ---------------- */}
       <div className="pf__stage">
         <svg
@@ -280,8 +351,8 @@ export function ProcessFlow({ steps, fit = false }: { steps: ProcessStep[]; fit?
                 top: `${(POINTS[i].y / VB_H) * 100}%`,
               }}
               onClick={() => select(i)}
-              onPointerEnter={() => select(i)}
-              onFocus={() => select(i)}
+              onPointerEnter={pinned ? undefined : () => select(i)}
+              onFocus={pinned ? undefined : () => select(i)}
             >
               <span className="pf__node-disc" aria-hidden>
                 <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
@@ -384,6 +455,18 @@ export function ProcessFlow({ steps, fit = false }: { steps: ProcessStep[]; fit?
           </motion.div>
         </AnimatePresence>
       </div>
+    </div>
+  );
+
+  if (!pinned) return flow;
+
+  return (
+    <div
+      ref={trackRef}
+      className="pf-track"
+      style={{ ["--pf-stages" as string]: nodes.length }}
+    >
+      <div className="pf-track__pin">{flow}</div>
     </div>
   );
 }

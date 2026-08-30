@@ -67,7 +67,7 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
                 </div>
               </div>
             </header>
-            <ProcessFlow steps={processSteps} fit />
+            <ProcessFlow steps={processSteps} fit pinned />
           </div>
         )}
       </div>
