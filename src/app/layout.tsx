@@ -94,7 +94,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         mono.variable,
       ].join(" ")}
     >
-      <body>
+      <body suppressHydrationWarning>
         <JsonLd />
         <ProgressSync />
         <Navbar />

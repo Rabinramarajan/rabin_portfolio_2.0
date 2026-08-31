@@ -1,7 +1,7 @@
 export type AvailabilityStatus = "available" | "limited" | "unavailable";
 
 export interface SocialLink { id: "github" | "linkedin" | "email" | "website"; label: string; href: string; }
-export interface NavItem { href: string; label: string; sectionId?: string; }
+export interface NavItem { href: string; label: string; sectionId?: string; desktopOnly?: boolean; }
 /** Which glyph renders beside a metric. Maps to an icon in the consuming component. */
 export type MetricIcon = "projects" | "clients" | "experience" | "commitment";
 export interface Metric {
