@@ -9,6 +9,7 @@ import { Magnetic } from "@/components/motion";
 import { useHydrated } from "@/lib/useHydrated";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { ScrollVideoPlayer } from "@/components/ScrollVideoPlayer";
+import { trackCtaClick } from "@/lib/analytics";
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -149,11 +150,22 @@ export function Hero() {
             transition={t(0.58)}
           >
             <Magnetic strength={8}>
-              <Btn href={hero.primaryCta.href} data-cursor="button" data-cursor-label="LET'S GO →">
+              <Btn
+                href={hero.primaryCta.href}
+                data-cursor="button"
+                data-cursor-label="LET'S GO →"
+                onClick={() => trackCtaClick(hero.primaryCta.label, 'hero_primary')}
+              >
                 {hero.primaryCta.label}
               </Btn>
             </Magnetic>
-            <Btn href={hero.secondaryCta.href} variant="line" data-cursor="link" data-cursor-label="VIEW WORK →">
+            <Btn
+              href={hero.secondaryCta.href}
+              variant="line"
+              data-cursor="link"
+              data-cursor-label="VIEW WORK →"
+              onClick={() => trackCtaClick(hero.secondaryCta.label, 'hero_secondary')}
+            >
               {hero.secondaryCta.label}
             </Btn>
           </motion.div>

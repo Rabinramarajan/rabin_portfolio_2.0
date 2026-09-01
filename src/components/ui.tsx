@@ -17,6 +17,7 @@ type BtnProps = {
   className?: string;
   "data-cursor"?: string;
   "data-cursor-label"?: string;
+  onClick?: () => void;
 };
 
 export function Btn({ href, children, variant = "solid", className, ...rest }: BtnProps) {

@@ -5,6 +5,8 @@ import { ProjectCover } from "@/components/ProjectCover";
 import { CaseChapter } from "@/components/work/CaseChapter";
 import { CaseGallery } from "@/components/work/CaseGallery";
 import { FeatureRail } from "@/components/work/FeatureRail";
+import { CaseStudyTracker, NextProjectLink } from "@/components/work/CaseStudyTracker";
+import { trackEvent } from "@/lib/analytics";
 import { ShareCase } from "@/components/work/ShareCase";
 import {
   IconBolt,
@@ -123,6 +125,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   return (
     <article className="wd">
+      <CaseStudyTracker projectTitle={project.title} projectSlug={project.slug} />
       <BreadcrumbJsonLd
         trail={[
           { name: "Home", path: "/" },
@@ -415,10 +418,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               <span />
             )}
             {next && next.slug !== project.slug ? (
-              <Link className="wd__pager-link wd__pager-link--next" href={"/work/" + next.slug} rel="next">
+              <NextProjectLink href={"/work/" + next.slug} projectTitle={next.title}>
                 <span className="wd__pager-k">Next project</span>
                 <span className="wd__pager-title">{next.title}</span>
-              </Link>
+              </NextProjectLink>
             ) : (
               <span />
             )}
@@ -431,7 +434,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </h2>
           <p className="wd__cta-body">Let's turn your ideas into production-ready products.</p>
           <div className="wd__cta-actions">
-            <Link className="wd__cta-btn wd__cta-btn--solid" href="/contact">
+            <Link
+              className="wd__cta-btn wd__cta-btn--solid"
+              href="/contact"
+            >
               Start a Conversation
             </Link>
             <Link className="wd__cta-btn" href="/work">

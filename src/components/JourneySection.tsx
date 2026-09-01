@@ -8,6 +8,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { CareerTimeline } from "@/components/experience/CareerTimeline";
 import { StatPills } from "@/components/experience/StatPills";
 import { accentIndex, journeyArt, sections, titleLines } from "@/content/sections";
+import { trackCtaClick } from "@/lib/analytics";
 
 /**
  * JOURNEY — the career timeline, on the home page.
@@ -70,7 +71,11 @@ export function JourneySection() {
           transition={{ duration: reduce ? duration.micro : duration.section, ease }}
         >
           <p className="jsec__cta-text">Looking for someone who can ship production software?</p>
-          <a href="/contact" className="jsec__cta-link">
+          <a
+            href="/contact"
+            className="jsec__cta-link"
+            onClick={() => trackCtaClick("Let's Talk", 'experience_section')}
+          >
             Let's Talk
             <svg viewBox="0 0 20 12" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
               <path d="M0 6h17M12.5 1.5 17 6l-4.5 4.5" />
