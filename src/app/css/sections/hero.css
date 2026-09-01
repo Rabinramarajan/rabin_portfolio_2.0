@@ -18,15 +18,15 @@
   }
 }
 /* Constrained-height laptops (14", 15.6"): reduce scroll track to prevent overlap */
-@media (min-width: 768px) and (max-height: 900px) {
+@media (min-width: 768px) and (max-height: 950px) {
   .chero-track {
     height: 280vh;
   }
 }
-/* Very small height (portrait orientation or cramped desktop): further reduce */
+/* 15.6" HD laptops (768px height): further reduce for tight height */
 @media (min-width: 768px) and (max-height: 768px) {
   .chero-track {
-    height: 240vh;
+    height: 220vh;
   }
 }
 /* Broad: 14"-15.6" laptops - initial responsive tweaks */
@@ -104,81 +104,178 @@
     display: none;
   }
 }
-/* Extreme: 15.6" HD & 14" laptops (768px height) - focused, centered layout */
-@media (min-width: 960px) and (max-height: 768px) {
+/* 15.6" laptops - real browser viewport height lands ~700-950px once chrome is
+   subtracted, so this block owns the whole laptop band. Declared last among the
+   height queries so it wins over the 860/800 blocks above. */
+@media (min-width: 960px) and (max-height: 950px) {
   .chero {
     overflow: visible !important;
     min-height: auto !important;
   }
   .chero__shell {
-    grid-template-columns: 1fr !important;
-    padding-top: calc(var(--header-h) + 1.2rem) !important;
-    padding-bottom: 2rem !important;
-    gap: 1.5rem !important;
-    align-items: start !important;
-    justify-content: center !important;
-    max-width: 600px !important;
-    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-rows: 1fr !important;
+    height: 100% !important;
+    padding-top: calc(var(--header-h) + 0.75rem) !important;
+    padding-bottom: 2.25rem !important;
+    gap: 2.5rem !important;
+    align-items: center !important;
+    justify-content: space-between !important;
   }
+  /* Text content - left column, vertically centred */
+  .chero__copy {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-self: center !important;
+    width: auto !important;
+    max-width: 40rem !important;
+  }
+  /* Title - dominant focal point */
   .chero__title {
-    font-size: clamp(2rem, 0.4rem + 4vw, 3.2rem) !important;
-    line-height: 0.95 !important;
-    margin-bottom: 0.75rem !important;
-    text-align: center !important;
+    font-size: clamp(3rem, 0.4rem + 5.4vw, 4.6rem) !important;
+    line-height: 0.94 !important;
+    margin-bottom: 0.5rem !important;
+    text-align: left !important;
     max-width: 12ch !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+  }
+  /* Supporting details */
+  .chero__disciplines {
+    margin-top: 0.3rem !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 0.72rem !important;
+    gap: 0.55rem !important;
+    letter-spacing: 0.2em !important;
+    justify-content: flex-start !important;
+    color: var(--color-text-muted) !important;
+    opacity: 0.85 !important;
   }
   .chero__lede {
-    font-size: 0.95rem !important;
-    margin-top: 0 !important;
+    font-size: 1.05rem !important;
+    margin-top: 0.55rem !important;
     line-height: 1.6 !important;
-    max-width: 38ch !important;
-    text-align: center !important;
-    margin-bottom: 1.5rem !important;
+    max-width: 40ch !important;
+    text-align: left !important;
+    margin-bottom: 1.25rem !important;
     color: var(--color-text-muted) !important;
   }
-  .chero__disciplines {
-    margin-top: 0 !important;
-    margin-bottom: 0.75rem !important;
-    font-size: 0.65rem !important;
-    gap: 0.4rem !important;
-    justify-content: center !important;
-    color: var(--color-text-muted) !important;
-  }
+  /* CTA Buttons */
   .chero__actions {
     margin-top: 0 !important;
-    margin-bottom: 2rem !important;
+    margin-bottom: 0 !important;
     gap: 1rem !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+    display: flex !important;
   }
+  /* Primary button */
+  .chero__actions a:first-child,
+  .chero__actions button:first-child {
+    min-height: 52px !important;
+    padding: 15px 40px !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    border-radius: 6px !important;
+    background: var(--color-accent) !important;
+    color: #000 !important;
+    box-shadow: 0 4px 16px rgba(201, 242, 77, 0.35) !important;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+  }
+  .chero__actions a:first-child:hover,
+  .chero__actions button:first-child:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 24px rgba(201, 242, 77, 0.5) !important;
+  }
+  .chero__actions a:first-child:active,
+  .chero__actions button:first-child:active {
+    transform: translateY(0) !important;
+  }
+  /* Secondary button */
+  .chero__actions a:nth-child(2),
+  .chero__actions button:nth-child(2) {
+    min-height: 52px !important;
+    padding: 15px 34px !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: var(--color-text) !important;
+    border: 1.2px solid rgba(255, 255, 255, 0.3) !important;
+    background: transparent !important;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+  }
+  .chero__actions a:nth-child(2):hover,
+  .chero__actions button:nth-child(2):hover {
+    border-color: rgba(255, 255, 255, 0.55) !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+  }
+  /* Focus states for keyboard navigation (WCAG accessibility) */
+  .chero__actions a:first-child:focus-visible,
+  .chero__actions button:first-child:focus-visible {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 2px !important;
+  }
+  .chero__actions a:nth-child(2):focus-visible,
+  .chero__actions button:nth-child(2):focus-visible {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 2px !important;
+  }
+  /* Quote - right column, bottom aligned to the button baseline */
   .chero__quote {
-    margin-top: 1rem !important;
-    text-align: center !important;
-    max-width: 24rem !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+    max-width: 18rem !important;
     opacity: 0.9 !important;
+    align-self: end !important;
+    justify-self: end !important;
   }
   .chero__quote-mark {
-    font-size: 1.2rem !important;
+    display: block !important;
+    font-size: 1.6rem !important;
     line-height: 0.4 !important;
+    color: var(--color-accent) !important;
+    opacity: 0.7 !important;
   }
   .chero__quote blockquote {
-    font-size: 0.8rem !important;
-    letter-spacing: 0.15em !important;
-    gap: 0.2rem !important;
-    margin-top: 0.4rem !important;
+    font-size: 0.86rem !important;
+    letter-spacing: 0.14em !important;
+    gap: 0.3rem !important;
+    margin-top: 0.85rem !important;
+    color: var(--color-text) !important;
+    line-height: 1.5 !important;
   }
   .chero__quote-rule {
-    margin: 0.6rem auto !important;
+    display: block !important;
+    margin: 0.85rem 0 0.6rem !important;
+    width: 4rem !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, var(--color-accent), transparent) !important;
+    opacity: 1 !important;
   }
   .chero__signature {
-    font-size: 1.3rem !important;
-    margin-top: 0.4rem !important;
+    font-size: 1.6rem !important;
+    margin-top: 0 !important;
+    color: var(--color-accent) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em !important;
   }
   .chero__status {
     margin-bottom: 1rem !important;
-    font-size: 0.7rem !important;
+    font-size: 0.78rem !important;
+    padding: 0.5rem 1.1rem !important;
     display: inline-flex !important;
+  }
+  .chero__status-label {
+    font-size: 0.78rem !important;
   }
 }
 /* Desktop-width default: apply after max-height constraints so they override */
@@ -701,9 +798,41 @@
     margin: 0 auto;
   }
 }
-/* Hide profile image on 768px constrained height for focus */
-@media (min-width: 960px) and (max-height: 768px) {
+/* 15.6" laptop: professional layout with UI/UX standards */
+@media (min-width: 960px) and (max-height: 950px) {
+  .hero {
+    padding: calc(var(--header-h) + 0.5rem) 0 0.75rem;
+  }
+  .hero__grid {
+    grid-template-columns: 1.3fr 0.65fr;
+    gap: 1.75rem;
+    align-items: center;
+  }
+  .hero__title {
+    font-size: clamp(1.85rem, 0.35rem + 3.2vw, 2.8rem);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .hero__lede {
+    font-size: 0.84rem;
+    margin-top: 0.4rem;
+    line-height: 1.55;
+    max-width: 34ch;
+    margin-bottom: 0.75rem;
+  }
+  .hero__disciplines {
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.58rem;
+    gap: 0.4rem;
+  }
+  .hero__actions {
+    margin-top: 0 !important;
+    gap: 0.75rem !important;
+  }
   .hero-visual {
-    display: none !important;
+    display: block !important;
+    max-width: 280px;
+    flex-shrink: 0;
   }
 }
