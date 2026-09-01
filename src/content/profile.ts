@@ -100,12 +100,12 @@ export const hero: HeroContent = {
   name: profile.name,
   role: profile.role,
   availability: profile.availability.label,
-  headline: "I engineer digital products that scale, perform and feel effortless.",
-  headlineLines: ["I engineer digital products", "that scale, perform", "and feel effortless."],
+  headline: "I Engineer High-Performance Digital Products.",
+  headlineLines: ["I Engineer High-Performance", "Digital Products built", "for real users."],
   displayLines: [
-    { text: "I Build" },
-    { text: "Digital", accent: true },
-    { text: "Experiences", accent: true },
+    { text: "I Engineer" },
+    { text: "High-Performance", accent: true },
+    { text: "Digital Products", accent: true },
   ],
   disciplines: ["Frontend Engineer", "Angular Specialist", "Product Engineering"],
   quote: {
@@ -114,14 +114,14 @@ export const hero: HeroContent = {
   },
   reel: { src: media("hero/home-reel.mp4"), poster: media("hero/home-poster.webp") },
   description:
-    "Frontend engineer specializing in Angular and modern web application architecture, with a strong focus on performance, usability and product quality.",
-  primaryCta: { label: "Let's Work Together", href: "/contact" },
-  secondaryCta: { label: "View Selected Work", href: "/work" },
+    "Frontend Software Engineer specializing in Angular, TypeScript & modern web architecture — building scalable products used by real users.",
+  primaryCta: { label: "View My Work", href: "/work" },
+  secondaryCta: { label: "Hire / Let's Talk", href: "/contact" },
   metadata: [
-    { label: "Role", value: profile.role },
-    { label: "Location", value: profile.locationShort },
     { label: "Experience", value: profile.yearsExperienceLabel + " years" },
-    { label: "Availability", value: "Select projects" },
+    { label: "Projects", value: credentials.projects },
+    { label: "Active Users", value: "10K+" },
+    { label: "Clients", value: credentials.clients },
   ],
   portrait: { src: media("profile/rabin-hero.webp"), alt: "Portrait of Rabin R", width: 640, height: 800 },
   midground: {

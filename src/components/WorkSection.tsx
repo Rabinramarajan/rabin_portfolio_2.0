@@ -125,6 +125,21 @@ function WorkCard({
           <ItemHeading className="wcard__title">{p.title}</ItemHeading>
           <span className="wcard__cat">{p.category}</span>
           <span className="wcard__copy">{p.overview}</span>
+
+          {p.metrics && p.metrics.length > 0 && (
+            <span className="wcard__metrics">
+              <span className="wcard__metrics-label">Impact</span>
+              <span className="wcard__metrics-list">
+                {p.metrics.map((m, idx) => (
+                  <span key={idx} className="wcard__metric">
+                    <span className="wcard__metric-value">{m.value}</span>
+                    <span className="wcard__metric-label">{m.label}</span>
+                  </span>
+                ))}
+              </span>
+            </span>
+          )}
+
           <span className="wcard__cta">
             <span className="wcard__cta-dot" aria-hidden />
             <span>View Case Study</span>

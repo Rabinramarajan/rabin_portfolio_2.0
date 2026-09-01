@@ -304,6 +304,42 @@
   transform: translateX(5px);
 }
 
+/* Impact metrics display */
+.wcard__metrics {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--wx-line);
+}
+.wcard__metrics-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.wcard__metrics-list {
+  display: grid;
+  gap: 0.4rem;
+}
+.wcard__metric {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.wcard__metric-value {
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+.wcard__metric-label {
+  color: var(--color-text-muted);
+}
+
 /* --- responsive -------------------------------------------- */
 
 @media (max-width: 1100px) {

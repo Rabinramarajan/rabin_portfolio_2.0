@@ -77,9 +77,9 @@ const COPY: Record<SectionId, IntroCopy> = {
   },
   work: {
     label: "Selected Work",
-    title: [{ text: "Work that" }, { text: "makes an", newline: true }, { text: "impact.", accent: true }],
+    title: [{ text: "Production systems." }, { text: "Real users.", newline: true }, { text: "Measurable outcomes.", accent: true }],
     lede:
-      "A selection of digital products I've engineered for startups and businesses across industries.",
+      "Government platforms serving 10K+ users. Enterprise systems powering real workflows. Every project with metrics that prove impact.",
   },
   services: {
     label: "Our Services",
