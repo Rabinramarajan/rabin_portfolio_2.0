@@ -17,6 +17,18 @@
     height: 400vh;
   }
 }
+/* Constrained-height laptops (14", 15.6"): reduce scroll track to prevent overlap */
+@media (min-width: 768px) and (max-height: 900px) {
+  .chero-track {
+    height: 280vh;
+  }
+}
+/* Very small height (portrait orientation or cramped desktop): further reduce */
+@media (min-width: 768px) and (max-height: 768px) {
+  .chero-track {
+    height: 240vh;
+  }
+}
 
 .chero {
   position: relative;
