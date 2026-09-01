@@ -16,6 +16,53 @@
 .jsec .ctl {
   margin-top: clamp(1.25rem, 2.5vw, 2rem);
 }
+.jsec__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding-top: clamp(2rem, 5vw, 3rem);
+  border-top: 1px solid var(--color-line);
+}
+.jsec__cta-text {
+  margin: 0;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--color-text);
+  max-width: 24ch;
+}
+.jsec__cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-ui) var(--ease-out-quart),
+    border-color var(--duration-ui) var(--ease-out-quart);
+}
+.jsec__cta-link svg {
+  width: 16px;
+  height: 10px;
+  transition: transform var(--duration-ui) var(--ease-out-quart);
+}
+.jsec__cta-link:hover {
+  background: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  border-color: var(--color-accent);
+}
+.jsec__cta-link:hover svg {
+  transform: translateX(3px);
+}
 
 /* ---------- section frame ---------- */
 .xsec {

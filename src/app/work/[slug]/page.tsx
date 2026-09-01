@@ -427,15 +427,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
         <section className="wd__cta" aria-labelledby="wd-cta">
           <h2 className="wd__cta-title" id="wd-cta">
-            Have a similar challenge?
+            Want to build something similar?
           </h2>
-          <p className="wd__cta-body">Let&apos;s build something production-ready.</p>
+          <p className="wd__cta-body">Let's turn your ideas into production-ready products.</p>
           <div className="wd__cta-actions">
             <Link className="wd__cta-btn wd__cta-btn--solid" href="/contact">
-              Start a conversation
+              Start a Conversation
             </Link>
             <Link className="wd__cta-btn" href="/work">
-              View all work
+              View All Work
             </Link>
           </div>
         </section>

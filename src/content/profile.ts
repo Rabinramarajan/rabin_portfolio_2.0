@@ -48,11 +48,9 @@ export const credentials: Credentials = {
 };
 
 export const navigation: NavItem[] = [
-  { href: "/services", label: "Service" },
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
-  { href: "/#skills", label: "Skills", sectionId: "skills" },
-  { href: "/#process", label: "Process", sectionId: "process" },
+  { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
 ];
 

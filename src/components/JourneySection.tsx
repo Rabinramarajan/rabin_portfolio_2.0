@@ -62,6 +62,22 @@ export function JourneySection() {
 
         <CareerTimeline limit={4} />
 
+        <motion.div
+          className="jsec__cta"
+          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: reduce ? duration.micro : duration.section, ease }}
+        >
+          <p className="jsec__cta-text">Looking for someone who can ship production software?</p>
+          <a href="/contact" className="jsec__cta-link">
+            Let's Talk
+            <svg viewBox="0 0 20 12" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+              <path d="M0 6h17M12.5 1.5 17 6l-4.5 4.5" />
+            </svg>
+          </a>
+        </motion.div>
+
       </div>
     </section>
   );
