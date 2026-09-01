@@ -2,6 +2,20 @@
    RABIN R — DESIGN SYSTEM
    Near-black / warm white / single Rabin lime accent.
    Unified typography: Inter (display, body, UI) · JetBrains Mono (code)
+
+   DESIGN SYSTEM GUIDELINES:
+   ✓ Type Scale: 8 distinct sizes (--type-xs through --type-3xl)
+   ✓ Border Radii: 6 tokens (--radius-xs, sm, md, lg, xl, full)
+   ✓ Spacing Scale: 8dp-based system (--space-2 through --space-80)
+   ✓ Button Variants: 4 core (solid, line, pill, pill-solid)
+
+   When adding components:
+   1. Use ONLY tokens from --type-* for font sizes
+   2. Use ONLY tokens from --radius-* for border-radius
+   3. Use ONLY tokens from --space-* for margins/padding
+   4. Consolidate button styles to 4 core variants
+
+   This ensures visual consistency across the entire site.
    ============================================================ */
 
 :root {
@@ -101,10 +115,13 @@
   --section-y: clamp(1.75rem, 1rem + 2.2vw, 3.25rem);
   --header-h: 72px;
 
-  /* --- radius --- */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  /* --- radius scale (max 6 values for design consistency) --- */
+  --radius-xs: 2px;       /* tight corners */
+  --radius-sm: 6px;       /* buttons, small cards */
+  --radius-md: 12px;      /* cards, modals */
+  --radius-lg: 16px;      /* large surfaces */
+  --radius-xl: 20px;      /* extra spacious cards */
+  --radius-full: 999px;   /* pills, circles */
 
   /* --- motion --- */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);

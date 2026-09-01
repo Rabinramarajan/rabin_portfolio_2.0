@@ -844,27 +844,6 @@
   text-transform: uppercase;
   color: var(--color-text-faint);
 }
-.cshare__btn {
-  padding: var(--space-8) var(--space-16);
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: transparent;
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition:
-    border-color var(--duration-ui) var(--ease-out-quart),
-    color var(--duration-ui) var(--ease-out-quart);
-}
-.cshare__btn:hover,
-.cshare__btn:focus-visible {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-.cshare__btn.is-done {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
 
 /* --- related --- */
 .wd__related-wrap {
@@ -991,27 +970,6 @@
   justify-content: center;
   gap: var(--space-12);
   margin-top: var(--space-24);
-}
-.wd__cta-btn {
-  padding: var(--space-12) var(--space-24);
-  border: 1px solid var(--color-line-strong);
-  border-radius: 999px;
-  font-size: var(--text-sm);
-  color: var(--color-text);
-  transition:
-    border-color var(--duration-ui) var(--ease-out-quart),
-    background var(--duration-ui) var(--ease-out-quart);
-}
-.wd__cta-btn--solid {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: var(--color-accent-contrast);
-}
-.wd__cta-btn:hover {
-  border-color: var(--color-accent);
-}
-.wd__cta-btn--solid:hover {
-  background: var(--color-accent-dim);
 }
 
 /* --- the accordion: below the spread breakpoint --- */

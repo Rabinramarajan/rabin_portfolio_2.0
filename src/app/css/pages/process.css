@@ -59,7 +59,7 @@
 }
 .pprin__kicker {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-text);
@@ -106,7 +106,7 @@
 .pprin__cell {
   --pprin-gutter: clamp(1rem, 1.6vw, 1.35rem);
   position: relative;
-  padding: clamp(1.1rem, 2vw, 1.4rem) var(--pprin-gutter) clamp(1.25rem, 2.2vw, 1.6rem) 0;
+  padding: 1.25rem var(--pprin-gutter) 1.5rem 0;
   border-top: 1px solid var(--color-line);
 }
 @media (min-width: 640px) {
@@ -155,7 +155,7 @@
 }
 .pprin__icon {
   display: block;
-  margin-top: 0.9rem;
+  margin-top: 1rem;
   color: var(--color-accent-dim);
   transition:
     color var(--duration-ui) var(--ease-out-expo),
@@ -171,7 +171,7 @@
   filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent) 45%, transparent));
 }
 .pprin__title {
-  margin-top: 0.8rem;
+  margin-top: 1rem;
   font-family: var(--font-display);
   font-size: var(--text-base);
   font-weight: 560;

@@ -172,9 +172,45 @@
 
 /* ---------- reduced motion ---------- */
 
+/* Dimmed state for unrelated nodes/connections during exploration */
+.eco__node-item--dimmed {
+  opacity: 0.15;
+  transition: opacity 200ms ease-out;
+}
+
+.eco__node-strand--dimmed {
+  opacity: 0.08;
+  stroke-width: 0.6px;
+  transition: opacity 200ms ease-out, stroke-width 200ms ease-out;
+}
+
+.eco__branch--dimmed {
+  opacity: 0.2;
+  transition: opacity 200ms ease-out;
+}
+
+/* Highlighted connections show more clearly */
+.eco__node-item--selected,
+.eco__node-item--related {
+  opacity: 1;
+  transition: opacity 200ms ease-out;
+}
+
+.eco__node-strand--selected {
+  opacity: 0.8;
+  stroke-width: 1.2px;
+  transition: opacity 200ms ease-out, stroke-width 200ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .eco__node,
   .eco__pill {
+    transition: none;
+  }
+
+  .eco__node-item--dimmed,
+  .eco__node-strand--dimmed,
+  .eco__branch--dimmed {
     transition: none;
   }
 }

@@ -202,6 +202,8 @@ export function ServicesHorizontalScroll({
           <div ref={progressRef} className={styles.progressBar} />
         </div>
 
+        <span className={styles.scrollHint} aria-hidden>Scroll to explore</span>
+
         <p className={styles.counter} aria-hidden>
           <span className={styles.counterCurrent}>{pad(activeIndex + 1)}</span>
           <span>/</span>

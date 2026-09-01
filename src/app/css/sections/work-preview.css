@@ -144,7 +144,7 @@
   display: flex;
   width: 100%;
   border: 1px solid var(--wx-line);
-  border-radius: 14px;
+  border-radius: var(--radius-xl);
   background: var(--wx-panel);
   overflow: hidden;
   transition:
@@ -315,10 +315,11 @@
 .wcard__metrics-label {
   display: block;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-accent);
+  margin-bottom: 0.35rem;
 }
 .wcard__metrics-list {
   display: grid;
@@ -328,7 +329,7 @@
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   line-height: 1.4;
 }
 .wcard__metric-value {

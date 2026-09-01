@@ -191,53 +191,6 @@
   margin: 0;
 }
 
-.abt-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.7rem;
-  flex: 0 0 auto;
-  white-space: nowrap;
-  min-height: 48px;
-  padding: 0.75rem 1.45rem;
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  position: relative;
-  z-index: 0;
-  transition:
-    background var(--duration-ui) var(--ease-out-expo),
-    color var(--duration-ui) var(--ease-out-expo),
-    border-color var(--duration-ui) var(--ease-out-expo),
-    box-shadow var(--duration-ui) var(--ease-out-expo);
-}
-.abt-btn:active {
-  filter: brightness(0.96);
-}
-.abt-btn--solid {
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-  box-shadow: 0 10px 30px -14px rgb(201 242 77 / 65%);
-}
-.abt-btn--solid:hover {
-  background: #d8fb66;
-  box-shadow: 0 16px 38px -14px rgb(201 242 77 / 80%);
-}
-.abt-btn--line {
-  border: 1px solid var(--color-line-strong);
-  color: var(--color-text);
-}
-.abt-btn--line:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-.abt-btn__arrow {
-  transition: transform var(--duration-ui) var(--ease-out-expo);
-}
-.abt-btn--line:hover .abt-btn__arrow {
-  transform: translateX(5px);
-}
 
 /* Metrics rail — one row, equal cells, anchors the left column */
 .abt__stats {

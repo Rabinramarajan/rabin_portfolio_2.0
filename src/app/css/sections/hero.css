@@ -217,7 +217,6 @@
   line-height: 0.9;
   letter-spacing: -0.03em;
   font-weight: 800;
-  text-transform: uppercase;
   max-width: 12ch;
 }
 .chero__line {
@@ -380,7 +379,7 @@
   align-items: center;
   gap: 0.6rem;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-accent);
@@ -396,6 +395,7 @@
    label sits optically centred between the dot and the pill's right edge */
 .chero__status-label {
   margin-right: -0.2em;
+  font-size: 0.75rem;
 }
 .chero__pulse {
   display: inline-block;
