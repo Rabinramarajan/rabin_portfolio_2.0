@@ -29,30 +29,124 @@
     height: 240vh;
   }
 }
-/* Ultra-constrained height (15.6" and 14" laptops in landscape): stack layout vertically */
-@media (min-width: 960px) and (max-height: 750px) {
-  .chero__shell {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    align-items: start;
-  }
-  .chero__quote {
-    justify-self: start;
-  }
+/* Broad: 14"-15.6" laptops - initial responsive tweaks */
+@media (min-width: 960px) and (max-height: 860px) {
   .chero__title {
-    font-size: clamp(2rem, 0.4rem + 4.5vw, 3.8rem);
-    max-width: 10ch;
+    font-size: clamp(2.2rem, 0.4rem + 5vw, 4.2rem);
+    max-width: 11ch;
   }
   .chero__lede {
-    font-size: 0.9rem;
-    margin-top: 0.65rem;
+    font-size: var(--text-base);
+    margin-top: 0.7rem;
   }
   .chero__disciplines {
     margin-top: 0.6rem;
-    font-size: 0.6rem;
+    font-size: 0.63rem;
   }
   .chero__actions {
     margin-top: 0.85rem;
+    gap: 0.65rem;
+  }
+  .chero__shell {
+    gap: 1.5rem;
+    padding-top: calc(var(--header-h) + 0.5rem);
+    padding-bottom: 1rem;
+  }
+  .chero__status {
+    margin-bottom: 0.5rem;
+    font-size: 0.68rem;
+  }
+  .chero__quote {
+    max-width: 16rem;
+  }
+}
+/* More constrained: 14"-15.6" laptops - stack layout */
+@media (min-width: 960px) and (max-height: 800px) {
+  .chero__shell {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    padding-top: calc(var(--header-h) + 0.4rem);
+    padding-bottom: 0.75rem;
+  }
+  .chero__quote {
+    justify-self: start;
+    max-width: 15rem;
+  }
+  .chero__title {
+    font-size: clamp(1.7rem, 0.25rem + 3.8vw, 3rem);
+    max-width: 9ch;
+    line-height: 0.83;
+    margin-bottom: 0.3rem;
+  }
+  .chero__lede {
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+    line-height: 1.45;
+  }
+  .chero__disciplines {
+    margin-top: 0.35rem;
+    font-size: 0.52rem;
+    gap: 0.35rem;
+  }
+  .chero__dot {
+    width: 2px;
+    height: 2px;
+  }
+  .chero__actions {
+    margin-top: 0.6rem;
+    gap: 0.55rem;
+  }
+  .chero__status {
+    display: none;
+  }
+  .chero__scroll {
+    display: none;
+  }
+}
+/* Extreme: 15.6" HD & 14" laptops (768px height) - allow overflow for scrolling */
+@media (min-width: 960px) and (max-height: 768px) {
+  .chero {
+    overflow: visible !important;
+    min-height: auto !important;
+  }
+  .chero__shell {
+    grid-template-columns: 1fr !important;
+    padding-top: calc(var(--header-h) + 0.8rem) !important;
+    padding-bottom: 1.5rem !important;
+    gap: 0.6rem !important;
+    align-items: start !important;
+  }
+  .chero__title {
+    font-size: clamp(1.8rem, 0.3rem + 3.5vw, 3rem) !important;
+    line-height: 0.85 !important;
+    margin-bottom: 0.3rem !important;
+  }
+  .chero__lede {
+    font-size: 0.9rem !important;
+    margin-top: 0.4rem !important;
+    line-height: 1.4 !important;
+  }
+  .chero__disciplines {
+    margin-top: 0.4rem !important;
+    font-size: 0.58rem !important;
+    gap: 0.3rem !important;
+  }
+  .chero__actions {
+    margin-top: 0.6rem !important;
+    gap: 0.65rem !important;
+  }
+  .chero__quote {
+    margin-top: 0.8rem !important;
+    font-size: 0.7rem !important;
+  }
+}
+/* Desktop-width default: apply after max-height constraints so they override */
+@media (min-width: 960px) {
+  .chero__shell {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 3rem;
   }
 }
 
@@ -204,46 +298,6 @@
   padding-top: calc(var(--header-h) + clamp(1rem, 3vh, 2.25rem));
   padding-bottom: clamp(3.5rem, 7vh, 5.5rem);
   will-change: transform;
-}
-@media (min-width: 960px) {
-  .chero__shell {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 3rem;
-  }
-}
-/* 14"/16" laptops: ~700-800px of usable height. The title's viewport-width
-   clamp alone overshoots there, so trim the type and the vertical rhythm
-   against height rather than width. */
-@media (min-width: 960px) and (max-height: 860px) {
-  .chero__title {
-    font-size: clamp(2.3rem, 0.5rem + 5.2vw, 4.6rem);
-    max-width: 11ch;
-  }
-  .chero__lede {
-    font-size: var(--text-base);
-    margin-top: 0.85rem;
-  }
-  .chero__disciplines {
-    margin-top: 0.75rem;
-    font-size: 0.65rem;
-  }
-  .chero__actions {
-    margin-top: 1rem;
-    gap: 0.75rem;
-  }
-  .chero__shell {
-    gap: 2rem;
-    padding-top: calc(var(--header-h) + clamp(0.75rem, 2vh, 1.5rem));
-    padding-bottom: clamp(2rem, 3.5vh, 2.5rem);
-  }
-  .chero__status {
-    margin-bottom: 0.65rem;
-    font-size: 0.7rem;
-  }
-  .chero__quote {
-    max-width: 18rem;
-  }
 }
 
 .chero__title {
@@ -490,24 +544,26 @@
 @media (min-width: 960px) and (max-height: 860px) {
   .hero__grid {
     grid-template-columns: 1.35fr 0.65fr;
-    gap: 2rem;
+    gap: 1.75rem;
     align-items: center;
+    padding-bottom: 1.5rem;
   }
   .hero-visual {
-    max-width: 380px;
+    max-width: 360px;
   }
 }
 /* Ultra-constrained: stack vertically */
-@media (min-width: 960px) and (max-height: 750px) {
+@media (min-width: 960px) and (max-height: 800px) {
   .hero__grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: start;
+    padding-bottom: 1rem;
   }
   .hero-visual {
     order: -1;
-    max-width: 300px;
-    margin: 0 auto 1rem;
+    max-width: 280px;
+    margin: 0 auto 0.75rem;
   }
 }
 .hero__status {
