@@ -142,6 +142,3 @@ export function media(key: MediaKey): string {
 export function blobPath(key: string): string {
   return `${BLOB_ROOT}/${key}`;
 }
-
-/** True once the site is reading from Blob rather than from /public/media. */
-export const isBlobConfigured = BLOB_BASE_URL.length > 0;

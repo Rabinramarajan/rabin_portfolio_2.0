@@ -11,7 +11,7 @@ import { useMotionTier } from "@/lib/motion-tier";
  * The ref is a stable callback ref, so `idle → active → complete` is the only
  * source of truth for the reveal.
  */
-export function useViewportRegister<T extends HTMLElement = HTMLDivElement>(
+function useViewportRegister<T extends HTMLElement = HTMLDivElement>(
   options: RegisterOptions = {},
 ): { ref: (node: T | null) => void; phase: Phase } {
   const [phase, setPhase] = useState<Phase>("idle");

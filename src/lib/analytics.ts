@@ -24,6 +24,12 @@ export interface EventParams {
   [key: string]: string | number | boolean;
 }
 
+declare global {
+  interface Window {
+    gtag?: (command: "event", eventName: string, params?: EventParams) => void;
+  }
+}
+
 /**
  * Track a conversion event with Google Analytics.
  * Falls back gracefully if GA is not available.
@@ -32,24 +38,12 @@ export function trackEvent(eventName: ConversionEvent, params?: EventParams) {
   if (typeof window === 'undefined') return;
 
   // Use gtag if available (from Google Analytics script)
-  if ((window as any).gtag) {
-    (window as any).gtag('event', eventName, params);
-  }
+  window.gtag?.('event', eventName, params);
 
   // Log to console in development
   if (process.env.NODE_ENV === 'development') {
     console.log(`📊 Analytics: ${eventName}`, params);
   }
-}
-
-/**
- * Track when a user views a section (for funnel analysis)
- */
-export function trackSectionView(sectionId: string) {
-  trackEvent('view_work_section', {
-    section: sectionId,
-    timestamp: new Date().toISOString(),
-  });
 }
 
 /**
@@ -70,32 +64,6 @@ export function trackCaseStudyView(projectTitle: string, projectSlug: string) {
   trackEvent('view_case_study', {
     project_title: projectTitle,
     project_slug: projectSlug,
-    timestamp: new Date().toISOString(),
-  });
-}
-
-/**
- * Track contact form interactions
- */
-export function trackContactFormStart() {
-  trackEvent('start_contact_form', {
-    timestamp: new Date().toISOString(),
-  });
-}
-
-export function trackContactFormSubmit(source?: string) {
-  trackEvent('submit_contact_form', {
-    source: source || 'contact_page',
-    timestamp: new Date().toISOString(),
-  });
-}
-
-/**
- * Track next project navigation
- */
-export function trackNextProject(projectTitle: string) {
-  trackEvent('view_next_project', {
-    project_title: projectTitle,
     timestamp: new Date().toISOString(),
   });
 }

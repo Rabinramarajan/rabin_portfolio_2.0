@@ -6,7 +6,6 @@ import { CaseChapter } from "@/components/work/CaseChapter";
 import { CaseGallery } from "@/components/work/CaseGallery";
 import { FeatureRail } from "@/components/work/FeatureRail";
 import { CaseStudyTracker, NextProjectLink } from "@/components/work/CaseStudyTracker";
-import { trackEvent } from "@/lib/analytics";
 import { ShareCase } from "@/components/work/ShareCase";
 import {
   IconBolt,
@@ -432,7 +431,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <h2 className="wd__cta-title" id="wd-cta">
             Want to build something similar?
           </h2>
-          <p className="wd__cta-body">Let's turn your ideas into production-ready products.</p>
+          <p className="wd__cta-body">Let&apos;s turn your ideas into production-ready products.</p>
           <div className="wd__cta-actions">
             <Link
               className="btn btn--solid"

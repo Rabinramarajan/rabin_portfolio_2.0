@@ -93,7 +93,12 @@
   .xnav {
     display: block;
     position: fixed;
-    left: clamp(1rem, 2vw, 1.75rem);
+    /* Tucked into whatever gutter the centred shell actually leaves, so the
+       ticks never graze the content edge on a narrow laptop. */
+    left: min(
+      clamp(1rem, 2vw, 1.75rem),
+      max(0.5rem, calc(var(--shell-edge) - 1.85rem))
+    );
     top: 50%;
     transform: translateY(-50%);
     z-index: 120;
@@ -107,9 +112,9 @@
     border-left: 1px solid var(--color-line);
   }
   .xnav__item {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.55rem;
     min-height: 30px;
     padding: 0 0.4rem 0 0;
     color: var(--color-text-faint);
@@ -124,16 +129,32 @@
       transform var(--duration-ui) var(--ease-out-expo),
       background var(--duration-ui) var(--ease-out-expo);
   }
+  /*
+   * The rail lives in the page gutter, which between 1180px and ~1650px is
+   * only wide enough for the ticks. The label is therefore taken out of flow
+   * and revealed as a transient flyout on hover/focus, over its own panel, so
+   * it can never sit permanently on top of the hero copy beside it.
+   */
   .xnav__label {
+    position: absolute;
+    left: calc(0.85rem + 0.55rem);
+    top: 50%;
+    translate: -4px -50%;
+    padding: 0.28rem 0.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 35%);
+    white-space: nowrap;
+    pointer-events: none;
     font-family: var(--font-mono);
     font-size: 0.58rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     opacity: 0;
-    transform: translateX(-4px);
     transition:
       opacity var(--duration-ui) var(--ease-out-expo),
-      transform var(--duration-ui) var(--ease-out-expo);
+      translate var(--duration-ui) var(--ease-out-expo);
   }
   .xnav__item[data-state="now"] {
     color: var(--color-accent);
@@ -142,14 +163,39 @@
     background: var(--color-accent);
     transform: scaleX(1.7);
   }
-  .xnav__item[data-state="now"] .xnav__label,
-  .xnav:hover .xnav__label,
+  /* One flyout at a time — the hovered item's — so the rail never stamps six
+     labels across the copy beside it. */
+  .xnav__item:hover .xnav__label,
   .xnav__item:focus-visible .xnav__label {
     opacity: 1;
-    transform: translateX(0);
+    translate: 0 -50%;
   }
   .xnav__item:hover,
   .xnav__item:focus-visible {
     color: var(--color-text);
+  }
+}
+
+/*
+ * Past 1680px the centred shell leaves a gutter wider than the longest label,
+ * so the rail can carry its labels in flow without ever reaching the content.
+ */
+@media (min-width: 1680px) {
+  .xnav__label {
+    position: static;
+    translate: none;
+    margin-left: 0.55rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .xnav__item[data-state="now"] .xnav__label {
+    opacity: 1;
+  }
+  .xnav__item:hover .xnav__label,
+  .xnav__item:focus-visible .xnav__label {
+    opacity: 1;
+    translate: none;
   }
 }

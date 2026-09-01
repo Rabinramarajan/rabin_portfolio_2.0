@@ -1,8 +1,8 @@
 import "server-only";
 
-import { put, del, list, type PutBlobResult } from "@vercel/blob";
+import { put, type PutBlobResult } from "@vercel/blob";
 
-import { BLOB_FOLDERS, BLOB_ROOT, blobPath, type BlobFolder } from "@/lib/media";
+import { BLOB_FOLDERS, blobPath, type BlobFolder } from "@/lib/media";
 
 /**
  * Server-only Vercel Blob helpers.
@@ -92,14 +92,4 @@ export async function uploadMedia({
     allowOverwrite: overwrite,
     cacheControlMaxAge: 60 * 60 * 24 * 365,
   });
-}
-
-/** List everything stored under the site's prefix (or one folder of it). */
-export function listMedia(folder?: BlobFolder) {
-  return list({ prefix: folder ? `${BLOB_ROOT}/${folder}/` : `${BLOB_ROOT}/` });
-}
-
-/** Delete one or more assets by their public Blob URL. */
-export function deleteMedia(urls: string | string[]) {
-  return del(urls);
 }
