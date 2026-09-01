@@ -104,7 +104,7 @@
     display: none;
   }
 }
-/* Extreme: 15.6" HD & 14" laptops (768px height) - allow overflow for scrolling */
+/* Extreme: 15.6" HD & 14" laptops (768px height) - focused, centered layout */
 @media (min-width: 960px) and (max-height: 768px) {
   .chero {
     overflow: visible !important;
@@ -112,33 +112,73 @@
   }
   .chero__shell {
     grid-template-columns: 1fr !important;
-    padding-top: calc(var(--header-h) + 0.8rem) !important;
-    padding-bottom: 1.5rem !important;
-    gap: 0.6rem !important;
+    padding-top: calc(var(--header-h) + 1.2rem) !important;
+    padding-bottom: 2rem !important;
+    gap: 1.5rem !important;
     align-items: start !important;
+    justify-content: center !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
   }
   .chero__title {
-    font-size: clamp(1.8rem, 0.3rem + 3.5vw, 3rem) !important;
-    line-height: 0.85 !important;
-    margin-bottom: 0.3rem !important;
+    font-size: clamp(2rem, 0.4rem + 4vw, 3.2rem) !important;
+    line-height: 0.95 !important;
+    margin-bottom: 0.75rem !important;
+    text-align: center !important;
+    max-width: 12ch !important;
   }
   .chero__lede {
-    font-size: 0.9rem !important;
-    margin-top: 0.4rem !important;
-    line-height: 1.4 !important;
+    font-size: 0.95rem !important;
+    margin-top: 0 !important;
+    line-height: 1.6 !important;
+    max-width: 38ch !important;
+    text-align: center !important;
+    margin-bottom: 1.5rem !important;
+    color: var(--color-text-muted) !important;
   }
   .chero__disciplines {
-    margin-top: 0.4rem !important;
-    font-size: 0.58rem !important;
-    gap: 0.3rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem !important;
+    font-size: 0.65rem !important;
+    gap: 0.4rem !important;
+    justify-content: center !important;
+    color: var(--color-text-muted) !important;
   }
   .chero__actions {
-    margin-top: 0.6rem !important;
-    gap: 0.65rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 2rem !important;
+    gap: 1rem !important;
+    justify-content: center !important;
   }
   .chero__quote {
-    margin-top: 0.8rem !important;
+    margin-top: 1rem !important;
+    text-align: center !important;
+    max-width: 24rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    opacity: 0.9 !important;
+  }
+  .chero__quote-mark {
+    font-size: 1.2rem !important;
+    line-height: 0.4 !important;
+  }
+  .chero__quote blockquote {
+    font-size: 0.8rem !important;
+    letter-spacing: 0.15em !important;
+    gap: 0.2rem !important;
+    margin-top: 0.4rem !important;
+  }
+  .chero__quote-rule {
+    margin: 0.6rem auto !important;
+  }
+  .chero__signature {
+    font-size: 1.3rem !important;
+    margin-top: 0.4rem !important;
+  }
+  .chero__status {
+    margin-bottom: 1rem !important;
     font-size: 0.7rem !important;
+    display: inline-flex !important;
   }
 }
 /* Desktop-width default: apply after max-height constraints so they override */
@@ -659,5 +699,11 @@
     order: -1;
     max-width: 340px;
     margin: 0 auto;
+  }
+}
+/* Hide profile image on 768px constrained height for focus */
+@media (min-width: 960px) and (max-height: 768px) {
+  .hero-visual {
+    display: none !important;
   }
 }
