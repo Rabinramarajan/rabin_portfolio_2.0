@@ -435,13 +435,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <p className="wd__cta-body">Let's turn your ideas into production-ready products.</p>
           <div className="wd__cta-actions">
             <Link
-              className="wd__cta-btn wd__cta-btn--solid"
+              className="btn btn--solid"
               href="/contact"
             >
-              Start a Conversation
+              <span className="btn__label">Start a Conversation</span>
             </Link>
-            <Link className="wd__cta-btn" href="/work">
-              View All Work
+            <Link className="btn btn--line" href="/work">
+              <span className="btn__label">View All Work</span>
             </Link>
           </div>
         </section>

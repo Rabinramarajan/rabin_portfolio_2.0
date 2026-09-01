@@ -1472,7 +1472,7 @@ export function TechEcosystem({
   const reduce = useReducedMotion();
   const Heading = headingLevel;
 
-  const [activeBranch, setActiveBranch] = useState<string | null>(null);
+  const [activeBranch, setActiveBranch] = useState<string | null>("frontend");
   const [selectedTech, setSelectedTech] = useState<EcoTechNode | null>(null);
 
   const totalCount = ECO_NODES.length;

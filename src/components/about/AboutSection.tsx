@@ -94,15 +94,19 @@ export function AboutSection() {
 
             <div className="abt__actions">
               <Magnetic strength={8}>
-                <Link href={profile.resumePath} className="abt-btn abt-btn--solid" data-cursor="button" data-cursor-label="DOWNLOAD →">
-                  Download Resume
-                  <Download size={17} strokeWidth={2} aria-hidden />
+                <Link href={profile.resumePath} className="btn btn--solid" data-cursor="button" data-cursor-label="DOWNLOAD →">
+                  <span className="btn__label">
+                    Download Resume
+                    <Download size={17} strokeWidth={2} aria-hidden />
+                  </span>
                 </Link>
               </Magnetic>
               <Magnetic strength={8}>
-                <Link href="/work" className="abt-btn abt-btn--line" data-cursor="link" data-cursor-label="VIEW WORK →">
-                  View My Work
-                  <ArrowRight size={17} strokeWidth={2} aria-hidden className="abt-btn__arrow" />
+                <Link href="/work" className="btn btn--line" data-cursor="link" data-cursor-label="VIEW WORK →">
+                  <span className="btn__label">
+                    View My Work
+                    <ArrowRight size={17} strokeWidth={2} aria-hidden className="btn__arrow" />
+                  </span>
                 </Link>
               </Magnetic>
             </div>

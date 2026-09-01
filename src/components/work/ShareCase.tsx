@@ -29,11 +29,11 @@ export function ShareCase({ url, title }: { url: string; title: string }) {
   return (
     <div className="cshare">
       <span className="cshare__label">Share</span>
-      <button type="button" className={cn("cshare__btn", copied && "is-done")} onClick={copy}>
+      <button type="button" className={cn("btn btn--pill", copied && "is-done")} onClick={copy}>
         {copied ? "Link copied" : "Copy link"}
       </button>
       <a
-        className="cshare__btn"
+        className="btn btn--pill"
         href={`https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`}
         target="_blank"
         rel="noreferrer noopener"
@@ -41,7 +41,7 @@ export function ShareCase({ url, title }: { url: string; title: string }) {
         LinkedIn
       </a>
       <a
-        className="cshare__btn"
+        className="btn btn--pill"
         href={`https://x.com/intent/tweet?url=${encoded}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noreferrer noopener"
