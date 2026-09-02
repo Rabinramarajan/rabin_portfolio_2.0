@@ -1,14 +1,14 @@
 {
   "demo": {
-    "project": "rabin-portfolio",
+    "project": "rabin-portfolio-2-0",
     "lastUpdated": "2026-09-03T00:00:00.000Z",
     "version": "1.0.0",
-    "docker": "registry.example.com/rabin/portfolio"
+    "docker": "vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0"
   },
   "prod": {
-    "project": "rabin-portfolio",
+    "project": "rabin-portfolio-2-0",
     "lastUpdated": "2026-09-03T00:00:00.000Z",
     "version": "1.0.0",
-    "docker": "registry.example.com/rabin/portfolio"
+    "docker": "vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0"
   }
 }
