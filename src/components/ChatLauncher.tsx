@@ -115,7 +115,8 @@ function ChatLauncherInner() {
         data-open={open ? "true" : undefined}
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label={open ? `Close ${chatConfig.name}` : `Open ${chatConfig.name}, ${chatConfig.subtitle}`}
+        aria-label={open ? `Close ${chatConfig.name}` : `Ask ${chatConfig.name} — ${chatConfig.subtitle}`}
+        title={open ? undefined : `Ask ${chatConfig.name}`}
         onClick={() => {
           if (open) {
             close();

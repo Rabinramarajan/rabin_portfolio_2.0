@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { submitContact } from "@/lib/contact/contact-service";
 import { createEmailProvider } from "@/lib/contact/email-service";
-import { createMessageStore } from "@/lib/contact/message-store";
 import { ATTACHMENT } from "@/content/contact-fields";
 import type { ContactAttachment } from "@/types/contact";
 
@@ -119,7 +118,6 @@ export async function POST(req: NextRequest) {
   try {
     const result = await submitContact(body, {
       email: createEmailProvider(),
-      store: createMessageStore(),
       attachment,
     });
 
@@ -139,10 +137,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("[contact] Unhandled error in POST /api/contact:", error);
 
+    // Nothing about the transport failure reaches the visitor — no SMTP codes,
+    // no host names, no credentials.
     const message =
-      error instanceof Error && error.message.includes("authentication")
-        ? "Email service is temporarily unavailable. Your message was saved. Please try again or email me directly."
-        : "Could not send. Your message was saved and I'll get back to you soon. You can also email me directly.";
+      "Something went wrong while sending your message. Please try again or contact Rabin directly.";
 
     return NextResponse.json({ error: message }, { status: 500 });
   }

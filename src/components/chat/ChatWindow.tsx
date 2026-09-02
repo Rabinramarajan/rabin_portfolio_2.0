@@ -159,7 +159,10 @@ export function ChatWindow({ onClose, seed = null }: Props) {
               {brandWord ? " " : ""}
               {restOfName}
             </span>
-            <span className="chat-panel__subtitle">{chatConfig.subtitle}</span>
+            <span className="chat-panel__subtitle">
+              <span className="chat-panel__status-dot" aria-hidden="true" />
+              {chatConfig.status}
+            </span>
           </span>
 
           <div className="chat-panel__controls">

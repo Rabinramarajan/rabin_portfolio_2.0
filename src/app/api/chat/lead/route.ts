@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { submitContact } from "@/lib/contact/contact-service";
 import { createEmailProvider } from "@/lib/contact/email-service";
-import { createMessageStore } from "@/lib/contact/message-store";
 import { logChatEvent } from "@/chat/analytics";
 import { chatConfig } from "@/chat/config";
 import { chatLeadSchema } from "@/chat/schema";
@@ -11,7 +10,7 @@ import { chatLeadSchema } from "@/chat/schema";
  * POST /api/chat/lead — chat-captured enquiries.
  *
  * Deliberately a thin adapter over the existing contact pipeline rather than a
- * second delivery path: validation, email and storage stay in one place, so a
+ * second delivery path: validation and email delivery stay in one place, so a
  * chat lead and a contact-form lead arrive identically.
  */
 
@@ -79,7 +78,7 @@ export async function POST(req: NextRequest) {
         // prepended so a terse brief still carries its own context.
         message: `[Sent from Ask Rabin]\nProject type: ${lead.projectType}\n\n${lead.message}`,
       },
-      { email: createEmailProvider(), store: createMessageStore() },
+      { email: createEmailProvider() },
     );
 
     if (!result.ok) {

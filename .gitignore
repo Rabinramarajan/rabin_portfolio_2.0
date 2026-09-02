@@ -53,3 +53,5 @@ next-env.d.ts
 /responsive-screenshots/
 /final-audit-screenshots/
 *.log
+
+.env*

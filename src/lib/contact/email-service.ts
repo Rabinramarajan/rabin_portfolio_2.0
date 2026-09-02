@@ -1,5 +1,4 @@
 import { profile } from "@/content/profile";
-import { mailLogger } from "./mail-logger";
 
 export interface EmailAttachment {
   filename: string;
@@ -18,23 +17,13 @@ export interface EmailMessage {
   referenceId?: string;
 }
 
-export interface EmailDeliveryStatus {
-  status: "pending" | "processing" | "sent" | "failed" | "retrying";
-  attempts: number;
-  maxAttempts: number;
-  lastError?: string;
-  lastAttemptAt?: Date;
-  deliveredAt?: Date;
-}
-
 export interface EmailProvider {
   send(message: EmailMessage): Promise<void>;
-  getStatus(): EmailDeliveryStatus;
-  verify(): Promise<boolean>;
 }
 
 export const EMAIL_MAX_RETRIES = 3;
 
+/** Keeps credentials out of the server log when a transport error is printed. */
 function maskSensitiveData(message: string): string {
   return message
     .replace(/pass(wd)?[=:\s]+[\S]+/gi, "****")
@@ -42,133 +31,121 @@ function maskSensitiveData(message: string): string {
     .replace(/user[=:\s]+[\S]+/gi, "USER redacted");
 }
 
-export class ResendEmailProvider implements EmailProvider {
-  private readonly apiKey: string;
-  private lastStatus: EmailDeliveryStatus = {
-    status: "pending",
-    attempts: 0,
-    maxAttempts: EMAIL_MAX_RETRIES,
-  };
+export interface SmtpConfig {
+  host: string;
+  port: number;
+  secure: boolean;
+  user: string;
+  pass: string;
+}
 
-  constructor(apiKey: string) {
-    this.apiKey = apiKey;
+/**
+ * Zoho (and any other) SMTP relay via Nodemailer.
+ *
+ * The transport is created once and reused: Nodemailer pools the TLS
+ * connection, which matters on Fluid Compute where a warm function instance
+ * serves several submissions.
+ */
+export class SmtpEmailProvider implements EmailProvider {
+  private readonly config: SmtpConfig;
+  private transporter: import("nodemailer").Transporter | null = null;
+
+  constructor(config: SmtpConfig) {
+    this.config = config;
   }
 
-  async verify(): Promise<boolean> {
-    return this.apiKey.length > 0;
-  }
-
-  async send(message: EmailMessage): Promise<void> {
-    const { referenceId = "unknown" } = message;
-
-    mailLogger.log({
-      timestamp: new Date().toISOString(),
-      type: "send",
-      referenceId,
-      to: message.to,
-      from: message.from,
-      subject: message.subject,
-      status: "pending",
+  private async getTransporter() {
+    if (this.transporter) return this.transporter;
+    const nodemailer = await import("nodemailer");
+    this.transporter = nodemailer.createTransport({
+      host: this.config.host,
+      port: this.config.port,
+      // Port 465 speaks TLS from the first byte; 587 upgrades via STARTTLS.
+      secure: this.config.secure,
+      auth: { user: this.config.user, pass: this.config.pass },
+      pool: true,
+      maxConnections: 1,
+      connectionTimeout: 15_000,
+      greetingTimeout: 15_000,
+      socketTimeout: 30_000,
     });
-
-    try {
-      const { Resend } = await import("resend");
-      const resend = new Resend(this.apiKey);
-
-      const { data, error } = await resend.emails.send({
-        from: message.from,
-        to: message.to,
-        replyTo: message.replyTo,
-        subject: message.subject,
-        text: message.text,
-        html: message.html,
-        attachments: message.attachments?.map((file) => ({
-          filename: file.filename,
-          content: file.content,
-          contentType: file.contentType,
-        })),
-      });
-
-      if (error) {
-        throw new Error(`${error.name}: ${error.message}`);
-      }
-
-      this.lastStatus = {
-        status: "sent",
-        attempts: 1,
-        maxAttempts: EMAIL_MAX_RETRIES,
-        deliveredAt: new Date(),
-      };
-
-      mailLogger.log({
-        timestamp: new Date().toISOString(),
-        type: "send",
-        referenceId,
-        to: message.to,
-        from: message.from,
-        subject: message.subject,
-        status: "success",
-        messageId: data?.id,
-      });
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-
-      this.lastStatus = {
-        status: "failed",
-        attempts: 1,
-        maxAttempts: EMAIL_MAX_RETRIES,
-        lastError: err.message,
-        lastAttemptAt: new Date(),
-      };
-
-      mailLogger.log({
-        timestamp: new Date().toISOString(),
-        type: "error",
-        referenceId,
-        to: message.to,
-        from: message.from,
-        subject: message.subject,
-        status: "failed",
-        errorMessage: maskSensitiveData(err.message),
-      });
-
-      throw err;
-    }
+    return this.transporter;
   }
-
-  getStatus(): EmailDeliveryStatus {
-    return this.lastStatus;
-  }
-}
-
-export class MemoryEmailProvider implements EmailProvider {
-  readonly sent: EmailMessage[] = [];
 
   async send(message: EmailMessage): Promise<void> {
-    this.sent.push(message);
-  }
+    let lastError: Error | null = null;
 
-  async verify(): Promise<boolean> {
-    return true;
-  }
+    for (let attempt = 1; attempt <= EMAIL_MAX_RETRIES; attempt += 1) {
+      try {
+        const transporter = await this.getTransporter();
+        await transporter.sendMail({
+          // Always the authenticated Zoho mailbox — SPF/DKIM are published for
+          // this domain, so spoofing the visitor here would get us rejected.
+          from: message.from,
+          to: message.to,
+          replyTo: message.replyTo,
+          subject: message.subject,
+          text: message.text,
+          html: message.html,
+          attachments: message.attachments?.map((file) => ({
+            filename: file.filename,
+            content: file.content,
+            contentType: file.contentType,
+          })),
+        });
+        return;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
 
-  getStatus(): EmailDeliveryStatus {
-    return {
-      status: "sent",
-      attempts: 1,
-      maxAttempts: EMAIL_MAX_RETRIES,
-    };
+        // 5xx replies are permanent (bad credentials, rejected recipient);
+        // retrying only burns the request's time budget.
+        const code = (error as { responseCode?: number }).responseCode;
+        const permanent = typeof code === "number" && code >= 500 && code < 600;
+
+        if (permanent || attempt === EMAIL_MAX_RETRIES) break;
+
+        await new Promise((resolve) => setTimeout(resolve, 500 * attempt));
+      }
+    }
+
+    const err = lastError ?? new Error("SMTP send failed");
+    console.error(
+      `[contact] SMTP send failed for ${message.referenceId ?? "unknown"}:`,
+      maskSensitiveData(err.message),
+    );
+    throw err;
   }
 }
 
+export function smtpConfig(env: NodeJS.Dict<string> = process.env): SmtpConfig | null {
+  const host = env.ZOHO_SMTP_HOST || env.SMTP_HOST;
+  const user = env.ZOHO_SMTP_USER || env.SMTP_USER;
+  const pass = env.ZOHO_SMTP_PASSWORD || env.SMTP_PASSWORD;
+  if (!host || !user || !pass) return null;
+
+  const port = Number(env.ZOHO_SMTP_PORT || env.SMTP_PORT || 465);
+  if (!Number.isFinite(port) || port <= 0) return null;
+
+  // Implicit TLS on 465, STARTTLS on 587 — derived from the port unless the
+  // deployment says otherwise.
+  const secureRaw = env.ZOHO_SMTP_SECURE || env.SMTP_SECURE;
+  const secure = secureRaw ? secureRaw !== "false" : port === 465;
+
+  return { host, port, secure, user, pass };
+}
+
+/**
+ * Zoho SMTP is the only transport: it is the mailbox the domain publishes
+ * SPF/DKIM for. Returns null when the credentials are absent, which the route
+ * surfaces as a 503 rather than silently dropping the enquiry.
+ */
 export function createEmailProvider(env: NodeJS.Dict<string> = process.env): EmailProvider | null {
-  const apiKey = env.RESEND_API_KEY;
-  if (!apiKey) return null;
-  return new ResendEmailProvider(apiKey);
+  const smtp = smtpConfig(env);
+  return smtp ? new SmtpEmailProvider(smtp) : null;
 }
 
 export function mailEnvelope(env: NodeJS.Dict<string> = process.env) {
-  const fromEmail = env.CONTACT_FROM_EMAIL || "hello@rabinr.in";
+  const fromEmail = env.CONTACT_FROM_EMAIL || env.ZOHO_SMTP_USER || env.SMTP_USER || "hello@rabinr.in";
   const fromName = env.CONTACT_FROM_NAME || profile.name;
   const toEmail = env.CONTACT_TO_EMAIL || profile.email;
 

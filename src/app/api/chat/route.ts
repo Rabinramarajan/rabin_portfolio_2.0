@@ -5,13 +5,12 @@ import { resolveProvider } from "@/chat/ai";
 import { logChatEvent } from "@/chat/analytics";
 import { chatConfig } from "@/chat/config";
 import {
-  ERROR_MESSAGE,
   REDIRECT_MESSAGE,
   REFUSAL_MESSAGE,
   UNVERIFIED_MESSAGE,
   deterministicAnswer,
 } from "@/chat/fallback";
-import { sanitizeOutput, validateAnswer } from "@/chat/guard";
+import { sanitizeOutput, trimIncompleteTail, validateAnswer } from "@/chat/guard";
 import { detectIntent } from "@/chat/intent";
 import type { ChatResponseMeta, ChatTurn, KnowledgeRecord } from "@/chat/models";
 import { buildMessages, systemPrompt } from "@/chat/prompt";
@@ -30,6 +29,8 @@ export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 16 * 1024;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
+/** Below this, a partial answer is too thin to be worth showing at all. */
+const MIN_PARTIAL_CHARS = 80;
 const encoder = new TextEncoder();
 
 /** Messages allowed per client per window. Raised only for automated runs. */
@@ -162,12 +163,20 @@ export async function POST(req: NextRequest) {
       system: systemPrompt(),
       messages,
       signal: req.signal,
-      maxTokens: 400,
+      // Headroom over the prompt's word cap: the budget should bound cost, not
+      // slice a sentence in half. `trimIncompleteTail` handles the rare overrun.
+      maxTokens: 700,
     });
-  } catch {
+  } catch (error) {
     // Provider errors are never surfaced verbatim — the visitor gets a grounded
-    // answer from the retrieved records instead of a stack trace.
-    logChatEvent("chat_error", { reason: "provider_unavailable", provider: provider.name });
+    // answer from the retrieved records instead of a stack trace. The cause is
+    // recorded server-side only, and only under DEBUG_CHAT, so a silent
+    // fallback is diagnosable without leaking anything to the browser.
+    logChatEvent("chat_error", {
+      reason: "provider_unavailable",
+      provider: provider.name,
+      cause: error instanceof Error ? error.message : "unknown",
+    });
     return staticStream(meta, deterministicAnswer(intent, entities, records, message));
   }
 
@@ -198,13 +207,28 @@ export async function POST(req: NextRequest) {
           controller.enqueue(frame("delta", { replace: deterministicAnswer(intent, entities, records, message) }));
         } else if (validated.length > emitted) {
           controller.enqueue(frame("delta", { text: validated.slice(emitted) }));
+        } else if (validated.length < emitted) {
+          // The final gate shortened the answer (an unfinished tail was cut).
+          // Without this the client would keep showing the fragment it already
+          // received, since deltas only ever append.
+          controller.enqueue(frame("delta", { replace: validated }));
         }
 
         logChatEvent("chat_response_received", { intent, provider: provider.name });
         controller.enqueue(frame("done", {}));
       } catch {
+        // The stream died part-way (provider quota, network drop). Whatever
+        // arrived is an unfinished thought, so it must never be presented as a
+        // complete answer: a substantial partial is trimmed to its last closed
+        // sentence, and anything shorter is discarded for the grounded
+        // deterministic answer built from the same records.
         logChatEvent("chat_error", { reason: "stream_failed", intent });
-        controller.enqueue(frame("delta", { replace: emitted ? sanitizeOutput(full) : ERROR_MESSAGE }));
+        const partial = trimIncompleteTail(sanitizeOutput(full));
+        const recovered =
+          partial.length >= MIN_PARTIAL_CHARS
+            ? partial
+            : deterministicAnswer(intent, entities, records, message);
+        controller.enqueue(frame("delta", { replace: recovered }));
         controller.enqueue(frame("done", {}));
       } finally {
         controller.close();

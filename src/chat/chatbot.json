@@ -1,10 +1,10 @@
 {
   "enabled": true,
-  "name": "Rabin AI Assistant",
+  "name": "Rabin AI",
   "brandWord": "Rabin",
   "subtitle": "Your portfolio companion",
-  "welcomeMessage": "Hi there! \ud83d\udc4b\n\nWelcome to my portfolio. How can I assist you today?",
-  "previewMessage": "I'm Rabin AI Assistant. How can I help you today?",
+  "welcomeMessage": "Hey! I'm Rabin AI. I can help you explore Rabin's work, experience, services, skills, projects, and how to start a project.",
+  "previewMessage": "Ask Rabin AI about his work, experience or services.",
   "maxMessageLength": 2000,
   "maxHistoryTurns": 8,
   "maxAnswerWords": 90,
@@ -13,15 +13,41 @@
   "showProjectCards": true,
   "allowLeadCapture": true,
   "starterPrompts": [
-    "Tell me about you",
-    "What services do you offer?",
-    "Show me your projects"
+    "Tell me about Rabin",
+    "What services does he offer?",
+    "Show me his selected work"
   ],
   "quickActions": [
-    { "label": "About Me", "prompt": "Tell me about Rabin.", "icon": "user" },
-    { "label": "My Work", "prompt": "Show me Rabin's projects.", "icon": "briefcase" },
-    { "label": "Services", "prompt": "What services does Rabin offer?", "icon": "grid" },
-    { "label": "Skills", "prompt": "What are Rabin's skills and technologies?", "icon": "spark" },
-    { "label": "Let's Connect", "prompt": "How can I contact Rabin?", "icon": "mail" }
-  ]
+    {
+      "label": "About Rabin",
+      "prompt": "Tell me about Rabin.",
+      "icon": "user"
+    },
+    {
+      "label": "Services",
+      "prompt": "What services does Rabin offer?",
+      "icon": "grid"
+    },
+    {
+      "label": "Selected Work",
+      "prompt": "Show me Rabin's selected work.",
+      "icon": "briefcase"
+    },
+    {
+      "label": "Experience",
+      "prompt": "What is Rabin's professional experience?",
+      "icon": "spark"
+    },
+    {
+      "label": "Skills",
+      "prompt": "What are Rabin's skills and technologies?",
+      "icon": "spark"
+    },
+    {
+      "label": "Hire Rabin",
+      "prompt": "I'd like to hire Rabin for a project.",
+      "icon": "mail"
+    }
+  ],
+  "status": "Online"
 }

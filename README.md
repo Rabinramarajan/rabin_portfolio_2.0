@@ -10,14 +10,34 @@ vercel env pull .env.local   # or create .env.local by hand
 npm run dev
 ```
 
-`.env.local` is the only env file this project uses. It holds the Resend
-settings for the contact form (`RESEND_API_KEY`, `CONTACT_FROM_EMAIL`,
+`.env.local` is the only env file this project uses. It holds the mail
+settings for the contact form, the envelope (`CONTACT_FROM_EMAIL`,
 `CONTACT_TO_EMAIL`, `CONTACT_FROM_NAME`, plus the optional
-`CONTACT_ACK_EMAIL`, `CONTACT_PERSIST` and `CONTACT_ALLOW_UNCONFIGURED`
+`CONTACT_ACK_EMAIL` and `CONTACT_ALLOW_UNCONFIGURED`
 flags) and the assistant keys (`GEMINI_API_KEY`, `GROQ_API_KEY`,
 `DEBUG_ASSISTANT`).
 
-`RESEND_API_KEY` and `GEMINI_API_KEY` stay on the server. Never expose them as NEXT_PUBLIC_ vars.
+### Contact mail transport
+
+Zoho SMTP is the only mail transport. Without these variables the contact
+endpoint returns 503 rather than silently dropping an enquiry.
+
+```bash
+ZOHO_SMTP_HOST=smtp.zoho.in
+ZOHO_SMTP_PORT=465          # 465 = implicit TLS, 587 = STARTTLS
+ZOHO_SMTP_USER=hello@rabinr.in
+ZOHO_SMTP_PASSWORD=         # Zoho *app password*, never the account password
+CONTACT_TO_EMAIL=hello@rabinr.in
+```
+
+Generate the app password in Zoho (Security → App Passwords); it is shown once.
+Mail is always sent **from** the authenticated Zoho mailbox with the visitor's
+address as `Reply-To` — spoofing the visitor as sender breaks SPF/DKIM and gets
+the message rejected. Set the same variables in Vercel under
+Project → Settings → Environment Variables.
+
+SMTP credentials and `GEMINI_API_KEY` stay on the server.
+Never expose them as NEXT_PUBLIC_ vars.
 
 ## Media (Vercel Blob)
 

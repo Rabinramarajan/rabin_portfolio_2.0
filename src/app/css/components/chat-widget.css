@@ -260,6 +260,27 @@
 .chat-panel__subtitle {
   font-size: var(--type-xs);
   color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+/* Availability dot. Static by default; it only pulses where motion is welcome,
+   so the header stays calm and reduced-motion users see a plain dot. */
+.chat-panel__status-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .chat-panel__status-dot {
+    animation: chat-status-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes chat-status-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
 }
 .chat-panel__controls {
   display: flex;

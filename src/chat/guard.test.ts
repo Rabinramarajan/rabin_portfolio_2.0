@@ -7,6 +7,7 @@ import { containsLeak, sanitizeOutput, validateAnswer } from "@/chat/guard";
 import { detectEntities, detectIntent, emptyEntities } from "@/chat/intent";
 import { knowledgeBase } from "@/chat/knowledge";
 import { buildContextBlock, buildMessages, systemPrompt } from "@/chat/prompt";
+import { trimIncompleteTail } from "@/chat/guard";
 import { retrieveContext } from "@/chat/retriever";
 
 describe("output guard", () => {
@@ -157,5 +158,42 @@ describe("actions", () => {
       expect(projects.some((project) => project.slug === card.slug)).toBe(true);
       expect(card.url).toBe(`/work/${card.slug}`);
     }
+  });
+});
+
+/**
+ * A stream that dies part-way (provider quota, dropped connection) leaves an
+ * unfinished thought on screen. These are the shapes seen in practice.
+ */
+describe("trimIncompleteTail", () => {
+  it("cuts a sentence the model never finished", () => {
+    expect(trimIncompleteTail("Rabin builds Angular apps. He also works with")).toBe(
+      "Rabin builds Angular apps.",
+    );
+  });
+
+  it("drops a bullet interrupted mid-word", () => {
+    const cut = "Yes, he has:\n\n- Fiji Immigration Portal\n- PRIMS Member Portal\n- VNPF Mobile App is where he";
+    expect(trimIncompleteTail(cut)).toBe("Yes, he has:\n\n- Fiji Immigration Portal\n- PRIMS Member Portal");
+  });
+
+  it("drops a bullet left inside an unclosed bold span", () => {
+    const cut = "He has worked on government platforms:\n\n- **Fiji Immigration Internal Management";
+    expect(trimIncompleteTail(cut)).toBe("He has worked on government platforms:");
+  });
+
+  it("leaves a complete bulleted answer alone", () => {
+    const done = "Selected work:\n\n- Fiji Immigration Portal\n- PRIMS Member Portal";
+    expect(trimIncompleteTail(done)).toBe(done);
+  });
+
+  it("leaves a complete sentence alone", () => {
+    expect(trimIncompleteTail("Rabin specializes in Angular.")).toBe("Rabin specializes in Angular.");
+  });
+
+  it("keeps a fragment rather than gutting the answer", () => {
+    // Trimming here would leave almost nothing, so the tail is kept.
+    const stub = "Yes. He worked across government, pension and insurance platforms for many years and";
+    expect(trimIncompleteTail(stub)).toBe(stub);
   });
 });

@@ -3,7 +3,6 @@ import { clean, isEmail } from "@/lib/sanitize";
 import { fieldErrorsFromZod, contactSchema } from "@/lib/contact/validation";
 import { createReferenceId } from "@/lib/contact/reference-id";
 import { mailEnvelope, type EmailProvider } from "@/lib/contact/email-service";
-import type { MessageStore } from "@/lib/contact/message-store";
 import {
   acknowledgementHtml,
   acknowledgementText,
@@ -23,19 +22,6 @@ const INQUIRY_SET = new Set<string>(INQUIRY_TYPES);
 function asInquiryType(value: string | undefined): InquiryType {
   if (value && INQUIRY_SET.has(value)) return value as InquiryType;
   return "Other";
-}
-
-export interface StoredContact {
-  referenceId: string;
-  receivedAt: string;
-  payload: ContactPayload;
-  notificationStatus: "pending" | "processing" | "sent" | "failed" | "retrying";
-  acknowledgementStatus: "pending" | "processing" | "sent" | "failed";
-  notificationAttempts: number;
-  acknowledgementAttempts: number;
-  lastEmailError?: string;
-  lastAttemptAt: string;
-  deliveredAt?: string;
 }
 
 export function normalizePayload(raw: unknown): { honeypot: boolean; payload?: ContactPayload; error?: ContactResult } {
@@ -96,7 +82,6 @@ export async function submitContact(
   raw: unknown,
   deps: {
     email: EmailProvider | null;
-    store: MessageStore;
     env?: NodeJS.Dict<string>;
     now?: Date;
     /** Uploaded file, already size- and type-checked by the route. */
@@ -125,18 +110,6 @@ export async function submitContact(
   const env = deps.env ?? process.env;
   const envelope = mailEnvelope(env);
 
-  // Save submission first - this preserves the message even if email fails
-  await deps.store.save({
-    referenceId,
-    receivedAt,
-    payload,
-    notificationStatus: "pending",
-    acknowledgementStatus: "pending",
-    notificationAttempts: 0,
-    acknowledgementAttempts: 0,
-    lastAttemptAt: new Date().toISOString(),
-  });
-
   if (!deps.email) {
     if (env.CONTACT_ALLOW_UNCONFIGURED === "true") {
       return { ok: true, referenceId, responseTime: profile.availability.responseTime };
@@ -147,58 +120,29 @@ export async function submitContact(
     };
   }
 
-  // Attempt owner notification
-  try {
-    await deps.email.send({
-      to: envelope.to,
-      from: envelope.from,
-      replyTo: payload.email,
-      referenceId,
-      subject: `New Portfolio Inquiry — ${payload.inquiryType} (${referenceId})`,
-      text: notificationText({ payload, referenceId, receivedAt }),
-      html: notificationHtml({ payload, referenceId, receivedAt }),
-      attachments: deps.attachment
-        ? [
-            {
-              filename: deps.attachment.filename,
-              content: deps.attachment.content,
-              contentType: deps.attachment.contentType,
-            },
-          ]
-        : undefined,
-    });
+  // The owner notification is the whole point of the submission: if it cannot
+  // be delivered the visitor must be told, so the error propagates to the route.
+  await deps.email.send({
+    to: envelope.to,
+    from: envelope.from,
+    replyTo: payload.email,
+    referenceId,
+    subject: `New project enquiry from ${payload.name}`,
+    text: notificationText({ payload, referenceId, receivedAt }),
+    html: notificationHtml({ payload, referenceId, receivedAt }),
+    attachments: deps.attachment
+      ? [
+          {
+            filename: deps.attachment.filename,
+            content: deps.attachment.content,
+            contentType: deps.attachment.contentType,
+          },
+        ]
+      : undefined,
+  });
 
-    // Update notification status to sent
-    await deps.store.save({
-      referenceId,
-      receivedAt,
-      payload,
-      notificationStatus: "sent",
-      acknowledgementStatus: "pending",
-      notificationAttempts: 0,
-      acknowledgementAttempts: 0,
-      lastAttemptAt: new Date().toISOString(),
-      deliveredAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error(`[contact] notification email failed for ${referenceId}:`, error);
-    // Preserve the submission regardless of email failure
-    await deps.store.save({
-      referenceId,
-      receivedAt,
-      payload,
-      notificationStatus: "failed",
-      acknowledgementStatus: "pending",
-      notificationAttempts: 0,
-      acknowledgementAttempts: 0,
-      lastEmailError: (error as Error).message,
-      lastAttemptAt: new Date().toISOString(),
-    });
-    // Still return success - the message was persisted
-  }
-
-  // The acknowledgement goes to the visitor's address - routine failure should
-  // not undo the owner notification or persistence.
+  // The acknowledgement goes to the visitor's address — a routine failure there
+  // must not undo an owner notification that already went out.
   if (envelope.ackEnabled) {
     try {
       await deps.email.send({
@@ -210,32 +154,8 @@ export async function submitContact(
         text: acknowledgementText({ payload, referenceId }),
         html: acknowledgementHtml({ payload, referenceId }),
       });
-
-      await deps.store.save({
-        referenceId,
-        receivedAt,
-        payload,
-        notificationStatus: "sent",
-        acknowledgementStatus: "sent",
-        notificationAttempts: 0,
-        acknowledgementAttempts: 0,
-        lastAttemptAt: new Date().toISOString(),
-      });
     } catch (error) {
       console.error(`[contact] acknowledgement failed for ${referenceId}:`, error);
-      // Do NOT fail the entire submission - only record the failure
-      await deps.store.save({
-        referenceId,
-        receivedAt,
-        payload,
-        notificationStatus: "sent",
-        acknowledgementStatus: "failed",
-        notificationAttempts: 0,
-        acknowledgementAttempts: 0,
-        lastEmailError: (error as Error).message,
-        lastAttemptAt: new Date().toISOString(),
-      });
-      // Important: we do NOT throw here - the submission was already successful
     }
   }
 

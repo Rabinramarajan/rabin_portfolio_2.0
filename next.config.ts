@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* Vercel Analytics and Speed Insights */
+  output: "standalone",
   productionBrowserSourceMaps: true,
   images: {
     formats: ["image/avif", "image/webp"],

@@ -13,7 +13,7 @@ export { AIProviderError } from "@/chat/ai/provider";
  * from the knowledge base rather than failing — the site never depends on a
  * third-party key being present.
  */
-const providers: AIProvider[] = [new GroqProvider(), new GeminiProvider()];
+const providers: AIProvider[] = [new GeminiProvider(), new GroqProvider()];
 
 export function resolveProvider(): AIProvider | null {
   const pinned = process.env.AI_PROVIDER?.trim().toLowerCase();

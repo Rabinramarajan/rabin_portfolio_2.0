@@ -15,6 +15,8 @@ export interface ChatbotConfig {
   /** Leading word of the name, tinted with the accent in the header. */
   brandWord: string;
   subtitle: string;
+  /** Availability line shown beside the name in the panel header. */
+  status: string;
   welcomeMessage: string;
   /** One-liner shown in the pre-open preview card. */
   previewMessage: string;

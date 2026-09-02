@@ -1,7 +1,20 @@
 import { describe, expect, it } from "vitest";
 import { submitContact } from "@/lib/contact/contact-service";
-import { MemoryEmailProvider } from "@/lib/contact/email-service";
-import { MemoryMessageStore } from "@/lib/contact/message-store";
+import type { EmailMessage, EmailProvider } from "@/lib/contact/email-service";
+
+/** Records what would have been sent, so tests can assert on the envelope. */
+class StubEmailProvider implements EmailProvider {
+  readonly sent: EmailMessage[] = [];
+  /** Throws on the nth send (1-based) to simulate a per-message failure. */
+  constructor(private readonly failOnCall?: number) {}
+
+  async send(message: EmailMessage): Promise<void> {
+    if (this.sent.length + 1 === this.failOnCall) {
+      throw new Error("550 5.1.1 recipient does not exist");
+    }
+    this.sent.push(message);
+  }
+}
 
 const payload = {
   name: "Ada Lovelace",
@@ -12,12 +25,10 @@ const payload = {
 };
 
 describe("submitContact", () => {
-  it("stores the message, notifies, and acknowledges on success", async () => {
-    const email = new MemoryEmailProvider();
-    const store = new MemoryMessageStore();
+  it("notifies the owner and acknowledges the visitor on success", async () => {
+    const email = new StubEmailProvider();
     const result = await submitContact(payload, {
       email,
-      store,
       env: { CONTACT_TO_EMAIL: "hello@rabinr.in", CONTACT_FROM_EMAIL: "portfolio@example.com" },
       now: new Date("2026-08-22T10:00:00.000Z"),
     });
@@ -26,37 +37,46 @@ describe("submitContact", () => {
     if (!result.ok) return;
     expect(result.referenceId).toMatch(/^RR-20260822-[A-Z0-9]{4}$/);
     expect(email.sent).toHaveLength(2);
+    expect(email.sent[0].to).toBe("hello@rabinr.in");
     expect(email.sent[0].replyTo).toBe("ada@example.com");
     expect(email.sent[1].to).toBe("ada@example.com");
-    expect(await store.get(result.referenceId)).toBeTruthy();
+  });
+
+  it("never puts the visitor's address in the From header", async () => {
+    const email = new StubEmailProvider();
+    await submitContact(payload, {
+      email,
+      env: { CONTACT_TO_EMAIL: "hello@rabinr.in", CONTACT_FROM_EMAIL: "portfolio@example.com" },
+    });
+
+    for (const message of email.sent) {
+      expect(message.from).toBe('"Rabin R" <portfolio@example.com>');
+      expect(message.from).not.toContain("ada@example.com");
+    }
+  });
+
+  it("subjects the notification with the sender's name", async () => {
+    const email = new StubEmailProvider();
+    await submitContact(payload, { email });
+    expect(email.sent[0].subject).toBe("New project enquiry from Ada Lovelace");
   });
 
   it("silently accepts honeypot spam", async () => {
-    const email = new MemoryEmailProvider();
-    const result = await submitContact({ ...payload, website: "https://spam.test" }, {
-      email,
-      store: new MemoryMessageStore(),
-    });
+    const email = new StubEmailProvider();
+    const result = await submitContact({ ...payload, website: "https://spam.test" }, { email });
     expect(result.ok).toBe(true);
     expect(email.sent).toHaveLength(0);
   });
 
   it("returns field errors for invalid input", async () => {
-    const result = await submitContact({ ...payload, email: "bad" }, {
-      email: new MemoryEmailProvider(),
-      store: new MemoryMessageStore(),
-    });
+    const result = await submitContact({ ...payload, email: "bad" }, { email: new StubEmailProvider() });
     expect(result.ok).toBe(false);
     if (result.ok) return;
     expect(result.fieldErrors?.email?.[0]).toBeTruthy();
   });
 
   it("returns a configuration error when mail is unavailable", async () => {
-    const result = await submitContact(payload, {
-      email: null,
-      store: new MemoryMessageStore(),
-      env: {},
-    });
+    const result = await submitContact(payload, { email: null, env: {} });
     expect(result.ok).toBe(false);
     if (result.ok) return;
     expect(result.error).toMatch(/not configured/i);
@@ -64,22 +84,16 @@ describe("submitContact", () => {
 
   it("still succeeds when the visitor acknowledgement bounces", async () => {
     // A dead or mistyped visitor address must not undo a delivered notification.
-    const store = new MemoryMessageStore();
-    const email = new MemoryEmailProvider();
-    const send = email.send.bind(email);
-    let call = 0;
-    email.send = async (message) => {
-      call += 1;
-      if (call === 2) throw new Error("550 5.1.1 recipient does not exist");
-      return send(message);
-    };
-
-    const result = await submitContact(payload, { email, store });
+    const email = new StubEmailProvider(2);
+    const result = await submitContact(payload, { email });
 
     expect(result.ok).toBe(true);
-    if (!result.ok) return;
-    // The notification to the inbox owner went out and was persisted.
     expect(email.sent).toHaveLength(1);
-    expect(await store.get(result.referenceId)).toBeTruthy();
+  });
+
+  it("propagates a failed owner notification so the route can report it", async () => {
+    // With no store behind it, a silent success here would lose the enquiry.
+    const email = new StubEmailProvider(1);
+    await expect(submitContact(payload, { email })).rejects.toThrow();
   });
 });
