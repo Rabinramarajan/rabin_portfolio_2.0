@@ -85,7 +85,7 @@ export function useChat() {
       const text = rawText.trim().slice(0, chatConfig.maxMessageLength);
       if (!text || busy) return;
 
-      const userMessage: ChatMessage = { id: nextId(), role: "user", content: text };
+      const userMessage: ChatMessage = { id: nextId(), role: "user", content: text, at: Date.now() };
       const assistantId = nextId();
 
       // History is captured before the new turn is appended.
@@ -95,7 +95,7 @@ export function useChat() {
           .filter((message) => !message.error && message.content)
           .slice(-chatConfig.maxHistoryTurns)
           .map((message) => ({ role: message.role, content: message.content }));
-        return [...prev, userMessage, { id: assistantId, role: "assistant", content: "" }];
+        return [...prev, userMessage, { id: assistantId, role: "assistant", content: "", at: Date.now() }];
       });
 
       setBusy(true);

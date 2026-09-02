@@ -104,6 +104,8 @@ export interface ChatMessage extends ChatTurn {
   error?: boolean;
   /** Renders the progressive lead-capture form instead of a text bubble. */
   lead?: boolean;
+  /** Epoch ms the turn was created — rendered as the bubble timestamp. */
+  at?: number;
 }
 
 /** Non-streamed metadata emitted before the answer text. */
