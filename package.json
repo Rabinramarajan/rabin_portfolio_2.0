@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "blob:migrate": "node --env-file-if-exists=.env.local scripts/migrate-media-to-blob.mjs",
-    "blob:migrate:dry": "node --env-file-if-exists=.env.local scripts/migrate-media-to-blob.mjs --dry-run"
+    "blob:migrate:dry": "node --env-file-if-exists=.env.local scripts/migrate-media-to-blob.mjs --dry-run",
+    "publish": "node publish/publish.js"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

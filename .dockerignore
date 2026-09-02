@@ -1,12 +1,31 @@
+# dependencies & build output — rebuilt inside the image
 node_modules
 .next
-.git
-.gitignore
-.vercel
+out
+build
+
+# secrets — must never enter the build context
 .env
-.env.local
-.env.development
-.env.production
+.env.*
+*.pem
+*.key
+
+# vcs & tooling
+.git
+.github
+.vscode
+.claude
+.idea
+
+# publish pipeline itself
+publish
+
+# docs, scratch files, archives
+*.md
+*.zip
 *.log
 coverage
-README.md
+
+# design/source assets not served at runtime
+ux
+animation
