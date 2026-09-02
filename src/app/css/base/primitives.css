@@ -5,6 +5,30 @@
 .shell {
   width: min(100% - (var(--gutter) * 2), var(--container-max));
   margin-inline: auto;
+  padding-inline: var(--rail-inset, 0px);
+}
+
+/*
+ * RAIL BREATHING ROOM.
+ *
+ * The site's two section rails are `position: fixed` overlays — the experience
+ * index on the left from 1180px, the sidebar on the right from 1700px — so
+ * neither reserves any layout space and content can run right up under them.
+ * `--rail-inset` tops the natural gutter up to a floor wide enough to clear
+ * them, and collapses to nothing once the centred shell already leaves more
+ * room than that, so the widest screens still get the full container width.
+ * It is set on the root rather than per page so the fixed header takes the
+ * same inset and its logo stays aligned with the copy directly beneath it.
+ */
+@media (min-width: 1180px) {
+  :root {
+    --rail-inset: max(0px, calc(9rem - var(--shell-edge)));
+  }
+}
+@media (min-width: 1700px) {
+  :root {
+    --rail-inset: max(0px, calc(13rem - var(--shell-edge)));
+  }
 }
 .section {
   padding: var(--section-y) 0;

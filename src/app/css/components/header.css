@@ -25,6 +25,8 @@
   gap: 1rem;
   width: min(100% - (var(--gutter) * 2), var(--container-max));
   margin-inline: auto;
+  /* Same inset as `.shell`, so the logo keeps lining up with page content. */
+  padding-inline: var(--rail-inset, 0px);
 }
 .hd__nav {
   margin-left: auto;
