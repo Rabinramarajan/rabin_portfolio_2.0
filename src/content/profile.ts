@@ -4,7 +4,7 @@ import { media } from "@/lib/media";
 export const SITE_URL = "https://www.rabinr.in";
 
 export const profile: Profile = {
-  name: "Rabin R",
+  name: "Rabin R sdghfah",
   shortName: "Rabin",
   monogram: "RR",
   role: "Frontend Software Engineer",
