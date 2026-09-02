@@ -230,5 +230,12 @@ export function retrieveContext(
 
   // Intent-scoped search was thin — widen to the whole base before giving up.
   const widened = retriever.search(question, { limit, entities });
-  return dedupeRecords([...primary, ...widened]).slice(0, limit);
+  const combined = dedupeRecords([...primary, ...widened]).slice(0, limit);
+  if (combined.length) return combined;
+
+  // Nothing matched lexically, but the intent is known. A question like
+  // "tell me about you" carries no scoreable token once stop words are
+  // removed, so fall back to the intent's primary record type — a grounded
+  // answer from real content beats the "I don't have that" reply.
+  return retriever.findByType(types[0]).slice(0, limit);
 }

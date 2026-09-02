@@ -213,7 +213,17 @@ const INTENT_RULES: IntentRule[] = [
   },
   {
     intent: "PROFILE",
-    patterns: [/\bwho\s+is\b/, /\btell\s+me\s+about\s+(rabin|him|yourself)\b/, /\babout\s+(rabin|him)\b/, /\bintroduce\b/],
+    // Visitors address the assistant in the second person ("tell me about
+    // you") as often as they name Rabin. Both mean the same question. This
+    // rule sits below the specific ones, so "about your projects" still
+    // resolves to PROJECT rather than being swallowed here.
+    patterns: [
+      /\bwho\s+(is|are)\s+(you|rabin|he)\b/,
+      /\bwho\s+is\b/,
+      /\btell\s+me\s+about\s+(rabin|him|you|yourself)\b/,
+      /\babout\s+(rabin|him|you|yourself)\b/,
+      /\bintroduce\b/,
+    ],
   },
   {
     intent: "NAVIGATION",

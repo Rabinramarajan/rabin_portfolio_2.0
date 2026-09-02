@@ -4,6 +4,7 @@ import { services } from "@/content/services";
 import { detectEntities, detectIntent, emptyEntities } from "@/chat/intent";
 import { knowledgeBase } from "@/chat/knowledge";
 import { JsonRetriever, retrieveContext } from "@/chat/retriever";
+import { chatConfig } from "@/chat/config";
 
 const retriever = new JsonRetriever();
 
@@ -111,5 +112,28 @@ describe("retrieval", () => {
     expect(retriever.findById("contact")?.type).toBe("contact");
     expect(retriever.findById("nope")).toBeUndefined();
     expect(retriever.findByType("availability").length).toBeGreaterThan(0);
+  });
+});
+
+/**
+ * Every prompt the UI offers with one tap must retrieve something. These are
+ * the highest-traffic questions in the product, and second-person phrasing
+ * ("tell me about you") reduces to nothing but stop words — so a stop-word or
+ * intent-pattern edit can silently turn a starter chip into "I don't have
+ * verified information about that".
+ */
+describe("one-tap prompts", () => {
+  const prompts = [
+    ...chatConfig.starterPrompts,
+    ...chatConfig.quickActions.map((action) => action.prompt),
+    "who are you",
+    "tell me about yourself",
+    "about you",
+  ];
+
+  it.each(prompts)("retrieves grounded context for %s", (prompt) => {
+    const { intent, entities } = detectIntent(prompt);
+    expect(intent).not.toBe("UNKNOWN");
+    expect(retrieveContext(prompt, intent, entities).length).toBeGreaterThan(0);
   });
 });
