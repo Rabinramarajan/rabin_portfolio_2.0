@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* Vercel Analytics and Speed Insights */
-  output: "standalone",
+  /* Standalone output exists for the container build (see Dockerfile), which
+     copies .next/standalone and runs its server.js.
+
+     It must NOT be set when Vercel builds the app itself: standalone makes
+     Next do its own file tracing and skip .next/next-server.js.nft.json, and
+     Vercel's post-build step then fails with ENOENT on that file. Vercel sets
+     VERCEL=1 during the build, so the two pipelines stay out of each other's
+     way. */
+  output: process.env.VERCEL ? undefined : "standalone",
   productionBrowserSourceMaps: true,
   images: {
     formats: ["image/avif", "image/webp"],
