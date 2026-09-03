@@ -9,12 +9,16 @@
 # Kustomize overlay to point at that tag. ArgoCD syncs the commit.
 #
 #   publish/config.json "demo".version -> deploy/overlays/staging
-#   publish/config.json "prod".version -> deploy/overlays/production
+#
+# Production is NOT synced here. ArgoCD Image Updater owns that tag: it watches
+# vcr.vercel.com and commits the bump itself (see the annotations on
+# deploy/argocd/application-production.yaml). Two writers on one field means
+# whichever ran last wins, so this workflow deliberately leaves it alone.
 #
 # Release flow:
 #   1. npm run publish prod        (builds, pushes vcr...:v1.0.5, updates config)
 #   2. commit and push config.json + version.json + package.json
-#   3. this workflow bumps the production overlay
+#   3. Image Updater sees the new tag and commits the overlay bump
 #   4. ArgoCD deploys it
 #
 # Rolling back is `git revert` of the bump commit, not a kubectl command.
@@ -66,7 +70,6 @@ jobs:
             ( cd "deploy/overlays/$overlay" && kustomize edit set image "$base=$repo:v$ver" )
           }
           sync demo staging
-          sync prod production
 
       - name: Render manifests as a gate
         run: |
