@@ -5,20 +5,19 @@ namespace: portfolio-staging
 nameSuffix: -staging
 
 resources:
-  - ../../base
-  - ingress.yaml
+- ../../base
+- ingress.yaml
 
 labels:
-  - includeSelectors: false
-    pairs:
-      app.kubernetes.io/instance: portfolio-staging
+- pairs:
+    app.kubernetes.io/instance: portfolio-staging
 
 # Synced from publish/config.json ("demo".version) by
 # .github/workflows/release.yml. Staging tracks the demo image, which is cut by
 # `npm run publish demo` — it does not auto-build on every push to main.
 images:
-  - name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
-    newTag: v1.0.0
+- name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
+  newTag: v1.0.0
 
 patches:
-  - path: replicas.yaml
+- path: replicas.yaml
