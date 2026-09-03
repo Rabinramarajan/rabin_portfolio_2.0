@@ -8,10 +8,10 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-    - hosts: ["rabin.dev", "www.rabin.dev"]
+    - hosts: ["rabinr.in", "www.rabinr.in"]
       secretName: portfolio-tls
   rules:
-    - host: rabin.dev
+    - host: rabinr.in
       http:
         paths:
           - path: /
@@ -21,7 +21,7 @@ spec:
                 name: portfolio
                 port:
                   name: http
-    - host: www.rabin.dev
+    - host: www.rabinr.in
       http:
         paths:
           - path: /
