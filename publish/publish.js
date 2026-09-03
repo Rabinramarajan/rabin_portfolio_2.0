@@ -57,6 +57,18 @@ if (!fs.existsSync(path.join(ROOT, "Dockerfile"))) {
   fail("No Dockerfile at the project root.");
 }
 
+/* Cheapest possible check that the daemon is reachable. Without it the run
+   gets as far as writing the version module before docker reports it cannot
+   connect — fail here instead, while nothing has been touched. */
+try {
+  execFileSync("docker", ["info"], { stdio: "ignore" });
+} catch {
+  fail(
+    "Cannot reach the Docker daemon. Start Docker Desktop, wait for it to\n" +
+      "  report Running, then re-run this command.",
+  );
+}
+
 // ---------- version ----------
 
 function nextVersion(current, kind) {
@@ -81,7 +93,25 @@ console.log(`Publishing  : ${tag}\n`);
 
 /* The site reads its version from a committed module, not from this folder:
    .dockerignore keeps publish/ out of the image. Generate it *before* the
-   build so the image reports the version it is actually being tagged with. */
+   build so the image reports the version it is actually being tagged with.
+
+   Because that write happens ahead of a step that can fail, stash the current
+   contents first: a failed build must leave no trace of a version that was
+   never pushed, or the working tree would claim a release that does not
+   exist. */
+const VERSION_MODULE = path.join(ROOT, "src", "generated", "version.json");
+const versionModuleBefore = fs.existsSync(VERSION_MODULE)
+  ? fs.readFileSync(VERSION_MODULE, "utf8")
+  : null;
+
+function restoreVersionModule() {
+  if (versionModuleBefore === null) {
+    if (fs.existsSync(VERSION_MODULE)) fs.rmSync(VERSION_MODULE);
+  } else {
+    fs.writeFileSync(VERSION_MODULE, versionModuleBefore, "utf8");
+  }
+}
+
 run("node", ["scripts/generate-version.mjs", `--env=${option}`, `--version=${version}`]);
 
 try {
@@ -100,7 +130,11 @@ try {
   run("docker", ["push", tag]);
   console.log(`✓ Pushed ${tag}`);
 } catch (error) {
-  fail(`Build/push failed — version stays at v${target.version}.\n${error.message}`);
+  restoreVersionModule();
+  fail(
+    `Build/push failed — version stays at v${target.version}.\n` +
+      `  src/generated/version.json was rolled back; the tree is unchanged.\n${error.message}`,
+  );
 }
 
 // ---------- record (only after a successful push) ----------
