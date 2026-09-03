@@ -34,4 +34,4 @@ USER appuser
 
 # Start the application
 # standalone output generates server.js at the root of .next/standalone
-CMD ["node", "server.js"]
+CMD ["node", "server.js", "npm", "start"]
