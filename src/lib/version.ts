@@ -30,23 +30,26 @@ export const displayVersion = `v${versionRecord.version}`;
 /** Newest first — the generator writes them in that order. */
 export const releases: Release[] = versionRecord.releases;
 
-/** `2 Sep 2026` in a fixed locale, so server and client render the same string. */
+/**
+ * `2 Sep 2026` in a fixed locale and zone, so server and client render the
+ * same string. IST is the project's home timezone — see `src/content/contact.ts`.
+ */
 export function formatReleaseDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
     year: "numeric",
-    timeZone: "UTC",
+    timeZone: "Asia/Kolkata",
   });
 }
 
-/** `21:06 UTC` — paired with the date on the release timeline. */
+/** `21:06 IST` — paired with the date on the release timeline. */
 export function formatReleaseTime(iso: string): string {
   return `${new Date(iso).toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
-    timeZone: "UTC",
-  })} UTC`;
+    timeZone: "Asia/Kolkata",
+  })} IST`;
 }
 
 /**
