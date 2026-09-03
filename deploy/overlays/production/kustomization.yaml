@@ -18,7 +18,7 @@ labels:
 # To roll back, revert the bump commit — never `kubectl set image`.
 images:
 - name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
-  newTag: v1.0.5
+  newTag: v1.0.6
 
 patches:
 - path: rollout.yaml
