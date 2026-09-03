@@ -1,0 +1,40 @@
+# ArgoCD Image Updater v1.x is CRD-driven: the controller watches ImageUpdater
+# resources, not Application annotations. (The annotation mechanism is v0.x and
+# is ignored by v1.3.0 unless spec.useAnnotations is set.)
+#
+# It polls vcr.vercel.com every 2m, and on a newer semver tag commits the bump
+# to deploy/overlays/production/kustomization.yaml. ArgoCD then syncs that
+# commit — so git stays the record of what production runs.
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: portfolio-production
+  namespace: argocd
+spec:
+  applicationRefs:
+    # Matches the Application by name, not a label selector — this CR governs
+    # exactly one app and should not silently pick up others later.
+    - namePattern: portfolio-production
+      images:
+        - alias: portfolio
+          imageName: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod
+          commonUpdateSettings:
+            updateStrategy: semver
+            # Only v-prefixed release tags. `latest` and any stray build tag
+            # cannot roll production forward on their own.
+            allowTags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+$
+            # Registry is private; same credentials as the vcr-pull secret.
+            pullSecret: pullsecret:argocd/vcr-creds
+          manifestTargets:
+            kustomize:
+              # Must equal the images[].name key in the overlay kustomization —
+              # that is the entry whose newTag gets rewritten.
+              name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod
+  writeBackConfig:
+    # git, not the "argocd" default: that one patches the live Application only,
+    # leaving the cluster on a tag git has no record of — the drift that
+    # selfHeal and "roll back with git revert" exist to prevent.
+    method: git
+    gitConfig:
+      branch: main
+      writeBackTarget: kustomization:deploy/overlays/production

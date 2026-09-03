@@ -5,27 +5,8 @@ metadata:
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  # ArgoCD Image Updater watches the registry and bumps the tag for us, so a
-  # `npm run publish prod` is the only manual step in a release.
-  #
-  # write-back-method=git is deliberate: the alternative (argocd) mutates the
-  # live Application only, leaving the cluster running a tag git has no record
-  # of — the exact drift selfHeal and "roll back with git revert" exist to
-  # prevent. Writing to git keeps the commit history the source of truth.
-  annotations:
-    argocd-image-updater.argoproj.io/image-list: >-
-      portfolio=vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod
-    # Only ever move to a higher semver. `latest` and any stray tag are ignored,
-    # so a mistaken push cannot roll production forward on its own.
-    argocd-image-updater.argoproj.io/portfolio.update-strategy: semver
-    argocd-image-updater.argoproj.io/portfolio.allow-tags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+$
-    # Must match the `images[].name` key in the overlay kustomization, not the
-    # rendered image — that is the field Image Updater rewrites.
-    argocd-image-updater.argoproj.io/portfolio.kustomize.image-name: >-
-      vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod
-    argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/git-branch: main
-    argocd-image-updater.argoproj.io/write-back-target: kustomization:deploy/overlays/production
+  # Image tag bumps are automated — see imageupdater-production.yaml. The v0.x
+  # annotation mechanism is deliberately not used: v1.x is CRD-driven.
 spec:
   project: portfolio
   source:

@@ -2,9 +2,13 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
-# Dependency layer — cached until package*.json changes
+# Dependency layer. The layer cache alone is not enough here: publish.js bumps
+# the version in package.json on every release, so this COPY is invalidated
+# each time and npm ci always re-runs. The cache mount is what keeps that cheap
+# — the package tarballs persist across builds, so the re-run is a local
+# extract instead of a full registry download.
 COPY package*.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci --prefer-offline --no-audit --fund=false
 
 # Source layer
 COPY . .
