@@ -6,7 +6,7 @@ is applied by hand, and no workflow talks to the cluster.
 Images come from the registry this project already publishes to:
 
 ```
-vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
+vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod
 ```
 
 This sits **alongside** the Vercel-hosted site, which is unchanged. Vercel stays

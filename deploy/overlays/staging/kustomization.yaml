@@ -16,8 +16,8 @@ labels:
 # .github/workflows/release.yml. Staging tracks the demo image, which is cut by
 # `npm run publish demo` — it does not auto-build on every push to main.
 images:
-- name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
-  newName: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
+- name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod
+  newName: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod
   newTag: v1.0.0
 
 patches:

@@ -27,7 +27,7 @@ spec:
         - name: portfolio
           # Tag is a placeholder — every overlay pins it via `images:` in its
           # kustomization.yaml, synced from publish/config.json.
-          image: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0:latest
+          image: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod:latest
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
