@@ -4,22 +4,21 @@ kind: Kustomization
 namespace: portfolio
 
 resources:
-  - ../../base
-  - ingress.yaml
-  - hpa.yaml
-  - pdb.yaml
+- ../../base
+- ingress.yaml
+- hpa.yaml
+- pdb.yaml
 
 labels:
-  - includeSelectors: false
-    pairs:
-      app.kubernetes.io/instance: portfolio-production
+- pairs:
+    app.kubernetes.io/instance: portfolio-production
 
 # What production runs. Synced from publish/config.json ("prod".version) by
 # .github/workflows/release.yml; ArgoCD deploys whatever this commit says.
 # To roll back, revert the bump commit — never `kubectl set image`.
 images:
-  - name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
-    newTag: v1.0.4
+- name: vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0
+  newTag: v1.0.5
 
 patches:
-  - path: rollout.yaml
+- path: rollout.yaml
