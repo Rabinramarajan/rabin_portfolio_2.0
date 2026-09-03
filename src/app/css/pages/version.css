@@ -3,15 +3,24 @@
 
    A build ledger, not a marketing page: monospace-forward, quiet
    colour, and a single hairline rail threading the timeline.
+
+   Spacing note: the scale here is literal pixels (--space-32 is
+   32px), so vertical rhythm leans on the 40/48/64/80 steps.
    ============================================================ */
 
 .vr {
-  max-width: 56rem;
+  max-width: 60rem;
   margin-inline: auto;
-  padding: var(--space-32) var(--space-6) var(--space-24);
+  /* Clear the fixed header — every page owns its own top offset. */
+  padding: calc(var(--header-h) + clamp(2rem, 5vw, 4rem)) var(--gutter)
+    var(--space-80);
 }
 
 /* ---------- header ---------- */
+
+.vr__head {
+  margin-bottom: clamp(3rem, 7vw, 5rem);
+}
 
 .vr__eyebrow {
   font-family: var(--font-mono);
@@ -19,34 +28,35 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-16);
 }
 
 .vr__title {
   font-family: var(--font-display);
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
   color: var(--color-text);
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-20);
 }
 
 .vr__lede {
-  max-width: 46ch;
+  max-width: 52ch;
   font-size: var(--text-base);
   line-height: var(--leading-relaxed);
   color: var(--color-text-muted);
-  margin: 0 0 var(--space-8);
+  margin: 0 0 var(--space-40);
 }
 
 .vr__facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-  gap: var(--space-4);
-  margin: 0 0 var(--space-5);
-  padding: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-24) var(--space-32);
+  margin: 0 0 var(--space-16);
+  padding: var(--space-28) var(--space-32);
   border: 1px solid var(--color-line);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   background: var(--color-surface);
 }
 
@@ -56,12 +66,13 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-text-faint);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-8);
 }
 
 .vr__fact dd {
   margin: 0;
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
   color: var(--color-text);
 }
 
@@ -75,8 +86,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--space-3);
-  margin: 0 0 var(--space-12);
+  gap: var(--space-12);
+  margin: 0;
+  padding-inline: var(--space-4);
   font-size: var(--text-xs);
 }
 
@@ -104,7 +116,7 @@
 .vr__item {
   display: grid;
   grid-template-columns: 1.5rem 1fr;
-  gap: var(--space-5);
+  gap: var(--space-24);
 }
 
 /* The rail is drawn by the marker column so it stops cleanly at the last dot. */
@@ -112,13 +124,13 @@
   position: relative;
   display: flex;
   justify-content: center;
-  padding-top: 1.35rem;
+  padding-top: 1.9rem;
 }
 
 .vr__item:not(:last-child) .vr__marker::after {
   content: "";
   position: absolute;
-  top: 2rem;
+  top: 2.6rem;
   bottom: -1rem;
   width: 1px;
   background: var(--color-line);
@@ -140,7 +152,7 @@
 }
 
 .vr__card {
-  padding: var(--space-5) 0 var(--space-8);
+  padding: var(--space-24) 0 var(--space-40);
   border-bottom: 1px solid var(--color-line);
 }
 
@@ -153,14 +165,15 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  gap: var(--space-12);
+  margin-bottom: var(--space-8);
 }
 
 .vr__version {
   font-family: var(--font-mono);
   font-size: var(--text-xl);
   font-weight: var(--weight-semibold);
+  line-height: 1;
   color: var(--color-text);
   margin: 0;
 }
@@ -168,10 +181,11 @@
 .vr__tag {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
+  line-height: 1.4;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.15rem 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   border: 1px solid var(--color-line);
   color: var(--color-text-muted);
 }
@@ -195,8 +209,8 @@
 .vr__when {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: 0 0 var(--space-3);
+  gap: var(--space-8);
+  margin: 0 0 var(--space-20);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
@@ -204,7 +218,7 @@
 .vr__digest {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-8);
   margin: 0;
 }
 
@@ -233,11 +247,15 @@
 /* ---------- footer ---------- */
 
 .vr__foot {
-  margin-top: var(--space-16);
-  padding-top: var(--space-6);
+  margin-top: var(--space-64);
+  padding-top: var(--space-32);
   border-top: 1px solid var(--color-line);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+}
+
+.vr__foot p {
+  margin: 0;
 }
 
 .vr__foot a {
@@ -249,15 +267,16 @@
 
 @media (max-width: 640px) {
   .vr {
-    padding-top: var(--space-20);
+    padding-bottom: var(--space-64);
   }
 
-  .vr__title {
-    font-size: var(--text-3xl);
+  .vr__facts {
+    padding: var(--space-24);
+    gap: var(--space-20);
   }
 
   .vr__item {
     grid-template-columns: 1rem 1fr;
-    gap: var(--space-4);
+    gap: var(--space-16);
   }
 }
