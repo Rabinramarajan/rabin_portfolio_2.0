@@ -12,8 +12,11 @@ spec:
       namespace: portfolio
     - server: https://kubernetes.default.svc
       namespace: portfolio-staging
-  # A web frontend has no business creating cluster-scoped objects.
-  clusterResourceWhitelist: []
+  # A web frontend has no business creating cluster-scoped objects — except the
+  # namespace it lives in, which CreateNamespace=true needs to apply.
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
   namespaceResourceWhitelist:
     - group: ""
       kind: "*"
