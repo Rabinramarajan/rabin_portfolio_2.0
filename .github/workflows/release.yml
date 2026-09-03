@@ -1,0 +1,90 @@
+# GitOps tag sync.
+#
+# Images are built and pushed by `npm run publish <env>` from a developer
+# machine, to vcr.vercel.com. That stays deliberate: no registry credentials
+# live in GitHub (same reasoning as ci.yml).
+#
+# So this workflow builds nothing. It reads publish/config.json — the record
+# that publish.js writes after a successful push — and rewrites the matching
+# Kustomize overlay to point at that tag. ArgoCD syncs the commit.
+#
+#   publish/config.json "demo".version -> deploy/overlays/staging
+#   publish/config.json "prod".version -> deploy/overlays/production
+#
+# Release flow:
+#   1. npm run publish prod        (builds, pushes vcr...:v1.0.5, updates config)
+#   2. commit and push config.json + version.json + package.json
+#   3. this workflow bumps the production overlay
+#   4. ArgoCD deploys it
+#
+# Rolling back is `git revert` of the bump commit, not a kubectl command.
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+    # Only a published release can change what should be deployed.
+    paths:
+      - "publish/config.json"
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync-overlays:
+    name: Sync overlay image tags from publish/config.json
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install kustomize
+        run: |
+          curl -sSL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Set image tags
+        run: |
+          set -euo pipefail
+          sync() {
+            env="$1" overlay="$2"
+            repo=$(node -p "require('./publish/config.json')['$env'].docker")
+            ver=$(node -p "require('./publish/config.json')['$env'].version")
+            echo "$env v$ver -> deploy/overlays/$overlay"
+            ( cd "deploy/overlays/$overlay" && kustomize edit set image "$repo:v$ver" )
+          }
+          sync demo staging
+          sync prod production
+
+      - name: Render manifests as a gate
+        run: |
+          for overlay in deploy/overlays/*/; do
+            kustomize build "$overlay" > /dev/null
+          done
+
+      - name: Commit the bump
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- deploy/; then
+            echo "Overlays already match publish/config.json — nothing to commit."
+            exit 0
+          fi
+          git --no-pager diff -- deploy/
+          git add deploy/
+          git commit -m "chore(deploy): sync overlay image tags from publish/config.json
+
+          Written by the Release workflow. ArgoCD syncs from this commit.
+
+          [skip ci]"
+          # Someone may have pushed while this ran.
+          git pull --rebase origin main
+          git push origin main

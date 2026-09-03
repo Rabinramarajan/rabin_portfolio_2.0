@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portfolio-staging
+  namespace: argocd
+  finalizers:
+    # Deleting the Application should take its workloads with it.
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: portfolio
+  source:
+    repoURL: https://github.com/Rabinramarajan/rabin_portfolio_2.0.git
+    targetRevision: main
+    path: deploy/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portfolio-staging
+  syncPolicy:
+    automated:
+      # Staging tracks main unattended — that is the point of it.
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 20s
+        factor: 2

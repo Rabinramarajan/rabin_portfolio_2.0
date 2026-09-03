@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+# `labels` rather than the deprecated `commonLabels`. Only the name is folded
+# into selectors — selectors are immutable, so anything that may change later
+# (part-of, version) must stay out of them.
+labels:
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/name: portfolio
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: rabin-portfolio
+
+configMapGenerator:
+  - name: portfolio-config
+    literals:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+
+# Generated ConfigMaps get a content hash suffix, so editing a value rolls the
+# pods automatically instead of leaving them on stale config.
+generatorOptions:
+  disableNameSuffixHash: false

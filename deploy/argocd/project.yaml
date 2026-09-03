@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: portfolio
+  namespace: argocd
+spec:
+  description: Rabin portfolio — GitOps-managed deployments
+  sourceRepos:
+    - https://github.com/Rabinramarajan/rabin_portfolio_2.0.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: portfolio
+    - server: https://kubernetes.default.svc
+      namespace: portfolio-staging
+  # A web frontend has no business creating cluster-scoped objects.
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: "*"
+    - group: apps
+      kind: "*"
+    - group: networking.k8s.io
+      kind: "*"
+    - group: autoscaling
+      kind: "*"
+    - group: policy
+      kind: "*"

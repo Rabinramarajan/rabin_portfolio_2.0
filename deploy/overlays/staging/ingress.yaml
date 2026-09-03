@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: portfolio
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    # Staging must never reach an index.
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Robots-Tag: noindex, nofollow";
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: ["staging.rabin.dev"]
+      secretName: portfolio-staging-tls
+  rules:
+    - host: staging.rabin.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                # Kustomize's nameReference transformer rewrites this to the
+                # suffixed Service name — do not hardcode "portfolio-staging".
+                name: portfolio
+                port:
+                  name: http

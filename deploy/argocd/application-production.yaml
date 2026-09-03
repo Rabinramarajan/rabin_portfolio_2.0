@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: portfolio-production
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: portfolio
+  source:
+    repoURL: https://github.com/Rabinramarajan/rabin_portfolio_2.0.git
+    targetRevision: main
+    path: deploy/overlays/production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: portfolio
+  syncPolicy:
+    automated:
+      prune: true
+      # selfHeal reverts manual kubectl edits back to git. Keep it on: a live
+      # hotfix that git does not know about is the failure mode GitOps exists
+      # to prevent.
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 30s
+        factor: 2
+  # The HPA owns replica count at runtime; without this, every scale event
+  # shows production as OutOfSync against the committed value.
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas

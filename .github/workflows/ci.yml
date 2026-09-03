@@ -79,6 +79,50 @@ jobs:
           fi
           echo "✓ package.json and release record agree on $pkg"
 
+  manifests:
+    name: Kustomize overlays render
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install kustomize
+        run: |
+          curl -sSL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      # A broken overlay would otherwise only surface as an ArgoCD sync
+      # failure, after the image is already built and pushed.
+      - name: Build every overlay
+        run: |
+          for overlay in deploy/overlays/*/; do
+            echo "--- $overlay"
+            kustomize build "$overlay" > /dev/null
+          done
+          echo "✓ all overlays render"
+
+      # The overlays are the deployed truth; publish/config.json is the
+      # published truth. If they disagree, the cluster is running something
+      # other than the recorded release.
+      - name: Overlays match publish/config.json
+        run: |
+          set -euo pipefail
+          status=0
+          check() {
+            env="$1" overlay="$2"
+            want="$(node -p "require('./publish/config.json')['$env'].docker"):v$(node -p "require('./publish/config.json')['$env'].version")"
+            got=$(kustomize build "deploy/overlays/$overlay" \
+              | grep -m1 -oE 'image: [^[:space:]]+' | cut -d' ' -f2)
+            if [ "$want" != "$got" ]; then
+              echo "::error file=deploy/overlays/$overlay/kustomization.yaml::$overlay deploys $got but publish/config.json records $want. The Release workflow syncs this — rerun it, or run 'kustomize edit set image' locally."
+              status=1
+            else
+              echo "✓ $overlay -> $got"
+            fi
+          }
+          check demo staging
+          check prod production
+          exit $status
+
   image:
     name: Container image builds
     runs-on: ubuntu-latest
