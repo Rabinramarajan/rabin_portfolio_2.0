@@ -273,26 +273,21 @@
   color: var(--color-accent);
 }
 
-/* Running build — pushed to the trailing edge of the legal row, and wrapping
-   underneath it once the row runs out of width. */
-.ft__version {
-  margin-inline-start: auto;
+/* Running build — flows inline after the legal text. Deliberately NOT pushed
+   to the trailing edge: the chat launcher is fixed to the bottom-right corner
+   at z-index 240, and a right-aligned badge lands underneath it. */
+.ft__legal .ft__version {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   letter-spacing: 0.06em;
   padding: 0.15rem 0.5rem;
   border: 1px solid var(--color-line);
   border-radius: 999px;
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
 }
 .ft__legal .ft__version:hover {
   color: var(--color-accent);
   border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
-}
-@media (max-width: 639px) {
-  .ft__version {
-    margin-inline-start: 0;
-  }
 }
 /* On narrow screens the floating chat launcher sits over the bottom of the
    viewport, so the legal row is given room to clear it once scrolled home. */
