@@ -53,12 +53,17 @@ jobs:
       - name: Set image tags
         run: |
           set -euo pipefail
+          # The name kustomize matches on is whatever deploy/base/deployment.yaml
+          # declares. Each env may publish to its own repo, so always write a
+          # remap (base=repo:tag) — a bare "repo:tag" would key on a name the
+          # base does not contain and silently apply to nothing.
+          base=$(grep -oE 'vcr\.vercel\.com/[^:[:space:]]+' deploy/base/deployment.yaml | head -1)
           sync() {
             env="$1" overlay="$2"
             repo=$(node -p "require('./publish/config.json')['$env'].docker")
             ver=$(node -p "require('./publish/config.json')['$env'].version")
-            echo "$env v$ver -> deploy/overlays/$overlay"
-            ( cd "deploy/overlays/$overlay" && kustomize edit set image "$repo:v$ver" )
+            echo "$env v$ver -> deploy/overlays/$overlay ($repo)"
+            ( cd "deploy/overlays/$overlay" && kustomize edit set image "$base=$repo:v$ver" )
           }
           sync demo staging
           sync prod production

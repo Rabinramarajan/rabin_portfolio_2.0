@@ -1,6 +1,6 @@
 {
   "name": "rabin_portfolio_2.0",
-  "version": "1.0.6",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
