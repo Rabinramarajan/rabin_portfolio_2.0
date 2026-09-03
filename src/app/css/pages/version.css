@@ -1,0 +1,263 @@
+/* ============================================================
+   /version — release history
+
+   A build ledger, not a marketing page: monospace-forward, quiet
+   colour, and a single hairline rail threading the timeline.
+   ============================================================ */
+
+.vr {
+  max-width: 56rem;
+  margin-inline: auto;
+  padding: var(--space-32) var(--space-6) var(--space-24);
+}
+
+/* ---------- header ---------- */
+
+.vr__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 var(--space-3);
+}
+
+.vr__title {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  margin: 0 0 var(--space-4);
+}
+
+.vr__lede {
+  max-width: 46ch;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-8);
+}
+
+.vr__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+}
+
+.vr__fact dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: var(--space-2);
+}
+
+.vr__fact dd {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--color-text);
+}
+
+.vr__fact-strong {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+}
+
+.vr__registry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-12);
+  font-size: var(--text-xs);
+}
+
+.vr__registry span {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.vr__registry code {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- timeline ---------- */
+
+.vr__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vr__item {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: var(--space-5);
+}
+
+/* The rail is drawn by the marker column so it stops cleanly at the last dot. */
+.vr__marker {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-top: 1.35rem;
+}
+
+.vr__item:not(:last-child) .vr__marker::after {
+  content: "";
+  position: absolute;
+  top: 2rem;
+  bottom: -1rem;
+  width: 1px;
+  background: var(--color-line);
+}
+
+.vr__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-line-strong);
+  z-index: 1;
+}
+
+.vr__dot--live {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+
+.vr__card {
+  padding: var(--space-5) 0 var(--space-8);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.vr__item:last-child .vr__card {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.vr__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.vr__version {
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.vr__tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+}
+
+.vr__tag--major {
+  border-color: color-mix(in srgb, var(--color-danger) 45%, transparent);
+  color: var(--color-danger);
+}
+
+.vr__tag--minor {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  color: var(--color-accent);
+}
+
+.vr__tag--live {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--color-accent);
+}
+
+.vr__when {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.vr__digest {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.vr__digest-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.vr__digest code {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+  /* Digests are 71 characters — never let one push the page sideways. */
+  overflow-wrap: anywhere;
+}
+
+.vr__digest--none {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+/* ---------- footer ---------- */
+
+.vr__foot {
+  margin-top: var(--space-16);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-line);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.vr__foot a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-accent);
+}
+
+@media (max-width: 640px) {
+  .vr {
+    padding-top: var(--space-20);
+  }
+
+  .vr__title {
+    font-size: var(--text-3xl);
+  }
+
+  .vr__item {
+    grid-template-columns: 1rem 1fr;
+    gap: var(--space-4);
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "rabin_portfolio_2.0",
-  "version": "0.1.0",
+  "version": "1.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "blob:migrate": "node --env-file-if-exists=.env.local scripts/migrate-media-to-blob.mjs",
     "blob:migrate:dry": "node --env-file-if-exists=.env.local scripts/migrate-media-to-blob.mjs --dry-run",
-    "publish": "node publish/publish.js"
+    "publish": "node publish/publish.js",
+    "version:sync": "node scripts/generate-version.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

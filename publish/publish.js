@@ -79,6 +79,11 @@ console.log(`Publishing  : ${tag}\n`);
 
 // ---------- build & push ----------
 
+/* The site reads its version from a committed module, not from this folder:
+   .dockerignore keeps publish/ out of the image. Generate it *before* the
+   build so the image reports the version it is actually being tagged with. */
+run("node", ["scripts/generate-version.mjs", `--env=${option}`, `--version=${version}`]);
+
 try {
   run("docker", [
     "buildx",
@@ -113,6 +118,15 @@ const digest = (() => {
 })();
 
 const now = new Date().toISOString();
+
+// package.json is a mirror, not a source of truth — keep it from drifting.
+const pkgPath = path.join(ROOT, "package.json");
+const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+if (pkg.version !== version) {
+  pkg.version = version;
+  fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+}
+
 target.version = version;
 target.lastUpdated = now;
 fs.writeFileSync(CONFIG_PATH, `${JSON.stringify(config, null, 2)}\n`);
@@ -123,4 +137,7 @@ const entry = `Version: ${version}, Last Updated: ${now}${digest ? `, Digest: ${
 fs.writeFileSync(logPath, entry + previous, "utf8");
 
 console.log(`\n✓ v${version} published to ${target.docker}`);
-console.log("  Commit publish/config.json and the build log to record this release.");
+console.log(
+  "  Commit publish/config.json, the build log, package.json and\n" +
+    "  src/generated/version.json to record this release.",
+);

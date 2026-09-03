@@ -10,6 +10,7 @@ import { Monogram } from "@/components/Logo";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
 import { Magnetic } from "@/components/motion";
 import { isStandaloneRoute } from "@/lib/chrome-routes";
+import { displayVersion } from "@/lib/version";
 
 const SOCIAL_ICONS = {
   github: GithubIcon,
@@ -144,6 +145,10 @@ function FooterInner() {
           <p className="ft__built">
             Built with <Link href="/skills">Next.js</Link> and <Link href="/skills">React</Link>.
           </p>
+          {/* The running build, linked to the full release ledger. */}
+          <Link className="ft__version" href="/version" title="Release history">
+            {displayVersion}
+          </Link>
         </div>
       </div>
     </footer>

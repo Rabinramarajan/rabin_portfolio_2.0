@@ -1,0 +1,24 @@
+{
+  "environment": "prod",
+  "project": "rabin-portfolio-2-0",
+  "registry": "vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0",
+  "version": "1.0.3",
+  "releasedAt": "2026-09-02T21:06:08.981Z",
+  "releases": [
+    {
+      "version": "1.0.3",
+      "releasedAt": "2026-09-02T21:06:08.981Z",
+      "digest": "sha256:ff288ee009f1b3d92e4dfbb5243ceb4509948cba22971f155761384f0a5dd6fe"
+    },
+    {
+      "version": "1.0.2",
+      "releasedAt": "2026-09-02T20:45:43.165Z",
+      "digest": "sha256:092debc8dbb353e50bfb42ed5726b58096262015c579bac06633bcd40720600b"
+    },
+    {
+      "version": "1.0.1",
+      "releasedAt": "2026-09-02T20:36:00.735Z",
+      "digest": "sha256:44ec7cc6bdfe1709d0a1728314fb9932d671262073ea0573874256964cc396f6"
+    }
+  ]
+}

@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     ".opencode/**",
     // Node-only build/media utilities — CommonJS by design.
     "scripts/**",
+    // The release pipeline — a Node script, not app code.
+    "publish/**",
   ]),
 ]);
 
