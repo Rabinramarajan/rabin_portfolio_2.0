@@ -2,9 +2,14 @@
   "environment": "prod",
   "project": "rabin-portfolio-2-0",
   "registry": "vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_2.0",
-  "version": "1.0.3",
-  "releasedAt": "2026-09-02T21:06:08.981Z",
+  "version": "1.0.4",
+  "releasedAt": "2026-09-03T19:53:37.412Z",
   "releases": [
+    {
+      "version": "1.0.4",
+      "releasedAt": "2026-09-03T19:53:37.412Z",
+      "digest": null
+    },
     {
       "version": "1.0.3",
       "releasedAt": "2026-09-02T21:06:08.981Z",
