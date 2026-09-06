@@ -20,8 +20,27 @@ const QUALITY_PRESETS = {
 /**
  * Optimization Targets
  * Format: { inputPath, formats: ['webp', 'avif'], quality: 'high'|'medium'|'light' }
+ *
+ * Optional per-target keys:
+ *   resize     - { width, height } box the source is fitted into before encoding.
+ *                Use it when the source is far larger than anything the UI ever
+ *                renders; re-encoding alone does not fix a 1254px asset painted
+ *                into a 128px box.
+ *   outputName - basename of the output, when it must not collide with the
+ *                source's own name.
  */
 const OPTIMIZATION_TARGETS = [
+  /* The chat launcher badge. Source is 1254x1254 (1.5 MB) but the mark never
+     renders above 128 CSS px, and it is mounted on every page — it was the
+     single largest image the site shipped. 256px covers 2x displays. */
+  {
+    input: "chatbot/1.png",
+    formats: ["webp"],
+    quality: "high",
+    resize: { width: 256, height: 256 },
+    outputName: "mark-256",
+  },
+
   // Service images (1.5-1.8 MB each - convert to WebP/AVIF)
   { input: "service/service_1.png", formats: ["webp", "avif"], quality: "high" },
   { input: "service/service_2.png", formats: ["webp", "avif"], quality: "high" },
@@ -55,7 +74,7 @@ const OPTIMIZATION_TARGETS = [
 /**
  * Optimizes an image to multiple formats
  */
-async function optimizeImage(inputPath, formats, qualityPreset) {
+async function optimizeImage(inputPath, formats, qualityPreset, options = {}) {
   const fullInputPath = path.join(MEDIA_DIR, inputPath);
   const inputExt = path.extname(inputPath);
   const inputBaseName = path.basename(inputPath, inputExt);
@@ -83,10 +102,19 @@ async function optimizeImage(inputPath, formats, qualityPreset) {
 
     for (const format of formats) {
       try {
-        const outputFilename = `${inputBaseName}.${format}`;
+        const outputFilename = `${options.outputName || inputBaseName}.${format}`;
         const outputPath = path.join(MEDIA_DIR, inputDir, outputFilename);
 
         let pipeline = image.clone();
+
+        if (options.resize) {
+          // `contain` over `cover`: these marks carry their own ring and glow,
+          // so cropping to fill would clip the artwork's own edge.
+          pipeline = pipeline.resize(options.resize.width, options.resize.height, {
+            fit: "contain",
+            background: { r: 0, g: 0, b: 0, alpha: 0 },
+          });
+        }
 
         // Apply format-specific optimization
         if (format === "webp") {
@@ -137,7 +165,10 @@ async function main() {
 
   for (const target of OPTIMIZATION_TARGETS) {
     console.log(`📦 Processing: ${target.input}`);
-    const result = await optimizeImage(target.input, target.formats, target.quality);
+    const result = await optimizeImage(target.input, target.formats, target.quality, {
+      resize: target.resize,
+      outputName: target.outputName,
+    });
 
     if (result.success) {
       totalOriginal += result.originalSize;
