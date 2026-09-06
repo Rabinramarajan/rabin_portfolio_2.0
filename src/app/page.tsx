@@ -1,5 +1,5 @@
 import { HomePage } from "@/components/HomePage";
-import { defaultSeo } from "@/content/profile";
+import { defaultSeo, hero } from "@/content/profile";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -11,5 +11,16 @@ export const metadata = pageMetadata({
 });
 
 export default function Page() {
-  return <HomePage />;
+  /* The hero poster is painted behind the headline and is only discoverable
+     once the (client) hero component's markup is parsed. Hoisting it into the
+     head lets the preload scanner start it with the document. */
+  const poster = hero.reel?.poster;
+  return (
+    <>
+      {poster ? (
+        <link rel="preload" as="image" href={poster} fetchPriority="high" />
+      ) : null}
+      <HomePage />
+    </>
+  );
 }

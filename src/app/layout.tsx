@@ -15,6 +15,7 @@ import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
 import { CustomCursor } from "@/components/custom-cursor/CustomCursor";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
+import { media } from "@/lib/media";
 import "@/motion/motion.css";
 import "./globals.css";
 
@@ -31,6 +32,14 @@ const mono = JetBrains_Mono({
   display: "swap",
   weight: ["400", "500", "600", "700"],
 });
+
+/* Media lives on the Vercel Blob CDN, a second origin whose connection would
+   otherwise only be opened once the hero markup is parsed. Returns null when
+   media is served from /public, where there is nothing to preconnect to. */
+function mediaOrigin(): string | null {
+  const sample = media("hero/home-poster.webp");
+  return sample.startsWith("http") ? new URL(sample).origin : null;
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -95,6 +104,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const origin = mediaOrigin();
   return (
     <html
       lang="en"
@@ -104,6 +114,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         mono.variable,
       ].join(" ")}
     >
+      <head>
+        {origin ? (
+          <>
+            <link rel="preconnect" href={origin} crossOrigin="" />
+            <link rel="dns-prefetch" href={origin} />
+          </>
+        ) : null}
+      </head>
       <body suppressHydrationWarning>
         <JsonLd />
         <ProgressSync />

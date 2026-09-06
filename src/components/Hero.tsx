@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { hero } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Btn } from "@/components/ui";
@@ -100,20 +100,21 @@ export function Hero() {
           </motion.p>
 
           <h1 id="hero-heading" className="chero__title">
+            {/* Plain spans on purpose. The headline is the LCP element, so its
+                reveal is a CSS animation (see .chero__word) that runs on the
+                server-rendered markup instead of waiting for hydration. */}
             {lines.map((line, i) => (
               <span className="chero__line" key={line.text}>
-                <motion.span
+                <span
                   className={
                     line.accent
                       ? "chero__word chero__word--accent"
                       : "chero__word"
                   }
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: "0.5em" }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={t(0.08 + i * 0.09)}
+                  style={{ "--i": i } as CSSProperties}
                 >
                   {line.text}
-                </motion.span>
+                </span>
               </span>
             ))}
           </h1>

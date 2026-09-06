@@ -103,6 +103,28 @@ export function ScrollVideoPlayer({
   const hydrated = useHydrated();
   const reduced = hydrated && !!prefersReduced;
 
+  /* The reel is multi-megabyte. With preload="auto" it starts downloading
+     during the initial page load and competes with the poster, the fonts and
+     the JS bundle for bandwidth, which pushes LCP out. Only metadata is
+     fetched up front (enough for the scrub binding); the full buffer is
+     requested once the page has finished loading. */
+  const [fullPreload, setFullPreload] = useState(false);
+  useEffect(() => {
+    /* autoplay mode is excluded: it calls play() on mount, and load() would
+       restart the stream out from under it. */
+    if (mode !== "scroll" || reduced) return;
+    const boost = () => {
+      setFullPreload(true);
+      videoRef.current?.load();
+    };
+    if (document.readyState === "complete") {
+      const id = window.setTimeout(boost, 200);
+      return () => window.clearTimeout(id);
+    }
+    window.addEventListener("load", boost, { once: true });
+    return () => window.removeEventListener("load", boost);
+  }, [reduced, mode]);
+
   /* scroll mode */
   useGSAP(
     () => {
@@ -186,6 +208,8 @@ export function ScrollVideoPlayer({
         <img
           src={poster}
           alt=""
+          fetchPriority="high"
+          decoding="async"
           className={`${
             posterClassName ?? "absolute inset-0 h-full w-full object-cover"
           } transition-opacity duration-500 ${ready && !posterOnly ? "opacity-0" : "opacity-100"}`}
@@ -198,7 +222,7 @@ export function ScrollVideoPlayer({
           poster={poster}
           muted
           playsInline
-          preload="auto"
+          preload={mode === "scroll" && !fullPreload ? "metadata" : "auto"}
           tabIndex={-1}
           autoPlay={mode === "autoplay" && !reduced}
           loop={mode === "autoplay" && loop && !reduced}

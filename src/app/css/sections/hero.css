@@ -451,13 +451,36 @@
   padding-bottom: 0.06em;
   margin-bottom: -0.06em;
 }
+/* The headline is the LCP element. Its entrance used to be a Motion tween
+   starting at opacity 0, so the largest text on the page only became a paint
+   candidate after hydration had run — LCP sat ~1.6s behind FCP. As a CSS
+   animation it starts at first paint instead, with no JS on the path. */
+@keyframes chero-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 .chero__word {
   display: block;
+  /* Deliberately short delays: every millisecond spent at opacity 0 is a
+     millisecond added to LCP. */
+  animation: chero-word-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.05s);
   background: linear-gradient(178deg, #ffffff 0%, #cfcec8 52%, #8e8d88 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chero__word {
+    animation: none;
+  }
 }
 .chero__word--accent {
   background: linear-gradient(
