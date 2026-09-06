@@ -1,0 +1,62 @@
+# Rabin R - Full-Stack Angular Developer & Frontend Software Engineer
+
+**Name:** Rabin R
+**Title:** Senior Frontend Engineer | Angular Specialist | Product Engineering
+**Location:** Chennai, Tamil Nadu, India
+**Website:** https://www.rabinr.in
+**Email:** hello@rabinr.in
+
+## About
+
+Rabin R is a Senior Frontend Angular Consultant with 4+ years of experience building high-performance web and mobile applications. Specialized in Angular (Zoneless + Signals), TypeScript, React, Next.js, and creating seamless user experiences.
+
+Expertise:
+- Angular Architecture & Performance
+- Frontend Engineering & Product Design
+- Web Performance Optimization
+- Design Systems & Component Architecture
+- React, Next.js, TypeScript, Node.js
+- Ionic Mobile Apps (iOS/Android)
+
+## Notable Work
+
+### Fiji Immigration Internal Management System
+High-consequence government case management platform serving 10,000+ users. Built with Angular, TypeScript, and modern web standards.
+
+### Fiji Immigration Citizen Portal
+Public-facing citizen management portal for the Fiji Government's Immigration Department.
+
+### PRIMS Member Portal
+Pension member portal with member account management and portal services.
+
+### VNPF Pension Mobile App
+Cross-platform iOS/Android Ionic application for pension member access.
+
+## Key Skills
+
+- **Frontend:** Angular, React, Next.js, TypeScript, RxJS, Tailwind CSS
+- **Mobile:** Ionic, iOS, Android
+- **Backend:** Node.js, Express, PostgreSQL, Supabase
+- **Tools:** Git, Nx, design systems, accessibility (WCAG)
+- **Performance:** Core Web Vitals, optimization, scalability
+
+## Credentials
+
+- 4+ Years Experience
+- 20+ Projects Delivered
+- 15+ Happy Clients
+- Government & Enterprise Expertise
+
+## Social
+
+- **GitHub:** https://github.com/Rabinramarajan
+- **LinkedIn:** https://www.linkedin.com/in/rabinr
+
+## Key Pages
+
+- **Work/Portfolio:** https://www.rabinr.in/work
+- **Services:** https://www.rabinr.in/services
+- **Experience:** https://www.rabinr.in/experience
+- **Resume:** https://www.rabinr.in/resume
+- **About:** https://www.rabinr.in/about
+- **Contact:** https://www.rabinr.in/contact

@@ -45,11 +45,20 @@ export const metadata: Metadata = {
     siteName: profile.name,
     title: defaultSeo.title,
     description: defaultSeo.description,
+    images: [
+      {
+        url: SITE_URL + "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Rabin R — Angular Developer & Frontend Software Engineer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: defaultSeo.title,
     description: defaultSeo.description,
+    images: [SITE_URL + "/opengraph-image"],
   },
   robots: {
     index: true,
