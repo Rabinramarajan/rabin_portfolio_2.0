@@ -11,9 +11,10 @@
  * uploads it the CDN has no such object, and a 404 leaves the widget faceless.
  * Swap this for `media("other/chatbot/mark.png")` once it is on the store.
  *
- * Points at `mark-256.webp`, not the 1254px `1.png` source it was derived from.
- * The mark never renders above 128 CSS px, so the original was shipping 1.5 MB
- * to paint a 128px badge on every page — the single largest image on the site.
+ * Points at `mark-128.webp`, not the 1254px `1.png` source it was derived from.
+ * The mark never renders above 64 CSS px — .chat-launch is 64px and every other
+ * surface is smaller — so the original was shipping 1.5 MB to paint a 64px badge
+ * on every page, the single largest image on the site. 128px covers 2x displays.
  * Regenerate with `node scripts/optimize-media.js` if the artwork changes.
  */
 export function BotMark({ className }: { className?: string }) {
@@ -21,7 +22,7 @@ export function BotMark({ className }: { className?: string }) {
     // eslint-disable-next-line @next/next/no-img-element -- fixed-size chrome inside an on-demand overlay; already sized to its display box, so the optimizer would add a request without shrinking the bytes
     <img
       className={className ? `chat-mark ${className}` : "chat-mark"}
-      src="/media/chatbot/mark-256.webp"
+      src="/media/chatbot/mark-128.webp"
       alt=""
       aria-hidden="true"
       loading="lazy"

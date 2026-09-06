@@ -52,10 +52,36 @@ function ChatLauncherInner() {
 
   // The preview card is an invitation, not an interruption: it appears once,
   // only on an idle page, and never again after it has been dismissed.
+  //
+  // It also waits until the hero is behind the reader. On a phone the card is
+  // full-width and sits low, so firing it on a still-unscrolled page drops it
+  // straight over the hero's CTAs — the one thing the landing view exists to
+  // offer. Scrolling past the first screen is the signal that it is welcome.
   useEffect(() => {
     if (open || dismissed) return;
-    const timer = window.setTimeout(() => setPreview(true), PREVIEW_DELAY_MS);
-    return () => window.clearTimeout(timer);
+    let timer = 0;
+    const scrolledPastHero = () => window.scrollY > window.innerHeight * 0.6;
+
+    const arm = () => {
+      timer = window.setTimeout(() => {
+        if (scrolledPastHero()) {
+          setPreview(true);
+        } else {
+          window.addEventListener("scroll", onScroll, { passive: true });
+        }
+      }, PREVIEW_DELAY_MS);
+    };
+    const onScroll = () => {
+      if (!scrolledPastHero()) return;
+      window.removeEventListener("scroll", onScroll);
+      setPreview(true);
+    };
+
+    arm();
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [open, dismissed]);
 
   if (!chatConfig.enabled) return null;

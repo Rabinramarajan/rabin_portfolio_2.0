@@ -31,14 +31,15 @@ const QUALITY_PRESETS = {
  */
 const OPTIMIZATION_TARGETS = [
   /* The chat launcher badge. Source is 1254x1254 (1.5 MB) but the mark never
-     renders above 128 CSS px, and it is mounted on every page — it was the
-     single largest image the site shipped. 256px covers 2x displays. */
+     renders above 64 CSS px — .chat-launch is 64px, and every other surface
+     (preview 60px, panel avatar 44px, message avatar 30px) is smaller — and it
+     is mounted on every page. 128px covers 2x displays at the largest use. */
   {
     input: "chatbot/1.png",
     formats: ["webp"],
-    quality: "high",
-    resize: { width: 256, height: 256 },
-    outputName: "mark-256",
+    quality: "light",
+    resize: { width: 128, height: 128 },
+    outputName: "mark-128",
   },
 
   // Service images (1.5-1.8 MB each - convert to WebP/AVIF)

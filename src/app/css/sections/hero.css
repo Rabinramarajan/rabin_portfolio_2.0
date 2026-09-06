@@ -665,6 +665,75 @@
   }
 }
 
+/* --- phones ---------------------------------------------------------------
+   The hero is a single 100vh pane with `overflow: clip`, so anything that does
+   not fit is silently cut off rather than scrolled to. At the base type scale
+   the headline alone runs five lines on a 390px screen ("High-Performance"
+   exceeds the 12ch measure and wraps), which pushed the first line up under
+   the fixed header and left the CTAs colliding with the pull quote and the
+   scroll indicator. This block sizes the pane in `dvh` (so the mobile URL bar
+   cannot steal the last 60px), fits the headline to the viewport width, and
+   drops the pull quote — decorative, and the only thing that does not fit. */
+@media (max-width: 767px) {
+  .chero {
+    min-height: 100dvh;
+  }
+  .chero--scrub {
+    height: 100dvh;
+  }
+  .chero__shell {
+    /* One column, vertically centred, with the header height reserved. */
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    align-items: center;
+    justify-content: stretch;
+    gap: 0;
+    padding-top: calc(var(--header-h) + 1rem);
+    padding-bottom: clamp(4rem, 11vh, 5.5rem);
+  }
+  .chero__title {
+    /* Sized so the longest word ("High-Performance", 16 chars) stays on one
+       line at 360px and up; the ch-based measure is what forced the wrap. */
+    font-size: clamp(1.75rem, 8.2vw, 2.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    max-width: none;
+  }
+  .chero__disciplines {
+    margin-top: 0.9rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    gap: 0.4rem;
+  }
+  .chero__disciplines > span {
+    gap: 0.4rem;
+  }
+  .chero__lede {
+    margin-top: 0.9rem;
+    font-size: var(--text-base);
+    line-height: 1.55;
+    max-width: 40ch;
+  }
+  .chero__actions {
+    margin-top: 1.35rem;
+    gap: 0.7rem;
+  }
+  /* Comfortable tap targets — the base buttons come in under 44px here. */
+  .chero__actions a,
+  .chero__actions button {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* The pull quote is the one block that cannot fit alongside the headline,
+     lede and CTAs in a single pane; it also duplicates the signature that the
+     footer already carries. */
+  .chero__quote {
+    display: none;
+  }
+}
+
 .hero {
   position: relative;
   min-height: 0;
