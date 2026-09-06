@@ -681,15 +681,115 @@
   .chero--scrub {
     height: 100dvh;
   }
+  /* PORTRAIT BAND.
+     The source reel is 16:9 with the subject at ~69% across and ~39% down. On
+     a 390x660 pane, `object-fit: cover` scales to fill the height, so there is
+     no vertical overflow at all — `object-position`'s Y value is inert, the
+     face is pinned to the middle of the screen where the headline lives, and
+     the horizontal crop slices it in half at the right edge.
+
+     Constraining the stage to a top band restores the crop budget: the band is
+     wide relative to its height, so the face fits whole, and it sits above the
+     copy instead of behind it. Scrim, vignette and blend are children of the
+     stage, so they follow the band and the copy lands on flat page bg. */
+  .chero__stage {
+    /* Offset by the fixed header: the subject's crown sits ~8% down the source
+       frame, which lands under the navbar when the band starts at y=0.
+
+       Height is the crop budget. Below ~219px (390 x 9/16) the width drives
+       `cover` and the frame is shown whole and small; above it the height
+       drives, and every extra pixel enlarges the head.
+
+       It is sized off the leftover space rather than a flat vh fraction: the
+       copy below is a fixed ~430px (header, three-line headline, lede, CTAs,
+       bottom padding) no matter how tall the phone is, so a vh multiplier that
+       clears the chin on a 600px screen leaves a dead void on a 932px one.
+       Subtracting the constant instead lets the portrait absorb the slack. */
+    top: var(--header-h);
+    bottom: auto;
+    height: clamp(160px, calc(100dvh - 450px), 420px);
+  }
+  /* CENTRING THE SUBJECT.
+     `object-position` cannot do this. At band size the 16:9 frame is only a
+     few pixels wider than the viewport, so there is almost no crop budget to
+     pan within — every value from 50% to 100% leaves the subject right of
+     centre, because he is right of centre in the source (~69% across).
+
+     So the frame is oversized instead and pulled by its own width: anchoring
+     its left edge at the band's centre and translating back by 69% lands that
+     exact point of the picture on the centre line, at any band size. */
+  .chero__reel {
+    /* 150% tall puts the frame's top and bottom edges outside the band, where
+       the stage clips them; -6% then drops the crown clear of the navbar. The
+       left edge lands off-screen. Only the right edge falls inside, and the
+       mask below is what takes care of it. */
+    inset: -6% auto auto 50%;
+    width: auto;
+    /* Without this the global `max-width: 100%` on media clamps the frame back
+       to the band's width, which collapses the aspect ratio and undoes both
+       the zoom and the centring. */
+    max-width: none;
+    height: 150%;
+    aspect-ratio: 16 / 9;
+    transform: translateX(-69%);
+    /* An oversized, translated frame cannot line up with the band's edges, so
+       it is dissolved rather than cropped — an oval falloff centred on the
+       subject leaves no seam to notice at any viewport width.
+
+       Its radii come from fixed features of the frame, which is why one set of
+       numbers holds at every band size: with a 150% frame at -6%, the head
+       always occupies 12%-64% of the frame's height and the band's floor
+       always cuts it at 70.7%. A 32.67% vertical radius centred at 38% is
+       therefore opaque right across the head and has reached zero by the
+       floor, while the wider horizontal radius runs past the screen edges. */
+    -webkit-mask-image: radial-gradient(
+      ellipse 31% 32.67% at 69% 38%,
+      #000 78%,
+      rgb(0 0 0 / 0.5) 90%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 31% 32.67% at 69% 38%,
+      #000 78%,
+      rgb(0 0 0 / 0.5) 90%,
+      transparent 100%
+    );
+  }
+  /* Clears the face — the old mobile scrim opened at 78% black directly over
+     it — and darkens only where the band hands off to the copy. */
+  .chero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(10 10 12 / 62%) 0%,
+      rgb(10 10 12 / 12%) 26%,
+      rgb(10 10 12 / 18%) 52%,
+      rgb(10 10 12 / 72%) 82%,
+      var(--color-bg) 100%
+    );
+  }
+  .chero__vignette {
+    /* Follows the subject to the centre line. */
+    background: radial-gradient(
+      ellipse at 50% 38%,
+      transparent 46%,
+      rgb(10 10 12 / 42%) 100%
+    );
+  }
   .chero__shell {
-    /* One column, vertically centred, with the header height reserved. */
+    /* One column; the copy sits at the foot of the pane, under the band.
+       The shell has to stretch for that: `.chero` is a centring flex column,
+       so an auto-height shell gets centred as a block and `align-content: end`
+       has no free space to act on — which is what left the headline sitting
+       across the subject's jaw. */
+    flex: 1 1 auto;
     grid-template-columns: minmax(0, 1fr);
-    align-content: center;
-    align-items: center;
+    align-content: end;
+    align-items: end;
     justify-content: stretch;
     gap: 0;
     padding-top: calc(var(--header-h) + 1rem);
-    padding-bottom: clamp(4rem, 11vh, 5.5rem);
+    /* Clears the scroll indicator and the chat FAB, both anchored bottom. */
+    padding-bottom: clamp(5rem, 13vh, 6.5rem);
   }
   .chero__title {
     /* Sized so the longest word ("High-Performance", 16 chars) stays on one
@@ -709,22 +809,25 @@
     gap: 0.4rem;
   }
   .chero__lede {
-    margin-top: 0.9rem;
+    margin-top: 0.85rem;
+    /* Held at the 16px mobile body-text floor rather than shrunk to buy
+       vertical room — the room comes from the layout above instead. */
     font-size: var(--text-base);
     line-height: 1.55;
-    max-width: 40ch;
+    max-width: 42ch;
   }
   .chero__actions {
-    margin-top: 1.35rem;
-    gap: 0.7rem;
+    margin-top: 1.2rem;
+    gap: 0.6rem;
+    /* Both CTAs on one row. Stacked they cost ~58px of the pane, which is the
+       difference between the headline clearing the portrait and overlapping
+       it; the pair still fits 345px once the padding is trimmed. */
+    flex-wrap: nowrap;
   }
-  /* Comfortable tap targets — the base buttons come in under 44px here. */
-  .chero__actions a,
-  .chero__actions button {
-    min-height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  .chero__actions .btn {
+    padding-inline: 1.05rem;
+    gap: 0.45rem;
+    white-space: nowrap;
   }
   /* The pull quote is the one block that cannot fit alongside the headline,
      lede and CTAs in a single pane; it also duplicates the signature that the
