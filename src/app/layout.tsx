@@ -19,11 +19,17 @@ import { media } from "@/lib/media";
 import "@/motion/motion.css";
 import "./globals.css";
 
+/* The weight set is matched to what the stylesheets actually ask for. It used
+   to list 300, which no rule uses, and omit 800, which the hero headline and
+   four other rules do use — so the heaviest type on the page was synthesised
+   as faux bold from 700 rather than drawn. Dropping the variable font here is
+   deliberate: it covers every weight from one file but measured 9 KB heavier
+   on the homepage than these static cuts. */
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const mono = JetBrains_Mono({
