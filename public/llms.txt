@@ -1,62 +1,36 @@
-# Rabin R - Full-Stack Angular Developer & Frontend Software Engineer
+# Rabin R
 
-**Name:** Rabin R
-**Title:** Senior Frontend Engineer | Angular Specialist | Product Engineering
-**Location:** Chennai, Tamil Nadu, India
-**Website:** https://www.rabinr.in
-**Email:** hello@rabinr.in
+> Senior Frontend Angular Consultant in Chennai, India, with 4+ years building
+> high-performance web and mobile products. Specialises in Angular (Zoneless +
+> Signals), TypeScript, React and Next.js, with a track record on government and
+> enterprise systems serving tens of thousands of users.
 
-## About
+Contact: hello@rabinr.in — based in Chennai, Tamil Nadu, India. Available for
+consulting and contract engagements.
 
-Rabin R is a Senior Frontend Angular Consultant with 4+ years of experience building high-performance web and mobile applications. Specialized in Angular (Zoneless + Signals), TypeScript, React, Next.js, and creating seamless user experiences.
+## Key pages
 
-Expertise:
-- Angular Architecture & Performance
-- Frontend Engineering & Product Design
-- Web Performance Optimization
-- Design Systems & Component Architecture
-- React, Next.js, TypeScript, Node.js
-- Ionic Mobile Apps (iOS/Android)
+- [Work / Portfolio](https://www.rabinr.in/work): Case studies for the government and enterprise systems Rabin has shipped.
+- [Services](https://www.rabinr.in/services): Angular development, web application development and mobile app engagements.
+- [Experience](https://www.rabinr.in/experience): Career timeline, roles and the stack used at each.
+- [Resume](https://www.rabinr.in/resume): Condensed professional history.
+- [About](https://www.rabinr.in/about): Background, working style and engineering principles.
+- [Contact](https://www.rabinr.in/contact): How to start a project or consulting engagement.
 
-## Notable Work
+## Selected work
 
-### Fiji Immigration Internal Management System
-High-consequence government case management platform serving 10,000+ users. Built with Angular, TypeScript, and modern web standards.
+- [Fiji Immigration Internal Management System](https://www.rabinr.in/work/fiji-immigration-internal): High-consequence government case management platform serving 10,000+ users, built with Angular and TypeScript.
+- [Fiji Immigration Citizen Portal](https://www.rabinr.in/work/fiji-immigration-external): Public-facing citizen portal for the Fiji Government's Immigration Department.
+- [PRIMS Member Portal](https://www.rabinr.in/work/prims-member-portal): Pension member portal covering account management and member services.
 
-### Fiji Immigration Citizen Portal
-Public-facing citizen management portal for the Fiji Government's Immigration Department.
+## Expertise
 
-### PRIMS Member Portal
-Pension member portal with member account management and portal services.
+- [Skills](https://www.rabinr.in/skills): Angular, React, Next.js, TypeScript, RxJS, Tailwind CSS, Ionic, Node.js, PostgreSQL.
+- [Process](https://www.rabinr.in/process): How an engagement runs, from discovery through launch and evolution.
+- [Pricing](https://www.rabinr.in/pricing): Engagement models and how projects are scoped.
 
-### VNPF Pension Mobile App
-Cross-platform iOS/Android Ionic application for pension member access.
+## Optional
 
-## Key Skills
-
-- **Frontend:** Angular, React, Next.js, TypeScript, RxJS, Tailwind CSS
-- **Mobile:** Ionic, iOS, Android
-- **Backend:** Node.js, Express, PostgreSQL, Supabase
-- **Tools:** Git, Nx, design systems, accessibility (WCAG)
-- **Performance:** Core Web Vitals, optimization, scalability
-
-## Credentials
-
-- 4+ Years Experience
-- 20+ Projects Delivered
-- 15+ Happy Clients
-- Government & Enterprise Expertise
-
-## Social
-
-- **GitHub:** https://github.com/Rabinramarajan
-- **LinkedIn:** https://www.linkedin.com/in/rabinr
-
-## Key Pages
-
-- **Work/Portfolio:** https://www.rabinr.in/work
-- **Services:** https://www.rabinr.in/services
-- **Experience:** https://www.rabinr.in/experience
-- **Resume:** https://www.rabinr.in/resume
-- **About:** https://www.rabinr.in/about
-- **Contact:** https://www.rabinr.in/contact
+- [Insights](https://www.rabinr.in/insights): Articles on frontend architecture, performance and design systems.
+- [GitHub](https://github.com/Rabinramarajan): Open source and side projects.
+- [LinkedIn](https://www.linkedin.com/in/rabinr): Professional profile and recommendations.

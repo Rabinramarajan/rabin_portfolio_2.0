@@ -187,7 +187,11 @@
   opacity: 0.4;
 }
 .ctl__progress-total {
-  opacity: 0.6;
+  /* Was opacity: 0.6, which composited to #535359 on the page ground — 2.58:1,
+     well under the 4.5:1 WCAG AA floor for this 12px text. Undimmed the base
+     token measures 5.33:1 and still reads as subordinate to the accent-coloured
+     current step, so the hierarchy survives without the contrast failure. */
+  opacity: 1;
 }
 @media (min-width: 900px) {
   .ctl__progress {
