@@ -11,6 +11,13 @@ export interface ScrollVideoPlayerProps {
   /** Static first frame. Shown until metadata loads, and as the whole
    *  component under prefers-reduced-motion. */
   poster?: string;
+  /** Candidate widths for `poster`, as a plain srcset string. The poster is
+   *  usually the LCP element, so offering narrow cuts saves the bulk of its
+   *  bytes on phones. Any caller passing this must mirror it in whatever
+   *  preload it emits, or the browser fetches two different files. */
+  posterSrcSet?: string;
+  /** `sizes` for `posterSrcSet`. Defaults to the full viewport width. */
+  posterSizes?: string;
   /** Optional smaller second source, offered before the mp4. */
   webmSrc?: string;
   /** "scroll" scrubs currentTime from scroll position; "autoplay" just plays. */
@@ -70,6 +77,8 @@ export interface ScrollVideoPlayerProps {
 export function ScrollVideoPlayer({
   src,
   poster,
+  posterSrcSet,
+  posterSizes = "100vw",
   webmSrc,
   mode,
   scrollHeight = "300vh",
@@ -207,6 +216,8 @@ export function ScrollVideoPlayer({
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={poster}
+          srcSet={posterSrcSet}
+          sizes={posterSrcSet ? posterSizes : undefined}
           alt=""
           fetchPriority="high"
           decoding="async"
@@ -219,7 +230,12 @@ export function ScrollVideoPlayer({
       {posterOnly ? null : (
         <video
           ref={videoRef}
-          poster={poster}
+          /* Deliberately no `poster` attribute. The <img> above already holds
+             the first frame and sits at opacity 1 until `ready`, so the video's
+             own poster is painted underneath it and never seen — but it is a
+             separate resource fetch, and one that ignores the img's srcset, so
+             it pulled the full-width file on phones on top of the narrow cut
+             the img had already chosen. Two downloads of the LCP image. */
           muted
           playsInline
           preload={mode === "scroll" && !fullPreload ? "metadata" : "auto"}

@@ -69,6 +69,8 @@ export function Hero() {
       mode={scrub ? "scroll" : "autoplay"}
       src={hero.reel?.src ?? ""}
       poster={hero.reel?.poster}
+      posterSrcSet={hero.reel?.posterSrcSet}
+      posterSizes={hero.reel?.posterSizes}
       loop
       as="section"
       containerProps={{ id: "hero", "aria-labelledby": "hero-heading" }}

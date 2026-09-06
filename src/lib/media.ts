@@ -77,6 +77,10 @@ export const MEDIA_MANIFEST = {
   // ---- hero -------------------------------------------------------------
   "hero/home-reel.mp4": "/media/hero/banner_v.scrub.mp4",
   "hero/home-poster.webp": "/media/hero/banner-poster.webp",
+  /* Narrower cuts of the same frame. The poster is the LCP element on mobile,
+     where the full 1280w file is ~4x the bytes the layout can use. */
+  "hero/home-poster-640.webp": "/media/hero/banner-poster-640.webp",
+  "hero/home-poster-960.webp": "/media/hero/banner-poster-960.webp",
 
   // ---- profile ----------------------------------------------------------
   "profile/rabin-hero.webp": "/media/working/hero-portrait-640.webp",

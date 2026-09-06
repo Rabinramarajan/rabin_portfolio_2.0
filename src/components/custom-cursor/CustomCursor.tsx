@@ -12,7 +12,7 @@
  * GSAP has been removed - uses direct DOM transforms instead.
  */
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 
 type CursorState = "default" | "link" | "button" | "project" | "image" | "text" | "hidden" | "explore";
 
@@ -83,6 +83,23 @@ export function CustomCursor() {
     }
   }, []);
 
+  /* Whether this device gets a custom cursor at all.
+     The tracking effect below already bails on a coarse pointer, but bailing
+     only stops the maths — the ring and dot were still in the document, held
+     off-screen by nothing more than a `(pointer: coarse)` CSS guard. Any touch
+     device that does not match that query (or matches it late) shows a stray
+     accent ring parked at the viewport corner. Gating the markup removes the
+     failure mode outright, and takes two always-composited `will-change`
+     layers off phones while it does. */
+  const [fine, setFine] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: fine)");
+    const sync = () => setFine(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -148,7 +165,12 @@ export function CustomCursor() {
       window.removeEventListener("pointerenter", onPointerEnter);
       style.remove();
     };
-  }, [updateState]);
+    /* `fine` gates the markup, so the refs are null until it flips true —
+       without it in the deps this effect runs once against nothing and the
+       cursor never initialises on desktop either. */
+  }, [updateState, fine]);
+
+  if (!fine) return null;
 
   return (
     <>

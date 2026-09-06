@@ -681,98 +681,82 @@
   .chero--scrub {
     height: 100dvh;
   }
-  /* PORTRAIT BAND.
+  /* THE PORTRAIT.
      The source reel is 16:9 with the subject at ~69% across and ~39% down. On
      a 390x660 pane, `object-fit: cover` scales to fill the height, so there is
      no vertical overflow at all — `object-position`'s Y value is inert, the
      face is pinned to the middle of the screen where the headline lives, and
      the horizontal crop slices it in half at the right edge.
 
-     Constraining the stage to a top band restores the crop budget: the band is
-     wide relative to its height, so the face fits whole, and it sits above the
-     copy instead of behind it. Scrim, vignette and blend are children of the
-     stage, so they follow the band and the copy lands on flat page bg. */
-  .chero__stage {
-    /* Offset by the fixed header: the subject's crown sits ~8% down the source
-       frame, which lands under the navbar when the band starts at y=0.
-
-       Height is the crop budget. Below ~219px (390 x 9/16) the width drives
-       `cover` and the frame is shown whole and small; above it the height
-       drives, and every extra pixel enlarges the head.
-
-       It is sized off the leftover space rather than a flat vh fraction: the
-       copy below is a fixed ~430px (header, three-line headline, lede, CTAs,
-       bottom padding) no matter how tall the phone is, so a vh multiplier that
-       clears the chin on a 600px screen leaves a dead void on a 932px one.
-       Subtracting the constant instead lets the portrait absorb the slack. */
-    top: var(--header-h);
-    bottom: auto;
-    height: clamp(160px, calc(100dvh - 450px), 420px);
-  }
+     So the frame is sized and placed directly instead. The stage stays the
+     full pane: an earlier version clipped it to a short band, which cropped
+     the picture dead under the beard and left a head floating with no body.
+     Nothing hard-clips now — the frame's own height decides how much of him
+     is on screen, and the mask decides where he dissolves. */
   /* CENTRING THE SUBJECT.
-     `object-position` cannot do this. At band size the 16:9 frame is only a
-     few pixels wider than the viewport, so there is almost no crop budget to
-     pan within — every value from 50% to 100% leaves the subject right of
-     centre, because he is right of centre in the source (~69% across).
+     `object-position` cannot do this either. At this scale the 16:9 frame is
+     only a little wider than the viewport, so there is almost no crop budget
+     to pan within — every value from 50% to 100% leaves him right of centre,
+     because he is right of centre in the source.
 
-     So the frame is oversized instead and pulled by its own width: anchoring
-     its left edge at the band's centre and translating back by 69% lands that
-     exact point of the picture on the centre line, at any band size. */
+     The frame is oversized instead and pulled by its own width: anchoring its
+     left edge at the pane's centre and translating back by 69% lands that
+     exact point of the picture on the centre line, at any size. */
   .chero__reel {
-    /* 150% tall puts the frame's top and bottom edges outside the band, where
-       the stage clips them; -6% then drops the crown clear of the navbar. The
-       left edge lands off-screen. Only the right edge falls inside, and the
-       mask below is what takes care of it. */
-    inset: -6% auto auto 50%;
+    /* Height is the crop budget: it sets how large the head reads and, with
+       the crown at 8.3% and the chin at 60% of the frame, exactly where the
+       chin falls. The copy below is a fixed ~430px whatever the phone, so the
+       headroom for the portrait grows faster than the viewport does — hence a
+       slope steeper than 1, which keeps ~20px between his chin and the
+       headline from a 600px screen to a 932px one. */
+    inset: var(--header-h) auto auto 50%;
     width: auto;
     /* Without this the global `max-width: 100%` on media clamps the frame back
-       to the band's width, which collapses the aspect ratio and undoes both
+       to the pane's width, which collapses the aspect ratio and undoes both
        the zoom and the centring. */
     max-width: none;
-    height: 150%;
+    height: clamp(180px, calc(145dvh - 687px), 620px);
     aspect-ratio: 16 / 9;
     transform: translateX(-69%);
-    /* An oversized, translated frame cannot line up with the band's edges, so
-       it is dissolved rather than cropped — an oval falloff centred on the
-       subject leaves no seam to notice at any viewport width.
-
-       Its radii come from fixed features of the frame, which is why one set of
-       numbers holds at every band size: with a 150% frame at -6%, the head
-       always occupies 12%-64% of the frame's height and the band's floor
-       always cuts it at 70.7%. A 32.67% vertical radius centred at 38% is
-       therefore opaque right across the head and has reached zero by the
-       floor, while the wider horizontal radius runs past the screen edges. */
+    /* An oversized, translated frame cannot line up with the pane's edges, so
+       it is dissolved rather than cropped. The radii are expressed against the
+       frame, so one set of numbers holds at every size: 31% horizontal is the
+       widest that still reaches zero before the right edge (69 + 31 = 100),
+       and 70% vertical centred at 30% reaches zero exactly at the frame's
+       foot. The 68% opaque stop then carries full opacity down to 78% of the
+       frame — past the chin at 60%, through the shoulders — so he dissolves
+       into the copy instead of ending at the jaw. */
     -webkit-mask-image: radial-gradient(
-      ellipse 31% 32.67% at 69% 38%,
-      #000 78%,
-      rgb(0 0 0 / 0.5) 90%,
+      ellipse 31% 70% at 69% 30%,
+      #000 68%,
+      rgb(0 0 0 / 0.45) 86%,
       transparent 100%
     );
     mask-image: radial-gradient(
-      ellipse 31% 32.67% at 69% 38%,
-      #000 78%,
-      rgb(0 0 0 / 0.5) 90%,
+      ellipse 31% 70% at 69% 30%,
+      #000 68%,
+      rgb(0 0 0 / 0.45) 86%,
       transparent 100%
     );
   }
   /* Clears the face — the old mobile scrim opened at 78% black directly over
-     it — and darkens only where the band hands off to the copy. */
+     it — and darkens only from the shoulders down, where the copy begins. */
   .chero__scrim {
     background: linear-gradient(
       180deg,
-      rgb(10 10 12 / 62%) 0%,
-      rgb(10 10 12 / 12%) 26%,
-      rgb(10 10 12 / 18%) 52%,
-      rgb(10 10 12 / 72%) 82%,
-      var(--color-bg) 100%
+      rgb(10 10 12 / 50%) 0%,
+      rgb(10 10 12 / 8%) 20%,
+      rgb(10 10 12 / 16%) 40%,
+      rgb(10 10 12 / 75%) 62%,
+      var(--color-bg) 84%
     );
   }
   .chero__vignette {
     /* Follows the subject to the centre line. */
     background: radial-gradient(
-      ellipse at 50% 38%,
-      transparent 46%,
-      rgb(10 10 12 / 42%) 100%
+      ellipse at 50% 30%,
+      transparent 44%,
+      rgb(10 10 12 / 45%) 100%
     );
   }
   .chero__shell {

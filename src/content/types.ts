@@ -48,7 +48,15 @@ export interface HeroContent {
   /** Pull quote rendered beside the headline, with a script signature. */
   quote?: { lines: string[]; signature: string };
   /** Full-bleed background reel behind the hero. */
-  reel?: { src: string; poster?: string };
+  reel?: {
+    src: string;
+    poster?: string;
+    /** Candidate widths for `poster`. The hero poster is the LCP element, so
+     *  the home page also preloads it — both the <img> and that preload read
+     *  these fields, which is what keeps them from resolving different files. */
+    posterSrcSet?: string;
+    posterSizes?: string;
+  };
   description: string;
   primaryCta: Cta;
   secondaryCta: Cta;

@@ -110,7 +110,20 @@ export const hero: HeroContent = {
     lines: ["Code is my craft.", "Impact is my goal."],
     signature: profile.shortName,
   },
-  reel: { src: media("hero/home-reel.mp4"), poster: media("hero/home-poster.webp") },
+  reel: {
+    src: media("hero/home-reel.mp4"),
+    poster: media("hero/home-poster.webp"),
+    /* The poster is the LCP element. This srcset and the <link rel="preload">
+       on the home page are read from these same two fields precisely so they
+       cannot drift — a preload that does not match the srcset makes the
+       browser fetch one file for the preload and a different one for the img. */
+    posterSrcSet: [
+      `${media("hero/home-poster-640.webp")} 640w`,
+      `${media("hero/home-poster-960.webp")} 960w`,
+      `${media("hero/home-poster.webp")} 1280w`,
+    ].join(", "),
+    posterSizes: "100vw",
+  },
   description:
     "Frontend Software Engineer specializing in Angular, TypeScript & modern web architecture — building scalable products used by real users.",
   primaryCta: { label: "View My Work", href: "/work" },

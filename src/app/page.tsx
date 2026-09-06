@@ -18,7 +18,17 @@ export default function Page() {
   return (
     <>
       {poster ? (
-        <link rel="preload" as="image" href={poster} fetchPriority="high" />
+        <link
+          rel="preload"
+          as="image"
+          href={poster}
+          /* Mirrors the <img>'s srcset/sizes exactly (both read the same fields
+             on hero.reel). Preloading the bare href while the img resolved a
+             narrower candidate would download two files instead of one. */
+          imageSrcSet={hero.reel?.posterSrcSet}
+          imageSizes={hero.reel?.posterSizes}
+          fetchPriority="high"
+        />
       ) : null}
       <HomePage />
     </>
