@@ -129,6 +129,7 @@ export const MEDIA_MANIFEST = {
   "other/faq/orbit.png": "/media/faq/banner_h.png",
   "other/maintenance/cover.png": "/media/under-maintain/1.png",
   "other/chatbot/mark.png": "/media/chatbot/1.png",
+  "other/footer/horizon.png": "/media/footer/2.png",
 } as const satisfies Record<string, string>;
 
 /** Every migrated asset, addressable by its Blob pathname. */
