@@ -59,7 +59,7 @@ export function FeatureRail({ features }: { features: ProjectFeature[] }) {
               <span className="wd__feat-shot">
                 <SmartImage
                   src={f.image.src}
-                  alt=""
+                  alt={f.title}
                   width={f.image.width}
                   height={f.image.height}
                   sizes="(min-width: 900px) 24vw, 70vw"

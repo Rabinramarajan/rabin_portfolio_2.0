@@ -83,7 +83,7 @@ export function CaseGallery({ frames }: { frames: Frame[] }) {
             >
               <SmartImage
                 src={f.src}
-                alt=""
+                alt={f.alt}
                 width={f.width}
                 height={f.height}
                 sizes="(min-width: 900px) 45vw, 100vw"
