@@ -194,7 +194,7 @@ function Chapter({
         <div className="ctl__head">
           <span className="ctl__logo" aria-hidden>
             {chapter.logo ? (
-              <img className="ctl__logo-img" src={chapter.logo} alt="" width={20} height={20} loading="lazy" />
+              <img className="ctl__logo-img" src={chapter.logo} alt={`${chapter.org} logo`} width={20} height={20} loading="lazy" />
             ) : (
               chapter.monogram ?? initials(chapter.org ?? chapter.phase)
             )}

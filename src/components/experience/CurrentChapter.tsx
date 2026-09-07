@@ -65,7 +65,7 @@ export function CurrentChapter() {
                 <h3 className="xcur__title">{role.role}</h3>
                 <div className="xcur__company-row">
                   {role.logo ? (
-                    <img className="xcur__logo" src={role.logo} alt="" width={18} height={18} loading="lazy" />
+                    <img className="xcur__logo" src={role.logo} alt={`${role.company} logo`} width={18} height={18} loading="lazy" />
                   ) : role.type === "Freelance" ? (
                     <FreelancerIcon className="xcur__logo" />
                   ) : null}

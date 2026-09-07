@@ -39,7 +39,7 @@ function ProjectResult({
         </span>
         {card.cover ? (
           // eslint-disable-next-line @next/next/no-img-element -- decorative thumbnail inside an overlay; next/image adds no benefit at this size and complicates the panel layout
-          <img className="chat-card__media" src={card.cover.src} alt="" loading="lazy" width={220} height={124} />
+          <img className="chat-card__media" src={card.cover.src} alt={`${card.title} project cover`} loading="lazy" width={220} height={124} />
         ) : null}
       </span>
       <span className="chat-card__body">
