@@ -28,9 +28,6 @@ export const REFUSAL_MESSAGE =
 export const UNVERIFIED_MESSAGE =
   "I don't have verified information about that in Rabin's portfolio.";
 
-export const ERROR_MESSAGE =
-  "I'm having trouble responding right now. You can still explore Rabin's work or contact him directly.";
-
 const list = (items: string[]) => items.map((item) => `- ${item}`).join("\n");
 
 /** A grounded answer built from records, with no model in the loop. */

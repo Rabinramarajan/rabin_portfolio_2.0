@@ -61,35 +61,6 @@ export const sidebarNavigation: NavItem[] = [
 ];
 
 /**
- * Footer navigation. These lived as literal arrays inside Footer.tsx, which
- * meant the site had two competing definitions of its own link structure —
- * the footer is the only internal link some of these routes get.
- *
- * Every href below must resolve to a page that exists under src/app or to an
- * anchor rendered on the homepage; the footer never links to a stub.
- *
- * `explore`:   the site's own sections and pages, one destination per label.
- * `resources`: secondary destinations that are not part of the main journey.
- */
-export const footerNavigation: { explore: NavItem[]; resources: NavItem[] } = {
-  explore: [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/services", label: "Services" },
-    { href: "/work", label: "Work" },
-    { href: "/experience", label: "Experience" },
-    { href: "/skills", label: "Skills" },
-    { href: "/process", label: "Process" },
-    { href: "/contact", label: "Contact" },
-  ],
-  resources: [
-    { href: profile.resumePath, label: "Résumé" },
-    { href: "/insights", label: "Insights" },
-    { href: "/#faq", label: "FAQs" },
-  ],
-};
-
-/**
  * Hero content — uses profile data for role, location, name
  * Only unique hero narrative content is stored here
  * Components should derive role/location from profile.ts instead of repeating

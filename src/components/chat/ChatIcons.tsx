@@ -92,14 +92,6 @@ export function IconRefresh(props: IconProps) {
   );
 }
 
-export function IconMinimize(props: IconProps) {
-  return (
-    <Svg {...props}>
-      <path d="M4.5 10h11" />
-    </Svg>
-  );
-}
-
 export function IconExpand(props: IconProps) {
   return (
     <Svg {...props}>
