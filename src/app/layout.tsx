@@ -14,6 +14,7 @@ import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
 import { CustomCursor } from "@/components/custom-cursor/CustomCursor";
+import { ConsentManager } from "@/components/ConsentManager";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import { media } from "@/lib/media";
 import "@/motion/motion.css";
@@ -131,6 +132,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body suppressHydrationWarning>
         <JsonLd />
         <ProgressSync />
+        <ConsentManager />
         <Navbar />
         <Sidebar />
         <main id="main">{children}</main>
@@ -138,6 +140,41 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ChatLauncher />
         <Toaster />
         <CustomCursor />
+
+        {/* Google Tag Manager - Consent Mode */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <Script id="gtm-consent-init" strategy="beforeInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'personalization_storage': 'denied',
+                'functionality_storage': 'denied',
+                'security_storage': 'granted',
+                'wait_for_update': 2000
+              });
+            `}
+          </Script>
+        )}
+
+        {/* Google Tag Manager Script */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+            strategy="afterInteractive"
+          />
+        )}
+
+        {/* CookieScript Banner */}
+        {process.env.NEXT_PUBLIC_COOKIESCRIPT_ID && (
+          <Script
+            src={`https://cdn.cookiescript.com/libs/cookiescript.js`}
+            strategy="afterInteractive"
+            data-cbid={process.env.NEXT_PUBLIC_COOKIESCRIPT_ID}
+          />
+        )}
 
         {/* Google Analytics */}
         {process.env.NEXT_PUBLIC_GA_ID && (
