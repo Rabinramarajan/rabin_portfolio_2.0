@@ -3,6 +3,8 @@ import { SectionKicker, Btn } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { ProcessFlow } from "@/components/process/ProcessFlow";
 import { ProcessPrinciples } from "@/components/process/ProcessPrinciples";
+import Image from "next/image";
+
 import { media } from "@/lib/media";
 
 /**
@@ -36,10 +38,18 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
               </div>
             </div>
             <div className="pr__hero-visual-frame">
-              <img
+              {/* `fill` rather than intrinsic dimensions: the frame above
+                  already pins the box to 16/10, so there is no layout shift to
+                  guard against and next/image only has to cover it. The win is
+                  bytes and format — this was previously the raw full-size PNG,
+                  served unresized to every viewport. */}
+              <Image
                 src={media("other/process/hero.png")}
                 alt="Product engineering process environment"
                 className="pr__hero-image"
+                fill
+                sizes="(min-width: 960px) 55vw, 100vw"
+                priority
               />
               <div className="pr__hero-visual-overlay" aria-hidden />
             </div>

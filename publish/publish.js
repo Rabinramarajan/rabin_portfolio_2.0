@@ -53,8 +53,14 @@ if (option === "prod") {
   }
 }
 
-if (!fs.existsSync(path.join(ROOT, "Dockerfile"))) {
-  fail("No Dockerfile at the project root.");
+/* Dockerfile.vercel is the single container definition for this project — the
+   image pushed to Vercel Container Registry, and the one CI builds as a gate.
+   It replaced a near-identical root `Dockerfile`; keeping one file is what
+   stops the published image and the CI-verified image from drifting apart. */
+const DOCKERFILE = "Dockerfile.vercel";
+
+if (!fs.existsSync(path.join(ROOT, DOCKERFILE))) {
+  fail(`No ${DOCKERFILE} at the project root.`);
 }
 
 /* Cheapest possible check that the daemon is reachable. Without it the run
@@ -120,6 +126,8 @@ try {
     "build",
     "--platform",
     "linux/amd64",
+    "-f",
+    DOCKERFILE,
     "-t",
     tag,
     "--load",

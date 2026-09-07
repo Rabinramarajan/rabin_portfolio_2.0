@@ -50,6 +50,9 @@ next-env.d.ts
 
 
 .env*
+# The template carries variable NAMES ONLY and must be committed — without
+# this negation the blanket .env* rule silently swallows it.
+!.env.example
 .vercel
 
 # Local publish build logs

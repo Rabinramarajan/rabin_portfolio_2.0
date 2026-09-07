@@ -12,6 +12,11 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/services/web-application-development", priority: 0.85, changeFrequency: "monthly" },
   { path: "/services/mobile-app-development", priority: 0.85, changeFrequency: "monthly" },
   { path: "/experience", priority: 0.8, changeFrequency: "monthly" },
+  /* Both are indexable (neither sets a noindex robots directive) and both are
+     linked from the primary nav, so omitting them here understated the site to
+     crawlers rather than protecting anything. */
+  { path: "/about", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/contact", priority: 0.8, changeFrequency: "yearly" },
   { path: "/skills", priority: 0.7, changeFrequency: "monthly" },
   { path: "/process", priority: 0.6, changeFrequency: "yearly" },
   { path: "/pricing", priority: 0.6, changeFrequency: "yearly" },

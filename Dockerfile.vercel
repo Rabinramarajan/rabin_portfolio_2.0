@@ -1,0 +1,85 @@
+# syntax=docker/dockerfile:1.7
+#
+# Production container for Vercel Container Registry
+# (vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod).
+#
+# Built and pushed by `npm run publish prod`; CI builds it without pushing so a
+# broken Dockerfile is caught before a release. See deploy/README.md for the
+# tag and rollback strategy.
+#
+#   builder -> npm ci -> next build (standalone) -> runner -> node server.js
+#
+# NOTE: this is a Docker/OCI image. It has nothing to do with next/image, which
+# is the runtime image optimizer configured in next.config.ts.
+
+# ---------- builder ----------
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+# Dependency layer, cached separately from source. The layer cache alone is not
+# enough: publish.js bumps the version in package.json on every release, which
+# invalidates this COPY every time. The npm cache mount is what keeps the
+# re-run cheap — tarballs persist across builds, so `npm ci` becomes a local
+# extract instead of a full registry download.
+COPY package*.json ./
+RUN --mount=type=cache,target=/root/.npm npm ci --prefer-offline --no-audit --fund=false
+
+COPY . .
+
+# Declares that this build wants `output: "standalone"`, regardless of whether
+# the surrounding builder happens to set VERCEL=1 (see next.config.ts).
+ENV DOCKER_BUILD=1
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build-time public config. NEXT_PUBLIC_* values are inlined into the client
+# bundle by the compiler, so they must be present now — setting them only at
+# `docker run` time would ship a bundle that ignores them.
+#
+# These are non-secret by definition (they are readable in the shipped JS).
+# No server-side secret — SMTP password, Blob write token, API keys — is
+# passed here or baked into the image; those are read from the runtime
+# environment by server code only.
+ARG NEXT_PUBLIC_BLOB_BASE_URL=""
+ARG NEXT_PUBLIC_GA_ID=""
+ARG NEXT_PUBLIC_GTM_ID=""
+ARG NEXT_PUBLIC_COOKIESCRIPT_ID=""
+ARG NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=""
+ARG NEXT_PUBLIC_BING_SITE_VERIFICATION=""
+ENV NEXT_PUBLIC_BLOB_BASE_URL=$NEXT_PUBLIC_BLOB_BASE_URL \
+    NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID \
+    NEXT_PUBLIC_GTM_ID=$NEXT_PUBLIC_GTM_ID \
+    NEXT_PUBLIC_COOKIESCRIPT_ID=$NEXT_PUBLIC_COOKIESCRIPT_ID \
+    NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=$NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION \
+    NEXT_PUBLIC_BING_SITE_VERIFICATION=$NEXT_PUBLIC_BING_SITE_VERIFICATION
+
+RUN npm run build
+
+# Fail here, loudly, rather than in the runner's COPY with a bare ENOENT.
+RUN test -f .next/standalone/server.js \
+    || (echo "ERROR: .next/standalone/server.js missing — next.config.ts did not emit standalone output." && exit 1)
+
+# ---------- runner ----------
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+# Vercel injects PORT; this is only the fallback when it does not.
+ENV PORT=3000
+# Must be 0.0.0.0, not localhost, or the server is unreachable from outside
+# the container.
+ENV HOSTNAME=0.0.0.0
+
+# The standalone bundle carries only the modules the build actually traced —
+# no dev dependencies, no source tree, no npm install at runtime.
+COPY --from=builder --chown=node:node /app/public ./public
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+
+# Never run as root.
+USER node
+
+EXPOSE 3000
+
+# Honours $PORT, set by Vercel at run time.
+CMD ["node", "server.js"]

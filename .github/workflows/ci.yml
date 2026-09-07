@@ -139,6 +139,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: Dockerfile.vercel
           platforms: linux/amd64
           push: false
           tags: rabin-portfolio:ci

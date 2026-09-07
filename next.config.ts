@@ -1,15 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* Standalone output exists for the container build (see Dockerfile), which
+  /* Standalone output exists for the container build (see Dockerfile.vercel), which
      copies .next/standalone and runs its server.js.
 
      It must NOT be set when Vercel builds the app itself: standalone makes
      Next do its own file tracing and skip .next/next-server.js.nft.json, and
      Vercel's post-build step then fails with ENOENT on that file. Vercel sets
      VERCEL=1 during the build, so the two pipelines stay out of each other's
-     way. */
-  output: process.env.VERCEL ? undefined : "standalone",
+     way.
+
+     DOCKER_BUILD=1 forces standalone back on. Without it the container build
+     is at the mercy of whoever runs it: Vercel sets VERCEL=1 in its own build
+     container, so building Dockerfile.vercel there would take the `undefined`
+     branch, never emit .next/standalone, and fail the COPY in the runner
+     stage. Dockerfile.vercel sets the flag, so the container build states what
+     it needs rather than inferring it. */
+  output: process.env.DOCKER_BUILD ? "standalone" : process.env.VERCEL ? undefined : "standalone",
   productionBrowserSourceMaps: true,
   images: {
     formats: ["image/avif", "image/webp"],
@@ -42,6 +49,16 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          /* HSTS. Safe to send unconditionally here: rabinr.in is HTTPS-only
+             on Vercel and there is no plaintext host to lock out. Two years
+             with subdomains, which is what the preload list requires — submit
+             at hstspreload.org once this has been live for a release or two.
+             Note this header is a no-op over plain HTTP by spec, so it costs
+             nothing in local development. */
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
         ],
       },
     ];
