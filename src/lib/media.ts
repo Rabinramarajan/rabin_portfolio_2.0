@@ -23,7 +23,7 @@
  * so a key is effectively immutable once anyone has fetched it — uploading new
  * bytes to the same pathname leaves every returning visitor on the old file for
  * up to a year. A new key is a new URL, which is the only thing that reliably
- * busts that cache. Hence the `-v5` hero keys below.
+ * busts that cache. Hence the `-v6` hero keys below.
  */
 
 /** Top-level Blob prefix. Everything this site owns lives under it. */
@@ -86,22 +86,31 @@ export const MEDIA_MANIFEST = {
      video.currentTime, so every frame must be seekable without decoding from a
      keyframe. It is encoded all-intra (`-g 1 -keyint_min 1 -sc_threshold 0`)
      from media-src/hero/home-reel-master.mp4, which is why it is several times
-     the size a normal 5s 720p clip would be. Re-encoding it with default GOP
+     the size a normal 5s clip would be. Re-encoding it with default GOP
      settings costs nothing visually and silently turns the scrub to mush.
 
      Two other settings are deliberate. CRF 23: the master is itself only
      ~2 Mbps, so anything below ~21 spends bytes reproducing the source's own
      compression noise (SSIM vs the master barely moves from 23 to 18, while
-     the file grows by half). And a light `unsharp` pass, because a 720p source
-     is upscaled by the browser on any viewport wider than 1280 — sharpening
-     before the upscale reads considerably crisper than letting the browser
-     scale a soft frame. */
-  "hero/home-reel-v5.mp4": "/media/hero/banner_v2.scrub.mp4",
-  "hero/home-poster-v5.webp": "/media/hero/banner2-poster.webp",
-  /* Narrower cuts of the same frame. The poster is the LCP element on mobile,
-     where the full 1280w file is ~4x the bytes the layout can use. */
-  "hero/home-poster-v5-640.webp": "/media/hero/banner2-poster-640.webp",
-  "hero/home-poster-v5-960.webp": "/media/hero/banner2-poster-960.webp",
+     the file grows by half).
+
+     And the reel is scaled UP to 1080p with lanczos plus a light `unsharp`,
+     even though the master is 720p and no real detail is gained. The hero is
+     full-bleed, so on a wide or display-scaled monitor (Windows at 125% turns
+     a 1920 viewport into ~2400 device pixels) a 720p frame is upscaled ~2x by
+     the browser at runtime. Doing that scale offline, with a better filter and
+     sharpening applied before the resample, is visibly cleaner than leaving it
+     to the browser — it is the difference between a soft face and a sharp one
+     at monitor sizes. The poster srcset carries a matching 1920w cut for the
+     same reason. */
+  "hero/home-reel-v6.mp4": "/media/hero/banner_v2.scrub.mp4",
+  "hero/home-poster-v6.webp": "/media/hero/banner2-poster.webp",
+  /* Other cuts of the same frame. The poster is the LCP element on mobile,
+     where the full-width file is ~4x the bytes the layout can use — and on a
+     wide or display-scaled monitor, where 1280w would itself be upscaled. */
+  "hero/home-poster-v6-640.webp": "/media/hero/banner2-poster-640.webp",
+  "hero/home-poster-v6-960.webp": "/media/hero/banner2-poster-960.webp",
+  "hero/home-poster-v6-1920.webp": "/media/hero/banner2-poster-1920.webp",
 
   // ---- profile ----------------------------------------------------------
   "profile/rabin-hero.webp": "/media/working/hero-portrait-640.webp",

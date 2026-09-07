@@ -44,7 +44,7 @@ const mono = JetBrains_Mono({
    otherwise only be opened once the hero markup is parsed. Returns null when
    media is served from /public, where there is nothing to preconnect to. */
 function mediaOrigin(): string | null {
-  const sample = media("hero/home-poster-v5.webp");
+  const sample = media("hero/home-poster-v6.webp");
   return sample.startsWith("http") ? new URL(sample).origin : null;
 }
 
