@@ -24,12 +24,6 @@ export interface EventParams {
   [key: string]: string | number | boolean;
 }
 
-declare global {
-  interface Window {
-    gtag?: (command: "event", eventName: string, params?: EventParams) => void;
-  }
-}
-
 /**
  * Track a conversion event with Google Analytics.
  * Falls back gracefully if GA is not available.
