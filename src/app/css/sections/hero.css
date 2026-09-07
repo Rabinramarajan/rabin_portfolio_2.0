@@ -321,10 +321,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Biased left of centre so the visible crop keeps the subject clear of the
-     headline - the reel frames him on the right, and `center` pulled him far
-     enough in to collide with "EXPERIENCES". */
-  object-position: 34% 20%;
+  /* The reel is centre-framed (subject at 48% across, face at 20% down) and
+     dollies in, so unlike the previous right-framed reel there is no side the
+     crop can favour: at 16:9 into a landscape viewport the horizontal budget
+     is only ~160px at 1440x900, and X barely moves him. The slight leftward
+     bias spends what budget there is pushing him off the headline; Y is what
+     actually matters, and it is held high so the face survives the crop on
+     short, wide viewports where the overflow is vertical. */
+  object-position: 38% 22%;
   will-change: transform;
   /* Dissolve the banner's hard waist-cut into the page background */
   -webkit-mask-image: linear-gradient(
@@ -349,12 +353,17 @@
   position: absolute;
   inset: 0;
   background:
+    /* Copy column holds at near-opaque, then clears through the headline's
+       tail (~48%) so the subject's face at 51% is never dimmed. The far right
+       settles back a little: the corridor behind him is empty, and left fully
+       lit it pulled the eye off the copy. */
     linear-gradient(
       90deg,
-      rgb(10 10 12 / 88%) 0%,
-      rgb(10 10 12 / 62%) 34%,
-      rgb(10 10 12 / 6%) 58%,
-      rgb(10 10 12 / 14%) 100%
+      rgb(10 10 12 / 90%) 0%,
+      rgb(10 10 12 / 66%) 30%,
+      rgb(10 10 12 / 20%) 46%,
+      rgb(10 10 12 / 4%) 60%,
+      rgb(10 10 12 / 22%) 100%
     ),
     linear-gradient(
       180deg,
@@ -368,8 +377,10 @@
 .chero__vignette {
   position: absolute;
   inset: 0;
+  /* Clear centre follows the subject, who now walks up the middle of the
+     frame rather than sitting at 62%. */
   background: radial-gradient(
-    ellipse at 62% 34%,
+    ellipse at 48% 24%,
     transparent 40%,
     rgb(10 10 12 / 30%) 100%
   );
@@ -420,6 +431,65 @@
       rgb(10 10 12 / 72%) 70%,
       var(--color-bg) 100%
     );
+  }
+}
+/* PORTRAIT TABLETS.
+   These land in the 768-959 band but are taller than they are wide, so
+   `cover` scales the 16:9 reel until the centre-framed subject fills the pane
+   and the headline crosses his face — the one thing the composition must
+   never do. The phone block's answer applies here too: size the frame to a
+   band at the top of the pane and dissolve its edges, so he owns the upper
+   half and the copy owns the lower. Only the sizing differs, so the mask
+   geometry below is deliberately identical to the phone block's.
+   Scoped to `orientation: portrait` so landscape phones and small landscape
+   windows, which are wide enough for `cover` to behave, keep it. */
+@media (min-width: 768px) and (max-width: 959px) and (orientation: portrait) {
+  .chero__reel {
+    inset: var(--header-h) auto auto 50%;
+    width: auto;
+    max-width: none;
+    height: clamp(320px, 44dvh, 620px);
+    aspect-ratio: 16 / 9;
+    transform: translateX(-48%);
+    -webkit-mask-image: radial-gradient(
+      ellipse 44% 72% at 48% 24%,
+      #000 66%,
+      rgb(0 0 0 / 0.45) 86%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 44% 72% at 48% 24%,
+      #000 66%,
+      rgb(0 0 0 / 0.45) 86%,
+      transparent 100%
+    );
+  }
+  /* Matches the phone treatment: clear over the face, darkening only from the
+     shoulders down where the copy starts. */
+  .chero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(10 10 12 / 52%) 0%,
+      rgb(10 10 12 / 10%) 20%,
+      rgb(10 10 12 / 20%) 42%,
+      rgb(10 10 12 / 78%) 64%,
+      var(--color-bg) 86%
+    );
+  }
+  .chero__vignette {
+    background: radial-gradient(
+      ellipse at 48% 24%,
+      transparent 44%,
+      rgb(10 10 12 / 45%) 100%
+    );
+  }
+  /* The copy sits at the foot of the pane, under the portrait band. `.chero`
+     is a centring flex column, so the shell has to stretch for `align-content`
+     to have any free space to act on. */
+  .chero__shell {
+    flex: 1 1 auto;
+    align-content: end;
+    align-items: end;
   }
 }
 .chero__shell {
@@ -682,7 +752,7 @@
     height: 100dvh;
   }
   /* THE PORTRAIT.
-     The source reel is 16:9 with the subject at ~69% across and ~39% down. On
+     The source reel is 16:9 with the subject at ~48% across and ~20% down. On
      a 390x660 pane, `object-fit: cover` scales to fill the height, so there is
      no vertical overflow at all — `object-position`'s Y value is inert, the
      face is pinned to the middle of the screen where the headline lives, and
@@ -694,47 +764,49 @@
      Nothing hard-clips now — the frame's own height decides how much of him
      is on screen, and the mask decides where he dissolves. */
   /* CENTRING THE SUBJECT.
-     `object-position` cannot do this either. At this scale the 16:9 frame is
+     `object-position` cannot do this either: at this scale the 16:9 frame is
      only a little wider than the viewport, so there is almost no crop budget
-     to pan within — every value from 50% to 100% leaves him right of centre,
-     because he is right of centre in the source.
+     to pan within.
 
      The frame is oversized instead and pulled by its own width: anchoring its
-     left edge at the pane's centre and translating back by 69% lands that
-     exact point of the picture on the centre line, at any size. */
+     left edge at the pane's centre and translating back by the subject's own
+     position in the source lands that exact point of the picture on the centre
+     line, at any size. The subject walks up the middle of this reel, so that
+     figure is 48% — it was 69% for the previous, right-framed reel. */
   .chero__reel {
     /* Height is the crop budget: it sets how large the head reads and, with
-       the crown at 8.3% and the chin at 60% of the frame, exactly where the
-       chin falls. The copy below is a fixed ~430px whatever the phone, so the
-       headroom for the portrait grows faster than the viewport does — hence a
-       slope steeper than 1, which keeps ~20px between his chin and the
-       headline from a 600px screen to a 932px one. */
+       the crown at 6% and the chin at 28.5% of the frame, exactly where the
+       chin falls. This reel is a wider shot than the last one — he is a
+       three-quarter figure at the open, not a close-up — so the frame is
+       scaled up harder to give the head comparable presence, and the numbers
+       below are steeper than the ones they replace. The copy is a fixed ~430px
+       whatever the phone, so the headroom grows faster than the viewport. */
     inset: var(--header-h) auto auto 50%;
     width: auto;
     /* Without this the global `max-width: 100%` on media clamps the frame back
        to the pane's width, which collapses the aspect ratio and undoes both
        the zoom and the centring. */
     max-width: none;
-    height: clamp(180px, calc(145dvh - 687px), 620px);
+    height: clamp(320px, calc(92dvh - 260px), 640px);
     aspect-ratio: 16 / 9;
-    transform: translateX(-69%);
+    transform: translateX(-48%);
     /* An oversized, translated frame cannot line up with the pane's edges, so
        it is dissolved rather than cropped. The radii are expressed against the
-       frame, so one set of numbers holds at every size: 31% horizontal is the
-       widest that still reaches zero before the right edge (69 + 31 = 100),
-       and 70% vertical centred at 30% reaches zero exactly at the frame's
-       foot. The 68% opaque stop then carries full opacity down to 78% of the
-       frame — past the chin at 60%, through the shoulders — so he dissolves
-       into the copy instead of ending at the jaw. */
+       frame, so one set of numbers holds at every size: centred at 48% there
+       is ~48% of headroom on either side, and 44% keeps the falloff inside the
+       frame on both; 72% vertical centred at 28% reaches zero exactly at the
+       frame's foot. The 66% opaque stop carries full opacity well past the
+       chin at 28.5%, down through the torso, so he dissolves into the copy instead
+       of ending at the jaw. */
     -webkit-mask-image: radial-gradient(
-      ellipse 31% 70% at 69% 30%,
-      #000 68%,
+      ellipse 44% 72% at 48% 24%,
+      #000 66%,
       rgb(0 0 0 / 0.45) 86%,
       transparent 100%
     );
     mask-image: radial-gradient(
-      ellipse 31% 70% at 69% 30%,
-      #000 68%,
+      ellipse 44% 72% at 48% 24%,
+      #000 66%,
       rgb(0 0 0 / 0.45) 86%,
       transparent 100%
     );

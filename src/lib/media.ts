@@ -17,6 +17,13 @@
  * Small static assets — favicons, the manifest logos, inline SVG marks — stay
  * in /public on purpose. They are a few KB each and are requested from the
  * document itself; routing them through Blob would only add a DNS hop.
+ *
+ * REPLACING AN ASSET'S CONTENT: bump the key, do not just repoint the value.
+ * Blob serves `cache-control: public, max-age=31536000` with no revalidation,
+ * so a key is effectively immutable once anyone has fetched it — uploading new
+ * bytes to the same pathname leaves every returning visitor on the old file for
+ * up to a year. A new key is a new URL, which is the only thing that reliably
+ * busts that cache. Hence the `-v5` hero keys below.
  */
 
 /** Top-level Blob prefix. Everything this site owns lives under it. */
@@ -75,12 +82,26 @@ const BLOB_BASE_URL = resolveBaseUrl();
  */
 export const MEDIA_MANIFEST = {
   // ---- hero -------------------------------------------------------------
-  "hero/home-reel.mp4": "/media/hero/banner_v.scrub.mp4",
-  "hero/home-poster.webp": "/media/hero/banner-poster.webp",
+  /* The reel is scroll-scrubbed: Hero.tsx writes scroll position straight onto
+     video.currentTime, so every frame must be seekable without decoding from a
+     keyframe. It is encoded all-intra (`-g 1 -keyint_min 1 -sc_threshold 0`)
+     from media-src/hero/home-reel-master.mp4, which is why it is several times
+     the size a normal 5s 720p clip would be. Re-encoding it with default GOP
+     settings costs nothing visually and silently turns the scrub to mush.
+
+     Two other settings are deliberate. CRF 23: the master is itself only
+     ~2 Mbps, so anything below ~21 spends bytes reproducing the source's own
+     compression noise (SSIM vs the master barely moves from 23 to 18, while
+     the file grows by half). And a light `unsharp` pass, because a 720p source
+     is upscaled by the browser on any viewport wider than 1280 — sharpening
+     before the upscale reads considerably crisper than letting the browser
+     scale a soft frame. */
+  "hero/home-reel-v5.mp4": "/media/hero/banner_v2.scrub.mp4",
+  "hero/home-poster-v5.webp": "/media/hero/banner2-poster.webp",
   /* Narrower cuts of the same frame. The poster is the LCP element on mobile,
      where the full 1280w file is ~4x the bytes the layout can use. */
-  "hero/home-poster-640.webp": "/media/hero/banner-poster-640.webp",
-  "hero/home-poster-960.webp": "/media/hero/banner-poster-960.webp",
+  "hero/home-poster-v5-640.webp": "/media/hero/banner2-poster-640.webp",
+  "hero/home-poster-v5-960.webp": "/media/hero/banner2-poster-960.webp",
 
   // ---- profile ----------------------------------------------------------
   "profile/rabin-hero.webp": "/media/working/hero-portrait-640.webp",
