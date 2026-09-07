@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Angular & Frontend Development Services",
   description:
-    "Frontend engineering, Angular development, React and Next.js, UI engineering, performance optimization, Ionic mobile apps and design systems — from problem to production.",
+    "Frontend engineering and Angular development services — React, Next.js, UI engineering, performance optimization and design systems.",
   path: "/services",
   keywords: [
     "Angular development services",
