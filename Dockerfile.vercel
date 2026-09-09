@@ -2,9 +2,25 @@
 #
 # Production container for Vercel Functions running a custom OCI image.
 #
-#   git push -> Vercel detects this file -> builds the OCI image ->
-#   stores it in Vercel Container Registry -> runs it as a Vercel Function
-#   on Fluid Compute.
+#   deploy -> Vercel builds this file into an OCI image -> stores it in
+#   Vercel Container Registry -> runs it as a Vercel Function on Fluid
+#   Compute.
+#
+# vercel.json is what selects that path, and is NOT redundant: Vercel's
+# automatic Dockerfile.vercel detection does not fire on this project, because
+# the Next.js framework preset wins and the platform runs `next build` on its
+# own instead of building this image. Declaring the service with an explicit
+# `entrypoint` is what switches the build over — verified by the build log
+# ("Building image ... (buildah)" rather than "Build Completed in
+# /vercel/output").
+#
+# The service KEY in vercel.json is the Container Registry repository name, so
+# it is deliberately `rabin_portfolio_prod` — the repository this project
+# already publishes to, holding v1.0.1 and v1.0.2. Renaming that key silently
+# creates a second repository instead of reusing the existing one.
+#
+# Vercel tags each build with the commit SHA (e.g. `:429caedc97ed`), which is
+# immutable per deployment; nothing here depends on a mutable `:latest`.
 #
 #   builder -> npm ci -> next build (standalone) -> runner -> node server.js
 #

@@ -1,10 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "services": {
-    "web": {
+    "rabin_portfolio_prod": {
       "root": ".",
       "entrypoint": "Dockerfile.vercel"
     }
   },
-  "rewrites": [{ "source": "/(.*)", "destination": { "service": "web" } }]
+  "rewrites": [{ "source": "/(.*)", "destination": { "service": "rabin_portfolio_prod" } }]
 }
