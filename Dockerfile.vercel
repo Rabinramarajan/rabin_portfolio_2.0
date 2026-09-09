@@ -1,19 +1,26 @@
 # syntax=docker/dockerfile:1.7
 #
-# Production container for Vercel Container Registry
-# (vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod).
+# Production container for Vercel Functions running a custom OCI image.
 #
-# Built and pushed by `npm run publish prod`; CI builds it without pushing so a
-# broken Dockerfile is caught before a release. See deploy/README.md for the
-# tag and rollback strategy.
+#   git push -> Vercel detects this file -> builds the OCI image ->
+#   stores it in Vercel Container Registry -> runs it as a Vercel Function
+#   on Fluid Compute.
 #
 #   builder -> npm ci -> next build (standalone) -> runner -> node server.js
 #
-# NOTE: this is a Docker/OCI image. It has nothing to do with next/image, which
-# is the runtime image optimizer configured in next.config.ts.
+# The same file is also built and pushed by hand by `npm run publish prod`
+# for the Kubernetes/ArgoCD path (see deploy/README.md), and built without
+# pushing by CI so a broken Dockerfile is caught before a release. One file,
+# three consumers — that is what stops the published image and the
+# CI-verified image from drifting apart.
+#
+# NOTE: this is a Docker/OCI image. It has nothing to do with next/image,
+# which is the runtime image optimizer configured in next.config.ts.
 
 # ---------- builder ----------
-FROM node:22-alpine AS builder
+# Node 24 LTS, matching the project's configured Vercel Node.js version and
+# supported by Next 16. Node 20 is deprecated on Vercel from 2026-10-01.
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # Dependency layer, cached separately from source. The layer cache alone is not
@@ -27,18 +34,27 @@ RUN --mount=type=cache,target=/root/.npm npm ci --prefer-offline --no-audit --fu
 COPY . .
 
 # Declares that this build wants `output: "standalone"`, regardless of whether
-# the surrounding builder happens to set VERCEL=1 (see next.config.ts).
+# the surrounding builder happens to set VERCEL=1 (see next.config.ts). Vercel
+# does set VERCEL=1 inside its own container build, so without this the build
+# would take the `undefined` branch, never emit .next/standalone, and fail the
+# COPY in the runner stage.
 ENV DOCKER_BUILD=1
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build-time public config. NEXT_PUBLIC_* values are inlined into the client
 # bundle by the compiler, so they must be present now — setting them only at
-# `docker run` time would ship a bundle that ignores them.
+# run time would ship a bundle that ignores them.
+#
+# On Vercel these arrive automatically: project environment variables are
+# translated into Docker build arguments for the image build, and exposed as
+# ordinary environment variables at run time. Each therefore needs to exist in
+# the project's environment variables for the target environment, or it builds
+# as the empty default below.
 #
 # These are non-secret by definition (they are readable in the shipped JS).
-# No server-side secret — SMTP password, Blob write token, API keys — is
-# passed here or baked into the image; those are read from the runtime
-# environment by server code only.
+# No server-side secret — SMTP password, Blob token, AI API key — is passed
+# here or baked into the image; those are read from the runtime environment by
+# server code only, and must never be added as ARGs.
 ARG NEXT_PUBLIC_BLOB_BASE_URL=""
 ARG NEXT_PUBLIC_GA_ID=""
 ARG NEXT_PUBLIC_GTM_ID=""
@@ -59,16 +75,28 @@ RUN test -f .next/standalone/server.js \
     || (echo "ERROR: .next/standalone/server.js missing — next.config.ts did not emit standalone output." && exit 1)
 
 # ---------- runner ----------
-FROM node:22-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-# Vercel injects PORT; this is only the fallback when it does not.
-ENV PORT=3000
+
+# Vercel routes container traffic to port 80 unless a PORT environment
+# variable is set in project settings; server.js reads $PORT. Defaulting to 80
+# here means the image satisfies Vercel's contract on its own, with no
+# out-of-band project setting to keep in sync — and an explicit PORT still
+# wins if one is ever set.
+ENV PORT=80
 # Must be 0.0.0.0, not localhost, or the server is unreachable from outside
 # the container.
 ENV HOSTNAME=0.0.0.0
+
+# Binding port 80 is privileged, and this container must not run as root.
+# Granting the node binary CAP_NET_BIND_SERVICE is what lets the unprivileged
+# `node` user bind it; libcap is removed again so it is not left in the image.
+RUN apk add --no-cache libcap \
+    && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node \
+    && apk del libcap
 
 # The standalone bundle carries only the modules the build actually traced —
 # no dev dependencies, no source tree, no npm install at runtime.
@@ -79,7 +107,12 @@ COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 # Never run as root.
 USER node
 
-EXPOSE 3000
+EXPOSE 80
 
-# Honours $PORT, set by Vercel at run time.
+# Run node directly as PID 1, with no init shim: Next's standalone server
+# installs its own SIGINT/SIGTERM handlers (server/lib/start-server.js), so it
+# shuts down gracefully inside Vercel's 30-second scale-in grace period.
+# Setting NEXT_MANUAL_SIG_HANDLE would disable those handlers — don't.
+#
+# stdout/stderr stay unredirected so Vercel's runtime logs capture them.
 CMD ["node", "server.js"]

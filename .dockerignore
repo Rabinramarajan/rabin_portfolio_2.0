@@ -1,8 +1,19 @@
+# Everything here is excluded from the build context sent to the daemon.
+#
+# Be careful pruning this: `next build` runs inside the image, so anything the
+# build reads must survive. src/, public/, package*.json, next.config.ts,
+# tsconfig.json, postcss.config.mjs and eslint.config.mjs all stay.
+#
+# src/generated/version.json in particular MUST stay — publish/ is excluded
+# below, so the committed generated module is the only thing that tells the
+# running site its version (src/app/version, /api/health).
+
 # dependencies & build output — rebuilt inside the image
 node_modules
 .next
 out
 build
+tsconfig.tsbuildinfo
 
 # secrets — must never enter the build context
 .env
@@ -16,16 +27,28 @@ build
 .vscode
 .claude
 .idea
+.vercel
 
 # publish pipeline itself
 publish
 
+# delivery config for the Kubernetes/ArgoCD path — not read by the build
+deploy
+
+# tests: not run during `next build`. Unit tests live beside the source they
+# cover, so only their config and the standalone e2e suite are excluded.
+e2e
+playwright.config.ts
+vitest.config.ts
+
 # docs, scratch files, archives
+docs
 *.md
 *.zip
 *.log
 coverage
 
-# design/source assets not served at runtime
+# design/source assets not served at runtime — public/ holds the shipped media
+media-src
 ux
 animation

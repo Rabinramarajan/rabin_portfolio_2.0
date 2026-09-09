@@ -2,7 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* Standalone output exists for the container build (see Dockerfile.vercel), which
-     copies .next/standalone and runs its server.js.
+     copies .next/standalone and runs its server.js. That container is what
+     Vercel itself builds and runs: it detects Dockerfile.vercel, builds the
+     OCI image, stores it in Vercel Container Registry, and serves it from a
+     Vercel Function on Fluid Compute.
+
+     The VERCEL branch below covers the other pipeline — Vercel building the
+     app directly from the Next.js framework preset, with no container. That
+     is not how this project deploys any more, but the branch stays as the
+     escape hatch back to it.
 
      It must NOT be set when Vercel builds the app itself: standalone makes
      Next do its own file tracing and skip .next/next-server.js.nft.json, and
