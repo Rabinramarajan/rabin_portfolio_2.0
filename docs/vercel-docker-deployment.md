@@ -58,7 +58,7 @@ than reusing the existing one. (This happened once during setup with a key of
 | --- | --- |
 | [Dockerfile.vercel](../Dockerfile.vercel) | `node:22-alpine` → `node:24-alpine`; `PORT` 3000 → **80**; `setcap` so non-root can bind 80; architecture notes |
 | [vercel.json](../vercel.json) | **New.** Declares the container service and the catch-all rewrite |
-| [.dockerignore](../.dockerignore) | Added `deploy`, `e2e`, `docs`, `media-src`, `.vercel`, `tsconfig.tsbuildinfo`, `playwright.config.ts`, `vitest.config.ts` |
+| [.dockerignore](../.dockerignore) | Added `deploy`, `e2e`, `docs`, `media-src`, `.vercel`, `tsconfig.tsbuildinfo`, `playwright.config.ts`, `vitest.config.mts` |
 | [next.config.ts](../next.config.ts) | Comments only — the `output: "standalone"` logic was already correct |
 | [publish/config.json](../publish/config.json) | `prod.version` 1.0.2 → 1.0.3 |
 | [package.json](../package.json) | `version` 1.0.2 → 1.0.3 |

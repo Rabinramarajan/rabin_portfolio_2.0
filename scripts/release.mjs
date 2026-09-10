@@ -49,22 +49,39 @@ const step = (m) => console.log(`\n→ ${m}`);
    bare name and EINVAL for the explicit `.cmd` (Node 20+ refuses to launch a
    batch file without a shell), so a shim run without `shell` looks exactly
    like a tool that is not installed. Hence the flag — scoped to these two.
-   `shell: true` concatenates arguments unescaped, which is safe only because
-   every argument passed to them here is a literal flag containing no spaces;
-   git keeps the default path since its commit message does contain spaces. */
+   git keeps the default path since its commit message does contain spaces.
+
+   Args are folded into the command string rather than passed alongside
+   `shell: true`: that combination concatenates them unescaped anyway, and
+   Node 22 deprecates it (DEP0190) precisely because the array *looks* like
+   it is being escaped when it is not. Folding them in makes the shell path
+   honest, and `assertShellSafe` enforces the invariant the old comment only
+   asserted in prose — every argument to a shim is a bare flag or word. */
 const SHIMS = new Set(["npm", "vercel"]);
 const needsShell = (cmd) => process.platform === "win32" && SHIMS.has(cmd);
+
+const assertShellSafe = (cmd, cmdArgs) => {
+  const bad = cmdArgs.filter((a) => !/^[\w.=/@-]+$/.test(a));
+  if (bad.length) {
+    fail(
+      `Refusing to run \`${cmd}\` through a shell with unquoted arguments: ${bad.join(", ")}.\n` +
+        `  Give this call its own non-shell path rather than relying on concatenation.`,
+    );
+  }
+};
+
+const exec = (cmd, cmdArgs, options) => {
+  if (!needsShell(cmd)) return execFileSync(cmd, cmdArgs, options);
+  assertShellSafe(cmd, cmdArgs);
+  return execFileSync([cmd, ...cmdArgs].join(" "), { ...options, shell: true });
+};
 
 const run = (cmd, cmdArgs) => {
   if (dryRun) {
     console.log(`  [dry-run] ${cmd} ${cmdArgs.join(" ")}`);
     return "";
   }
-  return execFileSync(cmd, cmdArgs, {
-    cwd: ROOT,
-    stdio: "inherit",
-    shell: needsShell(cmd),
-  });
+  return exec(cmd, cmdArgs, { cwd: ROOT, stdio: "inherit" });
 };
 
 /* ---------- work out the version ---------- */
@@ -120,7 +137,7 @@ if (dryRun) console.log("\n(dry run — no files written, nothing deployed)");
 
 if (!noDeploy && !dryRun) {
   try {
-    execFileSync("vercel", ["--version"], { stdio: "ignore", shell: needsShell("vercel") });
+    exec("vercel", ["--version"], { stdio: "ignore" });
   } catch {
     fail("Vercel CLI not found. Install it with `npm i -g vercel`, then re-run.");
   }

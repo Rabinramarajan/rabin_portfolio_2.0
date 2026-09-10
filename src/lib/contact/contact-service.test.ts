@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { submitContact } from "@/lib/contact/contact-service";
 import type { EmailMessage, EmailProvider } from "@/lib/contact/email-service";
 
@@ -85,10 +85,23 @@ describe("submitContact", () => {
   it("still succeeds when the visitor acknowledgement bounces", async () => {
     // A dead or mistyped visitor address must not undo a delivered notification.
     const email = new StubEmailProvider(2);
-    const result = await submitContact(payload, { email });
+    /* Captured rather than left to print: the bounce is deliberate here, and a
+       passing test that always writes to stderr teaches everyone to ignore it.
+       Asserted rather than merely swallowed, because this log is the only trace
+       of an enquiry whose acknowledgement never arrived. */
+    const logged = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    expect(result.ok).toBe(true);
-    expect(email.sent).toHaveLength(1);
+    try {
+      const result = await submitContact(payload, { email });
+
+      expect(result.ok).toBe(true);
+      expect(email.sent).toHaveLength(1);
+      if (!result.ok) return;
+      expect(logged).toHaveBeenCalledOnce();
+      expect(logged.mock.calls[0][0]).toContain(result.referenceId);
+    } finally {
+      logged.mockRestore();
+    }
   });
 
   it("propagates a failed owner notification so the route can report it", async () => {

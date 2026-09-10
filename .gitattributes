@@ -1,0 +1,30 @@
+# Line endings are decided here, not by each machine's `core.autocrlf`.
+#
+# Git for Windows ships `core.autocrlf=true` system-wide, which checks files
+# out as CRLF and converts them back to LF on commit. Every text file in this
+# repo is already LF in the index, so that round-trip changed nothing and only
+# produced the "LF will be replaced by CRLF" warnings on `git add` — noise on
+# every release commit. `eol=lf` keeps the working copy matching the index, so
+# the conversion (and the warning) never happens.
+#
+# This also keeps Linux CI and the Dockerfile.vercel build byte-identical to a
+# Windows checkout, which matters for anything that hashes or diffs a file.
+* text=auto eol=lf
+
+# Binaries: never inspected for line endings, never diffed as text. `text=auto`
+# already detects most of these, but stating it removes the guesswork for
+# formats whose headers can look textual.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+*.mp4   binary
+*.webm  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.pdf   binary

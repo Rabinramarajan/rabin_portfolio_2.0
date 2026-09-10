@@ -39,7 +39,7 @@ deploy
 # cover, so only their config and the standalone e2e suite are excluded.
 e2e
 playwright.config.ts
-vitest.config.ts
+vitest.config.mts
 
 # docs, scratch files, archives
 docs
