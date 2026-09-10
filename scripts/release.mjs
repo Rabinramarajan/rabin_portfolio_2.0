@@ -127,10 +127,28 @@ if (released.has(version)) {
 
 const releasedAt = new Date().toISOString();
 
+/* Stored as UTC — unambiguous, sorts correctly, and what publish.js has always
+   written. Only the console echo is localised: a bare `…Z` string next to an
+   IST wall clock reads as a five-and-a-half-hour error when it is in fact the
+   same instant. The site does the same conversion at render time via
+   formatReleaseDate/formatReleaseTime in src/lib/version.ts. */
+const IST = "Asia/Kolkata";
+const inIst = (iso) =>
+  `${new Date(iso).toLocaleString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: IST,
+  })} IST`;
+
 console.log(`Environment : ${ENV}`);
 console.log(`Previous    : v${target.version}${pending ? " (pending, never shipped)" : ""}`);
 console.log(`Releasing   : v${version}`);
-console.log(`Timestamp   : ${releasedAt}`);
+console.log(`Timestamp   : ${inIst(releasedAt)}`);
+console.log(`              ${releasedAt} (stored as UTC)`);
 if (dryRun) console.log("\n(dry run — no files written, nothing deployed)");
 
 /* ---------- preflight ---------- */
