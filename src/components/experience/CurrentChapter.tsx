@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { formatRoleDates, getCurrentRoles } from "@/content/experience";
 import { profile } from "@/content/profile";
@@ -65,7 +66,17 @@ export function CurrentChapter() {
                 <h3 className="xcur__title">{role.role}</h3>
                 <div className="xcur__company-row">
                   {role.logo ? (
-                    <img className="xcur__logo" src={role.logo} alt={`${role.company} logo`} width={18} height={18} loading="lazy" />
+                    /* Third-party favicon — see the note in CareerTimeline: too small
+                       to optimize, and off our remotePatterns allowlist by design. */
+                    <Image
+                      className="xcur__logo"
+                      src={role.logo}
+                      alt={`${role.company} logo`}
+                      width={18}
+                      height={18}
+                      loading="lazy"
+                      unoptimized
+                    />
                   ) : role.type === "Freelance" ? (
                     <FreelancerIcon className="xcur__logo" />
                   ) : null}

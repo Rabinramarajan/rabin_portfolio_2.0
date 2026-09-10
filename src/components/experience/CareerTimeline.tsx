@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { careerHorizon } from "@/content/experience";
 import type { HorizonChapter } from "@/content/types";
@@ -194,7 +195,18 @@ function Chapter({
         <div className="ctl__head">
           <span className="ctl__logo" aria-hidden>
             {chapter.logo ? (
-              <img className="ctl__logo-img" src={chapter.logo} alt={`${chapter.org} logo`} width={20} height={20} loading="lazy" />
+              /* Third-party favicons: sub-1KB, sometimes .ico, and served from hosts
+                 we do not control — nothing for the optimizer to gain, and no reason
+                 to widen images.remotePatterns for them. */
+              <Image
+                className="ctl__logo-img"
+                src={chapter.logo}
+                alt={`${chapter.org} logo`}
+                width={20}
+                height={20}
+                loading="lazy"
+                unoptimized
+              />
             ) : (
               chapter.monogram ?? initials(chapter.org ?? chapter.phase)
             )}
