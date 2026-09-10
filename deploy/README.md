@@ -115,8 +115,7 @@ cluster is running something other than the recorded release.
    kubectl -n portfolio create secret generic portfolio-secrets \
      --from-literal=BLOB_READ_WRITE_TOKEN=... \
      --from-literal=BLOB_UPLOAD_SECRET=... \
-     --from-literal=GEMINI_API_KEY=... \
-     --from-literal=GROQ_API_KEY=...
+     --from-literal=NVIDIA_API_KEY=...
    ```
 
    `NEXT_PUBLIC_*` values are inlined at build time, not read from the Secret —

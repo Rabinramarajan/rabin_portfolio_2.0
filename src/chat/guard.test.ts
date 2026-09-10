@@ -18,7 +18,7 @@ describe("output guard", () => {
 
   it("redacts anything shaped like a credential", () => {
     expect(sanitizeOutput("key is sk-abcdef0123456789abcd")).toContain("[redacted]");
-    expect(sanitizeOutput("set GROQ_API_KEY now")).toContain("[redacted]");
+    expect(sanitizeOutput("set NVIDIA_API_KEY now")).toContain("[redacted]");
     expect(sanitizeOutput("read process.env.SECRET")).toContain("[redacted]");
   });
 

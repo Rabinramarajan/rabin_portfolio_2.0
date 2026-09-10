@@ -1,5 +1,4 @@
-import { GeminiProvider } from "@/chat/ai/gemini";
-import { GroqProvider } from "@/chat/ai/groq";
+import { NvidiaProvider } from "@/chat/ai/nvidia";
 import type { AIProvider } from "@/chat/ai/provider";
 
 export type { AIProvider, AIRequest } from "@/chat/ai/provider";
@@ -13,7 +12,7 @@ export { AIProviderError } from "@/chat/ai/provider";
  * from the knowledge base rather than failing — the site never depends on a
  * third-party key being present.
  */
-const providers: AIProvider[] = [new GeminiProvider(), new GroqProvider()];
+const providers: AIProvider[] = [new NvidiaProvider()];
 
 export function resolveProvider(): AIProvider | null {
   const pinned = process.env.AI_PROVIDER?.trim().toLowerCase();

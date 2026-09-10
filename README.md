@@ -14,8 +14,7 @@ npm run dev
 settings for the contact form, the envelope (`CONTACT_FROM_EMAIL`,
 `CONTACT_TO_EMAIL`, `CONTACT_FROM_NAME`, plus the optional
 `CONTACT_ACK_EMAIL` and `CONTACT_ALLOW_UNCONFIGURED`
-flags) and the assistant keys (`GEMINI_API_KEY`, `GROQ_API_KEY`,
-`DEBUG_ASSISTANT`).
+flags) and the assistant keys (`NVIDIA_API_KEY`, `DEBUG_ASSISTANT`).
 
 ### Contact mail transport
 
@@ -36,7 +35,7 @@ address as `Reply-To` — spoofing the visitor as sender breaks SPF/DKIM and get
 the message rejected. Set the same variables in Vercel under
 Project → Settings → Environment Variables.
 
-SMTP credentials and `GEMINI_API_KEY` stay on the server.
+SMTP credentials and `NVIDIA_API_KEY` stay on the server.
 Never expose them as NEXT_PUBLIC_ vars.
 
 ## Media (Vercel Blob)

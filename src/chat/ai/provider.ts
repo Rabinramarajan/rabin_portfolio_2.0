@@ -35,7 +35,7 @@ export class AIProviderError extends Error {
   }
 }
 
-/** Shared SSE line reader — both supported providers speak `data:` frames. */
+/** Shared SSE line reader — every supported provider speaks `data:` frames. */
 export async function* readSse(
   body: ReadableStream<Uint8Array>,
   extract: (payload: unknown) => string | undefined,

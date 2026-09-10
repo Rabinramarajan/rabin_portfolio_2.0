@@ -21,9 +21,8 @@ const LEAK_MARKERS = [
 /** Secret-shaped strings that must never appear in an answer. */
 const SECRET_PATTERNS: RegExp[] = [
   /\bsk-[a-z0-9]{16,}/gi,
-  /\bgsk_[a-z0-9]{16,}/gi,
-  /\bAIza[0-9A-Za-z_-]{20,}/g,
-  /\b(GROQ|GEMINI|OPENAI|AI)_API_KEY\b/g,
+  /\bnvapi-[a-z0-9_-]{16,}/gi,
+  /\b(NVIDIA|OPENAI|AI)_API_KEY\b/g,
   /\bprocess\.env\.[A-Z_]+/g,
 ];
 
