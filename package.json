@@ -22,6 +22,7 @@
     "blob:migrate": "node --env-file-if-exists=.env.local scripts/migrate-media-to-blob.mjs",
     "blob:migrate:dry": "node --env-file-if-exists=.env.local scripts/migrate-media-to-blob.mjs --dry-run",
     "publish": "node publish/publish.js",
+    "release": "node scripts/release.mjs",
     "version:sync": "node scripts/generate-version.mjs"
   },
   "dependencies": {
