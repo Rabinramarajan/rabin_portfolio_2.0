@@ -31,6 +31,11 @@ export interface EcoBranch {
   icon: string;
   hubX: number;
   hubY: number;
+  /* Offset of the branch name tag relative to its hub. Hand-placed so the tag
+     lands in open canvas beside the branch's node cluster instead of on top of
+     a node label. */
+  tagDx: number;
+  tagDy: number;
   pathD: string;
   description: string;
 }
@@ -60,9 +65,11 @@ export const ECO_BRANCHES: EcoBranch[] = [
     subtitle: "Modern Reactive UI & Core Systems",
     color: "#C8FF00",
     accentRgb: "200, 255, 0",
-    icon: "⚛",
+    icon: "◇",
     hubX: 410,
     hubY: 180,
+    tagDx: -62,
+    tagDy: -114,
     pathD: "M 550 420 C 550 320, 440 240, 410 180",
     description: "High-performance component architecture, reactive signals, and accessible web systems.",
   },
@@ -72,9 +79,11 @@ export const ECO_BRANCHES: EcoBranch[] = [
     subtitle: "Cross-Platform & Hybrid Apps",
     color: "#38bdf8",
     accentRgb: "56, 189, 248",
-    icon: "📱",
+    icon: "▯",
     hubX: 710,
     hubY: 180,
+    tagDx: -90,
+    tagDy: -120,
     pathD: "M 550 420 C 550 320, 680 240, 710 180",
     description: "Native-bridge mobile solutions, PWAs, and production app store deployments.",
   },
@@ -87,6 +96,8 @@ export const ECO_BRANCHES: EcoBranch[] = [
     icon: "⚙",
     hubX: 880,
     hubY: 320,
+    tagDx: 75,
+    tagDy: -115,
     pathD: "M 550 440 C 660 440, 800 370, 880 320",
     description: "Robust REST & GraphQL services, authentication, and secure business logic.",
   },
@@ -96,9 +107,11 @@ export const ECO_BRANCHES: EcoBranch[] = [
     subtitle: "Databases, Cloud & Persistence",
     color: "#fbbf24",
     accentRgb: "251, 191, 36",
-    icon: "📊",
+    icon: "▤",
     hubX: 860,
     hubY: 530,
+    tagDx: 60,
+    tagDy: 120,
     pathD: "M 550 460 C 660 470, 780 520, 860 530",
     description: "Relational modeling, document storage, caching, and real-time syncing.",
   },
@@ -108,9 +121,11 @@ export const ECO_BRANCHES: EcoBranch[] = [
     subtitle: "Design Systems & Prototyping",
     color: "#f472b6",
     accentRgb: "244, 114, 182",
-    icon: "🎨",
+    icon: "◈",
     hubX: 240,
     hubY: 530,
+    tagDx: -10,
+    tagDy: 130,
     pathD: "M 550 460 C 440 470, 320 520, 240 530",
     description: "Design-token architecture, component libraries, and interactive prototyping.",
   },
@@ -123,6 +138,8 @@ export const ECO_BRANCHES: EcoBranch[] = [
     icon: "✓",
     hubX: 220,
     hubY: 330,
+    tagDx: -60,
+    tagDy: -115,
     pathD: "M 550 440 C 440 440, 300 370, 220 330",
     description: "End-to-end automation, strict linting, unit verification, and WCAG AA accessibility.",
   },
@@ -132,9 +149,11 @@ export const ECO_BRANCHES: EcoBranch[] = [
     subtitle: "DevOps, Workflows & Toolchains",
     color: "#fb923c",
     accentRgb: "251, 146, 60",
-    icon: "🔧",
+    icon: "⌘",
     hubX: 270,
     hubY: 170,
+    tagDx: -100,
+    tagDy: -95,
     pathD: "M 550 420 C 480 340, 320 250, 270 170",
     description: "Automated pipelines, containerization, environment parity, and developer ergonomics.",
   },
@@ -201,8 +220,8 @@ export const ECO_NODES: EcoTechNode[] = [
     id: "rxjs",
     label: "RxJS",
     branchId: "frontend",
-    x: 425,
-    y: 145,
+    x: 470,
+    y: 205,
     tier: "core",
     specCode: "FE-06",
     role: "Reactive Stream Pipeline",
@@ -726,14 +745,9 @@ function DigitalTreeCanvas({
         </defs>
 
         {/* Ambient Orbital Coordinates & Technical Grid Lines */}
-        <g className="eco__ambient-grid" opacity="0.35">
+        <g className="eco__ambient-grid" aria-hidden="true">
           <circle cx="550" cy="440" r="380" className="eco__orbital-ring" strokeDasharray="3 9" />
-          <circle cx="550" cy="440" r="260" className="eco__orbital-ring" strokeDasharray="2 6" />
           <circle cx="550" cy="440" r="140" className="eco__orbital-ring eco__orbital-ring--inner" />
-
-          {/* Crosshair guidelines */}
-          <line x1="550" y1="60" x2="550" y2="720" className="eco__crosshair" strokeDasharray="2 8" />
-          <line x1="100" y1="440" x2="1000" y2="440" className="eco__crosshair" strokeDasharray="2 8" />
         </g>
 
         {/* ============================================================
@@ -857,29 +871,33 @@ function DigitalTreeCanvas({
                     fill={branch.color}
                   />
 
-                  {/* Branch Name Label Tag */}
-                  <g
-                    transform="translate(0, -18)"
-                    className="eco__branch-tag"
-                  >
-                    <rect
-                      x="-48"
-                      y="-9"
-                      width="96"
-                      height="18"
-                      rx="9"
-                      className="eco__branch-tag-bg"
-                    />
-                    <text
-                      x="0"
-                      y="1"
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      className="eco__branch-tag-text"
+                  {/* Branch Name Label Tag — only for the active branch, so the
+                      other six tags stop colliding with node labels. Offset
+                      radially outward from the nucleus to clear its cluster. */}
+                  {isBranchHighlighted && (
+                    <g
+                      transform={`translate(${branch.tagDx}, ${branch.tagDy})`}
+                      className="eco__branch-tag"
                     >
-                      {branch.label.toUpperCase()}
-                    </text>
-                  </g>
+                      <rect
+                        x="-56"
+                        y="-12"
+                        width="112"
+                        height="24"
+                        rx="12"
+                        className="eco__branch-tag-bg"
+                      />
+                      <text
+                        x="0"
+                        y="1"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        className="eco__branch-tag-text"
+                      >
+                        {branch.label.toUpperCase()}
+                      </text>
+                    </g>
+                  )}
                 </g>
               </g>
             );
@@ -1049,7 +1067,7 @@ function DigitalTreeCanvas({
 
                 {/* Technology Label */}
                 <text
-                  y={isSelected ? 36 : 28}
+                  y={isSelected ? 42 : 34}
                   textAnchor="middle"
                   className="eco__node-text"
                 >

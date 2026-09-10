@@ -65,13 +65,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.05rem;
+  min-height: 40px;
   border-radius: 999px;
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-line);
   color: var(--color-text-muted);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
@@ -100,8 +101,13 @@
   color: #0A0A0C;
 }
 
+.eco__filter-pill:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .eco__pill-badge {
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   padding: 0.1rem 0.4rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
@@ -186,7 +192,7 @@
 
 .eco__root-badge-text {
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.18em;
   fill: #C8FF00;
@@ -238,7 +244,7 @@
 }
 
 .eco__branch--dimmed {
-  opacity: 0.18;
+  opacity: 0.3;
 }
 
 .eco__branch-glow {
@@ -246,24 +252,12 @@
   stroke-width: 6;
   opacity: 0.08;
   transition: opacity 0.3s ease, stroke-width 0.3s ease;
-  animation: branchGlowPulse 5s ease-in-out infinite;
 }
 
 .eco__branch--highlighted .eco__branch-glow {
   opacity: 0.3;
   stroke-width: 10;
   animation: branchGlowPulseActive 3s ease-in-out infinite;
-}
-
-@keyframes branchGlowPulse {
-  0%, 100% {
-    opacity: 0.05;
-    stroke-width: 5;
-  }
-  50% {
-    opacity: 0.2;
-    stroke-width: 8;
-  }
 }
 
 @keyframes branchGlowPulseActive {
@@ -291,19 +285,20 @@
   filter: drop-shadow(0 0 6px currentColor);
 }
 
+/* Only the branch in scope carries a travelling signal packet. Seven of these
+   firing at once was reading as static rather than as motion with meaning. */
 .eco__branch-signal {
   fill: none;
   stroke-width: 3.5;
   stroke-linecap: round;
   stroke-dasharray: 12 140;
-  animation: branchSignalFlow 4s linear infinite;
-  opacity: 0.75;
+  opacity: 0;
 }
 
 .eco__branch--highlighted .eco__branch-signal {
   stroke-width: 4.5;
   opacity: 1;
-  animation-duration: 2.2s;
+  animation: branchSignalFlow 2.2s linear infinite;
 }
 
 @keyframes branchSignalFlow {
@@ -326,20 +321,16 @@
 }
 
 .eco__branch-tag-bg {
-  fill: #11151C;
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-width: 1;
+  fill: #0D1117;
+  stroke: rgba(200, 255, 0, 0.45);
+  stroke-width: 1.2;
 }
 
 .eco__branch-tag-text {
   font-family: var(--font-mono);
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  fill: var(--color-text-muted);
-}
-
-.eco__branch--highlighted .eco__branch-tag-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   fill: #C8FF00;
 }
 
@@ -367,7 +358,7 @@
 }
 
 .eco__node-strand--dimmed {
-  opacity: 0.15;
+  opacity: 0.22;
 }
 
 .eco__strand-pulse {
@@ -455,10 +446,10 @@
 
 .eco__nucleus-label-text {
   font-family: var(--font-mono);
-  font-size: 6.5px;
+  font-size: 9.5px;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  fill: var(--color-text-faint);
+  letter-spacing: 0.12em;
+  fill: var(--color-text-muted);
 }
 
 /* Technology Nodes */
@@ -468,8 +459,26 @@
   transition: opacity 0.3s ease;
 }
 
+/* Not a whisper: the out-of-scope nodes still have to read as a coherent map
+   of the wider stack. The label is what gets removed, not the node. */
 .eco__node-item--dimmed {
-  opacity: 0.22;
+  opacity: 0.45;
+}
+
+.eco__node-item--dimmed:hover,
+.eco__node-item--dimmed:focus-visible {
+  opacity: 1;
+}
+
+.eco__node-item--dimmed:hover .eco__node-text,
+.eco__node-item--dimmed:focus-visible .eco__node-text {
+  opacity: 1;
+}
+
+.eco__node-item:focus-visible .eco__node-disc {
+  stroke: #C8FF00;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 10px rgba(200, 255, 0, 0.6));
 }
 
 .eco__node-aura {
@@ -537,22 +546,65 @@
   filter: brightness(0.9) drop-shadow(0 0 0px rgba(0, 0, 0, 0)) !important;
 }
 
+/* The svg is letterboxed to the stage height, so a 1100x740 user unit renders
+   at roughly 0.8x on a wide desktop stage — anything under ~12px here lands
+   below the 10px legibility floor. Sizes are set for the rendered result, not
+   the user-unit number. The dark paint-order stroke is what keeps a label
+   readable where it crosses a glowing branch trace. */
 .eco__node-text {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.04em;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   fill: var(--color-text);
   pointer-events: none;
-  transition: fill 0.25s ease, font-weight 0.25s ease;
+  transition: fill 0.25s ease, opacity 0.25s ease;
   dominant-baseline: hanging;
+  paint-order: stroke;
+  stroke: #0B0E13;
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
 }
 
 .eco__node-item:hover .eco__node-text {
   fill: #C8FF00;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .eco__node-item--selected .eco__node-text {
   fill: #C8FF00;
   font-weight: 700;
+}
+
+/* A dimmed node keeps its icon as a positional cue but drops its label. Ghost
+   text at 20% opacity was the main source of the "everything is a grey smudge"
+   read — 35 labels competing when only 7 are in scope. */
+.eco__node-item--dimmed .eco__node-text {
+  opacity: 0;
+}
+
+/* The tree runs several infinite keyframe animations that the section-level
+   reduced-motion block never covered — it only turned off transitions. */
+@media (prefers-reduced-motion: reduce) {
+  .eco__root-ground,
+  .eco__trunk-pulse,
+  .eco__branch-signal,
+  .eco__branch--highlighted .eco__branch-signal,
+  .eco__branch--highlighted .eco__branch-glow,
+  .eco__strand-pulse,
+  .eco__node-aura,
+  .eco__nucleus-ring--outer,
+  .eco__nucleus-logo-foreign,
+  .eco__nucleus-logo-mark {
+    animation: none !important;
+  }
+
+  .eco__node-disc,
+  .eco__node-icon-foreign,
+  .eco__node-text,
+  .eco__branch,
+  .eco__branch-path,
+  .eco__branch-glow {
+    transition: none !important;
+  }
 }

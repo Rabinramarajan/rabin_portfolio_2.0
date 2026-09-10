@@ -8,6 +8,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { CareerTimeline } from "@/components/experience/CareerTimeline";
 import { StatPills } from "@/components/experience/StatPills";
 import { accentIndex, journeyArt, sections, titleLines } from "@/content/sections";
+import { profile } from "@/content/profile";
 import { trackCtaClick } from "@/lib/analytics";
 
 /**
@@ -63,25 +64,62 @@ export function JourneySection() {
 
         <CareerTimeline limit={4} />
 
-        <motion.div
+        <motion.aside
           className="jsec__cta"
+          aria-labelledby="journey-cta-heading"
           initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: reduce ? duration.micro : duration.section, ease }}
         >
-          <p className="jsec__cta-text">Looking for someone who can ship production software?</p>
-          <a
-            href="/contact"
-            className="jsec__cta-link"
-            onClick={() => trackCtaClick("Let's Talk", 'experience_section')}
-          >
-            Let&apos;s Talk
-            <svg viewBox="0 0 20 12" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-              <path d="M0 6h17M12.5 1.5 17 6l-4.5 4.5" />
-            </svg>
-          </a>
-        </motion.div>
+          <div className="jsec__cta-copy">
+            <p className="jsec__cta-status">
+              <span className="jsec__cta-dot" aria-hidden />
+              {profile.availability.label}
+            </p>
+            <p className="jsec__cta-text" id="journey-cta-heading">
+              Looking for someone who can{" "}
+              <span className="jsec__cta-accent">ship production software</span>?
+            </p>
+            <dl className="jsec__cta-meta">
+              <div className="jsec__cta-meta-item">
+                <dt>Based in</dt>
+                <dd>{profile.locationShort}</dd>
+              </div>
+              <div className="jsec__cta-meta-item">
+                <dt>Reply time</dt>
+                <dd>{profile.availability.responseTime.replace('Usually responds ', '')}</dd>
+              </div>
+              <div className="jsec__cta-meta-item">
+                <dt>Focus</dt>
+                <dd>{profile.focus}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="jsec__cta-actions">
+            <a
+              href="/contact"
+              className="jsec__cta-link"
+              onClick={() => trackCtaClick("Let's Talk", 'experience_section')}
+            >
+              Let&apos;s Talk
+              <svg viewBox="0 0 20 12" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+                <path d="M0 6h17M12.5 1.5 17 6l-4.5 4.5" />
+              </svg>
+            </a>
+            <a
+              href={profile.resumePath}
+              className="jsec__cta-alt"
+              onClick={() => trackCtaClick('View Resume', 'experience_section')}
+            >
+              View résumé
+            </a>
+            <a href={`mailto:${profile.email}`} className="jsec__cta-mail">
+              {profile.email}
+            </a>
+          </div>
+        </motion.aside>
 
       </div>
     </section>
