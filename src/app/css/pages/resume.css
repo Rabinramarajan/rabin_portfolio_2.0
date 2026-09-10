@@ -1,0 +1,271 @@
+/* ============================================================
+   RESUME (.resume-page / .doc-*)
+   The page renders the resume as an actual paper sheet — black on
+   white, A4 measure, ATS-plain — so what is on screen is exactly
+   what "Download / Print" produces. Print rules below strip the
+   site chrome and the sheet's own screen affordances (shadow,
+   rounded corners, page margin) so it lands edge to edge.
+   ============================================================ */
+
+.resume-page {
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem) 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.resume-page__bar {
+  width: min(100%, 210mm);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.resume-page__hint {
+  margin-top: 0.3rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* The sheet ------------------------------------------------- */
+
+.doc {
+  width: min(100%, 210mm);
+  box-sizing: border-box;
+  padding: 16mm 14mm;
+  background: #fff;
+  color: #1a1a1a;
+  border-radius: 4px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+
+  /* Calibri/Carlito first so the sheet matches the source document on the
+     machines that have it; Inter and the system stack carry everywhere else.
+     No display or mono faces here — resume parsers do better with plain text
+     and the document should not read as branded. */
+  font-family: Calibri, Carlito, "Segoe UI", var(--font-sans), system-ui, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.42;
+}
+
+/* Header ---------------------------------------------------- */
+
+.doc__head {
+  text-align: center;
+  padding-bottom: 0.35rem;
+}
+
+.doc__name {
+  margin: 0;
+  font-size: 21pt;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: #111;
+}
+
+.doc__titles {
+  margin: 0.3rem 0 0;
+  font-size: 11pt;
+  color: #222;
+}
+
+.doc__contact {
+  margin: 0.22rem 0 0;
+  font-size: 9.5pt;
+  color: #333;
+}
+
+.doc__sep {
+  padding: 0 0.42em;
+  color: #888;
+}
+
+.doc a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.doc a:hover,
+.doc a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Sections -------------------------------------------------- */
+
+.doc__section {
+  margin-top: 0.85rem;
+}
+
+.doc__section-title {
+  margin: 0 0 0.45rem;
+  padding-bottom: 0.12rem;
+  border-bottom: 1px solid #111;
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #111;
+}
+
+.doc__body {
+  margin: 0;
+  text-align: justify;
+  color: #1a1a1a;
+}
+
+.doc__line + .doc__line {
+  margin-top: 0.28rem;
+}
+
+/* Core skills ----------------------------------------------- */
+
+.doc__skills {
+  margin: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+/* Label and items run together as one wrapping paragraph, matching the source
+   document — a two-column grid would hang the items in a way ATS text
+   extraction reorders. */
+.doc__skill-row dt,
+.doc__skill-row dd {
+  display: inline;
+  margin: 0;
+}
+
+.doc__skill-row dt {
+  font-weight: 700;
+}
+
+.doc__skill-row dd::before {
+  content: " ";
+}
+
+/* Entries --------------------------------------------------- */
+
+.doc__entry {
+  margin-top: 0.6rem;
+  break-inside: avoid;
+}
+
+.doc__entry:first-of-type {
+  margin-top: 0;
+}
+
+.doc__entry-title {
+  margin: 0;
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #111;
+}
+
+.doc__entry-meta {
+  margin: 0.06rem 0 0;
+  font-style: italic;
+  color: #333;
+}
+
+/* The global reset sets `list-style: none` on every ul, which silently strips
+   the markers a resume's duty bullets depend on. Restored explicitly. */
+.doc__bullets {
+  margin: 0.3rem 0 0;
+  padding-left: 1.15rem;
+  list-style: disc outside;
+}
+
+.doc__bullets li {
+  margin-top: 0.16rem;
+  color: #1a1a1a;
+}
+
+/* Small screens: keep the sheet readable rather than forcing the A4 measure. */
+@media (max-width: 560px) {
+  .doc {
+    padding: 8mm 7mm;
+    font-size: 11pt;
+  }
+
+  .doc__name {
+    font-size: 17pt;
+  }
+
+  .doc__body {
+    text-align: left;
+  }
+}
+
+/* Print ------------------------------------------------------
+   The page shipped a "Download / Print" button with no print
+   stylesheet behind it, so printing produced the full dark site
+   chrome. The sheet is now the only thing on the paper. */
+
+@media print {
+  /* Zero margin is load-bearing, not cosmetic: browsers draw the print
+     header/footer (date, document title, URL, page number) *inside* the @page
+     margin, and there is no CSS switch for them. With no margin box there is
+     nowhere to draw them, so the paper margin moves onto the sheet's own
+     padding below. */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .hd,
+  .ft,
+  .sidebar,
+  .scroll-progress,
+  .chat-preview,
+  .chat-quick,
+  .chat-launch,
+  .cursor-ring,
+  .cursor-dot,
+  .resume-page__bar {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .resume-page {
+    display: block;
+    padding: 0 !important;
+  }
+
+  /* The sheet carries the paper margin now that @page has none. Side padding
+     applies on every sheet; top/bottom padding only opens at the start and end
+     of the block, so a section that lands on a continuation page gets its
+     breathing room from .doc__section-title's margin instead. */
+  .doc {
+    width: auto;
+    max-width: none;
+    padding: 13mm 12mm !important;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 10pt;
+  }
+
+  .doc a {
+    text-decoration: none;
+  }
+
+  .doc__section {
+    break-inside: auto;
+  }
+
+  .doc__section-title {
+    break-after: avoid;
+  }
+
+  .doc__entry,
+  .doc__bullets li {
+    break-inside: avoid;
+  }
+}

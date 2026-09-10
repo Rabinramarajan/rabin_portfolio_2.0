@@ -1,4 +1,4 @@
-import type { Credentials, HeroContent, NavItem, Profile, SeoContent } from "@/content/types";
+import type { Credentials, EducationEntry, HeroContent, NavItem, Profile, SeoContent } from "@/content/types";
 import { media } from "@/lib/media";
 
 export const SITE_URL = "https://www.rabinr.in";
@@ -46,6 +46,30 @@ export const credentials: Credentials = {
   commitment: { value: "100%", label: "Focus on Quality" },
   needsReview: ["projects", "clients"],
 };
+
+/**
+ * Qualifications, for the resume page. Kept here rather than in the career
+ * timeline because `careerHorizon` records the 2021 foundation *year* as a
+ * narrative beat and never names the institution.
+ */
+export const education: EducationEntry[] = [
+  {
+    id: "bsc-it",
+    qualification: "B.Sc. Information Technology",
+    institution: "National College",
+    location: "Tiruchirappalli, Tamil Nadu, India",
+    period: "2018 — 2021",
+  },
+  {
+    id: "web-d-school",
+    qualification: "Web Design & Development",
+    institution: "Web D School",
+    location: "Chennai, India",
+  },
+];
+
+/** Spoken languages, shown in the resume footer block. */
+export const languages = ["English", "Tamil"] as const;
 
 export const navigation: NavItem[] = [
   { href: "/work", label: "Work" },

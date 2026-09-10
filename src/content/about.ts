@@ -39,7 +39,7 @@ export const about: AboutContent = {
     { year: '2021', title: 'B.Sc. IT Graduate', body: 'Core computer science and web technology foundations.' },
     { year: '2023', title: 'Frontend Developer', body: 'PRIMS Pension Portal and VNPF Ionic cross-platform mobile apps.' },
     { year: '2024', title: 'Senior Angular Engineer', body: 'Fiji Government Immigration Platforms serving 10,000+ users.' },
-    { year: '2026', title: 'Frontend Developer Consultant', body: 'RSTACK Solutions — interactive frontend for a web-based analytics application, integrating REST APIs with AI/ML models.' },
+    { year: '2026', title: 'Frontend Angular Consultant', body: 'RSTACK Solutions — enterprise healthcare applications built on Angular 22, TypeScript and Signals, with JWT-secured REST API integration.' },
   ],
   // Values come from `credentials` in profile.ts — the one canonical source.
   // Only the per-section wording (label/note/icon) lives here.

@@ -448,6 +448,15 @@ export type ServiceOfferingIcon =
  * About section claimed "30+ Projects / 20+ Clients" while the Skills section
  * claimed "20+ Projects / 15+ Clients" on the same site.
  */
+/** One qualification on the resume. Formal degrees and training both. */
+export interface EducationEntry {
+  id: string;
+  qualification: string;
+  institution: string;
+  location?: string;
+  period?: string;
+}
+
 export interface Credentials {
   /** Years of professional experience — derived from experience.ts. */
   years: string;

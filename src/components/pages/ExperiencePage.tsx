@@ -94,7 +94,7 @@ export function ExperiencePage() {
             index="05"
             label="Current chapter"
             title="Where the work is now."
-            lede={`${profile.yearsExperienceLabel} years of shipping — currently Frontend Developer Consultant at RSTACK Solutions, building the interface for an AI-driven analytics product.`}
+            lede={`${profile.yearsExperienceLabel} years of shipping — currently Frontend Angular Consultant at RSTACK Solutions, building enterprise healthcare applications on Angular 22.`}
           />
           <CurrentChapter />
         </div>
