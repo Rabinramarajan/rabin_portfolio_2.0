@@ -55,5 +55,4 @@ next-env.d.ts
 !.env.example
 .vercel
 
-# Local publish build logs
-publish/build-log-*.txt
+
