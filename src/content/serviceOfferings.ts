@@ -26,7 +26,7 @@ export const serviceOfferings: ServiceOffering[] = [
     description: "Component architecture, design systems and data flow designed for the third release, not the first demo.",
     stack: ["Architecture", "Design systems", "TypeScript"],
     icon: "layers",
-    href: "/services/web-application-development",
+    href: "/services/frontend-architecture",
   },
   {
     id: "performance",
@@ -35,7 +35,7 @@ export const serviceOfferings: ServiceOffering[] = [
     description: "Core Web Vitals, rendering, network and bundle work — measured against real devices, not guessed.",
     stack: ["Core Web Vitals", "Rendering", "Bundles"],
     icon: "shield",
-    href: "/services/web-application-development",
+    href: "/services/frontend-architecture",
   },
   {
     id: "mobile",
@@ -44,6 +44,6 @@ export const serviceOfferings: ServiceOffering[] = [
     description: "iOS and Android from one Angular + Ionic codebase, including store builds and native APIs.",
     stack: ["Ionic", "Capacitor", "Angular"],
     icon: "phone",
-    href: "/services/mobile-app-development",
+    href: "/services/ionic-development",
   },
 ];

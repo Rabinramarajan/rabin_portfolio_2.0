@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ import { contactSchema, type ContactInput } from "@/lib/contact/validation";
 import { ATTACHMENT, CONTACT_ROLES, PROJECT_STAGES, PROJECT_TYPES } from "@/content/contact-fields";
 import { contactCopy } from "@/content/contact";
 import { profile } from "@/content/profile";
+import { trackContactStart, trackContactSubmit } from "@/lib/analytics";
 import { duration, ease } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import type { InquiryType } from "@/types/contact";
@@ -47,6 +48,9 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
   const [referenceId, setReferenceId] = useState("");
   const [responseTime, setResponseTime] = useState(profile.availability.responseTime);
   const [detailsOpen, setDetailsOpen] = useState(Boolean(defaultInquiryType));
+  /* contact_start fires once per mount, on the first edit. Counting every
+     keystroke would drown the completion rate this event exists to measure. */
+  const started = useRef(false);
 
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
@@ -140,6 +144,7 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
       } | null;
 
       if (res.ok && body?.ok) {
+        trackContactSubmit(typeof window === "undefined" ? "" : window.location.pathname);
         setReferenceId(body.referenceId ?? "");
         setResponseTime(body.responseTime ?? profile.availability.responseTime);
         setSubmitState("ok");
@@ -235,7 +240,17 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
   const busy = submitState === "loading" || isSubmitting;
 
   return (
-    <form className="cp-form" onSubmit={onFormSubmit} noValidate aria-labelledby="contact-form-title">
+    <form
+      className="cp-form"
+      onSubmit={onFormSubmit}
+      onInput={() => {
+        if (started.current) return;
+        started.current = true;
+        trackContactStart(typeof window === "undefined" ? "" : window.location.pathname);
+      }}
+      noValidate
+      aria-labelledby="contact-form-title"
+    >
       <div className="cp-form__head">
         <h3 id="contact-form-title">Write to me</h3>
         <p>Name, email and a sentence is enough to start. Everything else is optional.</p>

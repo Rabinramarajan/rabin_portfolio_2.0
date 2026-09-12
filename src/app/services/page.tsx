@@ -2,18 +2,17 @@ import { ServicesPage } from "@/components/pages/ServicesPage";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Angular & Frontend Development Services",
+  title: "Angular & Frontend Engineering Services",
   description:
-    "Frontend engineering and Angular development services — React, Next.js, UI engineering, performance optimization and design systems.",
+    "Four services: Angular engineering, frontend architecture, performance optimization and Ionic cross-platform mobile — for enterprise and government products.",
   path: "/services",
   keywords: [
     "Angular development services",
-    "Frontend development services",
-    "Angular consulting",
-    "React development",
-    "Next.js development",
-    "Web performance optimization",
-    "Design system development",
+    "Angular consultant",
+    "Frontend architecture",
+    "Angular performance optimization",
+    "Ionic Angular developer",
+    "Enterprise Angular architecture",
   ],
 });
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ProjectCard } from "@/components/work/ProjectCard";
@@ -145,6 +146,26 @@ export function WorkExplorer({ exclude }: { exclude?: string[] }) {
           </button>
         </div>
       )}
+
+      {/* Every project, as plain links, always in the server HTML.
+
+          The grid above opens with six cards and reveals the rest behind a
+          button, which is right for reading and wrong for crawling: three of
+          the nine case studies had no <a href> in the initial response at
+          all, so the only route to them was the sitemap. This index costs one
+          list and removes that dependency — it is also the fastest way for a
+          returning visitor to reach a specific project. */}
+      <nav className="wex__index" aria-label="All projects">
+        <h2 className="wex__index-title">All projects</h2>
+        <ul>
+          {projects.map((p) => (
+            <li key={p.slug}>
+              <Link href={"/work/" + p.slug}>{p.title}</Link>
+              <span className="wex__index-meta">{p.category}</span>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {hidden > 0 ? (
         <div className="wex__foot">

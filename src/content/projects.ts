@@ -23,6 +23,31 @@ export const projects: Project[] = [
       { value: '~50%', label: 'Frontend performance gain', note: 'From optimised rendering and workflow handling.' },
       { value: '10,000+', label: 'Active users', note: 'Fiji Government immigration case management, across three countries.' },
     ],
+    /* Written in the first person and scoped deliberately. This was a team
+       delivery; claiming the platform would be a claim a reference check
+       would contradict, and the specific list is the more useful answer to a
+       hiring manager anyway. */
+    responsibilities: [
+      'Frontend architecture for the officer-facing application',
+      'Data flow optimisation across the case workflow panels',
+      'Reusable component library shared by the assessment screens',
+      'API integration against the Sails.js services',
+      'Role-based UI rendering and route guards',
+      'Performance work on rendering and network behaviour',
+    ],
+    decisions: [
+      {
+        problem:
+          'Several panels on a single case screen each requested the same reference data independently, so opening one record produced the same lookup calls repeatedly.',
+        decision:
+          'Moved the reference lookups behind a shared RxJS stream with caching, so the panels subscribe to one in-flight request instead of issuing their own.',
+        why:
+          'The duplication was structural, not accidental: each panel was written to be self-sufficient. Caching at the data layer fixed every panel at once and left them independent.',
+        tradeoff:
+          'Cached reference data can go stale within a session, so the cache is invalidated on the workflow events that can change it rather than held for the lifetime of the page.',
+        result: 'Approximately 40% lower API consumption on the case workflow screens.',
+      },
+    ],
     technologies: ['Angular', 'TypeScript', 'Sails.js', 'RxJS', 'Tailwind CSS'],
     featured: true,
     layout: 'large',
@@ -54,6 +79,23 @@ export const projects: Project[] = [
       'Frontend performance improved by approximately 50% through optimized rendering and application workflows.',
       'Designed to support high-volume government workflows across multiple operational teams.'
     ],
+    related: [
+      {
+        label: 'Angular performance optimization',
+        href: '/services/angular-performance-optimization',
+        note: 'The service this project is the evidence for.',
+      },
+      {
+        label: 'Angular Signals state management',
+        href: '/insights/angular-signals-state-management',
+        note: 'The state-precision argument behind the shared-stream decision above.',
+      },
+      {
+        label: 'Performance as a product requirement',
+        href: '/insights/angular-performance-core-web-vitals',
+        note: 'Why the 40% mattered operationally, not just as a number.',
+      },
+    ],
     seo: {
       title:
         'Fiji Immigration Internal Management System',
@@ -76,6 +118,33 @@ export const projects: Project[] = [
       { layer: 'State', value: 'RxJS' },
       { layer: 'Styling', value: 'Tailwind CSS' },
       { layer: 'API', value: 'Sails.js' },
+    ],
+    /* No measured outcome was ever captured for this deployment, and an
+       invented conversion figure would be worth less than nothing here. What
+       can be stated precisely is the shape of what was built. */
+    metrics: [
+      { value: '7', label: 'Citizen-facing workflows', note: 'Applications, guided forms, uploads, appointments, payments, tracking and responsive delivery.' },
+      { value: 'Multi-step', label: 'Application journey', note: 'One guided flow carries an applicant from submission through documents, appointment and payment.' },
+      { value: 'Public web', label: 'Delivery target', note: 'Built to stay usable for first-time applicants on mixed devices and slower networks.' },
+    ],
+    responsibilities: [
+      'Frontend implementation of the guided application flows',
+      'Document upload and validation interfaces',
+      'Appointment scheduling and payment integration on the client side',
+      'Responsive behaviour across phone, tablet and desktop',
+      'Application status tracking views',
+    ],
+    decisions: [
+      {
+        problem:
+          'A first-time applicant abandoning a long immigration form loses everything typed so far, and the form cannot be shortened — the questions are statutory.',
+        decision:
+          'Split the submission into a guided multi-step journey with per-step validation, so each step is short, correctable and complete before the next one opens.',
+        why:
+          'The length was not negotiable, but the cost of an error was. Validating at each step keeps a mistake local instead of surfacing it at the end.',
+        tradeoff:
+          'More screens to build and test than one long form, and the step state has to survive navigation.',
+      },
     ],
     technologies: ['Angular', 'TypeScript', 'Sails.js', 'RxJS', 'Tailwind CSS'],
     featured: true,
@@ -109,6 +178,18 @@ export const projects: Project[] = [
       'Created a self-service digital journey for immigration applicants.',
       'Unified application, document and tracking experiences into one citizen-facing portal.'
     ],
+    related: [
+      {
+        label: 'Frontend architecture',
+        href: '/services/frontend-architecture',
+        note: 'Component architecture and data flow for public-facing platforms.',
+      },
+      {
+        label: 'Forms that carry consequences',
+        href: '/insights/accessible-angular-forms',
+        note: 'The validation and error-recovery thinking behind the guided flow.',
+      },
+    ],
     seo: {
       title:
         'Fiji Immigration Citizen Portal',
@@ -138,6 +219,30 @@ export const projects: Project[] = [
       'Sails.js',
       'RxJS',
       'Angular Material'
+    ],
+    metrics: [
+      { value: '7', label: 'Member workflows', note: 'Dashboard, contributions, balances, transactions, statements, claims and beneficiaries.' },
+      { value: 'Multi-stream', label: 'Account data', note: 'Contribution, balance, transaction and claim streams composed into one member view.' },
+      { value: 'Enterprise web', label: 'Delivery target', note: 'Angular Material component system for consistency across the member screens.' },
+    ],
+    responsibilities: [
+      'Member dashboard and account views in Angular',
+      'Reactive composition of the contribution, balance and transaction streams',
+      'Statement and claims workflow interfaces',
+      'Angular Material component usage and interface consistency',
+      'API integration against the Sails.js services',
+    ],
+    decisions: [
+      {
+        problem:
+          'A pension member reads a balance once and acts on it. Dense financial tables are accurate and still leave the member calling the office to have them explained.',
+        decision:
+          'Led the member view with the few figures that answer the common questions, and kept the full transaction detail one level down rather than on the landing screen.',
+        why:
+          'The portal existed to reduce staff-assisted queries. Density on the first screen would have preserved exactly the calls it was meant to remove.',
+        tradeoff:
+          'A member who wants the full ledger takes one extra step to reach it.',
+      },
     ],
     featured: true,
     layout: 'medium',
@@ -169,6 +274,23 @@ export const projects: Project[] = [
       'Created a centralized self-service experience for pension members.',
       'Reduced dependency on manual staff assistance for common account information.',
       'Improved visibility into contributions, balances and pension transactions.'
+    ],
+    related: [
+      {
+        label: 'Angular engineering',
+        href: '/services/angular-development',
+        note: 'Enterprise Angular work of the kind this portal required.',
+      },
+      {
+        label: 'Angular Signals state management',
+        href: '/insights/angular-signals-state-management',
+        note: 'The two pieces of PRIMS state that earned promotion, and why nothing else did.',
+      },
+      {
+        label: 'Quiet interfaces age better',
+        href: '/insights/enterprise-ui-design-restraint',
+        note: 'The restraint argument behind leading with figures instead of tables.',
+      },
     ],
     seo: {
       title:

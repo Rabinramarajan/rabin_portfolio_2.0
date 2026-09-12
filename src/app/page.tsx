@@ -4,8 +4,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: defaultSeo.title,
-  description:
-    "Angular & React developer crafting scalable frontend solutions for enterprise applications",
+  description: defaultSeo.description,
   path: "/",
   keywords: defaultSeo.keywords,
 });

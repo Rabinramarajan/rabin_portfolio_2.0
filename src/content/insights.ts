@@ -42,7 +42,10 @@ export const publishedInsights = (now: Date = new Date()): Insight[] =>
 
 export const insights: Insight[] = [
   {
-    id: 'signals',
+    id: 'angular-signals-state-management',
+    seoTitle: 'Angular Signals State Management: When You Don’t Need a Store',
+    seoDescription:
+      'When Angular Signals are enough and a store is overhead — the promotion rule I use, drawn from a pension portal and an immigration case system.',
     datePublished: '2026-09-12',
     number: '01',
     title: 'Signals before ceremony',
@@ -51,7 +54,7 @@ export const insights: Insight[] = [
       { label: 'Angular development services', href: '/services/angular-development' },
       { label: 'PRIMS Member Portal — where two pieces of state earned a store', href: '/work/prims-member-portal' },
       { label: 'Fiji Immigration internal system', href: '/work/fiji-immigration-internal' },
-      { label: 'Going zoneless without a long-lived branch', href: '/insights/zoneless-migration' },
+      { label: 'Going zoneless without a long-lived branch', href: '/insights/angular-zoneless-change-detection' },
     ],
     cta: 'If you have an Angular codebase where changing one screen means opening six files, that is usually a state-layer problem rather than a discipline problem. I do scoped assessments that say which parts are worth fixing, and in what order.',
     body: [
@@ -181,16 +184,19 @@ export class CaseQueueStore {
     ],
   },
   {
-    id: 'vitals',
+    id: 'angular-performance-core-web-vitals',
+    seoTitle: 'Angular Performance: Core Web Vitals as a Product Requirement',
+    seoDescription:
+      'Why load behaviour belongs in the feature spec rather than an optimisation phase, and what that changes about how Angular applications get built.',
     datePublished: '2026-09-12',
     number: '02',
     title: 'Performance is a product requirement',
     dek: 'If Core Web Vitals are optional, they lose. Treat load, input delay and layout shift as part of the spec.',
     related: [
-      { label: 'Web application development services', href: '/services/web-application-development' },
+      { label: 'Frontend architecture services', href: '/services/frontend-architecture' },
       { label: 'Fiji Immigration internal system — the 40% API reduction', href: '/work/fiji-immigration-internal' },
       { label: 'InsureMet — the dense table views', href: '/work/insuremet' },
-      { label: 'Inheriting someone else’s Angular codebase', href: '/insights/inheriting-angular' },
+      { label: 'Inheriting someone else’s Angular codebase', href: '/insights/angular-codebase-audit' },
     ],
     cta: 'If your application is slow and nobody can say precisely why, that is a measurement problem before it is an engineering one. I start these engagements by establishing which of the three usual causes you actually have.',
     body: [
@@ -313,16 +319,19 @@ export class ReferenceDataService {
     ],
   },
   {
-    id: 'quiet-ui',
+    id: 'enterprise-ui-design-restraint',
+    seoTitle: 'Enterprise UI Design: Why Quiet Interfaces Age Better',
+    seoDescription:
+      'Restraint as an engineering decision in software people are required to use every day, from government case systems and member portals.',
     datePublished: '2026-09-12',
     number: '03',
     title: 'Quiet interfaces age better',
     dek: 'Motion should explain hierarchy, not decorate it. One accent, one rhythm, and copy that can stand without animation.',
     related: [
-      { label: 'Mobile app development services', href: '/services/mobile-app-development' },
+      { label: 'Ionic and cross-platform mobile services', href: '/services/ionic-development' },
       { label: 'VNPF blo mi member app', href: '/work/vnpf-blo-mi' },
       { label: 'Angular UI component architecture', href: '/work/ui-component-architecture' },
-      { label: 'Offline is a design input, not an error state', href: '/insights/offline-first' },
+      { label: 'Offline is a design input, not an error state', href: '/insights/ionic-offline-first-architecture' },
     ],
     cta: 'If your product looked right at launch and feels tiring a year in, that is usually a systems problem in the interface layer rather than a visual one. That is the kind of work I do.',
     body: [
@@ -436,13 +445,16 @@ export class ReferenceDataService {
     ],
   },
   {
-    id: 'zoneless-migration',
+    id: 'angular-zoneless-change-detection',
+    seoTitle: 'Angular Zoneless Change Detection: Migrating Without a Long-Lived Branch',
+    seoDescription:
+      'An incremental path to zoneless Angular — what to make precise first, what ships independently, and the checks I run at each step.',
     datePublished: '2026-09-15',
     number: '04',
     title: 'Going zoneless without a long-lived branch',
     dek: 'Zoneless is the last step of a migration, not the first. What to fix before you flip the provider, and how to ship it in pieces.',
     related: [
-      { label: 'Signals before ceremony', href: '/insights/signals' },
+      { label: 'Signals before ceremony', href: '/insights/angular-signals-state-management' },
       { label: 'Angular development services', href: '/services/angular-development' },
       { label: 'Zellavora AI Resume Builder — zoneless in production', href: '/work/zellavora-ai-resume-builder' },
     ],
@@ -592,15 +604,18 @@ export class CaseListComponent {
     ],
   },
   {
-    id: 'offline-first',
+    id: 'ionic-offline-first-architecture',
+    seoTitle: 'Ionic Offline-First Architecture with Angular and Capacitor',
+    seoDescription:
+      'Treating offline as a design input rather than an error state, in a member app shipped to iOS and Android.',
     datePublished: '2026-09-18',
     number: '05',
     title: 'Offline is a design input, not an error state',
     dek: 'Apps for real users on real networks need cached data with an honest age, queued actions, and failure messages that say what to do.',
     related: [
-      { label: 'Mobile app development services', href: '/services/mobile-app-development' },
+      { label: 'Ionic and cross-platform mobile services', href: '/services/ionic-development' },
       { label: 'VNPF blo mi member app', href: '/work/vnpf-blo-mi' },
-      { label: 'Quiet interfaces age better', href: '/insights/quiet-ui' },
+      { label: 'Quiet interfaces age better', href: '/insights/enterprise-ui-design-restraint' },
     ],
     cta: 'If you are building a member or field app where the network is unreliable, the offline behaviour should be specified before the screens are designed. That is the part I would want to scope first.',
     body: [
@@ -735,7 +750,10 @@ private async flush(): Promise<void> {
     ],
   },
   {
-    id: 'consequential-forms',
+    id: 'accessible-angular-forms',
+    seoTitle: 'Accessible Angular Forms: Validation and Error Recovery',
+    seoDescription:
+      'Form design when a failed submission costs the user something real — validation timing, error recovery and the accessibility that makes both work.',
     datePublished: '2026-09-22',
     number: '06',
     title: 'Forms that carry consequences',
@@ -743,7 +761,7 @@ private async flush(): Promise<void> {
     related: [
       { label: 'Fiji Immigration Citizen Portal', href: '/work/fiji-immigration-external' },
       { label: 'PRIMS Member Portal', href: '/work/prims-member-portal' },
-      { label: 'Web application development services', href: '/services/web-application-development' },
+      { label: 'Frontend architecture services', href: '/services/frontend-architecture' },
     ],
     cta: 'If you are building a form where failure costs the user something real — an application, a claim, a submission with a deadline — the error and recovery paths deserve as much design as the happy path. That is the work I would scope first.',
     body: [
@@ -861,15 +879,18 @@ private async flush(): Promise<void> {
     ],
   },
   {
-    id: 'inheriting-angular',
+    id: 'angular-codebase-audit',
+    seoTitle: 'Inheriting an Angular Codebase: A Practical Audit',
+    seoDescription:
+      'What a scoped assessment of an unfamiliar Angular application covers, and why it comes before any code changes.',
     datePublished: '2026-09-25',
     number: '07',
     title: 'Inheriting someone else’s Angular codebase',
     dek: 'How I assess an inherited application: what to measure, what to ignore, and why the expensive problem is rarely the one the team reported.',
     related: [
       { label: 'Angular development services', href: '/services/angular-development' },
-      { label: 'Performance is a product requirement', href: '/insights/vitals' },
-      { label: 'Signals before ceremony', href: '/insights/signals' },
+      { label: 'Performance is a product requirement', href: '/insights/angular-performance-core-web-vitals' },
+      { label: 'Signals before ceremony', href: '/insights/angular-signals-state-management' },
     ],
     cta: 'A scoped assessment like this is usually how my engagements start: one to two weeks, ending in a prioritised plan with a cost against each item. You can act on it with or without me.',
     body: [

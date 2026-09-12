@@ -203,6 +203,16 @@ export interface Project {
    * as title-only cards — nothing is described that the record does not say.
    */
   keyFeatures?: ProjectFeature[];
+  /**
+   * Where this case study points next: the service that sells this kind of
+   * work, and the article arguing the position it demonstrates.
+   *
+   * Case studies used to be a dead end — every inbound link, no outbound
+   * ones — so a reader convinced by the Fiji write-up had nowhere to go but
+   * the browser's back button. Each link is a claim that the two pages are
+   * about the same thing, so populate it by hand, never by category.
+   */
+  related?: { label: string; href: string; note: string }[];
   seo: { title: string; description: string };
 }
 
@@ -411,6 +421,15 @@ export type InsightBlock =
 
 export interface Insight {
   id: string;
+  /**
+   * Metadata title, when the editorial headline is not what anyone searches
+   * for. "Signals before ceremony" is the better thing to read and a worse
+   * thing to rank: the <h1> keeps the headline, the <title> gets this.
+   * Falls back to `title` when absent.
+   */
+  seoTitle?: string;
+  /** Metadata description, when the dek is written for a reader, not a SERP. */
+  seoDescription?: string;
   number?: string;
   title?: string;
   dek?: string;

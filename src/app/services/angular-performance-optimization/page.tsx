@@ -7,30 +7,32 @@ import { PageSectionHead } from "@/components/pages/PageSectionHead";
 import { PageCta } from "@/components/pages/PageCta";
 import { ServiceNarrative } from "@/components/pages/ServiceNarrative";
 import { servicePages } from "@/content/service-pages";
-import { secondaryServices, services } from "@/content/services";
+import { services } from "@/content/services";
 import { projects } from "@/content/projects";
 
-const frontend = services.find((s) => s.id === "frontend")!;
-/* React/Next.js is a supporting capability, not a headline service — it lives
-   in `secondaryServices` rather than in the marketed four. */
-const react = secondaryServices.find((s) => s.id === "react")!;
-const relatedProjects = projects.filter((p) =>
-  ["insuremet", "zellavora-ai-resume-builder", "prims-member-portal"].includes(p.slug),
+const service = services.find((s) => s.id === "performance")!;
+/* The evidence for this page is the one case study with measured numbers
+   attached, so it leads. The other two are named because the same work was
+   done there without an outcome figure ever being captured. */
+const evidence = projects.filter((p) =>
+  ["fiji-immigration-internal", "prims-member-portal", "insuremet"].includes(p.slug),
 );
 
-const page = servicePages.web;
+const page = servicePages.performance;
 
 export const metadata = pageMetadata({
-  title: "Custom Web Application Development",
+  title: "Angular Performance Optimization Consultant",
   description:
-    "Custom web application development — typed, testable frontends in Angular, React and Next.js, built for the third release, not the demo.",
-  path: "/services/web-application-development",
+    "Angular performance consulting — Core Web Vitals, change detection, bundle size and API waterfalls, diagnosed by measurement before anything is changed.",
+  path: "/services/angular-performance-optimization",
+  inheritOgImage: false,
   keywords: [
-    "Web application development",
-    "Custom web application development",
-    "Frontend software engineer",
-    "React developer",
-    "Next.js development",
+    "Angular performance optimization",
+    "Angular performance consultant",
+    "Core Web Vitals",
+    "Frontend performance audit",
+    "Angular change detection",
+    "Bundle size optimization",
   ],
 });
 
@@ -42,20 +44,23 @@ export default function Page() {
           trail={[
             { name: "Home", path: "/" },
             { name: "Services", path: "/services" },
-            { name: "Web Application Development", path: "/services/web-application-development" },
+            {
+              name: "Angular Performance Optimization",
+              path: "/services/angular-performance-optimization",
+            },
           ]}
         />
       </div>
       <ServiceJsonLd
-        name="Custom Web Application Development"
-        description={frontend.proposition}
-        path="/services/web-application-development"
+        name="Angular Performance Optimization"
+        description={service.proposition}
+        path="/services/angular-performance-optimization"
       />
       <PageHero
         index="03"
-        label="SERVICES / WEB APPS"
-        title={["Web Application", "Development"]}
-        lede={frontend.proposition}
+        label="SERVICES / PERFORMANCE"
+        title={["Angular Performance", "Optimization"]}
+        lede={service.proposition}
       />
 
       <div className="shell" style={{ marginTop: "2rem" }}>
@@ -67,23 +72,23 @@ export default function Page() {
 
         <PageSectionHead index="01" label="What's delivered" title="Deliverables" />
         <ul className="muted" style={{ marginTop: "0.75rem", display: "grid", gap: "0.5rem" }}>
-          {[...frontend.deliverables, ...react.deliverables].map((d) => (
+          {service.deliverables.map((d) => (
             <li key={d}>{d}</li>
           ))}
         </ul>
 
         <p className="case-meta" style={{ marginTop: "1.5rem" }}>
-          <span>Stack</span>
-          <span>{Array.from(new Set([...frontend.technologies, ...react.technologies])).join(" / ")}</span>
+          <span>Measured with</span>
+          <span>{service.technologies.join(" / ")}</span>
         </p>
         <p className="muted" style={{ marginTop: "0.75rem" }}>
-          Ideal for: {frontend.idealFor} {react.idealFor}
+          Ideal for: {service.idealFor}
         </p>
 
         <div style={{ marginTop: "2.5rem" }}>
-          <PageSectionHead index="02" label="Evidence" title="Web applications shipped" />
+          <PageSectionHead index="02" label="Evidence" title="Where this work was done" />
           <ul className="muted" style={{ marginTop: "0.75rem", display: "grid", gap: "0.5rem" }}>
-            {relatedProjects.map((p) => (
+            {evidence.map((p) => (
               <li key={p.slug}>
                 <Link href={"/work/" + p.slug}>{p.title}</Link> — {p.tagline}
               </li>
@@ -95,11 +100,12 @@ export default function Page() {
       </div>
 
       <PageCta
-        kicker="03 / WEB APPLICATIONS"
-        headline={["BUILDING A", "PRODUCT SURFACE?"]}
-        lede="From App Router architecture to typed data models and performance budgets, let's scope what a production-ready web application needs."
+        location="service"
+        kicker="03 / PERFORMANCE"
+        headline={["SOMETHING", "FEELING HEAVY?"]}
+        lede="Send me the screen that is slow and what you have already tried. A scoped investigation says which of the four usual causes you actually have before anyone writes a fix."
         actions={[
-          { label: "Start a Conversation", href: "/contact?intent=frontend" },
+          { label: "Discuss a performance project", href: "/contact?intent=performance" },
           { label: "See All Services", href: "/services", variant: "line" },
         ]}
       />

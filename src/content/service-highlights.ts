@@ -46,7 +46,7 @@ export const serviceHighlights: ServiceHighlight[] = [
       "Component architecture, design systems and data flow designed once, so the third release costs what the first one did.",
     capabilities: ["Component architecture", "Design systems", "State and data flow", "Maintainability"],
     icon: "layers",
-    href: "/services/web-application-development",
+    href: "/services/frontend-architecture",
   },
   {
     id: "performance",
@@ -56,7 +56,7 @@ export const serviceHighlights: ServiceHighlight[] = [
       "Faster loads and calmer runtime through profiling, splitting and budgets — measured against Core Web Vitals, not guessed.",
     capabilities: ["Core Web Vitals", "Rendering", "API / network optimization", "Bundle optimization"],
     icon: "shield",
-    href: "/services/web-application-development",
+    href: "/services/frontend-architecture",
   },
   {
     id: "mobile",
@@ -66,7 +66,7 @@ export const serviceHighlights: ServiceHighlight[] = [
       "iOS and Android from one Angular + Ionic codebase, including store builds, native APIs and offline-aware behaviour.",
     capabilities: ["Angular + Ionic", "Capacitor", "iOS / Android", "Native integrations"],
     icon: "phone",
-    href: "/services/mobile-app-development",
+    href: "/services/ionic-development",
   },
 ];
 

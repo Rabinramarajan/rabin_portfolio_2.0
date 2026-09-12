@@ -46,6 +46,18 @@ const nextConfig: NextConfig = {
       { source: "/projects", destination: "/work", permanent: true },
       { source: "/case-studies", destination: "/work", permanent: true },
       { source: "/case-studies/:slug", destination: "/work/:slug", permanent: true },
+      // Service URLs renamed to match what each page is actually about.
+      { source: "/services/web-application-development", destination: "/services/frontend-architecture", permanent: true },
+      { source: "/services/mobile-app-development", destination: "/services/ionic-development", permanent: true },
+      /* Insight slugs rewritten to what the article is about rather than to
+         its headline. The headline still rides in the <h1>. */
+      { source: "/insights/signals", destination: "/insights/angular-signals-state-management", permanent: true },
+      { source: "/insights/vitals", destination: "/insights/angular-performance-core-web-vitals", permanent: true },
+      { source: "/insights/quiet-ui", destination: "/insights/enterprise-ui-design-restraint", permanent: true },
+      { source: "/insights/zoneless-migration", destination: "/insights/angular-zoneless-change-detection", permanent: true },
+      { source: "/insights/offline-first", destination: "/insights/ionic-offline-first-architecture", permanent: true },
+      { source: "/insights/consequential-forms", destination: "/insights/accessible-angular-forms", permanent: true },
+      { source: "/insights/inheriting-angular", destination: "/insights/angular-codebase-audit", permanent: true },
     ];
   },
   async headers() {

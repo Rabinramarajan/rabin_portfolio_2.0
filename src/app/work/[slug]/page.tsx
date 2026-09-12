@@ -5,6 +5,7 @@ import { ProjectCover } from "@/components/ProjectCover";
 import { CaseChapter } from "@/components/work/CaseChapter";
 import { CaseGallery } from "@/components/work/CaseGallery";
 import { FeatureRail } from "@/components/work/FeatureRail";
+import { CaseStudyCta } from "@/components/work/CaseStudyCta";
 import { CaseStudyTracker, NextProjectLink } from "@/components/work/CaseStudyTracker";
 import { ShareCase } from "@/components/work/ShareCase";
 import {
@@ -427,23 +428,23 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </nav>
         </section>
 
-        <section className="wd__cta" aria-labelledby="wd-cta">
-          <h2 className="wd__cta-title" id="wd-cta">
-            Want to build something similar?
-          </h2>
-          <p className="wd__cta-body">Let&apos;s turn your ideas into production-ready products.</p>
-          <div className="wd__cta-actions">
-            <Link
-              className="btn btn--solid"
-              href="/contact"
-            >
-              <span className="btn__label">Start a Conversation</span>
-            </Link>
-            <Link className="btn btn--line" href="/work">
-              <span className="btn__label">View All Work</span>
-            </Link>
-          </div>
-        </section>
+        {project.related?.length ? (
+          <section className="wd__related" aria-labelledby="wd-related">
+            <h2 className="wd__related-title" id="wd-related">
+              Where this goes next
+            </h2>
+            <ul>
+              {project.related.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.label}</Link>
+                  <span>{item.note}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        <CaseStudyCta category={project.category} slug={project.slug} />
       </div>
     </article>
   );

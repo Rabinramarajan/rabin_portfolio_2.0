@@ -9,8 +9,9 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/work", priority: 0.9, changeFrequency: "monthly" },
   { path: "/services", priority: 0.9, changeFrequency: "monthly" },
   { path: "/services/angular-development", priority: 0.85, changeFrequency: "monthly" },
-  { path: "/services/web-application-development", priority: 0.85, changeFrequency: "monthly" },
-  { path: "/services/mobile-app-development", priority: 0.85, changeFrequency: "monthly" },
+  { path: "/services/frontend-architecture", priority: 0.85, changeFrequency: "monthly" },
+  { path: "/services/ionic-development", priority: 0.85, changeFrequency: "monthly" },
+  { path: "/services/angular-performance-optimization", priority: 0.85, changeFrequency: "monthly" },
   { path: "/experience", priority: 0.8, changeFrequency: "monthly" },
   /* Both are indexable (neither sets a noindex robots directive) and both are
      linked from the primary nav, so omitting them here understated the site to

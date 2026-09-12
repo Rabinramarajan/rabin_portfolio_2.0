@@ -26,12 +26,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const item = insights.find((i) => i.id === slug);
   if (!item) return { title: "Not found", robots: { index: false, follow: false } };
   const meta = pageMetadata({
-    title: item.title ?? "Insight",
+    title: item.seoTitle ?? item.title ?? "Insight",
     description:
+      item.seoDescription ??
       item.dek ??
       "An engineering position from Rabin R's shipped Angular and frontend work.",
     path: "/insights/" + item.id,
     type: "article",
+    // The route ships its own opengraph-image; inheriting would double the tags.
+    inheritOgImage: false,
   });
   // A stub with only a title and a dek is thin content — keep it crawlable but
   // out of the index until `body` is written. See Insight.body in types.ts.

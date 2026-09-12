@@ -25,34 +25,48 @@ export function WorkPage() {
             <div className="wpage__copy">
               <SectionKicker index="02" label="Selected Work" />
               <h1 className="wpage__title" id="wpage-title">
-                <span className="wpage__line">Work that makes</span>
-                <span className="wpage__line acc">an impact.</span>
+                <span className="wpage__line">Enterprise products.</span>
+                <span className="wpage__line">Real users.</span>
+                <span className="wpage__line acc">Measurable outcomes.</span>
               </h1>
               <p className="wpage__lede">
-                A selection of products I have engineered for governments, startups and
-                businesses across industries.
+                Selected Angular, frontend and mobile products across government,
+                pension, insurance and enterprise systems.
               </p>
-              <p className="wpage__intro">
-                Most of this is high-consequence software: immigration case management
-                used by Fiji government officers, a pension member portal, an insurance
-                administration console, and a member app shipped to both app stores for
-                VNPF in Vanuatu. These are systems people have to use to do their job or
-                access their money, not products they chose — which sets a different bar
-                for performance, accessibility and how the interface behaves on the
-                hundredth use rather than the first.
-              </p>
-              <p className="wpage__intro">
-                Each case study covers what the system does, the architecture decisions
-                that mattered, the stack, and the outcomes I measured. Where numbers are
-                quoted — a 40% reduction in API consumption, roughly 50% faster frontend
-                load on the Fiji internal platform — they are results from the work
-                rather than estimates.
-              </p>
+              {/* Chips before prose. Two dense paragraphs stood between the
+                  headline and the grid; they are still worth reading, so they
+                  now sit below the work rather than in front of it. */}
+              <ul className="wpage__chips">
+                {["10K+ users", "3 countries", "Government", "Fintech", "Mobile", "Enterprise"].map(
+                  (chip) => (
+                    <li key={chip}>{chip}</li>
+                  ),
+                )}
+              </ul>
             </div>
             <WorkOrbit />
           </div>
 
           <WorkExplorer />
+
+          <div className="wpage__note">
+            <p className="wpage__intro">
+              Most of this is high-consequence software: immigration case management used
+              by Fiji government officers, a pension member portal, an insurance
+              administration console, and a member app shipped to both app stores for
+              VNPF in Vanuatu. These are systems people have to use to do their job or
+              access their money, not products they chose — which sets a different bar
+              for performance, accessibility and how the interface behaves on the
+              hundredth use rather than the first.
+            </p>
+            <p className="wpage__intro">
+              Each case study covers what the system does, the architecture decisions
+              that mattered, the stack, and the outcomes I measured. Where numbers are
+              quoted — a 40% reduction in API consumption, roughly 50% faster frontend
+              load on the Fiji internal platform — they are results from the work rather
+              than estimates.
+            </p>
+          </div>
         </div>
       </section>
     </>

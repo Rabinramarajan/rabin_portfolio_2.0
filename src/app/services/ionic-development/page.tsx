@@ -16,13 +16,16 @@ const vnpf = projects.find((p) => p.slug === "vnpf-blo-mi")!;
 const page = servicePages.mobile;
 
 export const metadata = pageMetadata({
-  title: "Mobile App Development",
+  title: "Ionic & Cross-platform Mobile Development",
   description:
     "Cross-platform mobile apps with Ionic, Angular and Capacitor — shipped to iOS and Android with biometric sign-in and offline behaviour.",
-  path: "/services/mobile-app-development",
+  path: "/services/ionic-development",
+  inheritOgImage: false,
   keywords: [
     "Mobile app development",
     "Ionic development",
+    "Ionic Angular developer",
+    "Capacitor developer",
     "Angular mobile app",
     "Capacitor app development",
     "Cross-platform mobile app",
@@ -37,19 +40,19 @@ export default function Page() {
           trail={[
             { name: "Home", path: "/" },
             { name: "Services", path: "/services" },
-            { name: "Mobile App Development", path: "/services/mobile-app-development" },
+            { name: "Ionic Development", path: "/services/ionic-development" },
           ]}
         />
       </div>
       <ServiceJsonLd
-        name="Mobile App Development"
+        name="Ionic & Cross-platform Mobile Development"
         description={service.proposition}
-        path="/services/mobile-app-development"
+        path="/services/ionic-development"
       />
       <PageHero
-        index="06"
+        index="04"
         label="SERVICES / MOBILE"
-        title={["Mobile App", "Development"]}
+        title={["Ionic &", "Cross-platform Mobile"]}
         lede={service.proposition}
       />
 
@@ -88,7 +91,8 @@ export default function Page() {
       </div>
 
       <PageCta
-        kicker="06 / MOBILE"
+        location="service"
+        kicker="04 / MOBILE"
         headline={["ONE CODEBASE,", "BOTH STORES."]}
         lede="If a product needs to live on a phone — member apps, field tools, or an internal utility — Ionic and Angular can get it to both stores from one codebase."
         actions={[

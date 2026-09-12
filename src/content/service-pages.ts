@@ -29,22 +29,22 @@ export interface ServicePageContent {
   faqs: ServiceFaq[];
 }
 
-export const servicePages: Record<'angular' | 'web' | 'mobile', ServicePageContent> = {
+export const servicePages: Record<'angular' | 'web' | 'mobile' | 'performance', ServicePageContent> = {
   angular: {
     furtherReading: [
       {
         label: 'Signals before ceremony',
-        href: '/insights/signals',
+        href: '/insights/angular-signals-state-management',
         note: 'The state-promotion rule above, argued at length with the projects it came from.',
       },
       {
         label: 'Going zoneless without a long-lived branch',
-        href: '/insights/zoneless-migration',
+        href: '/insights/angular-zoneless-change-detection',
         note: 'The incremental migration path, step by step, with the grep commands I actually run.',
       },
       {
         label: 'Inheriting someone else’s Angular codebase',
-        href: '/insights/inheriting-angular',
+        href: '/insights/angular-codebase-audit',
         note: 'What a scoped assessment looks like before any code changes.',
       },
     ],
@@ -105,12 +105,12 @@ export const servicePages: Record<'angular' | 'web' | 'mobile', ServicePageConte
     furtherReading: [
       {
         label: 'Performance is a product requirement',
-        href: '/insights/vitals',
+        href: '/insights/angular-performance-core-web-vitals',
         note: 'Why load behaviour belongs in the feature spec rather than a later optimisation phase.',
       },
       {
         label: 'Forms that carry consequences',
-        href: '/insights/consequential-forms',
+        href: '/insights/accessible-angular-forms',
         note: 'Accessibility and error recovery when failure costs the user something real.',
       },
     ],
@@ -167,16 +167,77 @@ export const servicePages: Record<'angular' | 'web' | 'mobile', ServicePageConte
       },
     ],
   },
+  performance: {
+    furtherReading: [
+      {
+        label: 'Performance is a product requirement',
+        href: '/insights/angular-performance-core-web-vitals',
+        note: 'Why load behaviour belongs in the spec rather than in a phase after it.',
+      },
+      {
+        label: 'Signals before ceremony',
+        href: '/insights/angular-signals-state-management',
+        note: 'State precision as a performance decision, not only an architectural one.',
+      },
+    ],
+    intro: [
+      'Performance work is measurement first and code second. Most of the frontend slowness I am asked to look at is not caused by the thing the team suspects, and the fastest way to waste a month is to start optimising before knowing which of the four common causes — bundle size, render behaviour, network waterfalls, or change detection — is actually costing the user time.',
+    ],
+    problem: {
+      title: 'The problem this usually solves',
+      paragraphs: [
+        'The application works, and it feels heavy. Core Web Vitals are failing in field data while the lab score looks acceptable. A screen that was fine at launch now takes several seconds because the data behind it grew. Someone has already tried lazy loading and it did not move the number, because the number was never about the bundle.',
+        'The other version of this is operational rather than commercial. On an internal system used all day by the same people, a two-second delay repeated across hundreds of case screens is not a metric — it is hours of somebody’s working week. That is the framing I bring to it: load behaviour is a product requirement with a cost attached, not a polish item to schedule after the features.',
+      ],
+    },
+    approach: {
+      title: 'How I work on performance',
+      paragraphs: [
+        'The first deliverable is a measurement, not a patch: field data where it exists, a profile of the slow interaction on hardware comparable to what users actually have, and a network trace of the screen in question. That usually separates the problem into one of four buckets — what is downloaded, what is rendered, what is requested, and what re-runs — each of which has a different fix and a different price.',
+        'On a government case management system the reported symptom was slow page loads, and the cause was none of the usual suspects: independently built panels each fetched the same shared reference data on init, so opening one record fired the same lookups five or six times. Putting those behind a shared, cached stream cut API consumption by around 40% and load time by roughly half, without touching a single component’s logic. That is the typical shape of this work — the expensive fix is rarely the invasive one.',
+        'After the fix comes the guard. A budget in CI, a check on the bundle, and the measurement written down where the next developer will see it, so the regression that would have arrived three releases later gets caught by the pipeline instead of by a user.',
+      ],
+    },
+    engagement: {
+      title: 'What working together looks like',
+      paragraphs: [
+        'Performance engagements are usually short and scoped: an investigation of one to two weeks that produces a written diagnosis, a prioritised list of fixes with estimated cost and expected gain, and the measurements behind both. You can hand that to your own team, or I can implement it.',
+        'I will also tell you when the answer is no. If the profile says the time is being spent in the API rather than in the browser, frontend work will not fix it, and saying so at the end of week one is worth more than a month of tuning the wrong layer.',
+      ],
+    },
+    faqs: [
+      {
+        question: 'Can you guarantee a Lighthouse score?',
+        answer:
+          'No, and be careful with anyone who does. A lab score is a proxy; what I commit to is measuring the real bottleneck, fixing what is fixable in the frontend, and showing you the before and after on field-comparable conditions. On most projects the honest gains are large — around 40% fewer API calls and roughly half the load time on the case system above — but they are the result of the diagnosis, not a number promised before it.',
+      },
+      {
+        question: 'What do you measure?',
+        answer:
+          'Core Web Vitals (LCP, INP, CLS) as the user-facing frame, plus the things that cause them: bundle composition, render and change-detection behaviour, request waterfalls, and payload sizes. Field data first where it exists, because lab conditions flatter almost every application.',
+      },
+      {
+        question: 'Is this only for Angular?',
+        answer:
+          'No. Angular is where most of my depth is — change detection, zoneless, RxJS-level request behaviour — but bundle, network and rendering work applies equally to React and Next.js applications.',
+      },
+      {
+        question: 'How long does an investigation take?',
+        answer:
+          'One to two weeks for a diagnosis with a prioritised plan. Implementation depends entirely on what the diagnosis finds, which is why I do not quote it in advance.',
+      },
+    ],
+  },
   mobile: {
     furtherReading: [
       {
         label: 'Quiet interfaces age better',
-        href: '/insights/quiet-ui',
+        href: '/insights/enterprise-ui-design-restraint',
         note: 'Why restraint matters most in apps people are required to use every day.',
       },
       {
         label: 'Offline is a design input, not an error state',
-        href: '/insights/offline-first',
+        href: '/insights/ionic-offline-first-architecture',
         note: 'Cached reads with an honest age, queued writes, and idempotent replay.',
       },
     ],

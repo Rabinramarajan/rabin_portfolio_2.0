@@ -196,16 +196,21 @@ export const hero: HeroContent = {
 };
 
 export const defaultSeo: SeoContent = {
-  title: "Rabin R | Angular Developer & Frontend Software Engineer",
+  title: "Rabin R — Angular Consultant & Frontend Engineer",
   description:
-    "Senior Frontend Angular Consultant in Chennai. Engineering fast, scalable, accessible digital products with Angular, React and TypeScript.",
+    "Angular consultant and frontend engineer building scalable enterprise web and mobile products with Angular, TypeScript, RxJS, Signals and Ionic.",
+  /* Clustered rather than generic. "Frontend developer" on its own is a term
+     this site cannot win and would not convert if it did; the specific ones
+     below are what the work actually evidences. */
   keywords: [
+    "Angular consultant",
     "Angular developer",
+    "Angular developer Chennai",
+    "Angular performance optimization",
+    "Frontend architecture",
+    "Ionic Angular developer",
+    "Enterprise Angular architecture",
     "Frontend software engineer",
-    "React developer",
-    "Next.js",
-    "Freelance software engineer",
-    "Chennai",
   ],
 };
 
