@@ -56,3 +56,6 @@ next-env.d.ts
 .vercel
 
 
+
+# playwright-mcp session artifacts
+/.playwright-mcp/

@@ -68,9 +68,6 @@ export const education: EducationEntry[] = [
   },
 ];
 
-/** Spoken languages, shown in the resume footer block. */
-export const languages = ["English", "Tamil"] as const;
-
 export const navigation: NavItem[] = [
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
