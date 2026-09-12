@@ -1,14 +1,20 @@
 import { SkillsSection } from "@/components/SkillsSection";
+import { SkillsNarrative } from "@/components/SkillsNarrative";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Skills & Technologies",
   description:
-    "Rabin R's frontend technology stack — Angular, TypeScript, Signals, RxJS, React, Next.js, Ionic, Capacitor, Node.js, PostgreSQL and the testing and tooling around them.",
+    "Rabin R's frontend technology stack and the honest depth behind it — expert-level Angular, TypeScript and Ionic, production React and Next.js, plus the backend, testing and accessibility tooling around them.",
   path: "/skills",
   keywords: ["Angular Signals", "Zoneless Angular", "TypeScript developer", "RxJS", "Ionic Capacitor"],
 });
 
 export default function Page() {
-  return <SkillsSection headingLevel="h1" />;
+  return (
+    <>
+      <SkillsSection headingLevel="h1" />
+      <SkillsNarrative />
+    </>
+  );
 }

@@ -593,3 +593,15 @@
     transform: none;
   }
 }
+
+/* Prose block between the section label and the service cards. */
+.intro {
+  display: grid;
+  gap: 1rem;
+  max-width: 44rem;
+  margin: 1.25rem 0 2.5rem;
+}
+.intro p {
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}

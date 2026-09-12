@@ -93,4 +93,36 @@ export const about: AboutContent = {
     'Focused on performance, accessibility and pixel-perfect implementation.',
     'Constantly learning, exploring and turning ideas into real-world products.',
   ],
+  story: [
+    {
+      title: 'How I got here',
+      paragraphs: [
+        'I finished a B.Sc. in Information Technology in 2021 and started writing frontend code professionally more or less immediately. The first few years were not spent on side projects or tutorials — they were spent on systems that other people depended on to do their jobs, which turned out to be the fastest education available.',
+        'By 2023 I was building the PRIMS pension member portal and a set of cross-platform mobile apps in Ionic for VNPF in Vanuatu. In 2024 I moved onto the Fiji government immigration platforms — an internal case management system for immigration officers and a citizen-facing application portal, together serving more than ten thousand users. Since then I have worked as a Frontend Angular Consultant, most recently at RSTACK Solutions on enterprise healthcare applications built on Angular 22 with signals and JWT-secured API integration.',
+        'Four years in, the work has spanned government, pension, insurance and healthcare across three countries. That is a narrower path than it sounds: they are all high-consequence systems where the interface is the product, the users have no choice about using it, and correctness matters more than novelty.',
+      ],
+    },
+    {
+      title: 'What that experience actually taught me',
+      paragraphs: [
+        'Building software for a government immigration department changes your defaults. The officer working a case queue is not a persona in a deck — they are a real person doing the same task several hundred times a day, and every unnecessary click you ship is multiplied by that. The same applies to a pension member checking a balance on an old Android phone over a poor connection. These users do not churn, complain on social media, or file a helpful bug report. They just absorb whatever you built.',
+        'That is where most of my convictions come from. Performance is a product requirement rather than an optimisation phase, because a slow internal tool costs an organisation real hours every single day. Accessibility is built in rather than audited afterwards, because on government work it is usually a legal requirement and always the right thing. And architecture matters because these systems live for years and are maintained by people who were not in the room when the decisions were made.',
+        'It also taught me that the most valuable thing I can do is often unglamorous. Cutting API consumption by around 40% on the Fiji internal system came from noticing that independently built panels were each fetching the same shared reference data on init. No new feature, no rewrite, no interesting technology — just reading the network tab carefully and fixing a composition problem. That work is worth more than most features.',
+      ],
+    },
+    {
+      title: 'How I work with teams',
+      paragraphs: [
+        'I work embedded and senior: in your repository, your review process and your standups, accountable for the frontend rather than delivering a detached artefact and disappearing. In practice that means pull requests your team reviews, architectural decisions written down where the next developer will find them, and a deliberate effort to make myself unnecessary by the end of the engagement.',
+        'I am direct about trade-offs. If Angular is the wrong tool for what you are building, or a rewrite is a worse idea than the incremental path, or the feature you asked for will create a maintenance problem in six months, I will say so before the work starts rather than after. I would rather have a short uncomfortable conversation at the beginning than deliver something I know will age badly.',
+        'I work remotely from Chennai with teams worldwide, across overlapping hours. Most of my work has been with distributed teams in different time zones, which mainly means I write things down and do not depend on being in a meeting to unblock someone.',
+      ],
+    },
+    {
+      title: 'Outside the brief',
+      paragraphs: [
+        'I keep a small amount of my time for writing up the positions I have arrived at — on state management, on treating Core Web Vitals as a spec item, on why restrained interfaces survive repeated use better than expressive ones. This site is where that goes, and building it in Next.js rather than Angular is deliberate: working outside my primary stack keeps me honest about which of my habits are principles and which are just familiarity.',
+      ],
+    },
+  ],
 };

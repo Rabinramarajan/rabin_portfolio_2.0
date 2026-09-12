@@ -37,6 +37,10 @@
 @import "./css/pages/insights.css";
 @import "./css/pages/misc.css";
 @import "./css/pages/version.css";
+@import "./css/pages/legal.css";
+@import "./css/pages/service-narrative.css";
+@import "./css/pages/about-story.css";
+@import "./css/pages/skills-narrative.css";
 
 @import "./css/components/chat-widget.css";
 

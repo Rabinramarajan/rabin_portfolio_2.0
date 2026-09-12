@@ -6,6 +6,16 @@ import { SectionKicker } from "@/components/ui";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
 
+/** Long-form date for the visible byline; the machine-readable value stays ISO. */
+function formatDate(iso: string): string {
+  return new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
 export function generateStaticParams() {
   return insights.map((i) => ({ slug: i.id }));
 }
@@ -41,6 +51,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             headline={item.title ?? "Insight"}
             description={item.dek ?? ""}
             path={"/insights/" + item.id}
+            datePublished={item.datePublished}
+            dateModified={item.dateModified}
           />
         ) : null}
         <BreadcrumbJsonLd
@@ -64,6 +76,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <SectionKicker index={item.number ?? "09"} label="Insight" />
         <h1 className="sec-title">{item.title}</h1>
         <p className="sec-lede">{item.dek}</p>
+        {item.datePublished ? (
+          <p className="muted" style={{ marginTop: "0.75rem", fontSize: "0.875rem" }}>
+            <time dateTime={item.datePublished}>{formatDate(item.datePublished)}</time>
+            {item.dateModified && item.dateModified !== item.datePublished ? (
+              <> · Updated <time dateTime={item.dateModified}>{formatDate(item.dateModified)}</time></>
+            ) : null}
+            {" · "}Rabin R
+          </p>
+        ) : null}
         {item.body?.length ? (
           item.body.map((paragraph, i) => (
             <p key={i} style={{ marginTop: "1.5rem" }}>

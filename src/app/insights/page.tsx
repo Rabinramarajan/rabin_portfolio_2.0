@@ -10,5 +10,5 @@ export const metadata = pageMetadata({
 });
 
 export default function Page() {
-  return <InsightsSection headingLevel="h1" />;
+  return <InsightsSection headingLevel="h1" showIntro />;
 }

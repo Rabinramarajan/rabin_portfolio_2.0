@@ -1,0 +1,33 @@
+/* Written depth statement on /skills, beneath the ecosystem visual. */
+
+.skills-narrative__lede {
+  margin-top: 1rem;
+  max-width: 42rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+.skills-narrative__groups {
+  margin-top: 2rem;
+  display: grid;
+  gap: 2rem;
+}
+
+.skills-narrative__title {
+  font-size: var(--text-lg, 1.125rem);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.skills-narrative__body {
+  margin-top: 0.5rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+.skills-narrative__evidence {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

@@ -5,6 +5,8 @@ import { Breadcrumbs } from "@/components/pages/Breadcrumbs";
 import { PageHero } from "@/components/pages/PageHero";
 import { PageSectionHead } from "@/components/pages/PageSectionHead";
 import { PageCta } from "@/components/pages/PageCta";
+import { ServiceNarrative } from "@/components/pages/ServiceNarrative";
+import { servicePages } from "@/content/service-pages";
 import { services } from "@/content/services";
 import { projects } from "@/content/projects";
 
@@ -13,6 +15,8 @@ const react = services.find((s) => s.id === "react")!;
 const relatedProjects = projects.filter((p) =>
   ["insuremet", "zellavora-ai-resume-builder", "prims-member-portal"].includes(p.slug),
 );
+
+const page = servicePages.web;
 
 export const metadata = pageMetadata({
   title: "Custom Web Application Development",
@@ -53,6 +57,12 @@ export default function Page() {
       />
 
       <div className="shell" style={{ marginTop: "2rem" }}>
+        {page.intro.map((p, i) => (
+          <p className="muted" key={i} style={{ maxWidth: "42rem", marginBottom: "1rem" }}>
+            {p}
+          </p>
+        ))}
+
         <PageSectionHead index="01" label="What's delivered" title="Deliverables" />
         <ul className="muted" style={{ marginTop: "0.75rem", display: "grid", gap: "0.5rem" }}>
           {[...frontend.deliverables, ...react.deliverables].map((d) => (
@@ -78,6 +88,8 @@ export default function Page() {
             ))}
           </ul>
         </div>
+
+        <ServiceNarrative content={page} startIndex={3} />
       </div>
 
       <PageCta

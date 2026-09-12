@@ -17,6 +17,8 @@
   pointer-events: none;
 }
 .tr__line {
+  /* span, not div, so TextReveal output is valid inside <h1>/<h2>. */
+  display: block;
   color: var(--color-text);
   will-change: transform;
 }

@@ -99,6 +99,11 @@ export interface AboutContent {
   values: { title: string; body: string }[];
   /** Short first-person statements shown beside the About lead. */
   highlights: string[];
+  /**
+   * Long-form biography for the /about route — the page that answers "who
+   * wrote this". Rendered as prose sections beneath the intro band.
+   */
+  story?: { title: string; paragraphs: string[] }[];
 }
 
 export type ProjectFilter =
@@ -403,6 +408,10 @@ export interface Insight {
    * Adding paragraphs here is all it takes to publish and index the piece.
    */
   body?: string[];
+  /** ISO date. Emitted as datePublished and shown on the article. */
+  datePublished?: string;
+  /** ISO date of the last substantive revision. Falls back to datePublished. */
+  dateModified?: string;
 }
 
 export interface SeoContent {

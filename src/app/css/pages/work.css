@@ -271,3 +271,12 @@
 .wex__more:hover svg {
   translate: 4px 0;
 }
+
+/* Supporting prose under the /work lede. */
+.wpage__intro {
+  margin-top: 1rem;
+  max-width: 42rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  font-size: 0.9375rem;
+}

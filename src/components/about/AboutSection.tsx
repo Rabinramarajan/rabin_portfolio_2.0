@@ -71,7 +71,7 @@ export function AboutSection() {
               <TextReveal
                 lines={about.headingLines ?? [about.heading]}
                 className="abt__title"
-                as="h2"
+                as="h1"
                 delay={0.08}
               />
 

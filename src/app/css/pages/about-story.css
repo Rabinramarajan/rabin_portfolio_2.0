@@ -1,0 +1,74 @@
+/* Written body of /about — biography, principles, domains, timeline. */
+
+.abt-story__p {
+  margin-top: 1rem;
+  max-width: 42rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+
+.abt-story__principles {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.abt-story__principles dt {
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.abt-story__principles dd {
+  margin: 0.35rem 0 0;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.abt-story__list {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+  color: var(--color-text-muted);
+}
+
+.abt-story__timeline {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.abt-story__timeline li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.abt-story__year {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent, var(--color-text));
+  font-weight: 550;
+}
+
+.abt-story__milestone-title {
+  font-weight: 550;
+  color: var(--color-text);
+}
+
+.abt-story__milestone-body {
+  margin-top: 0.25rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .abt-story__timeline li {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}

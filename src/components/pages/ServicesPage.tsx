@@ -81,6 +81,32 @@ export function ServicesPage() {
             <span className={styles.sectionLabelDot} aria-hidden />
           </p>
 
+          <div className={styles.intro}>
+            <p>
+              I work as an embedded senior frontend engineer rather than an agency. In
+              practice that means I join your repository, your review process and your
+              standups, take ownership of the frontend, and write decisions down where
+              the next developer will find them. Most engagements begin with a scoped
+              assessment that produces a prioritised plan and a cost for each item, so
+              the first thing you get is an honest picture rather than an invoice.
+            </p>
+            <p>
+              The services below overlap, because real projects do. An Angular migration
+              usually turns into a performance engagement; a new web application always
+              involves UI engineering and accessibility. Rather than sell them as
+              separate packages, I scope the work to the problem — a fixed-scope project,
+              a monthly retainer for teams that want a senior frontend owner alongside
+              their own developers, or focused consulting on one specific question.
+            </p>
+            <p>
+              Four years of this has been spent on government, pension, insurance and
+              healthcare platforms across three countries, which is where my defaults
+              come from: performance treated as a product requirement, accessibility
+              built in rather than audited afterwards, and architecture chosen for the
+              third release rather than the first demo.
+            </p>
+          </div>
+
           <ul className={styles.cards}>
             {serviceHighlights.map((s, i) => (
               <motion.li

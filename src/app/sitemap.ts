@@ -22,6 +22,10 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/pricing", priority: 0.6, changeFrequency: "yearly" },
   { path: "/insights", priority: 0.6, changeFrequency: "monthly" },
   { path: "/resume", priority: 0.6, changeFrequency: "monthly" },
+  /* Low priority, but indexable and linked from the footer: their job is to be
+     findable evidence that the site says how it handles data. */
+  { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

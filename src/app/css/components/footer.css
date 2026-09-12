@@ -734,3 +734,20 @@
     letter-spacing: 0.22em;
   }
 }
+
+/* Privacy / Terms, sat in the closing legal bar beside the copyright. */
+.ft__legal-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+}
+.ft__legal-links a {
+  color: inherit;
+  text-decoration: none;
+}
+.ft__legal-links a:hover,
+.ft__legal-links a:focus-visible {
+  color: var(--color-text);
+  text-decoration: underline;
+}

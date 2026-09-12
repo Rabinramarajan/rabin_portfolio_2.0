@@ -227,11 +227,13 @@ export function ArticleJsonLd({
   description,
   path,
   datePublished,
+  dateModified,
 }: {
   headline: string;
   description: string;
   path: string;
   datePublished?: string;
+  dateModified?: string;
 }) {
   const url = absoluteUrl(path);
   const data = {
@@ -247,6 +249,7 @@ export function ArticleJsonLd({
     publisher: { "@id": PERSON_ID },
     isPartOf: { "@id": SITE_ID },
     ...(datePublished ? { datePublished } : {}),
+    ...(dateModified ?? datePublished ? { dateModified: dateModified ?? datePublished } : {}),
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
 }

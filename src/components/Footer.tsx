@@ -155,6 +155,11 @@ function FooterInner() {
             {displayVersion}
           </Link>
         </p>
+        <p className="ft__legal-links">
+          <Link href="/privacy">Privacy</Link>
+          <span aria-hidden>·</span>
+          <Link href="/terms">Terms</Link>
+        </p>
         <p className="ft__passion">
           <span className="ft__passion-rule" aria-hidden />
           Built with passion

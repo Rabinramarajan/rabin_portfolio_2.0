@@ -1,0 +1,36 @@
+/*
+ * Legal documents (/privacy, /terms).
+ *
+ * Long-form prose rather than a designed page: the job is readability at a
+ * comfortable measure, so this only sets the heading rhythm the section
+ * primitives do not already cover.
+ */
+
+.legal__section-title {
+  font-size: var(--text-xl);
+  letter-spacing: -0.02em;
+  font-weight: 550;
+  text-wrap: balance;
+  margin-bottom: 0.25rem;
+}
+
+.legal__body p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.legal__list {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.legal__meta {
+  margin-top: 0.75rem;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--color-text-muted);
+}

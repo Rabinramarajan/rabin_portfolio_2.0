@@ -37,9 +37,9 @@ export function PremiumContactHero() {
       {/* Content */}
       <div className="premium-contact-hero__content">
         <div className="premium-contact-hero__inner">
-          <h1 className="premium-contact-hero__title">Contact Us</h1>
+          <h1 className="premium-contact-hero__title">Contact Rabin R</h1>
           <p className="premium-contact-hero__subtitle">
-            Let&rsquo;s start a conversation about your next project
+            Angular and frontend engineering work — tell me what you&rsquo;re building and I&rsquo;ll reply within one business day.
           </p>
         </div>
       </div>
