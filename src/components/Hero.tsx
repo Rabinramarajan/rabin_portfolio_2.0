@@ -141,10 +141,18 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={t(0.42)}
             >
+              {/* The separator trails its item instead of leading the next
+                  one. Each item is one inline-flex box, so a wrap happens
+                  between boxes — with a leading dot that put a bare bullet at
+                  the start of row two, floating under the headline with
+                  nothing before it. Trailing, a wrap leaves the dot at the end
+                  of the row it belongs to, which reads as continuation. */}
               {disciplines.map((item, i) => (
                 <span key={item}>
-                  {i > 0 ? <span className="chero__dot" aria-hidden /> : null}
                   {item}
+                  {i < disciplines.length - 1 ? (
+                    <span className="chero__dot" aria-hidden />
+                  ) : null}
                 </span>
               ))}
             </motion.p>

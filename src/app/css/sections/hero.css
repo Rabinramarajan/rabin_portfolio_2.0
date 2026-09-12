@@ -132,15 +132,25 @@
     justify-content: center !important;
     align-self: center !important;
     width: auto !important;
-    max-width: 40rem !important;
+    /* 48rem, not 40rem. At 40rem neither of the two widest things in the copy
+       column fit: the headline's longest declared line ("Angular Engineer
+       for") wrapped mid-line, and the discipline strip needed ~46rem so it
+       broke and left a separator dot orphaned at the start of row two. One
+       measure governs both, so widening here is what squares them up. */
+    max-width: 48rem !important;
   }
   /* Title - dominant focal point */
   .chero__title {
-    font-size: clamp(3rem, 0.4rem + 5.4vw, 4.6rem) !important;
+    font-size: clamp(3rem, 0.4rem + 5vw, 4.4rem) !important;
     line-height: 0.94 !important;
     margin-bottom: 0.5rem !important;
     text-align: left !important;
-    max-width: 12ch !important;
+    /* The ch-based measure is what forced the wrap: 12ch is narrower than
+       every line the headline actually declares, so each one broke again
+       inside itself — "Angular Engineer / for", and "High-" / "Performance"
+       splitting at its own hyphen. The declared lines are the line breaks;
+       the column width above is the only constraint they need. */
+    max-width: none !important;
     font-weight: 800 !important;
     letter-spacing: -0.03em !important;
   }
@@ -509,11 +519,21 @@
 
 .chero__title {
   font-family: var(--font-display);
-  font-size: clamp(2.9rem, 1rem + 8.4vw, 7.4rem);
+  /* Held to 5.4rem rather than 7.4rem so the longest declared line stays
+     inside the copy column on a tall desktop viewport. Above that size it
+     needed a measure wider than the column and wrapped mid-line. */
+  font-size: clamp(2.9rem, 1rem + 5.6vw, 5.4rem);
   line-height: 0.9;
   letter-spacing: -0.03em;
   font-weight: 800;
-  max-width: 12ch;
+  /* See the laptop block above: a ch-based cap re-breaks lines the markup has
+     already broken. The lines are declared in content/profile.ts. */
+  max-width: none;
+}
+/* The copy column is the headline's measure on tall desktop viewports, where
+   the laptop-height block does not apply. */
+.chero__copy {
+  max-width: 56rem;
 }
 .chero__line {
   display: block;
