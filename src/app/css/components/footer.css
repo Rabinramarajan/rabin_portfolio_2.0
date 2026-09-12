@@ -531,42 +531,206 @@
     display: none;
   }
 }
-@media (max-width: 719px) {
-  /* Phone: the scene has to fit one screen, so the header clearance above the
-     pitch and the room below the arc are both taken back in. */
+/* ============================================================
+   PHONE (<768px)
+
+   The wide footer is a scene: art, pitch and rails share one screen because
+   there is width to spread them across. Compressed onto a phone that same
+   scene became ten centred rows stacked inside a forced `100dvh` — an
+   eyebrow, four trait labels, a headline, a rule, a button, a crest, a
+   tagline, a nav row, a social row, two legal lines — every one of them
+   centred on the same axis, none of them able to say which mattered, and all
+   of them squeezed to fit the screen height rather than sized to be read.
+
+   This block stops treating the phone footer as a scene to be fitted and
+   builds it as a closing sequence to be scrolled: art, then the ask, then the
+   links. Three changes carry it —
+
+     1. the height target goes, so nothing is compressed to fit;
+     2. the art stops being cropped 2.3x oversize, so the wordmark set into it
+        reads as a wordmark instead of as two letters running off both edges;
+     3. the links become a real list — 48px rows at 1rem — instead of a strip
+        of 11px captions at a 32px tap height.
+   ============================================================ */
+
+@media (max-width: 767px) {
+  .ft {
+    /* THE CENTRAL FIX. `min-height: 100dvh` made the screen the brief: on a
+       small phone the scene had to give back whatever the content needed,
+       which is what produced the cramping. The footer is now as tall as what
+       is in it — it still fills the screen on any ordinary phone, but because
+       the content adds up to that, not because it was pressed into it. */
+    min-height: 0;
+    /* The art is cropped from a 1672x941 file, and the wordmark set into it
+       spans nearly the full file width. The 900px floor stopped the crop
+       window shrinking with the viewport, so on a 390px screen the artwork
+       was drawn 900px wide and the wordmark lost ~40% of itself off the two
+       edges — the letters the screenshot shows running out of the frame. The
+       floor is dropped entirely here: the art is exactly the viewport, so the
+       wordmark reads whole and the arc simply sits lower and wider, which is
+       what a horizon does on a narrow screen anyway. */
+    --ft-globe-w: calc(100vw - var(--sbw));
+    padding-inline: var(--gutter);
+    /* Clears the fixed chat launcher in the bottom-right corner. */
+    padding-bottom: 4.5rem;
+  }
+
+  /* --- the scene --- */
+
   .ft__stage {
-    padding-top: 2.5rem;
-    padding-bottom: calc(var(--ft-arc) + 2.75rem);
+    padding-top: 2.75rem;
+    /* Room between the pitch and the crest sitting on the arc below it. */
+    padding-bottom: calc(var(--ft-arc) + 4.5rem);
   }
+
+  .ft__stage-inner {
+    gap: 1.5rem;
+  }
+
+  /* Two rows of decorative micro-caps (the eyebrow and these four traits)
+     bracket the headline and blunt it; the eyebrow is the one that carries
+     the closing idea, so it is the one that stays. */
   .ft__traits {
-    grid-auto-flow: row;
-    grid-template-columns: repeat(2, auto);
-    text-align: center;
+    display: none;
   }
+
+  .ft__pitch {
+    gap: 1.15rem;
+  }
+
   .ft__eyebrow {
-    gap: 0.6rem;
-    letter-spacing: 0.24em;
-  }
-  .ft__crest {
-    --ft-badge: 62px;
-  }
-  .ft__crest-tag {
-    /* The lit band below the arc is only ~76px tall at this width, so the
-       tagline is pulled in tight against the badge to clear the rail. */
-    top: calc(var(--ft-badge) / 2 + 1.15rem);
-    font-size: 0.625rem;
+    gap: 0.55rem;
+    font-size: 0.6875rem;
     letter-spacing: 0.22em;
   }
+
+  .ft__headline {
+    /* The scene no longer has to fit a fixed height, so the headline can take
+       the size it wants. `balance` over three short lines was leaving a
+       one-word last line. */
+    font-size: clamp(2rem, 9.5vw, 2.75rem);
+    line-height: 1.1;
+    text-wrap: pretty;
+  }
+
+  .ft__cta {
+    /* A phone's primary action is a full-width target, not an inline pill.
+       Capped so it stays a button rather than becoming a banner. */
+    width: min(100%, 20rem);
+    justify-content: center;
+    min-height: 3rem;
+    padding-inline: 1.25rem;
+  }
+
+  .ft__crest {
+    --ft-badge: 64px;
+  }
+
+  .ft__crest-tag {
+    top: calc(var(--ft-badge) / 2 + 1.25rem);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+  }
+
+  /* --- the links --- */
+
+  /* The crest and its tagline hang off the bottom of the stage, and the arc
+     they are anchored to is only ~33px tall at this width — so the tagline
+     lands just below the stage box and, without this, straight on top of the
+     rail. Stage padding cannot buy the room: the artwork is anchored to the
+     stage's bottom edge too, so it moves down with it. The gap has to come
+     from the rail. */
+  .ft__divider {
+    margin-top: 2.5rem;
+  }
+
   .ft__bar {
-    justify-content: center;
+    /* One column: the nav is a list, the socials are a row under it. Side by
+       side they were two competing clusters on a 335px line. */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    padding-block: 0.5rem 1.25rem;
   }
+
+  .ft__nav ul {
+    /* Two columns of full-height rows. The four destinations are short enough
+       to pair, and a 2x2 block is scanned in one look where a wrapped inline
+       strip is read word by word. */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .ft__nav li {
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  /* The hairlines are what make the four rows read as one list; the last pair
+     closes against the socials row instead. */
+  .ft__nav li:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .ft__nav a {
+    /* 48px: the strip's 32px row was under the 44px touch minimum, and 11px
+       uppercase is a caption size being asked to do a navigation job. */
+    min-height: 3rem;
+    width: 100%;
+    /* Centred in its own half, so the four labels sit on two axes that mirror
+       each other and share the centre line the rest of the footer is built
+       on — the crest, the tagline, the socials, the fine print. */
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+
+  .ft__socials {
+    justify-content: center;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .ft__socials a {
+    /* 40px was also under the minimum, and these are icon-only targets. */
+    width: 48px;
+    height: 48px;
+  }
+
+  /* --- fine print --- */
+
   .ft__legal {
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.25rem;
     text-align: center;
+    font-size: 0.8125rem;
+    line-height: 1.6;
   }
-  /* The floating chat launcher is fixed to the bottom-right corner, so the
-     legal row is given room to clear it once scrolled home. */
-  .ft {
-    padding-bottom: 4.75rem;
+
+  .ft__version {
+    /* The chip drops to its own line rather than hanging off the end of a
+       copyright line that already wraps. A block inside the paragraph, not a
+       grid item: the copyright is one sentence built from inline spans, and
+       making its parent a grid broke it into three stacked fragments. */
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0.75rem auto 0;
+    /* A 21px-tall pill is a mis-tap; on its own line it can afford the full
+       target height without crowding anything beside it. */
+    min-height: 2.75rem;
+    padding-inline: 0.9rem;
+    font-size: 0.75rem;
+  }
+
+  .ft__passion {
+    gap: 0.7rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
   }
 }
