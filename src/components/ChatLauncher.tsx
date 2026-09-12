@@ -8,6 +8,7 @@ import { chatConfig } from "@/chat/config";
 import { BotMark } from "@/components/chat/BotMark";
 import { IconClose, QUICK_ICONS } from "@/components/chat/ChatIcons";
 import { isStandaloneRoute } from "@/lib/chrome-routes";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 /**
  * The only chat code on the critical path.
@@ -50,15 +51,23 @@ function ChatLauncherInner() {
     trackChat("chat_opened", {});
   }, []);
 
+  /* Phones never get the preview card unprompted.
+
+     On a wide screen it is a small card in a corner the reader can ignore. On
+     a phone it is full-width and lands over the bottom third of whatever they
+     are reading — an interruption with no corner to sit in — and there is no
+     "idle page" to time it against, because a phone reader is either swiping
+     or gone. The launcher button is still there and still opens the panel the
+     moment they want it; it just no longer speaks first. */
+  const phone = useMediaQuery("(max-width: 767px)");
+
   // The preview card is an invitation, not an interruption: it appears once,
   // only on an idle page, and never again after it has been dismissed.
   //
-  // It also waits until the hero is behind the reader. On a phone the card is
-  // full-width and sits low, so firing it on a still-unscrolled page drops it
-  // straight over the hero's CTAs — the one thing the landing view exists to
-  // offer. Scrolling past the first screen is the signal that it is welcome.
+  // It also waits until the hero is behind the reader, so it cannot drop over
+  // the landing view's CTAs — the one thing that screen exists to offer.
   useEffect(() => {
-    if (open || dismissed) return;
+    if (open || dismissed || phone) return;
     let timer = 0;
     const scrolledPastHero = () => window.scrollY > window.innerHeight * 0.6;
 
@@ -82,13 +91,15 @@ function ChatLauncherInner() {
       window.clearTimeout(timer);
       window.removeEventListener("scroll", onScroll);
     };
-  }, [open, dismissed]);
+  }, [open, dismissed, phone]);
 
   if (!chatConfig.enabled) return null;
 
   return (
     <>
-      {preview && !open ? (
+      {/* `phone` again, not just in the effect: a card already on screen when
+          the viewport crosses the breakpoint has to go with it. */}
+      {preview && !open && !phone ? (
         <div className="chat-preview" role="note">
           <button
             type="button"
