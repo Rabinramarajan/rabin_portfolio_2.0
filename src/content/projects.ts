@@ -86,9 +86,14 @@ export const projects: Project[] = [
         note: 'The service this project is the evidence for.',
       },
       {
+        label: 'The same request, five times',
+        href: '/insights/rxjs-reduce-api-calls',
+        note: 'The shared-stream decision above, written out with the code and the trade-off.',
+      },
+      {
         label: 'Angular Signals state management',
         href: '/insights/angular-signals-state-management',
-        note: 'The state-precision argument behind the shared-stream decision above.',
+        note: 'The state-precision argument the same work rests on.',
       },
       {
         label: 'Performance as a product requirement',

@@ -170,6 +170,16 @@ export const servicePages: Record<'angular' | 'web' | 'mobile' | 'performance', 
   performance: {
     furtherReading: [
       {
+        label: 'The same request, five times',
+        href: '/insights/rxjs-reduce-api-calls',
+        note: 'The shared-stream pattern behind the 40%, with the code and the cache-invalidation problem it creates.',
+      },
+      {
+        label: 'The order you check things in',
+        href: '/insights/angular-performance-checklist',
+        note: 'The diagnostic sequence I work through, ordered by how often each item is the actual cause.',
+      },
+      {
         label: 'Performance is a product requirement',
         href: '/insights/angular-performance-core-web-vitals',
         note: 'Why load behaviour belongs in the spec rather than in a phase after it.',

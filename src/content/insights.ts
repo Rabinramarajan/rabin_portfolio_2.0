@@ -988,4 +988,173 @@ rg -L "ChangeDetectionStrategy.OnPush" src --type ts -g "*.component.ts" | wc -l
       'The test of a good assessment is that the team can act on it without me. If they read it, agree with the ordering, and do the work themselves, it did its job. That happens reasonably often, and it is a better outcome than a long engagement that starts with a plan nobody understood.',
     ],
   },
+  {
+    id: 'rxjs-reduce-api-calls',
+    seoTitle: 'RxJS: How I Cut Angular API Calls by 40%',
+    seoDescription:
+      'A government case system fired the same reference lookups five times per screen. The fix was one shared, cached RxJS stream — here is the pattern and what it cost.',
+    datePublished: '2026-09-12',
+    number: '08',
+    title: 'The same request, five times',
+    dek: 'A shared RxJS stream cut API consumption on a government case system by about 40%. No component logic changed.',
+    related: [
+      { label: 'Angular performance optimization', href: '/services/angular-performance-optimization' },
+      { label: 'Fiji Immigration internal system — where this was measured', href: '/work/fiji-immigration-internal' },
+      { label: 'Performance is a product requirement', href: '/insights/angular-performance-core-web-vitals' },
+      { label: 'Signals before ceremony', href: '/insights/angular-signals-state-management' },
+    ],
+    cta: 'If your network tab shows the same endpoint several times per screen, that is usually a data-layer problem rather than a slow API. I do scoped performance investigations that say which of the four usual causes you actually have before anyone writes a fix.',
+    body: [
+      'The complaint was slow page loads. On the Fiji immigration internal system — the application officers use to assess visa and permit cases — opening a single case record took long enough that people noticed, and noticing is the threshold that matters on software somebody uses four hundred times a week.',
+
+      'Slow page loads have an obvious suspect, so we checked it first and it was innocent. The bundle was not the problem. Lazy loading was already in place. The screen was not rendering an unreasonable number of components. What the network tab showed instead was the same three reference endpoints — country list, visa categories, office locations — being requested five and six times on a single navigation.',
+
+      { type: 'heading', text: 'Why a good decision produced a bad outcome' },
+
+      'The cause was not carelessness. It was a reasonable rule applied consistently. Each panel on the case screen — applicant details, document checklist, assessment history, routing — had been built to be self-sufficient: fetch what you need in ngOnInit, do not assume a parent has already loaded it. That rule is what lets panels be reordered, reused on other screens and tested alone.',
+
+      'It also means that when four panels each need the country list, the country list is fetched four times. The duplication was structural. Nothing in any single file looked wrong, which is exactly why it had survived review for a year.',
+
+      {
+        type: 'code',
+        language: 'typescript',
+        caption: 'Four files that each look correct, and together are not.',
+        code: `// Repeated, near-identically, in every panel on the screen.
+export class DocumentChecklistComponent implements OnInit {
+  countries: Country[] = [];
+
+  constructor(private readonly api: ReferenceApi) {}
+
+  ngOnInit(): void {
+    this.api.getCountries().subscribe((list) => (this.countries = list));
+  }
+}`,
+      },
+
+      { type: 'heading', text: 'The fix: one stream, shared' },
+
+      'The obvious repair — lift the fetch into the parent and pass it down — would have undone the property that made the panels reusable. The better repair leaves every component exactly as written and changes what the service does underneath them.',
+
+      {
+        type: 'code',
+        language: 'typescript',
+        caption: 'shareReplay turns N subscribers into one request.',
+        code: `@Injectable({ providedIn: 'root' })
+export class ReferenceApi {
+  private readonly countries$ = this.http.get<Country[]>('/api/reference/countries').pipe(
+    // refCount: false keeps the value after the last panel unsubscribes, so
+    // navigating back to the screen does not re-fetch it.
+    shareReplay({ bufferSize: 1, refCount: false }),
+  );
+
+  constructor(private readonly http: HttpClient) {}
+
+  getCountries(): Observable<Country[]> {
+    return this.countries$;
+  }
+}`,
+      },
+
+      'Four subscribers, one HTTP request, and — because the observable is created once on the service rather than per call — a second navigation to the screen makes no request at all. Not one component changed. The panels still fetch what they need in ngOnInit and still work in isolation, which was the point of building them that way.',
+
+      { type: 'aside', text: 'shareReplay without refCount: false is the version most codebases have. With refCount: true the subscription is torn down when the last subscriber leaves, so returning to the screen re-fetches — correct for volatile data, wasteful for a country list.' },
+
+      { type: 'heading', text: 'The part that is actually hard' },
+
+      'Caching reference data is easy. Deciding when the cache is wrong is not. A cached list that changes underneath you is a bug that reaches production quietly, weeks later, as a question about why the dropdown does not show the new office.',
+
+      'So the cache is invalidated deliberately rather than expired on a timer. The workflow events that can change reference data — an administrator editing a category, a new office being registered — clear the relevant stream, and everything downstream re-fetches on next subscribe. A timeout would have been less code, and would have meant either stale data for its duration or pointless requests forever.',
+
+      {
+        type: 'code',
+        language: 'typescript',
+        caption: 'Invalidate on the event that can change the data, not on a clock.',
+        code: `private countriesCache$?: Observable<Country[]>;
+
+getCountries(): Observable<Country[]> {
+  this.countriesCache$ ??= this.http
+    .get<Country[]>('/api/reference/countries')
+    .pipe(shareReplay({ bufferSize: 1, refCount: false }));
+  return this.countriesCache$;
+}
+
+invalidateCountries(): void {
+  this.countriesCache$ = undefined;
+}`,
+      },
+
+      { type: 'heading', text: 'What it was worth' },
+
+      'API consumption on the case workflow screens dropped by approximately 40%, and frontend load time by roughly half. The second number is the one that mattered to the people using it: on a system somebody works in all day, a delay repeated across hundreds of case screens is not a metric, it is hours of a working week.',
+
+      'The change was around thirty lines across two services. That ratio is typical of this work, and it is the reason I measure before touching anything — the expensive fix is rarely the invasive one, and the invasive one is rarely the fix.',
+
+      { type: 'heading', text: 'The lesson worth keeping' },
+
+      'The instinct when a screen is slow is to look at rendering, because rendering is what you can see. In four years of this the cause has more often been the data layer doing something reasonable too many times. Before optimising anything, sort the network tab by name and count the duplicates. A URL that appears more than once per navigation is work that costs nothing to remove.',
+    ],
+  },
+  {
+    id: 'angular-performance-checklist',
+    seoTitle: 'Angular Performance Optimization Checklist (In Diagnostic Order)',
+    seoDescription:
+      'The checks I run on a slow Angular application, in the order that finds the cause fastest — network duplication, change detection, bundle, then rendering.',
+    datePublished: '2026-09-27',
+    number: '09',
+    title: 'The order you check things in',
+    dek: 'Most Angular performance checklists are alphabetical. This one is ordered by how often each item turns out to be the cause.',
+    related: [
+      { label: 'Angular performance optimization', href: '/services/angular-performance-optimization' },
+      { label: 'The same request, five times', href: '/insights/rxjs-reduce-api-calls' },
+      { label: 'Performance is a product requirement', href: '/insights/angular-performance-core-web-vitals' },
+      { label: 'Fiji Immigration internal system', href: '/work/fiji-immigration-internal' },
+    ],
+    cta: 'If you have worked through this and the profile still does not explain what users are experiencing, that is the point at which an outside pass is worth it. I do scoped investigations that end in a written diagnosis you can act on without me.',
+    body: [
+      'Every Angular performance checklist I have read is a list of everything that can be slow. That is a reference, not a procedure: it tells you the twenty things to check and nothing about which to check first, so teams work down it alphabetically and spend a week on lazy loading for an application whose problem was never the bundle.',
+
+      'This one is ordered by hit rate — how often, in four years of production Angular, each item has turned out to be the actual cause. Stop at the first one that explains what you are seeing.',
+
+      { type: 'heading', text: '0. Measure on something a user owns' },
+
+      'Before any of it: reproduce the slowness on hardware and a network comparable to the people complaining, and prefer field data over a lab score. A mid-range Android on a throttled connection tells you things a desktop Lighthouse run never will, and almost every application flatters itself in lab conditions. If you cannot reproduce it, you are about to optimise something that is not broken.',
+
+      { type: 'heading', text: '1. Duplicate and serial requests' },
+
+      'Open the network tab, sort by name, and count. Any URL that appears more than once per navigation is free work to remove — usually caused by independently built panels each fetching shared data on init. On a government case system this alone accounted for around 40% of API traffic.',
+
+      'Then look at the waterfall shape. Requests that start only after an earlier one finishes, without needing its result, are a serial chain that should be parallel. Both of these are cheap to find and cheap to fix, which is why they go first.',
+
+      { type: 'heading', text: '2. Change detection' },
+
+      'Open Angular DevTools and profile the interaction that feels slow. You are looking for components checking on cycles that have nothing to do with them.',
+
+      {
+        type: 'code',
+        language: 'bash',
+        caption: 'A rough count of components that are not OnPush.',
+        code: 'rg -L "ChangeDetectionStrategy.OnPush" src --type ts -g "*.component.ts" | wc -l'
+      },
+
+      'A high number is not automatically a problem — it is a problem when the profiler shows those components re-checking during unrelated interactions. Fix the ones the profiler names, not the ones the grep finds. Moving a whole codebase to OnPush at once is how teams introduce stale-view bugs in exchange for a metric nobody measured.',
+
+      { type: 'heading', text: '3. What is actually in the bundle' },
+
+      'Not "is it big" but "what is in it, and does the first screen need that". A date library imported in full for one format call, an icon set imported wholesale, a chart library on a route that is not the landing route. Then check that lazy loading is real: a route configured lazily whose module is eagerly imported somewhere else is not lazy, and this is common enough to be worth verifying rather than assuming.',
+
+      { type: 'heading', text: '4. Rendering' },
+
+      'Long lists without virtual scrolling, trackBy missing on a list that re-renders whole, images without dimensions causing layout shift, and work done in a template expression that therefore runs on every check. This is last not because it never matters but because it is where people start, and it is the cause less often than the three above.',
+
+      { type: 'aside', text: 'A function call in a template — {{ formatTotal(row) }} — runs on every change detection cycle for every row. It is the single most common rendering mistake I find, and the fix is a pipe or a precomputed field.' },
+
+      { type: 'heading', text: '5. Then stop it coming back' },
+
+      'A fix without a guard is a fix with an expiry date. A bundle budget that fails the build, a Lighthouse or field-data check in CI, and the measurement written down where the next developer will find it. The regression that would have arrived three releases later gets caught by the pipeline instead of by a user, which is the only version of this that survives a team change.',
+
+      { type: 'heading', text: 'The one that is not on the list' },
+
+      'Sometimes the answer is that the frontend is not the problem. If the profile says the time is spent waiting on the API, no amount of Angular work will fix it, and the honest move is to say so early rather than tune the wrong layer for a month. That finding is worth as much as any optimisation on this page.',
+    ],
+  },
 ];
