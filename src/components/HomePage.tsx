@@ -1,8 +1,12 @@
 import { Hero } from "@/components/Hero";
+import { ProofBar } from "@/components/ProofBar";
 import { ServicesHorizontalScroll } from "@/components/ServicesHorizontalScroll";
 import { WorkSection } from "@/components/WorkSection";
+import { PrinciplesSection } from "@/components/PrinciplesSection";
+import { InsightsSection } from "@/components/InsightsSection";
 import { FaqSection } from "@/components/FaqSection";
 import { FaqJsonLd } from "@/components/JsonLd";
+import { PageCta } from "@/components/pages/PageCta";
 
 /*
  * These sections are imported statically on purpose.
@@ -18,16 +22,36 @@ import { JourneySection } from "@/components/JourneySection";
 import { SkillsSection } from "@/components/SkillsSection";
 import { ProcessSection } from "@/components/ProcessSection";
 
+/**
+ * Work leads, services follow.
+ *
+ * The old order opened with the service menu. Both audiences that arrive here
+ * — a hiring manager and a prospective client — ask what has actually been
+ * built before they ask what is for sale, so the evidence now comes first and
+ * the services read as a description of it.
+ */
 export function HomePage() {
   return (
     <>
       <Hero />
-      <ServicesHorizontalScroll id="services" />
+      <ProofBar />
       <WorkSection id="work" limit={3} />
+      <ServicesHorizontalScroll id="services" />
+      <PrinciplesSection />
       <JourneySection />
+      <InsightsSection />
       <SkillsSection />
       <ProcessSection />
       <FaqSection />
+      <PageCta
+        kicker="Next step"
+        headline={["Have an Angular or", "frontend challenge?"]}
+        lede="Tell me what you are building and where it is stuck. I will tell you whether I am the right person for it."
+        actions={[
+          { label: "Discuss your project", href: "/contact" },
+          { label: "Read the case studies", href: "/work", variant: "line" },
+        ]}
+      />
       <FaqJsonLd />
     </>
   );

@@ -35,9 +35,9 @@ describe("contactSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("requires an inquiry type when projectType is absent", () => {
+  it("accepts an enquiry that never classifies itself", () => {
     const result = contactSchema.safeParse({ ...valid, inquiryType: "" });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it("accepts the homepage payload that uses projectType", () => {

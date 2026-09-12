@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { useRef, type CSSProperties } from "react";
 import { hero } from "@/content/profile";
@@ -184,6 +185,28 @@ export function Hero() {
               {hero.secondaryCta.label}
             </Btn>
           </motion.div>
+
+          {/* Recruiters and clients read the same hero. Everything above this
+              line is written for the client funnel; this is the one-line exit
+              to the résumé so a hiring manager does not have to work out
+              which of five nav items is for them. */}
+          {hero.recruiterCta ? (
+            <motion.p
+              className="chero__recruiter"
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={t(0.66)}
+            >
+              {hero.recruiterCta.label}{" "}
+              <Link
+                href={hero.recruiterCta.href}
+                className="chero__recruiter-link"
+                onClick={() => trackCtaClick(hero.recruiterCta!.linkLabel, "hero_recruiter")}
+              >
+                {hero.recruiterCta.linkLabel} →
+              </Link>
+            </motion.p>
+          ) : null}
         </div>
 
         {quote ? (

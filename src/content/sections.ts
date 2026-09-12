@@ -43,16 +43,17 @@ export interface SectionIntro {
  * move an entry and every index follows.
  */
 export const ORDER = [
-  "about",
-  "services",
   "work",
+  "services",
+  "principles",
   "journey",
+  "insights",
   "skills",
   "process",
   "faq",
+  "about",
   "engagement",
   "contact",
-  "insights",
 ] as const;
 
 export type SectionId = (typeof ORDER)[number];
@@ -116,6 +117,12 @@ const COPY: Record<SectionId, IntroCopy> = {
     label: "Contact",
     title: [],
     lede: "",
+  },
+  principles: {
+    label: "Why Work With Me",
+    title: [{ text: "Why I build" }, { text: "this way.", newline: true, accent: true }],
+    lede:
+      "Four positions that decide how the work gets done long before a framework does.",
   },
   insights: {
     label: "Insights",

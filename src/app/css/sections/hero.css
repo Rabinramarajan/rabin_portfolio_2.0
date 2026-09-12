@@ -1087,3 +1087,21 @@
     flex-shrink: 0;
   }
 }
+
+/* --- recruiter exit line under the hero CTAs --- */
+.chero__recruiter {
+  margin-top: clamp(1rem, 2.5vw, 1.5rem);
+  font-size: var(--text-sm);
+  color: var(--muted, rgba(255, 255, 255, 0.65));
+}
+
+.chero__recruiter-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.chero__recruiter-link:hover,
+.chero__recruiter-link:focus-visible {
+  color: var(--accent, currentColor);
+}

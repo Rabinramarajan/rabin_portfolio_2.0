@@ -44,10 +44,10 @@ export const about: AboutContent = {
   // Values come from `credentials` in profile.ts — the one canonical source.
   // Only the per-section wording (label/note/icon) lives here.
   metrics: [
-    { value: credentials.years, label: 'Years Experience', icon: 'experience', note: 'Building modern web applications' },
-    { value: credentials.projects, label: 'Projects Completed', icon: 'projects', note: 'From ideas to successful products' },
-    { value: credentials.commitment.value, label: credentials.commitment.label, icon: 'commitment', note: 'Committed to quality and excellence' },
-    { value: credentials.clients, label: 'Happy Clients', icon: 'clients', note: 'Startups, agencies and enterprises' },
+    { value: credentials.years, label: 'Years shipping production software', icon: 'experience', note: 'Building modern web applications' },
+    { value: credentials.projects, label: 'Projects', icon: 'projects', note: 'From ideas to successful products' },
+    { value: credentials.users, label: 'Users served', icon: 'users', note: 'Across government and enterprise platforms' },
+    { value: credentials.countries, label: 'Countries', icon: 'countries', note: 'Deployments running outside India' },
   ],
   // Composed treatment: the cut-out portrait ships with its own glow rings,
   // monogram badge and signature, so the section renders it as a single layer.

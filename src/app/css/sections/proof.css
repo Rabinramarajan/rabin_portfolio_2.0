@@ -1,0 +1,71 @@
+/* ── PROOF STRIP ──────────────────────────────────────────────────────────
+   Sits between the hero and the first real section, so it is deliberately
+   quiet: a rule above, numbers, labels, nothing that competes with the
+   headline it follows. It wraps to two columns on phones rather than
+   scrolling sideways — four numbers are the whole point, and a horizontal
+   scroller hides half of them. */
+.proofbar {
+  border-block: 1px solid var(--line, rgba(255, 255, 255, 0.12));
+  padding-block: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.proofbar__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .proofbar__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.proofbar__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.proofbar__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.proofbar__label {
+  font-size: var(--text-sm);
+  color: var(--muted, rgba(255, 255, 255, 0.65));
+}
+
+/* ── WHY WORK WITH ME ───────────────────────────────────────────────────── */
+.principles__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding: 0;
+  list-style: none;
+}
+
+.principles__item {
+  border-top: 1px solid var(--line, rgba(255, 255, 255, 0.12));
+  padding-top: 1rem;
+}
+
+.principles__title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+}
+
+.principles__body {
+  margin: 0;
+  color: var(--muted, rgba(255, 255, 255, 0.65));
+}

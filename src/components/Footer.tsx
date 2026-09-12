@@ -36,7 +36,10 @@ const RAIL = footerNavigation;
 
 /* Standing for the person, not the stack — read top to bottom down the left
    rail, the way the reference lockup does. */
-const TRAITS = ["Full Stack", "Developer", "Tech Enthusiast", "Lifelong Learner"];
+/* "Tech Enthusiast" and "Lifelong Learner" are what a portfolio says before
+   it has shipped anything. Four years of government and enterprise platforms
+   is not that, so the marquee now says what the work is. */
+const TRAITS = ["Frontend Engineer", "Angular Consultant", "Product Engineering", "Performance"];
 
 function FooterInner() {
   const reduce = useReducedMotion();

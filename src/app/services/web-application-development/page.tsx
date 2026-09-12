@@ -7,11 +7,13 @@ import { PageSectionHead } from "@/components/pages/PageSectionHead";
 import { PageCta } from "@/components/pages/PageCta";
 import { ServiceNarrative } from "@/components/pages/ServiceNarrative";
 import { servicePages } from "@/content/service-pages";
-import { services } from "@/content/services";
+import { secondaryServices, services } from "@/content/services";
 import { projects } from "@/content/projects";
 
 const frontend = services.find((s) => s.id === "frontend")!;
-const react = services.find((s) => s.id === "react")!;
+/* React/Next.js is a supporting capability, not a headline service — it lives
+   in `secondaryServices` rather than in the marketed four. */
+const react = secondaryServices.find((s) => s.id === "react")!;
 const relatedProjects = projects.filter((p) =>
   ["insuremet", "zellavora-ai-resume-builder", "prims-member-portal"].includes(p.slug),
 );

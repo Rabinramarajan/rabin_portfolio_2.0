@@ -3,7 +3,7 @@ export type AvailabilityStatus = "available" | "limited" | "unavailable";
 export interface SocialLink { id: "github" | "linkedin" | "email" | "website"; label: string; href: string; }
 export interface NavItem { href: string; label: string; sectionId?: string; desktopOnly?: boolean; }
 /** Which glyph renders beside a metric. Maps to an icon in the consuming component. */
-export type MetricIcon = "projects" | "clients" | "experience" | "commitment";
+export type MetricIcon = "projects" | "clients" | "experience" | "users" | "countries";
 export interface Metric {
   value: string;
   label: string;
@@ -60,6 +60,8 @@ export interface HeroContent {
   description: string;
   primaryCta: Cta;
   secondaryCta: Cta;
+  /** Recruiter escape hatch out of the client funnel. */
+  recruiterCta?: Cta & { linkLabel: string };
   metadata: { label: string; value: string }[];
   portrait: Required<MediaRef>;
   midground: Required<MediaRef>;
@@ -501,10 +503,13 @@ export interface Credentials {
   /** Clients served. `review: true` means the figure is unverified. */
   clients: string;
   /**
-   * Qualitative commitment tile. Deliberately NOT a satisfaction percentage:
-   * a "100% Client Satisfaction" claim is unverifiable and reads as filler.
+   * People who actually use the shipped software, and the number of countries
+   * those deployments run in. Both are countable from the case studies, which
+   * is why they replaced the old "100% Focus on Quality" tile: that figure
+   * measured nothing and read as filler.
    */
-  commitment: { value: string; label: string };
+  users: string;
+  countries: string;
   /** Figures that still need the owner to confirm a real number. */
   needsReview: readonly ("projects" | "clients")[];
 }

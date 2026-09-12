@@ -57,7 +57,7 @@ function profileRecords(): KnowledgeRecord[] {
       title: "Track record",
       content:
         `Years of experience: ${credentials.years}. Projects delivered: ${credentials.projects}. ` +
-        `Clients: ${credentials.clients}. ${credentials.commitment.value} ${credentials.commitment.label}. ` +
+        `Clients: ${credentials.clients}. Users served: ${credentials.users}. Countries: ${credentials.countries}. ` +
         `${projects.length} published case studies are on the site.`,
       tags: ["years", "experience", "projects", "clients", "metrics", "track record", "how many"],
       url: "/about",
