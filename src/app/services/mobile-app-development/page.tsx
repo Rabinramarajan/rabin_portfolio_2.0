@@ -18,7 +18,7 @@ const page = servicePages.mobile;
 export const metadata = pageMetadata({
   title: "Mobile App Development",
   description:
-    "Cross-platform mobile app development from Rabin R — Ionic, Angular and Capacitor apps shipped to iOS and Android, including biometric sign-in, offline behaviour and native APIs.",
+    "Cross-platform mobile apps with Ionic, Angular and Capacitor — shipped to iOS and Android with biometric sign-in and offline behaviour.",
   path: "/services/mobile-app-development",
   keywords: [
     "Mobile app development",

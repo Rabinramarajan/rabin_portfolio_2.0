@@ -34,3 +34,31 @@
   color: var(--color-text-muted);
   opacity: 0.75;
 }
+
+/* Outbound links at the foot of an article — the services and case studies
+   the argument was formed on. */
+.ins-related {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border, rgba(127, 127, 127, 0.2));
+}
+.ins-related__title {
+  font-size: var(--text-lg, 1.125rem);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+.ins-related ul {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+.ins-related a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ins-related a:hover {
+  color: var(--color-text);
+}

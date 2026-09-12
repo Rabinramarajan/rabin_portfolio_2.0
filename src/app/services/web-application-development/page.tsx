@@ -21,7 +21,7 @@ const page = servicePages.web;
 export const metadata = pageMetadata({
   title: "Custom Web Application Development",
   description:
-    "Custom web application development from Rabin R — typed, testable frontends with Angular, React and Next.js, built for the third release, not just the launch demo.",
+    "Custom web application development — typed, testable frontends in Angular, React and Next.js, built for the third release, not the demo.",
   path: "/services/web-application-development",
   keywords: [
     "Web application development",

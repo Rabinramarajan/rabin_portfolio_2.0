@@ -97,6 +97,19 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             write-up is still being drafted.
           </p>
         )}
+        {item.related?.length ? (
+          <aside className="ins-related">
+            <h2 className="ins-related__title">Where this applies</h2>
+            <ul>
+              {item.related.map((r) => (
+                <li key={r.href}>
+                  <Link href={r.href}>{r.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        ) : null}
+
         <p style={{ marginTop: "2rem" }}>
           <Link className="btn btn--line" href="/insights">
             <span className="btn__label">All insights →</span>

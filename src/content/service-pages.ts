@@ -19,6 +19,8 @@ export interface ServiceFaq {
 }
 
 export interface ServicePageContent {
+  /** The insight article arguing the position this page takes. */
+  furtherReading?: { label: string; href: string; note: string };
   /** Sets the scene directly under the hero, before the deliverables list. */
   intro: string[];
   problem: ServiceNarrativeSection;
@@ -29,6 +31,11 @@ export interface ServicePageContent {
 
 export const servicePages: Record<'angular' | 'web' | 'mobile', ServicePageContent> = {
   angular: {
+    furtherReading: {
+      label: 'Signals before ceremony',
+      href: '/insights/signals',
+      note: 'The state-promotion rule above, argued at length with the projects it came from.',
+    },
     intro: [
       'I have spent most of the last four years inside large Angular applications that other people have to keep working after I leave — immigration case management for the Fiji government, a pension member portal, an insurance administration console. That context shapes how I build: the interesting problem is rarely getting a feature to work, it is getting it to work in a codebase that will take another twenty features without becoming unmaintainable.',
     ],
@@ -83,6 +90,11 @@ export const servicePages: Record<'angular' | 'web' | 'mobile', ServicePageConte
     ],
   },
   web: {
+    furtherReading: {
+      label: 'Performance is a product requirement',
+      href: '/insights/vitals',
+      note: 'Why load behaviour belongs in the feature spec rather than a later optimisation phase.',
+    },
     intro: [
       'Web application work covers the surfaces where structure, data and rendering strategy matter more than page count: dashboards, portals, admin consoles and product interfaces that people use as a tool rather than read as a document. I build these with Angular or with React and Next.js, chosen by what the application is rather than by preference.',
     ],
@@ -137,6 +149,11 @@ export const servicePages: Record<'angular' | 'web' | 'mobile', ServicePageConte
     ],
   },
   mobile: {
+    furtherReading: {
+      label: 'Quiet interfaces age better',
+      href: '/insights/quiet-ui',
+      note: 'Why restraint matters most in apps people are required to use every day.',
+    },
     intro: [
       'I build cross-platform mobile applications with Ionic, Angular and Capacitor — one codebase producing genuine iOS and Android apps that ship through the App Store and Play Store. The VNPF member app in Vanuatu is the clearest example: a pension member app used by people checking balances and statements on the devices they actually own, which are frequently not new and frequently on poor connections.',
     ],

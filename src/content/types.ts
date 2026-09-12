@@ -412,6 +412,12 @@ export interface Insight {
   datePublished?: string;
   /** ISO date of the last substantive revision. Falls back to datePublished. */
   dateModified?: string;
+  /**
+   * Where this argument is applied in practice. Rendered at the foot of the
+   * article: each piece had exactly one inbound link (the index) and no
+   * outbound links, so it sat off to one side of the site rather than in it.
+   */
+  related?: { label: string; href: string }[];
 }
 
 export interface SeoContent {

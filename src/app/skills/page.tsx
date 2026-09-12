@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Skills & Technologies",
   description:
-    "Rabin R's frontend technology stack and the honest depth behind it — expert-level Angular, TypeScript and Ionic, production React and Next.js, plus the backend, testing and accessibility tooling around them.",
+    "Rabin R's frontend stack and the honest depth behind it — expert Angular, TypeScript and Ionic, production React and Next.js, plus testing.",
   path: "/skills",
   keywords: ["Angular Signals", "Zoneless Angular", "TypeScript developer", "RxJS", "Ionic Capacitor"],
 });

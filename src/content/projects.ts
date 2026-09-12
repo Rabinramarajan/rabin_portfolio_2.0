@@ -56,9 +56,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'Fiji Immigration Internal Management System | Angular Enterprise Case Study',
+        'Fiji Immigration Internal Management System',
       description:
-        'Case study of an enterprise Angular platform built for Fiji immigration officers, covering application assessment, document verification, workflow automation, role-based access control and operational reporting.'
+        'Enterprise Angular platform for Fiji immigration officers — application assessment, document verification, workflow automation and reporting.'
     }
   },
 
@@ -111,9 +111,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'Fiji Immigration Citizen Portal | Angular Government Portal Case Study',
+        'Fiji Immigration Citizen Portal',
       description:
-        'Case study of a public Angular portal for Fiji immigration applications, featuring guided forms, document uploads, appointments, payments and application tracking designed for a self-service citizen experience.'
+        'Public Angular portal for Fiji immigration applications — guided forms, document uploads, appointments, payments and application tracking.'
     }
   },
 
@@ -172,9 +172,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'PRIMS Member Portal | Angular Pension Platform Case Study',
+        'PRIMS Pension Member Portal',
       description:
-        'Case study of a self-service pension portal built with Angular, Angular Material and RxJS, providing members with contributions, balances, statements, claims and account information.'
+        'Self-service pension portal in Angular, Angular Material and RxJS — member contributions, balances, statements, claims and account details.'
     }
   },
 
@@ -233,9 +233,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'VNPF blo mi Mobile App | Ionic Angular iOS & Android Case Study',
+        'VNPF blo mi Member Mobile App',
       description:
-        'Case study of a cross-platform provident fund mobile application built with Ionic, Angular and Capacitor, providing members with balances, contributions, loans and secure mobile access.'
+        'Cross-platform provident fund app built with Ionic, Angular and Capacitor — balances, contributions, loans and secure mobile access.'
     }
   },
 
@@ -294,9 +294,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'InsureMet | Angular Insurance Administration Platform Case Study',
+        'InsureMet Insurance Administration',
       description:
-        'Case study of an Angular enterprise insurance administration platform bringing products, policies, claims, finance and reporting dashboards into one modular operational console.'
+        'Angular insurance administration platform bringing products, policies, claims, finance and reporting dashboards into one modular console.'
     }
   },
 
@@ -362,9 +362,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'Galaxy Sofas | Angular SSR Furniture E-Commerce Case Study',
+        'Galaxy Sofas — Angular SSR Storefront',
       description:
-        'Case study of a modern Angular SSR furniture storefront featuring sofa collections, chairs and bedroom accessories, with responsive design, structured SEO and performance-focused frontend architecture.'
+        'Angular SSR furniture storefront — sofa collections, chairs and bedroom accessories with responsive design and a performance-focused frontend.'
     }
   },
 
@@ -422,9 +422,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'Zellavora AI Resume Builder | Angular AI Product Case Study',
+        'Zellavora AI Resume Builder',
       description:
-        'Case study of an AI-powered resume builder built with modern Angular architecture, Signals and Zoneless patterns, featuring guided input, AI generation, live editing, ATS-friendly resumes and PDF export.'
+        'AI resume builder in modern Angular with Signals and zoneless patterns — guided input, live editing, ATS-friendly output and PDF export.'
     }
   },
 
@@ -488,9 +488,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'Zellavora Control Center | Angular SaaS Admin Platform Case Study',
+        'Zellavora Control Center — Angular SaaS',
       description:
-        'Case study of a centralized Angular SaaS control platform built to manage products, projects, users, roles, permissions, content, configuration and operational activity across a multi-application ecosystem.'
+        'Angular SaaS control platform for products, projects, users, roles, permissions, content and configuration across a multi-app ecosystem.'
     }
   },
 
@@ -550,9 +550,9 @@ export const projects: Project[] = [
     ],
     seo: {
       title:
-        'Angular Enterprise UI Component Architecture | Design System Case Study',
+        'Angular UI Component Architecture',
       description:
-        'Case study of a reusable Angular UI component architecture using standalone components, Signals, Tailwind CSS and Angular CDK patterns to create scalable, consistent and maintainable enterprise application interfaces.'
+        'Reusable Angular UI component architecture with standalone components, Signals, Tailwind CSS and CDK patterns for enterprise interfaces.'
     }
   }
 ];

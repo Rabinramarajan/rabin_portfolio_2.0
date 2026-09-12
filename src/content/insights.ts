@@ -9,6 +9,11 @@ export const publishedInsights = (): Insight[] => insights.filter(isPublished);
 export const insights: Insight[] = [
   {
     id: 'signals',
+    related: [
+      { label: 'Angular development services', href: '/services/angular-development' },
+      { label: 'PRIMS Member Portal — where two pieces of state earned a store', href: '/work/prims-member-portal' },
+      { label: 'Fiji Immigration internal system', href: '/work/fiji-immigration-internal' },
+    ],
     datePublished: '2026-09-12',
     number: '01',
     title: 'Signals before ceremony',
@@ -25,6 +30,11 @@ export const insights: Insight[] = [
   },
   {
     id: 'vitals',
+    related: [
+      { label: 'Web application development services', href: '/services/web-application-development' },
+      { label: 'Fiji Immigration internal system — the 40% API reduction', href: '/work/fiji-immigration-internal' },
+      { label: 'InsureMet — the dense table views', href: '/work/insuremet' },
+    ],
     datePublished: '2026-09-12',
     number: '02',
     title: 'Performance is a product requirement',
@@ -41,6 +51,11 @@ export const insights: Insight[] = [
   },
   {
     id: 'quiet-ui',
+    related: [
+      { label: 'Mobile app development services', href: '/services/mobile-app-development' },
+      { label: 'VNPF blo mi member app', href: '/work/vnpf-blo-mi' },
+      { label: 'Angular UI component architecture', href: '/work/ui-component-architecture' },
+    ],
     datePublished: '2026-09-12',
     number: '03',
     title: 'Quiet interfaces age better',

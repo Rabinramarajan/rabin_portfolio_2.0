@@ -3,6 +3,7 @@ import { services } from "@/content/services";
 import { projects } from "@/content/projects";
 import { skillGroups } from "@/content/skills";
 import { faqs } from "@/content/faq";
+import { publishedInsights } from "@/content/insights";
 import { absoluteUrl } from "@/lib/seo";
 
 /** JSON-LD must never be able to close the script tag it lives in. */
@@ -250,6 +251,64 @@ export function ArticleJsonLd({
     isPartOf: { "@id": SITE_ID },
     ...(datePublished ? { datePublished } : {}),
     ...(dateModified ?? datePublished ? { dateModified: dateModified ?? datePublished } : {}),
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
+}
+
+/**
+ * ProfilePage for /about — the route that answers "who is this".
+ *
+ * `mainEntity` points at the sitewide Person node rather than redefining it, so
+ * there is still exactly one Person entity on the site and this page is marked
+ * as the authoritative page about it.
+ */
+export function ProfilePageJsonLd({ path = "/about" }: { path?: string } = {}) {
+  const url = absoluteUrl(path);
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": url + "#profile",
+    url,
+    name: `About ${profile.name}`,
+    mainEntity: { "@id": PERSON_ID },
+    isPartOf: { "@id": SITE_ID },
+    inLanguage: "en",
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
+}
+
+/**
+ * Blog schema for the /insights index, listing only published posts.
+ *
+ * A stub without a body is noindex and absent from the sitemap, so listing it
+ * here would advertise a page we are simultaneously asking Google to ignore.
+ */
+export function BlogJsonLd() {
+  const url = absoluteUrl("/insights");
+  const posts = publishedInsights();
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": url + "#blog",
+    url,
+    name: "Insights",
+    description: "Engineering positions from shipped Angular and frontend work.",
+    inLanguage: "en",
+    author: { "@id": PERSON_ID },
+    publisher: { "@id": PERSON_ID },
+    isPartOf: { "@id": SITE_ID },
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      "@id": absoluteUrl("/insights/" + post.id) + "#article",
+      headline: post.title,
+      description: post.dek,
+      url: absoluteUrl("/insights/" + post.id),
+      ...(post.datePublished ? { datePublished: post.datePublished } : {}),
+      ...(post.dateModified ?? post.datePublished
+        ? { dateModified: post.dateModified ?? post.datePublished }
+        : {}),
+      author: { "@id": PERSON_ID },
+    })),
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={ld(data)} />;
 }

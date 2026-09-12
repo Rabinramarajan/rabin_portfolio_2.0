@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PageSectionHead } from "@/components/pages/PageSectionHead";
 import type { ServicePageContent } from "@/content/service-pages";
 
@@ -67,6 +68,17 @@ export function ServiceNarrative({
           ))}
         </dl>
       </section>
+
+      {content.furtherReading ? (
+        <section style={{ marginTop: "2.5rem" }}>
+          <PageSectionHead index={n(4)} label="Further reading" title="The argument in full" />
+          <p className="svc-reading">
+            <Link href={content.furtherReading.href}>{content.furtherReading.label}</Link>
+            {" — "}
+            {content.furtherReading.note}
+          </p>
+        </section>
+      ) : null}
     </>
   );
 }

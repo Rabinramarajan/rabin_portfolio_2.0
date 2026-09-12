@@ -20,7 +20,7 @@ const page = servicePages.angular;
 export const metadata = pageMetadata({
   title: "Angular Development Services",
   description:
-    "Enterprise Angular development from Rabin R — signals, standalone APIs and Angular 17–22 architecture for government, insurance and pension platforms that hold up under real traffic.",
+    "Enterprise Angular development — signals, standalone APIs and Angular 17–22 architecture for government, insurance and pension platforms.",
   path: "/services/angular-development",
   keywords: [
     "Angular development services",

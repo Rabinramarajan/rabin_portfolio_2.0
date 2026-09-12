@@ -1,5 +1,6 @@
 import { InsightsSection } from "@/components/InsightsSection";
 import { pageMetadata } from "@/lib/seo";
+import { BlogJsonLd } from "@/components/JsonLd";
 
 export const metadata = pageMetadata({
   title: "Insights",
@@ -10,5 +11,10 @@ export const metadata = pageMetadata({
 });
 
 export default function Page() {
-  return <InsightsSection headingLevel="h1" showIntro />;
+  return (
+    <>
+      <BlogJsonLd />
+      <InsightsSection headingLevel="h1" showIntro />
+    </>
+  );
 }

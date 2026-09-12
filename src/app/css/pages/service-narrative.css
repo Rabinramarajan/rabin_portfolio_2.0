@@ -27,3 +27,16 @@
   color: var(--color-text-muted);
   line-height: 1.7;
 }
+
+/* Pointer from a service page to the article arguing its position. */
+.svc-reading {
+  margin-top: 1rem;
+  max-width: 42rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+}
+.svc-reading a {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

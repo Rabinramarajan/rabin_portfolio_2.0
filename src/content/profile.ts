@@ -75,6 +75,25 @@ export const navigation: NavItem[] = [
   { href: "/about", label: "About" },
 ];
 
+/**
+ * Footer rail — the full set of indexable destinations.
+ *
+ * The primary nav stays at four items by design, which left /skills and
+ * /pricing reachable only from the sitemap: no internal links anywhere on the
+ * site, so no internal PageRank and nothing signalling they matter. The footer
+ * is where the secondary routes earn their links.
+ */
+export const footerNavigation: NavItem[] = [
+  { href: "/about", label: "About" },
+  { href: "/services", label: "Services" },
+  { href: "/work", label: "Work" },
+  { href: "/experience", label: "Experience" },
+  { href: "/skills", label: "Skills" },
+  { href: "/process", label: "Process" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/insights", label: "Insights" },
+];
+
 export const sidebarNavigation: NavItem[] = [
   { href: "/#", label: "Hero", sectionId: "hero" },
   { href: "/about", label: "About Us" },

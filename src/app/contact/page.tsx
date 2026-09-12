@@ -6,7 +6,7 @@ import { PremiumContactCenterVisual } from "@/components/contact/PremiumContactC
 import { PremiumContactRightColumn } from "@/components/contact/PremiumContactRightColumn";
 
 export const metadata = pageMetadata({
-  title: "Contact Rabin R | Let's Build Something Amazing",
+  title: "Contact",
   description:
     "Ready to collaborate? Reach out with your project ideas, challenges, or opportunities. Let's create something impactful together.",
   path: "/contact",

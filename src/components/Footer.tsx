@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Mail } from "lucide-react";
-import { navigation, profile } from "@/content/profile";
+import { footerNavigation, profile } from "@/content/profile";
 import { duration, ease } from "@/lib/motion";
 import { Monogram } from "@/components/Logo";
 import { GithubIcon, LinkedinIcon } from "@/components/brand-icons";
@@ -29,13 +29,10 @@ const SOCIALS = profile.socials.filter(
   (s): s is (typeof profile.socials)[number] & { id: keyof typeof SOCIAL_ICONS } => s.id in SOCIAL_ICONS,
 );
 
-/* The closing rail carries four destinations, in the order the site tells its
-   story. `navigation` is the single source of truth for the labels and hrefs;
-   only the sequence is stated here. */
-const RAIL_ORDER = ["/about", "/services", "/work", "/experience"];
-const RAIL = RAIL_ORDER.map((href) => navigation.find((n) => n.href === href)).filter(
-  (n): n is (typeof navigation)[number] => Boolean(n),
-);
+/* The closing rail carries every indexable destination, in the order the site
+   tells its story. It deliberately runs wider than the primary nav: /skills and
+   /pricing had no internal links anywhere on the site before this. */
+const RAIL = footerNavigation;
 
 /* Standing for the person, not the stack — read top to bottom down the left
    rail, the way the reference lockup does. */

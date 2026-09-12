@@ -31,7 +31,7 @@ export const LEGAL_EFFECTIVE = '2026-09-12';
 export const privacy: LegalDocument = {
   title: 'Privacy Policy',
   description:
-    'How rabinr.in handles enquiry form submissions, AI assistant conversations, file attachments and consent-gated analytics — what is collected, why, and how long it is kept.',
+    'How rabinr.in handles enquiry submissions, AI assistant chats, attachments and consent-gated analytics — what is collected and how long it is kept.',
   path: '/privacy',
   lede: 'This site is a personal portfolio operated by Rabin R. It collects very little, and this page describes all of it.',
   effective: LEGAL_EFFECTIVE,
