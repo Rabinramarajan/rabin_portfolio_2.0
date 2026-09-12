@@ -1,10 +1,44 @@
 import type { Insight } from '@/content/types';
 
-/** An insight is publishable — and indexable — once it has body blocks. */
-export const isPublished = (i: Insight): boolean => (i.body?.length ?? 0) > 0;
+/**
+ * An insight is published once it has body blocks AND its publication date has
+ * arrived. A future `datePublished` genuinely holds the piece back: it is left
+ * out of the listing and the sitemap, and its route is marked `noindex` until
+ * the date passes.
+ *
+ * That distinction matters. `datePublished` is emitted in BlogPosting schema
+ * and read as a freshness signal, so the date has to be the date the article
+ * actually became available — scheduling forward is honest, backdating is not.
+ *
+ * Evaluated in UTC to match the ISO dates in the content and the `dateModified`
+ * emitted in schema, so a build machine's timezone cannot flip an article's
+ * state a few hours early or late.
+ */
+export const isPublished = (i: Insight, now: Date = new Date()): boolean => {
+  if ((i.body?.length ?? 0) === 0) return false;
+  if (!i.datePublished) return true;
+  return i.datePublished <= now.toISOString().slice(0, 10);
+};
 
-/** Insights with a written article, for the sitemap. */
-export const publishedInsights = (): Insight[] => insights.filter(isPublished);
+/**
+ * True unless the href points at an insight that is not live yet.
+ *
+ * Cross-links are authored against the whole set, but a scheduled piece is
+ * noindex and unlisted — linking to it from a live page would point internal
+ * links at a page we are asking Google to ignore. Non-insight hrefs always
+ * pass, so this can filter a mixed list of services, case studies and
+ * articles without knowing which is which.
+ */
+export const isLinkLive = (href: string, now: Date = new Date()): boolean => {
+  const match = /^\/insights\/([^/#?]+)/.exec(href);
+  if (!match) return true;
+  const target = insights.find((i) => i.id === match[1]);
+  return target ? isPublished(target, now) : false;
+};
+
+/** Insights that are live: written, and past their publication date. */
+export const publishedInsights = (now: Date = new Date()): Insight[] =>
+  insights.filter((i) => isPublished(i, now));
 
 export const insights: Insight[] = [
   {
@@ -403,7 +437,7 @@ export class ReferenceDataService {
   },
   {
     id: 'zoneless-migration',
-    datePublished: '2026-09-12',
+    datePublished: '2026-09-15',
     number: '04',
     title: 'Going zoneless without a long-lived branch',
     dek: 'Zoneless is the last step of a migration, not the first. What to fix before you flip the provider, and how to ship it in pieces.',
@@ -559,7 +593,7 @@ export class CaseListComponent {
   },
   {
     id: 'offline-first',
-    datePublished: '2026-09-12',
+    datePublished: '2026-09-18',
     number: '05',
     title: 'Offline is a design input, not an error state',
     dek: 'Apps for real users on real networks need cached data with an honest age, queued actions, and failure messages that say what to do.',
@@ -702,7 +736,7 @@ private async flush(): Promise<void> {
   },
   {
     id: 'consequential-forms',
-    datePublished: '2026-09-12',
+    datePublished: '2026-09-22',
     number: '06',
     title: 'Forms that carry consequences',
     dek: 'What building immigration and pension forms teaches you about accessibility, error recovery and never losing what someone typed.',
@@ -828,7 +862,7 @@ private async flush(): Promise<void> {
   },
   {
     id: 'inheriting-angular',
-    datePublished: '2026-09-12',
+    datePublished: '2026-09-25',
     number: '07',
     title: 'Inheriting someone else’s Angular codebase',
     dek: 'How I assess an inherited application: what to measure, what to ignore, and why the expensive problem is rarely the one the team reported.',

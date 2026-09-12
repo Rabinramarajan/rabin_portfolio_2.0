@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { insights, isPublished } from "@/content/insights";
+import { insights, isLinkLive, isPublished } from "@/content/insights";
 import { SectionKicker } from "@/components/ui";
 import { InsightBody } from "@/components/insights/InsightBody";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
@@ -42,12 +42,17 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   const item = insights.find((i) => i.id === slug);
   if (!item) notFound();
+  // Written but dated ahead: the route renders (so the link is previewable)
+  // but it is unlisted, out of the sitemap and noindex until the date lands.
+  const live = isPublished(item);
+  const related = item.related?.filter((r) => isLinkLive(r.href)) ?? [];
+  const scheduled = !live && (item.body?.length ?? 0) > 0;
   return (
     <article className="section">
       <div className="shell" style={{ maxWidth: "42rem" }}>
         {/* Article schema only once the post has a body — a stub is thin
             content and is already kept out of the index. */}
-        {isPublished(item) ? (
+        {live ? (
           <ArticleJsonLd
             headline={item.title ?? "Insight"}
             description={item.dek ?? ""}
@@ -79,11 +84,18 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <p className="sec-lede">{item.dek}</p>
         {item.datePublished ? (
           <p className="muted" style={{ marginTop: "0.75rem", fontSize: "0.875rem" }}>
+            {scheduled ? "Scheduled for " : null}
             <time dateTime={item.datePublished}>{formatDate(item.datePublished)}</time>
             {item.dateModified && item.dateModified !== item.datePublished ? (
               <> · Updated <time dateTime={item.dateModified}>{formatDate(item.dateModified)}</time></>
             ) : null}
             {" · "}Rabin R
+          </p>
+        ) : null}
+        {scheduled ? (
+          <p className="ins-scheduled" role="note">
+            This piece is finished but not published yet. It is not listed, not in the
+            sitemap and not indexed until its publication date.
           </p>
         ) : null}
         {item.body?.length ? (
@@ -94,11 +106,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             write-up is still being drafted.
           </p>
         )}
-        {item.related?.length ? (
+        {related.length ? (
           <aside className="ins-related">
             <h2 className="ins-related__title">Where this applies</h2>
             <ul>
-              {item.related.map((r) => (
+              {related.map((r) => (
                 <li key={r.href}>
                   <Link href={r.href}>{r.label}</Link>
                 </li>

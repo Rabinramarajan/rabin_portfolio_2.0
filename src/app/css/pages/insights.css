@@ -141,3 +141,14 @@
   flex-wrap: wrap;
   gap: 0.75rem;
 }
+
+/* Shown on a finished article whose publication date has not arrived. */
+.ins-scheduled {
+  margin-top: 1.5rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px dashed var(--color-border, rgba(127, 127, 127, 0.4));
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}

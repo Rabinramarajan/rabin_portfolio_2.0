@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { insights } from "@/content/insights";
+import { publishedInsights } from "@/content/insights";
 import { sections } from "@/content/sections";
 import { SectionKicker } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
@@ -15,6 +15,8 @@ export function InsightsSection({
 }: { headingLevel?: SectionHeadingLevel; showIntro?: boolean } = {}) {
   const Heading = headingLevel;
   const intro = sections.insights;
+  // Scheduled pieces are not live yet, so the listing must not advertise them.
+  const items = publishedInsights();
   return (
     <section id="insights" className="section">
       <div className="shell">
@@ -32,7 +34,7 @@ export function InsightsSection({
           </p>
         ) : null}
         <div style={{ marginTop: "1.5rem" }}>
-          {insights.map((item) => (
+          {items.map((item) => (
             <Link className="ins-row" href={"/insights/" + item.id} key={item.id}>
               <span className="mono faint">{item.number}</span>
               <span>

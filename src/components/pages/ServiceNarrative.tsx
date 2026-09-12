@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageSectionHead } from "@/components/pages/PageSectionHead";
 import type { ServicePageContent } from "@/content/service-pages";
+import { isLinkLive } from "@/content/insights";
 
 /**
  * The prose body of a service detail page.
@@ -27,6 +28,8 @@ export function ServiceNarrative({
   startIndex?: number;
 }) {
   const n = (offset: number) => String(startIndex + offset).padStart(2, "0");
+  // A scheduled article is noindex and unlisted, so it is not offered here yet.
+  const reading = content.furtherReading?.filter((r) => isLinkLive(r.href)) ?? [];
 
   return (
     <>
@@ -69,11 +72,11 @@ export function ServiceNarrative({
         </dl>
       </section>
 
-      {content.furtherReading?.length ? (
+      {reading.length ? (
         <section style={{ marginTop: "2.5rem" }}>
           <PageSectionHead index={n(4)} label="Further reading" title="The arguments in full" />
           <ul className="svc-reading">
-            {content.furtherReading.map((item) => (
+            {reading.map((item) => (
               <li key={item.href}>
                 <Link href={item.href}>{item.label}</Link>
                 {" — "}
