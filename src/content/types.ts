@@ -392,6 +392,21 @@ export interface PricingPlan {
   featured?: boolean;
 }
 
+/**
+ * One block of an article body.
+ *
+ * A bare string stays a paragraph, so the plain-prose shape these articles
+ * started in is still valid. The tagged variants exist because the SERP these
+ * pieces compete in is uniformly code-heavy: arguing about `signal()` versus
+ * `BehaviorSubject` in unbroken prose reads as weaker than the same argument
+ * with the code beside it, however good the prose is.
+ */
+export type InsightBlock =
+  | string
+  | { type: "heading"; text: string }
+  | { type: "code"; language: string; caption?: string; code: string }
+  | { type: "aside"; text: string };
+
 export interface Insight {
   id: string;
   number?: string;
@@ -401,13 +416,13 @@ export interface Insight {
   value?: string;
   note?: string;
   /**
-   * Article body, one paragraph per entry. An insight without a body has no
-   * publishable article yet: its detail route still renders (so the listing
-   * never dead-links) but stays out of the sitemap and is marked `noindex`,
-   * because a page carrying only a title and a one-line dek is thin content.
-   * Adding paragraphs here is all it takes to publish and index the piece.
+   * Article body. An insight without a body has no publishable article yet:
+   * its detail route still renders (so the listing never dead-links) but stays
+   * out of the sitemap and is marked `noindex`, because a page carrying only a
+   * title and a one-line dek is thin content. Adding blocks here is all it
+   * takes to publish and index the piece.
    */
-  body?: string[];
+  body?: InsightBlock[];
   /** ISO date. Emitted as datePublished and shown on the article. */
   datePublished?: string;
   /** ISO date of the last substantive revision. Falls back to datePublished. */
@@ -418,6 +433,12 @@ export interface Insight {
    * outbound links, so it sat off to one side of the site rather than in it.
    */
   related?: { label: string; href: string }[];
+  /**
+   * The closing ask. These pieces argued a position and then requested
+   * nothing, which wasted the one reader most likely to hire: the engineering
+   * lead who just read 1,300 words and agreed with them.
+   */
+  cta?: string;
 }
 
 export interface SeoContent {

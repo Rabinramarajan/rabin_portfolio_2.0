@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { insights, isPublished } from "@/content/insights";
 import { SectionKicker } from "@/components/ui";
+import { InsightBody } from "@/components/insights/InsightBody";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
 
@@ -86,11 +87,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </p>
         ) : null}
         {item.body?.length ? (
-          item.body.map((paragraph, i) => (
-            <p key={i} style={{ marginTop: "1.5rem" }}>
-              {paragraph}
-            </p>
-          ))
+          <InsightBody blocks={item.body} />
         ) : (
           <p className="muted" style={{ marginTop: "1.5rem" }}>
             This is a working position from shipped Angular and frontend work — the full
@@ -110,11 +107,20 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </aside>
         ) : null}
 
-        <p style={{ marginTop: "2rem" }}>
-          <Link className="btn btn--line" href="/insights">
-            <span className="btn__label">All insights →</span>
-          </Link>
-        </p>
+        <section className="ins-cta">
+          <p className="ins-cta__text">
+            {item.cta ??
+              "If this matches a problem you are looking at, I work as an embedded senior frontend engineer on Angular and React products."}
+          </p>
+          <div className="ins-cta__actions">
+            <Link className="btn btn--solid" href={"/contact?intent=" + item.id}>
+              <span className="btn__label">Start a conversation →</span>
+            </Link>
+            <Link className="btn btn--line" href="/insights">
+              <span className="btn__label">All insights</span>
+            </Link>
+          </div>
+        </section>
       </div>
     </article>
   );

@@ -105,6 +105,17 @@ export function ServicesPage() {
               built in rather than audited afterwards, and architecture chosen for the
               third release rather than the first demo.
             </p>
+            {/* Stated plainly so the wrong enquiry can disqualify itself here rather
+                than after two calls. An agency would answer "yes" to all of this. */}
+            <p className={styles.introScope}>
+              <strong>What this is not:</strong> I am one engineer, not an agency. There
+              is no bench, no account manager, and no second developer to cover a
+              holiday. If you need a team of four next month, a 24/7 support rota, or
+              backend and infrastructure ownership alongside the frontend, I am the
+              wrong choice and will say so on the first call. What I am good for is
+              being the senior frontend owner on a product that matters, working inside
+              your team.
+            </p>
           </div>
 
           <ul className={styles.cards}>

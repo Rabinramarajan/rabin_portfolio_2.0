@@ -605,3 +605,15 @@
   color: var(--color-text-muted);
   line-height: 1.75;
 }
+
+/* The honest-scoping paragraph. Marked so it reads as a statement rather
+   than more prose — the point is that it gets read, not skimmed. */
+.introScope {
+  padding: 1rem 1.15rem;
+  border-left: 2px solid var(--color-accent);
+  background: color-mix(in oklab, var(--color-accent) 7%, transparent);
+}
+.introScope strong {
+  color: var(--color-text);
+  font-weight: 600;
+}

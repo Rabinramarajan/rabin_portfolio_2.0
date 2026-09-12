@@ -69,14 +69,18 @@ export function ServiceNarrative({
         </dl>
       </section>
 
-      {content.furtherReading ? (
+      {content.furtherReading?.length ? (
         <section style={{ marginTop: "2.5rem" }}>
-          <PageSectionHead index={n(4)} label="Further reading" title="The argument in full" />
-          <p className="svc-reading">
-            <Link href={content.furtherReading.href}>{content.furtherReading.label}</Link>
-            {" — "}
-            {content.furtherReading.note}
-          </p>
+          <PageSectionHead index={n(4)} label="Further reading" title="The arguments in full" />
+          <ul className="svc-reading">
+            {content.furtherReading.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href}>{item.label}</Link>
+                {" — "}
+                {item.note}
+              </li>
+            ))}
+          </ul>
         </section>
       ) : null}
     </>
