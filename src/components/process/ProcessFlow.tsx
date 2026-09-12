@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ProcessStep } from "@/content/types";
 import { ease } from "@/lib/motion";
 import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 /**
  * ProcessFlow — the "signal conduit".
@@ -115,6 +116,10 @@ export function ProcessFlow({
   const [active, setActive] = useState(0);
   const [held, setHeld] = useState(false);
   const uid = useId().replace(/[:]/g, "");
+  /* Under 900px the ribbon is hidden and the pin never engages, so the spine
+     is the whole instrument: it becomes an accordion whose readout opens in
+     place, instead of a tab strip pointing at a panel below the fold. */
+  const compact = useMediaQuery("(max-width: 899px)");
   const trackRef = useRef<HTMLDivElement>(null);
 
   const nodes = useMemo(() => steps.slice(0, POINTS.length), [steps]);
@@ -131,7 +136,11 @@ export function ProcessFlow({
      inner shell sticks, and the distance scrolled through the track maps
      linearly onto the stage index. */
   useEffect(() => {
-    if (!pinned || nodes.length < 2) return;
+    /* Not just `pinned`: the pin itself is a ≥900px stylesheet rule, but
+       .pf-track is still taller than the viewport below that, so without the
+       breakpoint check scroll would keep overwriting the stage the reader
+       just opened. */
+    if (!pinned || compact || nodes.length < 2) return;
     const track = trackRef.current;
     if (!track) return;
 
@@ -158,17 +167,17 @@ export function ProcessFlow({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [pinned, nodes.length]);
+  }, [pinned, compact, nodes.length]);
 
   /* In pinned mode a node is a scroll target, so the pointer never fights the
      scroll position; otherwise it selects directly and holds the carousel. */
   const select = useCallback(
     (index: number) => {
-      if (pinned) {
-        const track = trackRef.current;
-        if (!track) return;
-        const span = track.offsetHeight - window.innerHeight;
-        if (span <= 0) return;
+      const track = trackRef.current;
+      const span = track ? track.offsetHeight - window.innerHeight : 0;
+      /* Compact screens never pin, so scrolling to a stage would land on
+         nothing — a tap selects directly, which is what opens the accordion. */
+      if (pinned && !compact && track && span > 0) {
         const top = window.scrollY + track.getBoundingClientRect().top;
         window.scrollTo({
           top: top + (span * (index + 0.5)) / nodes.length,
@@ -179,7 +188,7 @@ export function ProcessFlow({
       setActive(index);
       setHeld(true);
     },
-    [pinned, reduce, nodes.length],
+    [pinned, compact, reduce, nodes.length],
   );
 
   const onKeyNav = useCallback(
@@ -188,18 +197,67 @@ export function ProcessFlow({
       e.preventDefault();
       const dir = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : -1;
       const next = (active + dir + nodes.length) % nodes.length;
-      if (pinned) {
-        select(next);
-        return;
-      }
-      setHeld(true);
-      setActive(next);
+      select(next);
     },
-    [active, nodes.length, pinned, select],
+    [active, nodes.length, select],
   );
 
   const step = nodes[active];
   const progress = last > 0 ? active / last : 1;
+
+  /* One console, two homes: at the foot of the wide layout, and inline under
+     the open stage on compact screens. Only ever one of them is rendered. */
+  const readout = (
+    <div
+      className="pf__readout"
+      id="pf-readout"
+      role={compact ? "region" : "tabpanel"}
+      aria-labelledby={compact ? `pf-step-${step.id}` : `pf-tab-${step.id}`}
+      aria-live="polite"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={step.id}
+          className="pf__panel"
+          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
+          transition={SWAP}
+        >
+          <div className="pf__panel-lead">
+            <p className="pf__panel-k">
+              <span className="pf__panel-num">{step.number}</span>
+              <span aria-hidden>—</span>
+              <span>{step.label}</span>
+            </p>
+            <h3 className="pf__panel-title">{step.title}</h3>
+            <p className="pf__panel-purpose">{step.purpose}</p>
+          </div>
+
+          <div className="pf__panel-col">
+            <p className="pf__col-k">What happens</p>
+            <ul className="pf__list">
+              {step.happens.slice(0, 5).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="pf__panel-col">
+            <p className="pf__col-k">What you get</p>
+            <ul className="pf__chips">
+              {step.deliverables.slice(0, 5).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <p className="pf__outcome">
+              <span aria-hidden>↳</span> {step.outcome}
+            </p>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
 
   const flow = (
     <div
@@ -371,7 +429,13 @@ export function ProcessFlow({
       </div>
 
       {/* ---------------- conduit: compact vertical spine ---------------- */}
-      <div className="pf__spine" role="tablist" aria-label="Process stages" onKeyDown={onKeyNav}>
+      <div
+        className="pf__spine"
+        data-compact={compact ? "on" : undefined}
+        role={compact ? undefined : "tablist"}
+        aria-label="Process stages"
+        onKeyDown={compact ? undefined : onKeyNav}
+      >
         <span className="pf__spine-rail" aria-hidden />
         <span
           className="pf__spine-live"
@@ -379,13 +443,17 @@ export function ProcessFlow({
           style={{ transform: `scaleY(${last > 0 ? Math.max(progress, 0.02) : 1})` }}
         />
         {nodes.map((s, i) => (
+          <Fragment key={s.id}>
           <button
-            key={s.id}
             type="button"
-            role="tab"
-            aria-selected={i === active}
+            id={`pf-step-${s.id}`}
+            role={compact ? undefined : "tab"}
+            aria-selected={compact ? undefined : i === active}
+            aria-expanded={compact ? i === active : undefined}
             aria-controls="pf-readout"
-            tabIndex={i === active ? 0 : -1}
+            /* every row stays tabbable as a disclosure button; only the tab
+               strip uses roving tabindex */
+            tabIndex={compact ? undefined : i === active ? 0 : -1}
             className="pf__spine-node"
             data-state={i === active ? "on" : i < active ? "done" : "off"}
             onClick={() => select(i)}
@@ -401,60 +469,19 @@ export function ProcessFlow({
               </span>
               <span className="pf__spine-label">{s.label}</span>
             </span>
+            <span className="pf__spine-caret" aria-hidden>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
           </button>
+          {compact && i === active ? readout : null}
+          </Fragment>
         ))}
       </div>
 
       {/* ---------------- shared readout console ---------------- */}
-      <div
-        className="pf__readout"
-        id="pf-readout"
-        role="tabpanel"
-        aria-labelledby={`pf-tab-${step.id}`}
-        aria-live="polite"
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={step.id}
-            className="pf__panel"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
-            transition={SWAP}
-          >
-            <div className="pf__panel-lead">
-              <p className="pf__panel-k">
-                <span className="pf__panel-num">{step.number}</span>
-                <span aria-hidden>—</span>
-                <span>{step.label}</span>
-              </p>
-              <h3 className="pf__panel-title">{step.title}</h3>
-              <p className="pf__panel-purpose">{step.purpose}</p>
-            </div>
-
-            <div className="pf__panel-col">
-              <p className="pf__col-k">What happens</p>
-              <ul className="pf__list">
-                {step.happens.slice(0, 5).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="pf__panel-col">
-              <p className="pf__col-k">What you get</p>
-              <ul className="pf__chips">
-                {step.deliverables.slice(0, 5).map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <p className="pf__outcome">
-                <span aria-hidden>↳</span> {step.outcome}
-              </p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      {compact ? null : readout}
     </div>
   );
 

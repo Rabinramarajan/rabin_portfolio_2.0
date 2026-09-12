@@ -318,7 +318,14 @@
   }
 }
 
-/* --- mobile: no pin, native swipe with snap --- */
+/* --- mobile (<768px): no pin, no rail — a stacked single-column list.
+
+   The swipe rail was a desktop layout squeezed onto a phone: 320px cards on a
+   ~360px screen with a 48px gap, and the counter/progress chrome hidden, so
+   the off-screen neighbour read as a truncation bug rather than as "swipe".
+   Stacking removes the hidden content entirely — every card is reachable by
+   the one gesture a phone already uses — and lets the cards run to the page
+   gutter, so the card copy sits on the same grid as the heading. --- */
 
 @media (min-width: 1400px) {
   .pin {
@@ -330,44 +337,135 @@
   .pin {
     height: auto;
     overflow: visible;
-    padding-block: clamp(4rem, 12vh, 7rem);
-    padding-top: clamp(4rem, 12vh, 7rem);
-    padding-bottom: clamp(4rem, 12vh, 7rem);
+    padding-block: clamp(3.5rem, 10vh, 5.5rem);
+    gap: clamp(1.75rem, 5vw, 2.5rem);
   }
 
-  .viewport {
-    display: block;
+  /* the rail's wash is anchored to a 100vh box; on a tall stacked section it
+     would smear over the whole list, so it stays behind the heading only */
+  .pin::before {
+    inset: 0 0 auto;
+    height: 60vh;
   }
 
-  .foot {
-    display: none;
+  .head {
+    padding-inline: var(--edge);
+    gap: 0.6rem;
   }
 
+  .title {
+    font-size: clamp(1.85rem, 8.5vw, 2.6rem);
+    max-width: 18ch;
+  }
+
+  .lede {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    max-width: 42ch;
+  }
+
+  .foot,
   .scrollHint {
     display: none;
   }
 
   .viewport {
+    display: block;
     overflow: visible;
     margin-right: 0;
     mask-image: none;
   }
 
   .track {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
     width: auto;
+    height: auto;
+    max-height: none;
+    padding-inline: var(--edge);
+    overflow: visible;
     will-change: auto;
-  }
-
-  .track::-webkit-scrollbar {
-    display: none;
+    /* the pin tween is never built under 768px, but a stale inline transform
+       can survive a resize across the breakpoint */
+    transform: none !important;
   }
 
   .cardItem {
-    scroll-snap-align: center;
+    flex: initial;
+    width: auto;
+  }
+
+  .card {
+    --card-pad: 1.25rem;
+    /* index and icon share a meta row above the title, so the number reads as
+       a marker instead of a giant watermark competing with the headline */
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "index icon"
+      "title title"
+      "desc  desc"
+      "stack stack";
+    align-items: center;
+    gap: 0.5rem 0.85rem;
+    padding: var(--card-pad);
+    border-radius: var(--radius-lg);
+    /* the corner-lit gradient is invisible at this size; a flat surface with a
+       readable border holds up better on a phone */
+    background: var(--color-surface);
+  }
+
+  .cardIndex {
+    grid-area: index;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--color-accent);
+    opacity: 0.85;
+  }
+
+  .cardIcon {
+    grid-area: icon;
+    position: static;
+    justify-self: end;
+    display: flex;
+    color: var(--color-text-faint);
+  }
+
+  .cardIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cardTitle {
+    grid-area: title;
+    font-size: 1.3rem;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+  }
+
+  .cardDescription {
+    grid-area: desc;
+    /* 16px floor: the rail's clamp resolved to about 13px on a phone */
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .cardStack {
+    grid-area: stack;
+    margin-top: 0.35rem;
+    gap: 0.4rem;
+  }
+
+  .cardChip {
+    font-size: 0.7rem;
+    padding: 0.28rem 0.6rem;
+  }
+
+  /* touch feedback in place of the desktop hover lift, which a tap can leave
+     stuck on mobile Safari */
+  .card:active {
+    border-color: var(--color-line-strong);
   }
 }
 
@@ -402,7 +500,7 @@
 
   .track {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
     width: auto;
     overflow: visible;
     will-change: auto;

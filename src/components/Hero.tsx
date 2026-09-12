@@ -7,6 +7,7 @@ import { duration, ease } from "@/lib/motion";
 import { Btn } from "@/components/ui";
 import { Magnetic } from "@/components/motion";
 import { useHydrated } from "@/lib/useHydrated";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { ScrollVideoPlayer } from "@/components/ScrollVideoPlayer";
 import { trackCtaClick } from "@/lib/analytics";
@@ -26,7 +27,18 @@ export function Hero() {
      `reduce` is null during SSR and on the client's first render, so the
      initial render must assume the scrub and settle afterwards. */
   const hydrated = useHydrated();
-  const scrub = hydrated ? !reduce : true;
+  /* Phones do not scrub.
+
+     The scrub buys its frames with scroll distance: a 240vh track that a
+     100dvh hero sticks inside, so a phone reader spends ~1.4 screens of
+     swiping on a pane that does not move on. And the frames they are paying
+     that distance for largely never arrive — iOS Safari defers `currentTime`
+     seeks on a multi-megabyte video until the touch scroll settles, so the
+     reel lurches once at the end of each swipe. Both together read as the
+     page being stuck. Below 768px the reel just plays: the hero is exactly
+     one screen tall and the next section is one swipe away. */
+  const phone = useMediaQuery("(max-width: 767px)");
+  const scrub = hydrated ? !reduce && !phone : true;
 
   const t = (delay: number) => ({
     duration: reduce ? duration.micro : duration.section,

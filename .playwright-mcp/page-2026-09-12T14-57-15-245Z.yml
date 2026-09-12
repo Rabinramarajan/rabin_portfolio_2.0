@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - banner "Site header" [ref=e2]:
+    - generic [ref=e3]:
+      - link "Rabin R — home" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e9]:
+          - text: RABIN
+          - emphasis [ref=e10]: R
+      - button "Open menu" [ref=e11] [cursor=pointer]
+  - main [ref=e14]:
+    - paragraph [ref=e17]: RR
+  - contentinfo [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - list [ref=e21]:
+          - listitem [ref=e22]: Full Stack
+          - listitem [ref=e23]: Developer
+          - listitem [ref=e24]: Tech Enthusiast
+          - listitem [ref=e25]: Lifelong Learner
+        - generic [ref=e26]:
+          - paragraph [ref=e27]:
+            - generic [ref=e28]: Ideas
+            - generic [ref=e30]: Code
+            - generic [ref=e32]: Impact
+          - heading [level=2] [ref=e33]:
+            - text: Let's build something
+            - emphasis [ref=e34]: exceptional.
+          - link "Let's Connect" [ref=e37] [cursor=pointer]:
+            - /url: /contact
+      - generic:
+        - link "Rabin R — home" [ref=e41] [cursor=pointer]:
+          - /url: /
+        - paragraph [ref=e43]: Turning ideas into reality
+    - generic [ref=e45]:
+      - navigation "Footer" [ref=e46]:
+        - list [ref=e47]:
+          - listitem [ref=e48]:
+            - link "About" [ref=e49] [cursor=pointer]:
+              - /url: /about
+          - listitem [ref=e50]:
+            - link "Services" [ref=e51] [cursor=pointer]:
+              - /url: /services
+          - listitem [ref=e52]:
+            - link "Work" [ref=e53] [cursor=pointer]:
+              - /url: /work
+          - listitem [ref=e54]:
+            - link "Experience" [ref=e55] [cursor=pointer]:
+              - /url: /experience
+      - list [ref=e56]:
+        - listitem [ref=e57]:
+          - link "GitHub" [ref=e58] [cursor=pointer]:
+            - /url: https://github.com/Rabinramarajan
+        - listitem [ref=e62]:
+          - link "LinkedIn" [ref=e63] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/rabinr
+        - listitem [ref=e68]:
+          - link "Email" [ref=e69] [cursor=pointer]:
+            - /url: mailto:hello@rabinr.in
+    - generic [ref=e73]:
+      - paragraph [ref=e74]:
+        - text: © 2026 Rabin R. All rights reserved.
+        - link "v1.0.6" [ref=e75] [cursor=pointer]:
+          - /url: /version
+      - paragraph [ref=e76]: Built with passion
+  - button "Ask Rabin AI — Your portfolio companion" [ref=e78] [cursor=pointer]
+  - region "Notifications alt+T"
+  - text: + + +
+  - button "Open Next.js Dev Tools" [ref=e85] [cursor=pointer]

@@ -610,3 +610,146 @@
     min-height: 0;
   }
 }
+
+
+/* ============================================================
+   COMPACT (<900px) — the spine as an accordion.
+
+   The spine used to be a tab strip driving the console at the
+   foot of the section: on a phone that put the answer several
+   screens below the control, and because the pinned `select`
+   bailed when the track had no scroll span, a tap did nothing
+   at all. Each stage now opens its own readout in place.
+   ============================================================ */
+
+@media (max-width: 899px) {
+  .pf {
+    gap: 0;
+  }
+
+  .pf__spine {
+    gap: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  /* The continuous rail belongs to a passive diagram; once each row is a
+     control with its own divider, the rail only smears across the readout. */
+  .pf__spine-rail,
+  .pf__spine-live {
+    display: none;
+  }
+
+  .pf__spine-node {
+    width: 100%;
+    /* ≥56px: the 40px row the tab strip produced was under the 44px target */
+    min-height: 3.5rem;
+    gap: 0.9rem;
+    padding: 0.85rem 0.25rem;
+    border-bottom: 1px solid var(--color-line);
+    transition: background-color var(--duration-ui) var(--ease-out-expo);
+  }
+
+  .pf__spine-node[data-state="on"] {
+    border-bottom-color: transparent;
+  }
+
+  .pf__spine-disc {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .pf__spine-disc svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .pf__spine-copy {
+    flex: 1;
+    min-width: 0;
+    /* the tab strip's 0.72rem/0.16em uppercase mono was a caption, not a
+       control label — this is a row of buttons and has to read like one */
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    /* faint fails contrast at this size; muted is the floor for a label */
+    color: var(--color-text-muted);
+  }
+
+  .pf__spine-num {
+    color: var(--color-text-faint);
+  }
+
+  .pf__spine-caret {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-text-faint);
+    transition:
+      transform var(--duration-ui) var(--ease-out-expo),
+      color var(--duration-ui) var(--ease-out-expo);
+  }
+
+  .pf__spine-caret svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    stroke: currentColor;
+  }
+
+  .pf__spine-node[data-state="on"] .pf__spine-caret {
+    transform: rotate(180deg);
+    color: var(--color-accent);
+  }
+
+  /* "done" is meaningless without a scrubbing pin — below 900px the stage is
+     chosen by tapping, so only open/closed exists. */
+  .pf__spine-node[data-state="done"] .pf__spine-disc {
+    border-color: var(--color-line-strong);
+  }
+
+  .pf__spine-node[data-state="done"] .pf__spine-disc svg {
+    stroke: var(--color-text-faint);
+  }
+
+  /* --- the readout, opened inline under its own row --- */
+
+  .pf__spine[data-compact="on"] .pf__readout {
+    margin: 0 0 0.75rem;
+    /* indented to the disc's centre line so the panel reads as belonging to
+       the row above it rather than as the next section */
+    margin-left: 1.15rem;
+    border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+    border-left: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
+
+  .pf__spine[data-compact="on"] .pf__panel {
+    gap: 1.1rem;
+    padding: 1.1rem;
+  }
+
+  /* the row already states the number and the label */
+  .pf__spine[data-compact="on"] .pf__panel-k {
+    display: none;
+  }
+
+  .pf__panel-title {
+    margin-top: 0;
+    font-size: var(--text-lg, 1.25rem);
+  }
+
+  .pf__panel-purpose,
+  .pf__list {
+    font-size: 0.95rem;
+  }
+
+  .pf__outcome {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 899px) and (prefers-reduced-motion: reduce) {
+  .pf__spine-caret {
+    transition: none;
+  }
+}
