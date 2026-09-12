@@ -298,42 +298,86 @@
   }
 }
 
+/* Breadcrumbs.
+ *
+ * Read as a file path rather than a row of loose links: the trail sits on a
+ * hairline rail sized to itself, and the separators are mono slashes so the
+ * whole thing speaks the same language as the "//" section kickers. The one
+ * bold moment is the accent rule that wipes in under a crumb on hover — every
+ * other part stays quiet. */
+
 .crumbs {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   font-size: var(--text-sm);
 }
 
 .crumbs ol {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0.6rem;
+  border-bottom: 1px solid var(--glass-border);
   list-style: none;
   color: var(--color-text-muted);
 }
 
+.crumbs li {
+  display: inline-flex;
+  align-items: center;
+}
+
 .crumbs li + li::before {
   content: "/";
-  margin-right: 0.5rem;
-  opacity: 0.45;
+  margin-right: 0.4rem;
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+  opacity: 0.35;
 }
 
 .crumbs a {
+  position: relative;
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  transition: color 200ms var(--ease-out-quart);
+}
+
+/* The wipe lives on its own layer so the link text never shifts. */
+.crumbs a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.62rem;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms var(--ease-out-quart);
 }
 
 .crumbs a:hover,
 .crumbs a:focus-visible {
   color: var(--color-text);
-  border-bottom-color: currentColor;
 }
 
+.crumbs a:hover::before,
+.crumbs a:focus-visible::before {
+  transform: scaleX(1);
+}
+
+/* Where you are: stated plainly, not styled as something to click. */
 .crumbs [aria-current="page"] {
   color: var(--color-text);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crumbs a::before {
+    transition: none;
+  }
 }
 
 .nf-links {

@@ -6,6 +6,12 @@
  * primitives do not already cover.
  */
 
+/* The header is fixed, so the first block has to clear it on top of the usual
+   section rhythm — otherwise the breadcrumb tucks under the nav. */
+.legal {
+  padding-top: calc(var(--header-h) + var(--section-y));
+}
+
 .legal__section-title {
   font-size: var(--text-xl);
   letter-spacing: -0.02em;

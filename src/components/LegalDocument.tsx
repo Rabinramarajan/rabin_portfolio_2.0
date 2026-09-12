@@ -19,7 +19,7 @@ function formatDate(iso: string): string {
  */
 export function LegalDocument({ doc }: { doc: LegalDocumentContent }) {
   return (
-    <article className="section">
+    <article className="section legal">
       <div className="shell" style={{ maxWidth: "42rem" }}>
         <BreadcrumbJsonLd
           trail={[
