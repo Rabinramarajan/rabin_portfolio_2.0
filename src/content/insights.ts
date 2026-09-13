@@ -40,6 +40,21 @@ export const isLinkLive = (href: string, now: Date = new Date()): boolean => {
 export const publishedInsights = (now: Date = new Date()): Insight[] =>
   insights.filter((i) => isPublished(i, now));
 
+/**
+ * The number shown against an article in the UI.
+ *
+ * The authored `number` is a stable slot across the whole set, so once
+ * scheduled or unwritten pieces are filtered out those slots read as gaps — a
+ * listing of four articles numbered 01, 02, 03, 08. The displayed number is
+ * therefore the position within the *published* set, falling back to the
+ * authored slot for a piece that is not live yet (its own page, viewed direct).
+ */
+export const insightNumber = (id: string, now: Date = new Date()): string => {
+  const position = publishedInsights(now).findIndex((i) => i.id === id);
+  if (position >= 0) return String(position + 1).padStart(2, '0');
+  return insights.find((i) => i.id === id)?.number ?? '01';
+};
+
 export const insights: Insight[] = [
   {
     id: 'angular-signals-state-management',

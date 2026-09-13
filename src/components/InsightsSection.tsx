@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { publishedInsights } from "@/content/insights";
+import { insightNumber, publishedInsights } from "@/content/insights";
 import { sections } from "@/content/sections";
 import { SectionKicker } from "@/components/ui";
 import type { SectionHeadingLevel } from "@/components/ui";
@@ -50,7 +50,7 @@ export function InsightsSection({
         <div style={{ marginTop: "1.5rem" }}>
           {items.map((item) => (
             <Link className="ins-row" href={"/insights/" + item.id} key={item.id}>
-              <span className="mono faint">{item.number}</span>
+              <span className="mono faint">{insightNumber(item.id)}</span>
               <span>
                 <strong style={{ display: "block", fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontWeight: 500 }}>
                   {item.title}

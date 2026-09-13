@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { insights, isLinkLive, isPublished } from "@/content/insights";
+import { insightNumber, insights, isLinkLive, isPublished } from "@/content/insights";
 import { SectionKicker } from "@/components/ui";
 import { InsightBody } from "@/components/insights/InsightBody";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
@@ -82,7 +82,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <li aria-current="page">{item.title}</li>
           </ol>
         </nav>
-        <SectionKicker index={item.number ?? "09"} label="Insight" />
+        <SectionKicker index={insightNumber(item.id)} label="Insight" />
         <h1 className="sec-title">{item.title}</h1>
         <p className="sec-lede">{item.dek}</p>
         {item.datePublished ? (
