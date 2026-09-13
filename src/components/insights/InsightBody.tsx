@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { InsightBlock } from "@/content/types";
+import { insightSections } from "@/lib/insightSections";
 
 /**
  * Renders an article body.
@@ -11,75 +12,99 @@ import type { InsightBlock } from "@/content/types";
  * meaning here that the code itself does not.
  *
  * Headings render as `<h2>`, which is also what gives these pages a real
- * document outline — before this the only h2 on an article was the footer CTA.
+ * document outline. The slot number rendered beside each one is decoration
+ * over an already-complete heading, so it is marked aria-hidden — a screen
+ * reader announcing "zero two Opportunities Ahead" is worse than the heading
+ * on its own.
+ *
+ * Ids and numbers come from `insightSections`, the same pass the contents rail
+ * reads, so a heading cannot be numbered one way in the prose and another way
+ * in the sidebar.
  */
 export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
+  const sections = insightSections(blocks);
+  let headingIndex = 0;
+
   return (
     <>
       {blocks.map((block, i) => {
         if (typeof block === "string") {
           return (
-            <p className="ins-p" key={i}>
+            <p className="insd-p" key={i}>
               {block}
             </p>
           );
         }
 
         if (block.type === "heading") {
+          const section = sections[headingIndex++];
           return (
-            <h2 className="ins-h2" key={i} id={slugify(block.text)}>
-              {block.text}
+            <h2
+              className="insd-h2"
+              key={i}
+              id={section?.id}
+              data-plain={section?.number ? undefined : "true"}
+            >
+              {section?.number ? (
+                <span className="insd-h2__no" aria-hidden>
+                  {section.number}
+                </span>
+              ) : null}
+              <span className="insd-h2__text">{block.text}</span>
             </h2>
           );
         }
 
         if (block.type === "aside") {
+          /* The author's own emphasised line. In the previous design this was
+             a tinted note; here it is the article's pull quote, which is what
+             it always read as. */
           return (
-            <aside className="ins-aside" key={i}>
-              {block.text}
+            <aside className="insd-quote" key={i}>
+              <span className="insd-quote__mark" aria-hidden>
+                &ldquo;
+              </span>
+              <p className="insd-quote__text">{block.text}</p>
             </aside>
           );
         }
 
         if (block.type === "image") {
           return (
-            <figure className="ins-figure" key={i}>
+            <figure className="insd-figure" key={i}>
               <Image
                 src={block.src}
                 alt={block.alt}
                 width={block.width}
                 height={block.height}
                 priority={block.priority}
-                /* These diagrams break the 42rem measure, so the rendered box
-                   is wider than the prose on desktop and full-width below it. */
-                sizes="(max-width: 48rem) 100vw, 56rem"
+                /* These diagrams break the prose measure, so the rendered box
+                   is wider than the column on desktop and full-width below. */
+                sizes="(max-width: 48rem) 100vw, 44rem"
               />
               {block.caption ? (
-                <figcaption className="ins-figure__caption">{block.caption}</figcaption>
+                <figcaption className="insd-figure__caption">{block.caption}</figcaption>
               ) : null}
             </figure>
           );
         }
 
         return (
-          <figure className="ins-code" key={i}>
+          <figure className="insd-code" key={i}>
+            {block.language ? (
+              <span className="insd-code__lang" aria-hidden>
+                {block.language}
+              </span>
+            ) : null}
             <pre>
               <code data-language={block.language}>{block.code}</code>
             </pre>
             {block.caption ? (
-              <figcaption className="ins-code__caption">{block.caption}</figcaption>
+              <figcaption className="insd-code__caption">{block.caption}</figcaption>
             ) : null}
           </figure>
         );
       })}
     </>
   );
-}
-
-/** Stable anchor for a heading, so sections are linkable and citable. */
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }

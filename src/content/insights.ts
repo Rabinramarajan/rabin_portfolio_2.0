@@ -114,6 +114,12 @@ export const featuredInsight = (now: Date = new Date()): Insight | undefined => 
 export const insights: Insight[] = [
   {
     id: 'angular-signals-state-management',
+    takeaways: [
+      'Most UI state has exactly one reader — declare it in the component, not in a service.',
+      'Promote state only when a second consumer actually exists in the code, not when one is imagined.',
+      'Promotion has an order: signal in a component, then signals in a service, then a store.',
+      'Zoneless makes the same argument from the other side — explicit state is what change detection can see.',
+    ],
     topic: 'Architecture',
     seoTitle: 'Angular Signals State Management: When You Don’t Need a Store',
     seoDescription:
@@ -257,6 +263,12 @@ export class CaseQueueStore {
   },
   {
     id: 'angular-performance-core-web-vitals',
+    takeaways: [
+      'A separate performance phase loses — the cost is composed from decisions already shipped.',
+      'Layout shift is designed in, not introduced later: reserve the box before the content lands.',
+      'Write the budget into the spec so it is a requirement rather than a clean-up task.',
+      'INP is the metric that changes habits, because it measures what the main thread is doing.',
+    ],
     topic: 'Performance',
     seoTitle: 'Angular Performance: Core Web Vitals as a Product Requirement',
     seoDescription:
@@ -393,6 +405,12 @@ export class ReferenceDataService {
   },
   {
     id: 'enterprise-ui-design-restraint',
+    takeaways: [
+      'Design for the fortieth use, not the first — that is where the real product is.',
+      'Motion earns its place only when it does work the layout cannot.',
+      'One accent colour, one job: a second meaning makes the first unreadable.',
+      'Reduced motion and density are the same argument applied to different constraints.',
+    ],
     topic: 'Design',
     seoTitle: 'Enterprise UI Design: Why Quiet Interfaces Age Better',
     seoDescription:
@@ -520,6 +538,12 @@ export class ReferenceDataService {
   },
   {
     id: 'angular-zoneless-change-detection',
+    takeaways: [
+      'The big-bang migration branch fails because it never converges with main.',
+      'Find what actually depends on the zone before converting anything.',
+      'Convert the triggers, not the components — the RxJS boundary is where the work is.',
+      'Third-party libraries decide the timeline; flip the flag only once they are cleared.',
+    ],
     topic: 'Architecture',
     seoTitle: 'Angular Zoneless Change Detection: Migrating Without a Long-Lived Branch',
     seoDescription:
@@ -680,6 +704,12 @@ export class CaseListComponent {
   },
   {
     id: 'ionic-offline-first-architecture',
+    takeaways: [
+      'There are three states, not two: online, offline, and sent-but-unconfirmed.',
+      'Pick storage by the consequence of losing the data, not by what is convenient.',
+      'Queued actions need idempotency keys, or a retry becomes a duplicate record.',
+      'Tell the user which of the three things happened — silence is what destroys trust.',
+    ],
     topic: 'Mobile',
     seoTitle: 'Ionic Offline-First Architecture with Angular and Capacitor',
     seoDescription:
@@ -827,6 +857,12 @@ private async flush(): Promise<void> {
   },
   {
     id: 'accessible-angular-forms',
+    takeaways: [
+      'Never lose what someone typed — a failed submit that clears the form is the real defect.',
+      'Errors have to be findable, not merely present: announced, linked, and focusable.',
+      'Write error text as an instruction, not a diagnosis.',
+      'Multi-step flows owe the user an honest position — where they are and what is left.',
+    ],
     topic: 'Accessibility',
     seoTitle: 'Accessible Angular Forms: Validation and Error Recovery',
     seoDescription:
@@ -957,6 +993,12 @@ private async flush(): Promise<void> {
   },
   {
     id: 'angular-codebase-audit',
+    takeaways: [
+      'Run the application before reading a line of it.',
+      'Measure the shape of the codebase — size, coupling, duplication — before judging its quality.',
+      'Git history and "what broke last" tell you more about risk than the code does.',
+      'Separate the three causes of slowness before proposing a single fix.',
+    ],
     topic: 'Practice',
     seoTitle: 'Inheriting an Angular Codebase: A Practical Audit',
     seoDescription:
@@ -1068,6 +1110,12 @@ rg -L "ChangeDetectionStrategy.OnPush" src --type ts -g "*.component.ts" | wc -l
   },
   {
     id: 'rxjs-reduce-api-calls',
+    takeaways: [
+      'A reasonable per-component decision composed into five identical requests per screen.',
+      'One shared stream replaces the duplicates — shareReplay with refCount: false.',
+      'refCount is the setting most codebases get wrong, and it decides whether returning re-fetches.',
+      'Invalidation is the genuinely hard part; caching is the easy half.',
+    ],
     topic: 'Performance',
     seoTitle: 'RxJS: How I Cut Angular API Calls by 40%',
     seoDescription:
@@ -1175,6 +1223,12 @@ invalidateCountries(): void {
   },
   {
     id: 'angular-performance-checklist',
+    takeaways: [
+      'Measure on hardware a user actually owns before changing anything.',
+      'Work the list in order: requests, change detection, bundle, rendering.',
+      'A function call in a template runs on every cycle — the most common rendering mistake there is.',
+      'Finish by stopping the regression coming back, not by shipping the fix.',
+    ],
     topic: 'Performance',
     seoTitle: 'Angular Performance Optimization Checklist (In Diagnostic Order)',
     seoDescription:
@@ -1239,6 +1293,12 @@ invalidateCountries(): void {
   },
   {
     id: 'ux-problem-approach',
+    takeaways: [
+      'Define the problem before opening Figma — the brief is the design decision.',
+      'Map the journey, then find the friction; it compounds quietly and shows up as drop-off.',
+      'Simplify before adding, and use familiar patterns knowing why they work.',
+      'Explore more than one solution, then validate and iterate on the one that survives.',
+    ],
     topic: 'Design',
     seoTitle: 'How I Approach UX Problems as a Product Designer',
     seoDescription:

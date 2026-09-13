@@ -1,158 +1,930 @@
-/* The header is fixed, so a route that opens on an insights section has to
-   clear it on top of the usual section rhythm — otherwise the kicker tucks
-   under the nav. Not applied to the homepage teaser, which is scrolled to. */
-.ins-page {
-  padding-top: calc(var(--header-h) + var(--section-y));
+/* ============================================================
+   INSIGHT DETAIL  (/insights/[slug])
+   The article page: hero, prose column, sticky rail.
+   The listing and its card stay in insights-hub.css.
+
+   Built from the site tokens — near-black ground, one lime
+   accent, Inter — so a reader arriving on an article from
+   search lands on the same product the rest of the site is,
+   not on a blog theme. The reference for this layout used a
+   second (indigo) accent for its quote and CTA cards; that is
+   the one thing deliberately not carried over, because the
+   accent here already has a job.
+
+   Class prefix: .insd-*
+   ============================================================ */
+
+.insd {
+  --insd-measure: 44rem;
+  --insd-rail: 20.5rem;
+  position: relative;
+  padding-bottom: var(--space-80);
 }
 
-/* Outbound links at the foot of an article — the services and case studies
-   the argument was formed on. */
-.ins-related {
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border, rgba(127, 127, 127, 0.2));
+/* --- reading progress ------------------------------------------------
+   A 2px line under the fixed header. Transformed rather than animated on
+   width so the update is a composite, not a layout pass. */
+
+.insd-progress {
+  position: fixed;
+  top: var(--header-h);
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: calc(var(--z-header) - 1);
+  background: rgb(255 255 255 / 4%);
+  pointer-events: none;
 }
-.ins-related__title {
-  font-size: var(--text-lg, 1.125rem);
-  font-weight: 550;
-  letter-spacing: -0.01em;
+
+.insd-progress__bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: 0 50%;
+  scale: 0 1;
+  background: linear-gradient(90deg, var(--color-accent-dim), var(--color-accent));
+  box-shadow: 0 0 12px rgb(201 242 77 / 35%);
 }
-.ins-related ul {
-  margin-top: 0.75rem;
-  display: grid;
-  gap: 0.5rem;
-  list-style: none;
-  padding: 0;
+
+/* --- hero ------------------------------------------------------------ */
+
+.insd-hero {
+  position: relative;
+  padding-top: calc(var(--header-h) + var(--space-40));
+  padding-bottom: var(--space-56);
+  overflow: hidden;
+  isolation: isolate;
 }
-.ins-related a {
+
+@media (min-width: 900px) {
+  .insd-hero {
+    /* The cover needs vertical room to read as an image rather than a band.
+       Floored rather than fixed so a long headline still sets the height. */
+    min-height: 32rem;
+    padding-bottom: var(--space-48);
+  }
+}
+
+/* The cover art. On desktop it occupies the right half of the hero and is
+   faded into the page on both axes, so the headline can sit over its darker
+   edge without a scrim box. On narrow screens it drops behind the whole hero
+   at low opacity instead — a cropped half-image beside a wrapped headline
+   reads as a layout bug. */
+.insd-hero__art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+  mask-image: linear-gradient(180deg, rgb(0 0 0 / 55%), transparent 92%);
+}
+
+.insd-hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+@media (min-width: 900px) {
+  .insd-hero__art {
+    /* Starts clear of the headline's measure (40rem from the shell edge), so
+       the art is a counterweight to the text rather than something the text
+       is set over. The horizontal fade covers the remaining overlap on a
+       viewport wide enough to push the two together. */
+    left: min(52%, calc(var(--shell-edge) + 40rem));
+    opacity: 1;
+    mask-image:
+      linear-gradient(90deg, transparent, rgb(0 0 0 / 70%) 22%, #000 48%),
+      linear-gradient(180deg, #000 60%, transparent 98%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+  .insd-hero__img {
+    object-position: 65% 35%;
+  }
+}
+
+.insd-hero__inner {
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .insd-hero__inner {
+    max-width: 40rem;
+  }
+}
+
+.insd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
   color: var(--color-text-muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  font-size: var(--type-sm);
+  text-decoration: none;
+  transition: color var(--duration-micro) var(--ease-out-cubic);
 }
-.ins-related a:hover {
+.insd-back:hover {
+  color: var(--color-text);
+}
+.insd-back__arrow {
+  transition: translate var(--duration-ui) var(--ease-out-expo);
+}
+.insd-back:hover .insd-back__arrow {
+  translate: -3px 0;
+}
+
+/* --- tags --- */
+
+.insd-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin-top: var(--space-32);
+  padding: 0;
+  list-style: none;
+}
+
+.insd-tag {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-muted);
+  font-size: var(--type-xs);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* The topic. It is the one tag that means something the listing filters on,
+   so it is the one that gets the accent. */
+.insd-tag[data-lead] {
+  border-color: color-mix(in oklab, var(--color-accent) 34%, transparent);
+  background: color-mix(in oklab, var(--color-accent) 12%, transparent);
   color: var(--color-text);
 }
 
-/* ---- Article body ---------------------------------------------------- */
+/* --- headline --- */
 
-.ins-p {
-  margin-top: 1.5rem;
-  line-height: 1.75;
+.insd-title {
+  margin-top: var(--space-24);
+  max-width: 16ch;
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
 }
 
-/* Section headings give an article a real outline. Before these existed the
-   only h2 on the page was the footer CTA. */
-.ins-h2 {
-  margin-top: 2.75rem;
+.insd-dek {
+  margin-top: var(--space-20);
+  max-width: 34rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
+}
+
+/* --- byline --- */
+
+.insd-byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16) var(--space-32);
+  margin-top: var(--space-32);
+}
+
+.insd-byline__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.insd-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-line-strong);
+  object-fit: cover;
+  object-position: center top;
+}
+.insd-avatar--lg {
+  width: 48px;
+  height: 48px;
+}
+
+.insd-byline__name,
+.insd-byline__role,
+.insd-author__name,
+.insd-author__role {
+  display: block;
+}
+
+.insd-byline__name,
+.insd-author__name {
+  font-size: var(--type-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.insd-byline__role,
+.insd-author__role {
+  margin-top: 2px;
+  font-size: var(--type-xs);
+  color: var(--color-text-faint);
+}
+
+.insd-byline__meta {
+  color: var(--color-text-faint);
+  font-size: var(--type-sm);
+}
+.insd-byline__sep {
+  padding: 0 0.5rem;
+  color: var(--color-text-faint);
+  opacity: 0.6;
+}
+
+/* --- layout ---------------------------------------------------------- */
+
+.insd-grid {
+  display: grid;
+  gap: var(--space-40);
+  margin-top: var(--space-40);
+  /* Deliberately NOT `align-items: start`. The rail's column has to stretch to
+     the row's full height, because a sticky element can only travel inside its
+     own containing block — shrink the column to the panels' height and the
+     rail unsticks a screen into the article. */
+  align-items: stretch;
+}
+
+@media (min-width: 1080px) {
+  .insd-grid {
+    grid-template-columns: minmax(0, 1fr) var(--insd-rail);
+    gap: var(--space-48);
+  }
+}
+
+.insd-main {
+  min-width: 0;
+  max-width: var(--insd-measure);
+  align-self: start;
+}
+
+/* --- prose ----------------------------------------------------------- */
+
+.insd-p {
+  margin-top: var(--space-20);
+  color: color-mix(in oklab, var(--color-text) 88%, transparent);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  text-wrap: pretty;
+}
+
+/* Numbered section heading. The number is a separate span so it can hang in
+   its own column and stay optically aligned across sections whether the
+   heading wraps to one line or three. */
+.insd-h2 {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  align-items: baseline;
+  margin-top: var(--space-56);
+  font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: 550;
-  letter-spacing: -0.02em;
+  line-height: var(--leading-snug);
+  letter-spacing: -0.025em;
   text-wrap: balance;
-  scroll-margin-top: calc(var(--header-h) + 1rem);
+  scroll-margin-top: calc(var(--header-h) + var(--space-32));
 }
 
-.ins-aside {
-  margin-top: 1.5rem;
-  padding: 0.9rem 1.1rem;
-  border-left: 2px solid var(--color-accent);
-  background: color-mix(in oklab, var(--color-accent) 7%, transparent);
-  color: var(--color-text-muted);
-  line-height: 1.7;
-  font-size: 0.9375rem;
+/* An article that numbers its own headings gets no second number, so the
+   hanging column is removed rather than left empty. */
+.insd-h2[data-plain] {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-.ins-code {
-  margin: 1.75rem 0 0;
+.insd-h2__no {
+  font-family: var(--font-mono);
+  font-size: var(--type-base);
+  font-weight: var(--weight-regular);
+  color: var(--color-accent);
+  letter-spacing: 0;
 }
 
-.ins-code pre {
+/* --- pull quote --- */
+
+.insd-quote {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  gap: var(--space-8);
+  margin-top: var(--space-32);
+  padding: var(--space-24) var(--space-28);
+  border: 1px solid color-mix(in oklab, var(--color-accent) 20%, var(--color-line));
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(22rem 14rem at 0% 0%, rgb(201 242 77 / 9%), transparent 70%),
+    var(--color-bg-elevated);
+  overflow: hidden;
+}
+
+.insd-quote__mark {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  line-height: 0.85;
+  color: var(--color-accent);
+  opacity: 0.75;
+}
+
+.insd-quote__text {
+  color: var(--color-text);
+  font-size: var(--text-base);
+  font-style: italic;
+  line-height: var(--leading-relaxed);
+  text-wrap: pretty;
+}
+
+/* --- code --- */
+
+.insd-code {
+  position: relative;
+  margin: var(--space-32) 0 0;
+}
+
+.insd-code__lang {
+  position: absolute;
+  top: var(--space-12);
+  right: var(--space-16);
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  pointer-events: none;
+}
+
+.insd-code pre {
   margin: 0;
-  padding: 1.1rem 1.25rem;
-  overflow-x: auto;
-  border: 1px solid var(--color-border, rgba(127, 127, 127, 0.24));
-  border-radius: 10px;
-  background: color-mix(in oklab, var(--color-text) 5%, transparent);
+  padding: var(--space-28) var(--space-24) var(--space-24);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
   /* Code is the one place the page may exceed the text measure; it scrolls in
      its own box so the article body never scrolls sideways. */
   max-width: 100%;
+  overflow-x: auto;
 }
 
-.ins-code code {
+.insd-code code {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  line-height: 1.65;
+  line-height: 1.7;
   white-space: pre;
   color: var(--color-text);
 }
 
-.ins-code__caption {
-  margin-top: 0.6rem;
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  line-height: 1.6;
+.insd-code__caption,
+.insd-figure__caption {
+  margin-top: var(--space-12);
+  color: var(--color-text-faint);
+  font-size: var(--type-sm);
+  line-height: var(--leading-normal);
 }
 
-/* Closing ask. The articles argued a position and then asked for nothing. */
-.ins-cta {
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--color-border, rgba(127, 127, 127, 0.2));
+/* --- figures ---------------------------------------------------------
+   The diagrams are wider than the prose measure is comfortable at, so on a
+   wide viewport the figure overhangs the column evenly on both sides and
+   falls back into it once the viewport stops allowing the overhang. The
+   article body itself never scrolls sideways. */
+
+.insd-figure {
+  width: min(48rem, 92vw);
+  margin: var(--space-32) 0;
+  margin-left: calc((100% - min(48rem, 92vw)) / 2);
 }
 
-.ins-cta__text {
-  max-width: 42rem;
-  color: var(--color-text-muted);
-  line-height: 1.75;
-}
-
-.ins-cta__actions {
-  margin-top: 1.1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-/* Shown on a finished article whose publication date has not arrived. */
-.ins-scheduled {
-  margin-top: 1.5rem;
-  padding: 0.85rem 1.1rem;
-  border: 1px dashed var(--color-border, rgba(127, 127, 127, 0.4));
-  border-radius: 8px;
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-  line-height: 1.7;
-}
-
-/* Article diagrams.
-   The prose measure is 42rem, which is right for reading and too narrow for a
-   wide annotated diagram. These figures widen past it up to the shell, then
-   fall back to the text column once the viewport stops allowing the overhang,
-   so the article body itself never scrolls sideways. */
-.ins-figure {
-  /* 100% is the 42rem text measure, so on a wide viewport the left margin goes
-     negative and the figure overhangs the prose evenly on both sides. Below
-     ~46rem viewport width 92vw is the smaller term, the margin reaches zero,
-     and the figure simply sits in the column. */
-  width: min(56rem, 92vw);
-  margin: 2rem 0;
-  margin-left: calc((100% - min(56rem, 92vw)) / 2);
-}
-
-.ins-figure img {
+.insd-figure img {
   display: block;
   width: 100%;
   height: auto;
-  border: 1px solid var(--color-border, rgba(127, 127, 127, 0.24));
-  border-radius: 10px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
   /* The diagrams are authored on a near-white ground; the border alone is what
-     separates them from the page in light mode. */
+     separates them from the page. */
   background: color-mix(in oklab, var(--color-text) 3%, transparent);
 }
 
-.ins-figure__caption {
-  margin-top: 0.6rem;
-  font-size: 0.8125rem;
+/* Shown on a finished article whose publication date has not arrived. */
+.insd-note {
+  margin-bottom: var(--space-24);
+  padding: var(--space-16) var(--space-20);
+  border: 1px dashed var(--color-line-strong);
+  border-radius: var(--radius-md);
   color: var(--color-text-muted);
-  line-height: 1.6;
+  font-size: var(--type-sm);
+  line-height: var(--leading-relaxed);
 }
 
+/* --- "where this applies" --------------------------------------------
+   The outbound links: the services and case studies the argument was formed
+   on. Rows rather than a bulleted list, so each one is a target. */
+
+.insd-applies {
+  margin-top: var(--space-56);
+  padding-top: var(--space-32);
+  border-top: 1px solid var(--color-line);
+}
+
+.insd-applies__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 550;
+  letter-spacing: -0.02em;
+}
+
+.insd-applies ul {
+  margin-top: var(--space-16);
+  display: grid;
+  gap: var(--space-8);
+  padding: 0;
+  list-style: none;
+}
+
+.insd-applies a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding: var(--space-12) var(--space-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-muted);
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-cubic),
+    color var(--duration-ui) var(--ease-out-cubic),
+    background var(--duration-ui) var(--ease-out-cubic);
+}
+.insd-applies a:hover {
+  border-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.insd-applies__arrow {
+  color: var(--color-accent);
+  transition: translate var(--duration-ui) var(--ease-out-expo);
+}
+.insd-applies a:hover .insd-applies__arrow {
+  translate: 3px 0;
+}
+
+/* --- share ----------------------------------------------------------- */
+
+.insd-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  margin-top: var(--space-40);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--color-line);
+}
+
+.insd-share__label {
+  color: var(--color-text-faint);
+  font-size: var(--type-sm);
+}
+
+.insd-share__actions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.insd-share__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-cubic),
+    color var(--duration-ui) var(--ease-out-cubic),
+    translate var(--duration-ui) var(--ease-out-expo);
+}
+.insd-share__btn:hover {
+  border-color: var(--color-line-strong);
+  color: var(--color-text);
+  translate: 0 -2px;
+}
+.insd-share__btn[data-copied] {
+  border-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+  color: var(--color-accent);
+}
+
+/* --- rail ------------------------------------------------------------ */
+
+.insd-rail {
+  min-width: 0;
+}
+
+.insd-rail__sticky {
+  display: grid;
+  gap: var(--space-16);
+}
+
+@media (min-width: 1080px) {
+  .insd-rail__sticky {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-24));
+    /* On a piece with eight sections the rail is taller than the viewport.
+       Sticky alone would pin its head and put the author card and the ask
+       permanently below the fold, so the rail carries its own scroll — capped
+       to the viewport, with the last panel's foot reachable. `contain` keeps
+       reaching its end from scrolling the article underneath it. */
+    max-height: calc(100dvh - var(--header-h) - var(--space-48));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+    /* Room for the scrollbar so it never sits on a panel's border. */
+    padding-right: var(--space-4);
+  }
+}
+
+.insd-panel {
+  padding: var(--space-20);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+}
+
+.insd-panel__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: var(--type-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+.insd-panel__title svg {
+  flex: none;
+  color: var(--color-accent);
+}
+
+.insd-panel__link {
+  margin-left: auto;
+  color: var(--color-text-faint);
+  font-size: var(--type-xs);
+  font-weight: var(--weight-regular);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-micro) var(--ease-out-cubic);
+}
+.insd-panel__link:hover {
+  color: var(--color-accent);
+}
+
+/* --- contents rail --- */
+
+.insd-toc__list {
+  margin-top: var(--space-16);
+  padding: 0;
+  list-style: none;
+}
+
+.insd-toc__link {
+  display: grid;
+  grid-template-columns: 1.6rem 0.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+  color: var(--color-text-muted);
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
+  text-decoration: none;
+  transition: color var(--duration-ui) var(--ease-out-cubic);
+}
+
+.insd-toc__list[data-plain] .insd-toc__link {
+  grid-template-columns: 0.75rem minmax(0, 1fr);
+}
+
+.insd-toc__no {
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  color: var(--color-text-faint);
+}
+
+/* The spine. Each row draws its own segment, so the line is exactly as long
+   as the list and needs no separate element to position against it. */
+.insd-toc__dot {
+  position: relative;
+  justify-self: center;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-line-strong);
+  transition:
+    background var(--duration-ui) var(--ease-out-cubic),
+    box-shadow var(--duration-ui) var(--ease-out-cubic),
+    scale var(--duration-ui) var(--transition-spring);
+}
+.insd-toc__dot::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 1px;
+  height: calc(100% + var(--space-16));
+  translate: -50% 0;
+  background: var(--color-line);
+}
+.insd-toc__list li:last-child .insd-toc__dot::before {
+  display: none;
+}
+
+.insd-toc__text {
+  min-width: 0;
+}
+
+.insd-toc__link:hover {
+  color: var(--color-text);
+}
+.insd-toc__link:hover .insd-toc__dot {
+  background: var(--color-text-muted);
+}
+
+.insd-toc__link[aria-current] {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+}
+.insd-toc__link[aria-current] .insd-toc__no {
+  color: var(--color-accent);
+}
+.insd-toc__link[aria-current] .insd-toc__dot {
+  background: var(--color-accent);
+  scale: 1.25;
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent) 16%, transparent);
+}
+
+/* --- key takeaways --- */
+
+.insd-takeaways__list {
+  margin-top: var(--space-16);
+  display: grid;
+  gap: var(--space-12);
+  padding: 0;
+  list-style: none;
+}
+
+.insd-takeaways__list li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--space-12);
+  align-items: start;
+  color: var(--color-text-muted);
+  font-size: var(--type-sm);
+  line-height: var(--leading-normal);
+}
+
+.insd-takeaways__icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-accent);
+}
+
+/* --- related articles --- */
+
+.insd-more__list {
+  margin-top: var(--space-16);
+  display: grid;
+  gap: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.insd-more__item {
+  display: grid;
+  grid-template-columns: 5.25rem minmax(0, 1fr);
+  gap: var(--space-12);
+  align-items: center;
+  padding: var(--space-8);
+  margin: 0 calc(var(--space-8) * -1);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background var(--duration-ui) var(--ease-out-cubic);
+}
+.insd-more__item:hover {
+  background: var(--color-surface);
+}
+
+.insd-more__thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.insd-more__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.insd-more__title {
+  color: var(--color-text);
+  font-size: var(--type-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  /* Two lines, then ellipsis: the rail is a fixed width and a five-word
+     headline must not push the thumbnail out of alignment with the next row. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.insd-more__meta {
+  display: block;
+  margin-top: var(--space-4);
+  color: var(--color-text-faint);
+  font-size: var(--type-xs);
+}
+
+/* --- author --- */
+
+.insd-author__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.insd-author__bio {
+  margin-top: var(--space-16);
+  color: var(--color-text-muted);
+  font-size: var(--type-sm);
+  line-height: var(--leading-normal);
+}
+
+.insd-author__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-top: var(--space-16);
+}
+
+.insd-author__cta {
+  display: inline-block;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-size: var(--type-xs);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-cubic),
+    background var(--duration-ui) var(--ease-out-cubic);
+}
+.insd-author__cta:hover {
+  border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+  background: color-mix(in oklab, var(--color-accent) 10%, transparent);
+}
+
+.insd-author__socials {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.insd-author__social {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  transition:
+    color var(--duration-ui) var(--ease-out-cubic),
+    border-color var(--duration-ui) var(--ease-out-cubic);
+}
+.insd-author__social:hover {
+  color: var(--color-text);
+  border-color: var(--color-line-strong);
+}
+
+/* --- closing ask ----------------------------------------------------- */
+
+.insd-ask {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in oklab, var(--color-accent) 22%, var(--color-line));
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.insd-ask__glow {
+  position: absolute;
+  inset: -40% -20% auto;
+  height: 18rem;
+  background: radial-gradient(50% 50% at 70% 40%, rgb(201 242 77 / 16%), transparent 72%);
+  pointer-events: none;
+}
+
+.insd-ask__icon {
+  position: relative;
+  color: var(--color-accent);
+}
+
+.insd-ask__title {
+  position: relative;
+  margin-top: var(--space-12);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 550;
+  letter-spacing: -0.02em;
+  line-height: var(--leading-snug);
+}
+
+.insd-ask__text {
+  position: relative;
+  margin-top: var(--space-8);
+  color: var(--color-text-muted);
+  font-size: var(--type-sm);
+  line-height: var(--leading-normal);
+}
+
+.insd-ask__cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+  padding: 0.6rem 1.05rem;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-size: var(--type-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  transition:
+    translate var(--duration-ui) var(--ease-out-expo),
+    box-shadow var(--duration-ui) var(--ease-out-cubic);
+}
+.insd-ask__cta:hover {
+  translate: 0 -2px;
+  box-shadow: var(--shadow-glow), var(--shadow-depth-sm);
+}
+
+/* --- entrance --------------------------------------------------------
+   One quiet rise on the hero and the rail. The prose is not animated: text
+   that fades in as you reach it is text you cannot start reading. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .insd-hero__inner > * {
+    animation: insd-rise var(--duration-section) var(--ease-out-expo) backwards;
+  }
+  .insd-hero__inner > *:nth-child(2) {
+    animation-delay: 0.06s;
+  }
+  .insd-hero__inner > *:nth-child(3) {
+    animation-delay: 0.12s;
+  }
+  .insd-hero__inner > *:nth-child(4) {
+    animation-delay: 0.18s;
+  }
+  .insd-hero__inner > *:nth-child(5) {
+    animation-delay: 0.24s;
+  }
+  .insd-rail__sticky > * {
+    animation: insd-rise var(--duration-section) var(--ease-out-expo) 0.2s backwards;
+  }
+}
+
+@keyframes insd-rise {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}

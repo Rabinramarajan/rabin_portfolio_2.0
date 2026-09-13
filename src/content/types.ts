@@ -511,6 +511,15 @@ export interface Insight {
    * lead who just read 1,300 words and agreed with them.
    */
   cta?: string;
+  /**
+   * The article's own claims, in the reader's order, for the sidebar panel on
+   * the detail page. Authored rather than extracted: a summariser would
+   * produce four restatements of the dek, and this is the block a skimming
+   * engineering lead reads instead of the article. Four entries is the shape
+   * the panel is designed around; the panel is omitted entirely when a piece
+   * has none, so this never has to be backfilled before a piece can publish.
+   */
+  takeaways?: string[];
 }
 
 export interface SeoContent {

@@ -1,21 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { insightNumber, insights, isLinkLive, isPublished } from "@/content/insights";
-import { SectionKicker } from "@/components/ui";
-import { InsightBody } from "@/components/insights/InsightBody";
+import { insights, isPublished } from "@/content/insights";
+import { InsightArticle } from "@/components/insights/InsightArticle";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
-
-/** Long-form date for the visible byline; the machine-readable value stays ISO. */
-function formatDate(iso: string): string {
-  return new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 export function generateStaticParams() {
   return insights.map((i) => ({ slug: i.id }));
@@ -41,102 +29,42 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return isPublished(item) ? meta : { ...meta, robots: { index: false, follow: true } };
 }
 
+/**
+ * One article.
+ *
+ * The route's own job is metadata, schema and the 404 — everything visual
+ * lives in `InsightArticle`, which the layout is complex enough to deserve.
+ */
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const item = insights.find((i) => i.id === slug);
   if (!item) notFound();
+
   // Written but dated ahead: the route renders (so the link is previewable)
   // but it is unlisted, out of the sitemap and noindex until the date lands.
   const live = isPublished(item);
-  const related = item.related?.filter((r) => isLinkLive(r.href)) ?? [];
-  const scheduled = !live && (item.body?.length ?? 0) > 0;
-  return (
-    <article className="section ins-page">
-      <div className="shell" style={{ maxWidth: "42rem" }}>
-        {/* Article schema only once the post has a body — a stub is thin
-            content and is already kept out of the index. */}
-        {live ? (
-          <ArticleJsonLd
-            headline={item.title ?? "Insight"}
-            description={item.dek ?? ""}
-            path={"/insights/" + item.id}
-            datePublished={item.datePublished}
-            dateModified={item.dateModified}
-          />
-        ) : null}
-        <BreadcrumbJsonLd
-          trail={[
-            { name: "Home", path: "/" },
-            { name: "Insights", path: "/insights" },
-            { name: item.title ?? "Insight", path: "/insights/" + item.id },
-          ]}
-        />
-        <nav className="crumbs" aria-label="Breadcrumb">
-          <ol>
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/insights">Insights</Link>
-            </li>
-            <li aria-current="page">{item.title}</li>
-          </ol>
-        </nav>
-        <SectionKicker index={insightNumber(item.id)} label="Insight" />
-        <h1 className="sec-title">{item.title}</h1>
-        <p className="sec-lede">{item.dek}</p>
-        {item.datePublished ? (
-          <p className="muted" style={{ marginTop: "0.75rem", fontSize: "0.875rem" }}>
-            {scheduled ? "Scheduled for " : null}
-            <time dateTime={item.datePublished}>{formatDate(item.datePublished)}</time>
-            {item.dateModified && item.dateModified !== item.datePublished ? (
-              <> · Updated <time dateTime={item.dateModified}>{formatDate(item.dateModified)}</time></>
-            ) : null}
-            {" · "}Rabin R
-          </p>
-        ) : null}
-        {scheduled ? (
-          <p className="ins-scheduled" role="note">
-            This piece is finished but not published yet. It is not listed, not in the
-            sitemap and not indexed until its publication date.
-          </p>
-        ) : null}
-        {item.body?.length ? (
-          <InsightBody blocks={item.body} />
-        ) : (
-          <p className="muted" style={{ marginTop: "1.5rem" }}>
-            This is a working position from shipped Angular and frontend work — the full
-            write-up is still being drafted.
-          </p>
-        )}
-        {related.length ? (
-          <aside className="ins-related">
-            <h2 className="ins-related__title">Where this applies</h2>
-            <ul>
-              {related.map((r) => (
-                <li key={r.href}>
-                  <Link href={r.href}>{r.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        ) : null}
 
-        <section className="ins-cta">
-          <p className="ins-cta__text">
-            {item.cta ??
-              "If this matches a problem you are looking at, I work as an embedded senior frontend engineer on Angular and React products."}
-          </p>
-          <div className="ins-cta__actions">
-            <Link className="btn btn--solid" href={"/contact?intent=" + item.id}>
-              <span className="btn__label">Start a conversation →</span>
-            </Link>
-            <Link className="btn btn--line" href="/insights">
-              <span className="btn__label">All insights</span>
-            </Link>
-          </div>
-        </section>
-      </div>
-    </article>
+  return (
+    <>
+      {/* Article schema only once the post has a body — a stub is thin
+          content and is already kept out of the index. */}
+      {live ? (
+        <ArticleJsonLd
+          headline={item.title ?? "Insight"}
+          description={item.dek ?? ""}
+          path={"/insights/" + item.id}
+          datePublished={item.datePublished}
+          dateModified={item.dateModified}
+        />
+      ) : null}
+      <BreadcrumbJsonLd
+        trail={[
+          { name: "Home", path: "/" },
+          { name: "Insights", path: "/insights" },
+          { name: item.title ?? "Insight", path: "/insights/" + item.id },
+        ]}
+      />
+      <InsightArticle item={item} />
+    </>
   );
 }
