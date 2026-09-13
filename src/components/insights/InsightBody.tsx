@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { InsightBlock } from "@/content/types";
 
 /**
@@ -37,6 +38,26 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
             <aside className="ins-aside" key={i}>
               {block.text}
             </aside>
+          );
+        }
+
+        if (block.type === "image") {
+          return (
+            <figure className="ins-figure" key={i}>
+              <Image
+                src={block.src}
+                alt={block.alt}
+                width={block.width}
+                height={block.height}
+                priority={block.priority}
+                /* These diagrams break the 42rem measure, so the rendered box
+                   is wider than the prose on desktop and full-width below it. */
+                sizes="(max-width: 48rem) 100vw, 56rem"
+              />
+              {block.caption ? (
+                <figcaption className="ins-figure__caption">{block.caption}</figcaption>
+              ) : null}
+            </figure>
           );
         }
 

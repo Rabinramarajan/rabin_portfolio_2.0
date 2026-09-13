@@ -428,7 +428,24 @@ export type InsightBlock =
   | string
   | { type: "heading"; text: string }
   | { type: "code"; language: string; caption?: string; code: string }
-  | { type: "aside"; text: string };
+  | { type: "aside"; text: string }
+  /**
+   * A diagram or screenshot. `alt` is required rather than optional: these
+   * carry the argument of the section they sit in, so an image without one
+   * silently drops that argument for anyone not seeing it. `width` and
+   * `height` are the file's intrinsic pixels — they reserve the box and keep
+   * the article off the CLS list.
+   */
+  | {
+      type: "image";
+      src: string;
+      alt: string;
+      width: number;
+      height: number;
+      caption?: string;
+      /** Set on the first image in an article; it is the LCP candidate. */
+      priority?: boolean;
+    };
 
 export interface Insight {
   id: string;

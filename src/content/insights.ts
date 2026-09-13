@@ -1172,4 +1172,94 @@ invalidateCountries(): void {
       'Sometimes the answer is that the frontend is not the problem. If the profile says the time is spent waiting on the API, no amount of Angular work will fix it, and the honest move is to say so early rather than tune the wrong layer for a month. That finding is worth as much as any optimisation on this page.',
     ],
   },
+  {
+    id: 'ux-problem-approach',
+    seoTitle: 'How I Approach UX Problems as a Product Designer',
+    seoDescription:
+      'The questions I work through before opening Figma — defining the problem, mapping journey friction, removing fields, and validating the assumption underneath the design.',
+    datePublished: '2026-09-13',
+    number: '10',
+    title: 'What can I make easier?',
+    dek: 'A better-looking screen is not automatically a better experience. The work happens before Figma opens.',
+    related: [
+      { label: 'Quiet interfaces age better', href: '/insights/enterprise-ui-design-restraint' },
+      { label: 'Forms that carry consequences', href: '/insights/accessible-angular-forms' },
+      { label: 'Frontend architecture', href: '/services/frontend-architecture' },
+      { label: 'InsureMet — decisions made under time pressure', href: '/work/insuremet' },
+    ],
+    cta: 'If you have a product where users complete the flow but hesitate through it, that hesitation is usually findable and usually cheap to fix. I do scoped UX reviews that name the friction points in order of cost.',
+    body: [
+      {
+        type: 'image',
+        src: '/media/insights/ux-problem-approach/cover.png',
+        alt: 'Title card: How I Approach UX Problems as a Product Designer — understand, simplify, design, validate — beside a desk with a laptop, notebook and wireframes pinned to the wall.',
+        width: 1664,
+        height: 936,
+        priority: true,
+      },
+
+      'When I come across a frustrating product experience, my first instinct is not to redesign the screen. I ask why it is difficult for the user, because often the problem is not the UI at all — it is an unnecessary step, unclear information, too many choices, poor hierarchy, or an interface that asks someone to think when it could have decided for them. That one question, “what can I make easier?”, shapes how I work through every UX problem.',
+
+      { type: 'heading', text: '1. Define the problem before opening Figma' },
+
+      'It is tempting to jump straight to solutions, but a better-looking screen does not automatically create a better experience. Take a user searching for a 2BHK on a real-estate platform: hundreds of listings, several filters, near-identical property cards, pricing shown differently in each one, and three ways to contact an owner. That looks like a search or a UI problem. The deeper question is how we help someone confidently narrow down the right property — and that changes what gets designed. Instead of redrawing the listing screen, I start with what information a person actually needs in order to decide.',
+
+      { type: 'heading', text: '2. Look at it like a first-time user' },
+
+      'When you work closely with a product, everything eventually feels obvious. To a new user it is not. A first-time cab booking raises small questions: is this my exact pickup point, is this the final fare, can I change the destination, when does the driver arrive. Each unanswered one adds uncertainty. So when I review an experience I look for the moments where someone has to stop and think. If an interface keeps prompting “what do I do next?”, there is an opportunity sitting right there.',
+
+      { type: 'heading', text: '3. Map the journey, then find the friction' },
+
+      'I prefer to look at the whole journey rather than treat each screen as an isolated design problem. For an e-commerce product that is roughly discover → compare → select → add to cart → checkout → pay, and the interesting part is the transitions. Does the product page carry enough to decide on? Are delivery charges communicated early enough, or as a surprise at the end? Does checkout ask for anything it does not need yet? Is the primary action obvious? One small issue rarely ruins an experience. Several across a journey do.',
+
+      {
+        type: 'image',
+        src: '/media/insights/ux-problem-approach/journey-friction.png',
+        alt: 'The six steps of an e-commerce journey — discover, compare, select, add to cart, checkout, pay — each annotated with its friction: irrelevant listings, too much to process, uncertainty before commitment, surprise fees, a long checkout form, and payment distrust.',
+        width: 1786,
+        height: 804,
+        caption: 'The same journey, read as transitions rather than screens. No single card here is fatal; the column of them is.',
+      },
+
+      { type: 'aside', text: 'Friction compounds quietly. No single step feels broken, so nobody reports it — it shows up as a drop-off rate instead, which is the most expensive way to find out.' },
+
+      { type: 'heading', text: '4. Simplify before adding' },
+
+      'I try to avoid solving every UX problem by adding another feature. Sometimes removing something is the better answer. A signup form asking for name, email, phone, location, company, job title, date of birth and password, when the user’s immediate goal is simply to have an account, is asking eight questions to answer one. Email, password, continue is usually enough for now; the rest can be requested later, when there is a visible reason for it. Every additional field is another decision, and every unnecessary decision is friction. So before “what should we add?”, I ask what we can remove.',
+
+      {
+        type: 'image',
+        src: '/media/insights/ux-problem-approach/simplify-signup.png',
+        alt: 'Before and after of a signup form: eight fields including phone, location, company, job title and date of birth, beside a version asking only for email and password with a continue button and social sign-in.',
+        width: 1536,
+        height: 1017,
+        caption: 'The removed fields are not lost — they are asked for later, at the point where the reason for them is visible.',
+      },
+
+      { type: 'heading', text: '5. Use familiar patterns — but know why they work' },
+
+      'I study competitors and established patterns, though not to copy screens. I want to understand why a pattern works. A heart beside a product already means save or wishlist to almost everyone. Replacing it with something new might make the interface more distinctive, but it also hands the user something to learn. Good UX does not always need to be innovative; sometimes familiarity is the feature. The judgement is knowing what people already expect, and when there is a genuine reason to break from it.',
+
+      { type: 'heading', text: '6. Explore more than one solution' },
+
+      'My first idea is still an assumption, so I try not to get attached to it. If users are struggling to compare properties, the options might be: improve the information hierarchy of the cards, add a dedicated comparison feature, or improve shortlisting so details can be reviewed later. All three can look good in Figma, which is exactly why that is not the deciding factor. The question is which one addresses the actual problem with the least unnecessary complexity. That turns the review from “I like this version” into “this works better because”, and the second conversation is the one worth having.',
+
+      {
+        type: 'image',
+        src: '/media/insights/ux-problem-approach/explore-solutions.png',
+        alt: 'One problem — users struggle to compare properties — with three solution options side by side: clearer property cards, a dedicated side-by-side comparison feature, and a smarter shortlist ranked by match percentage.',
+        width: 1536,
+        height: 1024,
+        caption: 'Three credible answers to one problem. The question that separates them is complexity against impact, not which mockup looks best.',
+      },
+
+      { type: 'heading', text: '7. Validate, learn, iterate' },
+
+      'A polished prototype can still rest on the wrong assumption. Suppose we believe users cannot find relevant properties, so we improve the filters. Research might show that people find properties fine — they just do not trust what the listings say. Better filters will not touch that. Depending on the project, validation is user conversations, usability testing, feedback, analytics or a live experiment. The process is not design → make it beautiful → done. It is closer to understand → explore → design → validate → learn → iterate.',
+
+      { type: 'heading', text: 'The part I keep coming back to' },
+
+      'The longer I do this, the more product design looks like a series of decisions rather than a series of screens. What information appears first. What can be removed. Where someone is likely to hesitate. What a user needs before they can commit. How to resolve that while still serving what the product needs. When I open Figma, I do not want to start by asking what I can design. I want to start by asking what I can make easier.',
+    ],
+  },
 ];
