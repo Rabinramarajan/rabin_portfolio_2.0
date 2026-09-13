@@ -64,6 +64,7 @@ export default function Page() {
       />
 
       <div className="shell" style={{ marginTop: "2rem" }}>
+        <p className="svc-answer" style={{ maxWidth: "44rem", marginBottom: "1.25rem", fontSize: "1.05rem", lineHeight: 1.65 }}>{page.answer}</p>
         {page.intro.map((p, i) => (
           <p className="muted" key={i} style={{ maxWidth: "42rem", marginBottom: "1rem" }}>
             {p}

@@ -157,17 +157,17 @@
     },
     {
       "name": "Images",
-      "score": 92,
+      "score": 100,
       "what_works": [
         "Zero missing alt attributes across all 30 pages",
         "WebP with responsive srcset, lazy loading below the fold, fetchpriority on the LCP candidate"
       ],
       "findings": [
         {
-          "title": "Three images missing explicit dimensions",
-          "severity": "Low",
-          "description": "One img each on /, /contact and /process lacks both width and height",
-          "recommendation": "Add width and height to prevent layout shift"
+          "title": "Withdrawn: three images missing dimensions",
+          "severity": "Info",
+          "description": "Originally reported as a CLS risk. All three are absolutely-positioned fill images (hero poster via hero.css; /contact and /process via Next.js Image fill), which cannot shift layout and are specified to carry no width/height.",
+          "recommendation": "No change needed - finding withdrawn."
         }
       ]
     }
@@ -178,18 +178,18 @@
         "name": "Phase 1: Highest Leverage",
         "timeframe": "Week 1",
         "items": [
-          "Redistribute internal links from case studies to service pages",
-          "Collapse apex domain redirect to a single hop",
-          "Remove redundant hero preload in src/app/page.tsx and verify one remains"
+          "Redistribute internal links from case studies to service pages [DONE]",
+          "Collapse apex domain redirect to a single hop [NOT DONE - Vercel dashboard]",
+          "Remove redundant hero preload in src/app/page.tsx and verify one remains [DONE]"
         ]
       },
       {
         "name": "Phase 2: Content Depth",
         "timeframe": "Weeks 2-3",
         "items": [
-          "Add a quotable standalone answer paragraph to each of the 4 service pages",
-          "Expand the /insights hub by 300-400 words",
-          "Deepen the six 470-540 word case studies"
+          "DONE: quotable answer paragraph on all 4 service pages",
+          "DONE: /insights expanded 265 -> 362 words",
+          "TODO: deepen the six 470-540 word case studies"
         ]
       },
       {
@@ -198,7 +198,7 @@
         "items": [
           "Get a PageSpeed API key or Search Console CWV report to replace inferred performance data",
           "Install Python 3.10+ and run /seo setup to unlock rendered-DOM crawling and PDF reports",
-          "Housekeeping: image dimensions, /version footer link, 5 short titles, CSP header, FAQPage decision"
+          "Housekeeping DONE: 5 titles lengthened, /version nofollowed, CSP added Report-Only, FAQPage decision documented. Image-dimension item withdrawn as a false positive."
         ]
       },
       {

@@ -79,6 +79,34 @@ const nextConfig: NextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
+          /* CSP, deliberately Report-Only for now.
+             Enforcing this today would break the site: Next.js inlines the RSC
+             flight payload and its bootstrap as inline <script>, so a policy
+             without 'unsafe-inline' blocks the app from starting, and
+             'unsafe-inline' in an *enforced* policy buys little over having no
+             policy at all. Doing it properly means per-request nonces, which
+             needs middleware and makes every page dynamic — a real cost for a
+             personal site with no user-generated content and no auth.
+             Report-Only gets the violation data at zero risk. Violations appear
+             in the browser console; add a `report-to` endpoint if that becomes
+             worth wiring up. Promote to `Content-Security-Policy` only after a
+             nonce strategy is in place and the console is quiet. */
+          {
+            key: "Content-Security-Policy-Report-Only",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.cookiescript.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://www.googletagmanager.com",
+              "media-src 'self' https://*.public.blob.vercel-storage.com",
+              "font-src 'self' data:",
+              "connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://*.public.blob.vercel-storage.com",
+              "frame-ancestors 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "object-src 'none'",
+            ].join("; "),
+          },
         ],
       },
     ];

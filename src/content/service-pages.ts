@@ -21,6 +21,18 @@ export interface ServiceFaq {
 export interface ServicePageContent {
   /** The insight articles arguing the positions this page takes. */
   furtherReading?: { label: string; href: string; note: string }[];
+  /**
+   * The direct answer to "should I hire this person for this", stated before
+   * the narrative starts.
+   *
+   * Written to survive being quoted with no surrounding page: reader's symptom
+   * first, then what is actually done, then one piece of evidence with a number.
+   * `intro` is good prose but only reads correctly in place, which gives an AI
+   * search surface nothing it can lift. This is the passage meant to be lifted,
+   * so every figure in it has to be one of the verified ones — an invented
+   * number here is the worst place on the site to put one.
+   */
+  answer: string;
   /** Sets the scene directly under the hero, before the deliverables list. */
   intro: string[];
   problem: ServiceNarrativeSection;
@@ -48,6 +60,8 @@ export const servicePages: Record<'angular' | 'web' | 'mobile' | 'performance', 
         note: 'What a scoped assessment looks like before any code changes.',
       },
     ],
+    answer:
+      'If you have a large Angular application that several people maintain, and changing one screen has started to mean opening six files, that is the work I do. I take on enterprise Angular codebases — immigration case management for the Fiji government, a pension member portal, an insurance administration console — and work on architecture, state and change detection rather than on features alone. The Fiji internal system serves 10,000+ users and recorded roughly a 50% frontend performance gain over that work. Engagements run from a scoped assessment of an existing codebase through to sustained architecture work.',
     intro: [
       'I have spent most of the last four years inside large Angular applications that other people have to keep working after I leave — immigration case management for the Fiji government, a pension member portal, an insurance administration console. That context shapes how I build: the interesting problem is rarely getting a feature to work, it is getting it to work in a codebase that will take another twenty features without becoming unmaintainable.',
     ],
@@ -114,6 +128,8 @@ export const servicePages: Record<'angular' | 'web' | 'mobile' | 'performance', 
         note: 'Accessibility and error recovery when failure costs the user something real.',
       },
     ],
+    answer:
+      'If your frontend works but every new feature costs more than the last, the problem is usually structure rather than effort. I do frontend architecture consulting — component boundaries, design systems, state flow and rendering strategy — in Angular, React and Next.js. The work is aimed at the third release rather than the demo: deciding what belongs in a shared layer, what should stay local, and which abstractions are worth what they cost to maintain. These engagements usually open with a scoped assessment of the codebase you already have.',
     intro: [
       'Web application work covers the surfaces where structure, data and rendering strategy matter more than page count: dashboards, portals, admin consoles and product interfaces that people use as a tool rather than read as a document. I build these with Angular or with React and Next.js, chosen by what the application is rather than by preference.',
     ],
@@ -190,6 +206,8 @@ export const servicePages: Record<'angular' | 'web' | 'mobile' | 'performance', 
         note: 'State precision as a performance decision, not only an architectural one.',
       },
     ],
+    answer:
+      'If your Angular application is slow and nobody can say precisely why, that is the engagement. I measure before changing anything: bundle size, render behaviour, network waterfalls and change detection are the four usual causes, and the one a team suspects is frequently not the one costing users time. On a government case system the same reference lookups were firing five times per screen; one shared, cached RxJS stream cut API calls by about 40%. The work starts with a diagnosis, not with a fix.',
     intro: [
       'Performance work is measurement first and code second. Most of the frontend slowness I am asked to look at is not caused by the thing the team suspects, and the fastest way to waste a month is to start optimising before knowing which of the four common causes — bundle size, render behaviour, network waterfalls, or change detection — is actually costing the user time.',
     ],
@@ -251,6 +269,8 @@ export const servicePages: Record<'angular' | 'web' | 'mobile' | 'performance', 
         note: 'Cached reads with an honest age, queued writes, and idempotent replay.',
       },
     ],
+    answer:
+      'If you need genuine iOS and Android applications out of a single codebase, I build them with Ionic, Angular and Capacitor. The clearest example is the VNPF member app in Vanuatu: a provident fund app used to check balances, contributions and loans on devices that are frequently not new and connections that are frequently poor, with biometric sign-in and offline behaviour specified before any screen was designed. That constraint, rather than the framework, is what shapes how I build these.',
     intro: [
       'I build cross-platform mobile applications with Ionic, Angular and Capacitor — one codebase producing genuine iOS and Android apps that ship through the App Store and Play Store. The VNPF member app in Vanuatu is the clearest example: a pension member app used by people checking balances and statements on the devices they actually own, which are frequently not new and frequently on poor connections.',
     ],

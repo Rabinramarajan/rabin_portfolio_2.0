@@ -10,7 +10,37 @@ Each item states how you would know it failed, and what to watch without re-runn
 | 1. Redistribute internal links to service pages | **Done** — partially met target (see below) |
 | 2. Collapse apex redirect chain | **Not done** — Vercel dashboard change, not code |
 | 3. Remove redundant hero preload | **Done and verified** |
-| 4–9 | Not started |
+| 4. Quotable answer paragraph on service pages | **Done** — all four, +85–97 words each |
+| 5. Expand `/insights` hub | **Done** — 265 → 362 words |
+| 6. Deepen six short case studies | Not started — needs your source material |
+| 7. Replace inferred performance data | **Blocked** — needs a PSI API key or GSC access |
+| 8. Install Python 3.10+ | **Not done** — a machine-level install, your call |
+| 9. Housekeeping | **Done**, except one item withdrawn (see correction) |
+
+### Correction to this audit
+
+**The "three images missing width/height (CLS risk)" finding was wrong, and is withdrawn.**
+All three are absolutely-positioned fill images — the homepage hero poster is
+`position: absolute; inset: 0; width/height: 100%` in `hero.css`, and `/contact` and
+`/process` use Next.js `<Image fill>` (`data-nimg="fill"`). Images out of normal flow
+inside a sized container contribute no layout shift, and `fill` images are *supposed*
+to carry no width/height attributes. Adding them would have been a cosmetic change
+justified by a CLS risk that does not exist. No change was made.
+
+### Item 9, as completed
+
+- Five short titles lengthened to 44–53 chars (`/resume`, `/contact`, `/process`,
+  `/insights`, `/experience`), each now carrying a query term.
+- Sitewide footer link to the `noindex` `/version` page marked `rel="nofollow"`.
+- CSP added as **`Content-Security-Policy-Report-Only`**, deliberately not enforced.
+  Enforcing it would break the site: Next.js inlines the RSC flight payload as inline
+  `<script>`, so a policy without `'unsafe-inline'` stops the app booting, and
+  `'unsafe-inline'` in an enforced policy buys little. Doing it properly needs
+  per-request nonces via middleware, which makes every page dynamic — a real cost for a
+  site with no auth and no user content. Report-Only gets the data at zero risk;
+  violations surface in the browser console.
+- Homepage `FAQPage` kept, with the decision now documented in `JsonLd.tsx` so the
+  asymmetry with `ServiceNarrative.tsx` reads as deliberate rather than as an oversight.
 
 **Item 1 measured result.** Contextual inbound links per service page, before → after:
 

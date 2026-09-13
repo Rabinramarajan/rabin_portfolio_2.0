@@ -150,8 +150,12 @@ function FooterInner() {
       <div className="ft__legal">
         <p>
           © {new Date().getFullYear()} <span className="ft__legal-name">{profile.name}</span>. All rights reserved.
-          {/* The running build, linked to the full release ledger. */}
-          <Link className="ft__version" href="/version" title="Release history">
+          {/* The running build, linked to the full release ledger.
+              `/version` is noindex, so this sitewide link is nofollow: without it
+              every page spends a link on a target search engines are being asked
+              to ignore. It stays a real link because it is genuinely useful to a
+              human reading a bug report. */}
+          <Link className="ft__version" href="/version" title="Release history" rel="nofollow">
             {displayVersion}
           </Link>
         </p>

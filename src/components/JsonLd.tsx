@@ -185,6 +185,13 @@ export function ProjectJsonLd({
  * The FAQ block lives only in the homepage, so emitting this from the root
  * layout marked up every route — /work, /pricing, every case study — with
  * questions those pages never show. Render this from the homepage only.
+ *
+ * Kept deliberately, despite Google retiring FAQ rich results for all sites on
+ * 2026-05-07. It no longer earns a SERP feature, so it is not worth adding
+ * anywhere new — which is why ServiceNarrative omits it — but the questions
+ * here are real, visible and on-page, and the entity costs nothing to keep.
+ * The asymmetry between the two files is the decision, not an oversight:
+ * this one already exists and stays; new FAQPage entities are not added.
  */
 export function FaqJsonLd() {
   const data = {

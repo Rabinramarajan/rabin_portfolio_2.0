@@ -3,7 +3,7 @@ import { pageMetadata } from "@/lib/seo";
 import { BlogJsonLd } from "@/components/JsonLd";
 
 export const metadata = pageMetadata({
-  title: "Insights",
+  title: "Insights — Angular Engineering Notes",
   description:
     "Engineering notes from Rabin R on Angular architecture, Signals, rendering performance and quiet interfaces — positions taken from shipped production work.",
   path: "/insights",

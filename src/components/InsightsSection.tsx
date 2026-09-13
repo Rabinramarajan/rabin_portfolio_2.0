@@ -24,14 +24,28 @@ export function InsightsSection({
         <Heading className="sec-title">{intro.title[0].text}</Heading>
         <p className="sec-lede">{intro.lede}</p>
         {showIntro ? (
-          <p className="ins-intro">
-            Positions I have arrived at from shipped work rather than from reading about
-            it — state management that stayed maintainable across a pension portal and an
-            immigration case system, performance treated as a spec item instead of a
-            later phase, and why restrained interfaces survive repeated daily use better
-            than expressive ones. Each one is a working argument, with the projects that
-            produced it named.
-          </p>
+          <>
+            <p className="ins-intro">
+              These are engineering notes rather than tutorials. Each one argues a position I
+              arrived at on a specific production system — a government case management
+              platform, a pension member portal, a cross-platform member app — and says what
+              the decision cost as well as what it bought.
+            </p>
+            <p className="ins-intro">
+              The recurring subjects are Angular architecture and state, where the useful
+              question is usually when Signals are enough and a store is overhead rather than
+              which library to adopt; rendering and network performance, where load behaviour
+              belongs in the feature spec rather than in a later optimisation phase; and
+              restraint in interfaces for software people are required to use every day rather
+              than choose to.
+            </p>
+            <p className="ins-intro">
+              I write one of these when a problem turns out to have a general shape worth
+              naming. That means there are fewer of them than a publishing schedule would
+              produce, and each is drawn from work that actually shipped, with the projects
+              that produced it named.
+            </p>
+          </>
         ) : null}
         <div style={{ marginTop: "1.5rem" }}>
           {items.map((item) => (

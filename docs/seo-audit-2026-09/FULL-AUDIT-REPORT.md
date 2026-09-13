@@ -166,8 +166,14 @@ likely to produce citations for hiring-intent prompts.
 Excellent. Zero missing alt attributes across 30 pages, WebP with responsive `srcset`,
 `loading="lazy"` on below-fold images, `fetchpriority` on the LCP candidate.
 
-**Missing dimensions (Low).** Three pages each have one `<img>` without both `width` and
-`height`: `/`, `/contact`, `/process`. Each is a CLS risk on slow connections.
+**~~Missing dimensions (Low)~~ — WITHDRAWN, this finding was wrong.**
+Three pages each have one `<img>` without both `width` and `height` (`/`, `/contact`,
+`/process`), which was originally reported as a CLS risk. On inspection all three are
+absolutely-positioned fill images: the homepage hero poster is `position: absolute;
+inset: 0; width/height: 100%` in `hero.css`, and the other two are Next.js `<Image fill>`
+(`data-nimg="fill"`). Images out of normal flow inside a sized container cannot shift
+layout, and `fill` images are specified to carry no width/height attributes. There is
+nothing to fix here, and the Images category is clean.
 
 ---
 

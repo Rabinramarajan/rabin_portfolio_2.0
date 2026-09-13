@@ -1,4 +1,4 @@
-# Images — 92/100
+# Images — 100/100
 
 ## What works
 
@@ -7,8 +7,12 @@
 
 ## Findings
 
-### Three images missing explicit dimensions (Low)
+### Withdrawn: three images missing dimensions (Info)
 
-One img each on /, /contact and /process lacks both width and height
+Originally reported as a CLS risk on `/`, `/contact` and `/process`. On inspection all three
+are absolutely-positioned fill images — the homepage hero poster is `position: absolute;
+inset: 0; width/height: 100%` in `hero.css`, and the other two are Next.js `<Image fill>`
+(`data-nimg="fill"`). Images out of normal flow inside a sized container cannot shift layout,
+and `fill` images are specified to carry no width/height attributes.
 
-**Recommendation:** Add width and height to prevent layout shift
+**Recommendation:** No change needed — finding withdrawn.
