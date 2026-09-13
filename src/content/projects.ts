@@ -4,6 +4,7 @@ const img = (src: string, alt: string, width = 1600, height = 1000) => ({ src, a
 export const projects: Project[] = [
   {
     slug: 'fiji-immigration-internal',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '01',
     title: 'Fiji Immigration Internal Management System',
     tagline: 'The system immigration officers run a country borders on.',
@@ -111,6 +112,7 @@ export const projects: Project[] = [
 
   {
     slug: 'fiji-immigration-external',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '02',
     title: 'Fiji Immigration Citizen Portal',
     tagline: 'Visa and permit applications, without the queue.',
@@ -205,6 +207,7 @@ export const projects: Project[] = [
 
   {
     slug: 'prims-member-portal',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '03',
     title: 'PRIMS Member Portal',
     tagline: 'A pension account members can actually understand.',
@@ -307,6 +310,7 @@ export const projects: Project[] = [
 
   {
     slug: 'vnpf-blo-mi',
+    service: { label: 'Ionic cross-platform mobile development', href: '/services/ionic-development' },
     number: '04',
     title: 'VNPF blo mi Member Mobile App',
     tagline: 'A provident fund in your pocket, across iOS and Android.',
@@ -368,6 +372,7 @@ export const projects: Project[] = [
 
   {
     slug: 'insuremet',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '05',
     title: 'InsureMet',
     tagline: 'Policies, claims and finance for an insurer, in one console.',
@@ -429,6 +434,7 @@ export const projects: Project[] = [
 
   {
     slug: 'galaxy-sofas',
+    service: { label: 'Angular performance optimization', href: '/services/angular-performance-optimization' },
     number: '06',
     title: 'Galaxy Sofas',
     tagline: 'A furniture storefront designed to make choosing a sofa feel simple.',
@@ -497,6 +503,7 @@ export const projects: Project[] = [
 
   {
     slug: 'zellavora-ai-resume-builder',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '07',
     title: 'Zellavora AI Resume Builder',
     tagline: 'Guided input in. ATS-friendly resume out.',
@@ -557,6 +564,7 @@ export const projects: Project[] = [
 
   {
     slug: 'zellavora-control-center',
+    service: { label: 'frontend architecture consulting', href: '/services/frontend-architecture' },
     number: '08',
     title: 'Zellavora Control Center',
     tagline: 'One control plane for products, projects and operations.',
@@ -623,6 +631,7 @@ export const projects: Project[] = [
 
   {
     slug: 'ui-component-architecture',
+    service: { label: 'frontend architecture consulting', href: '/services/frontend-architecture' },
     number: '09',
     title: 'Enterprise UI Component Architecture',
     tagline: 'Build once. Reuse everywhere.',

@@ -444,7 +444,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </section>
         ) : null}
 
-        <CaseStudyCta category={project.category} slug={project.slug} />
+        <CaseStudyCta category={project.category} slug={project.slug} service={project.service} />
       </div>
     </article>
   );

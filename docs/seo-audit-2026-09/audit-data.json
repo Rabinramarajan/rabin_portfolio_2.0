@@ -1,0 +1,219 @@
+{
+  "summary": {
+    "health_score": 85,
+    "business_type": "Solo consultancy / professional service (Angular & frontend engineering) with publisher signals",
+    "top_findings": [
+      "Internal link equity flows to case studies (up to 15 contextual inbound) while service pages get only 2-4",
+      "Apex domain has a 2-hop redirect chain: http://rabinr.in -> https://rabinr.in -> https://www.rabinr.in",
+      "Duplicate hero image preload on homepage (manual hoist in page.tsx now redundant with React auto-hoisting)",
+      "Thin hub pages: /insights 265 words, /pricing 312, /contact 367",
+      "Performance could not be measured - PageSpeed returned 429, no CrUX field data available"
+    ],
+    "quick_wins": [
+      "Collapse apex redirect to a single hop",
+      "Delete redundant preload block in src/app/page.tsx",
+      "Add width/height to the one unsized img on /, /contact, /process",
+      "Lengthen 5 under-length titles (16-20 chars) to carry query terms",
+      "Remove or nofollow the sitewide footer link to noindex /version"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "score": 90,
+      "what_works": [
+        "All 30 URLs return 200 with self-referencing canonicals",
+        "robots.txt correct with Host and Sitemap directives",
+        "HSTS includeSubDomains preload, X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy",
+        "404 returns proper status; /version and /maintenance correctly noindex and excluded from sitemap"
+      ],
+      "findings": [
+        {
+          "title": "Two-hop redirect chain on apex domain",
+          "severity": "Medium",
+          "description": "http://rabinr.in -> https://rabinr.in -> https://www.rabinr.in, two 308 hops",
+          "recommendation": "Redirect http://rabinr.in directly to https://www.rabinr.in at the Vercel domain layer"
+        },
+        {
+          "title": "Sitewide footer link to noindex page",
+          "severity": "Low",
+          "description": "/version is linked on 29 of 30 pages but is noindex, follow",
+          "recommendation": "Remove from footer or add rel=nofollow"
+        },
+        {
+          "title": "No Content-Security-Policy header",
+          "severity": "Low",
+          "description": "Five other security headers are set; CSP is absent",
+          "recommendation": "Add a CSP header to complete the security header set"
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "score": 80,
+      "what_works": [
+        "Strong E-E-A-T: named government and pension systems, specific metrics, real resume",
+        "Articles take positions drawn from shipped work rather than summarising documentation"
+      ],
+      "findings": [
+        {
+          "title": "Thin hub and commercial pages",
+          "severity": "Medium",
+          "description": "/insights 265 words, /pricing 312, /contact 367, /process 420",
+          "recommendation": "Expand /insights by 300-400 words stating topical scope and perspective"
+        },
+        {
+          "title": "Six short case studies",
+          "severity": "Low",
+          "description": "470-540 words versus 758 for the strongest case study",
+          "recommendation": "Add constraint/decision/trade-off/outcome narrative, not padding"
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "score": 85,
+      "what_works": [
+        "Zero duplicate titles or descriptions across 30 pages",
+        "All meta descriptions 132-172 chars and hand-written",
+        "Exactly one H1 per page; OG and Twitter card tags on all pages"
+      ],
+      "findings": [
+        {
+          "title": "Internal link equity flows to case studies, not service pages",
+          "severity": "High",
+          "description": "Contextual inbound links: fiji-immigration-internal 15, prims-member-portal 10, versus angular-performance-optimization 2 and ionic-development 3",
+          "recommendation": "Link from each case study to the service page it demonstrates; target 6+ contextual inbound links per service page"
+        },
+        {
+          "title": "Five under-length titles",
+          "severity": "Low",
+          "description": "/resume 16 chars, /contact 17, /process 17, /insights 18, /experience 20",
+          "recommendation": "Extend to carry query terms within the ~60 character allowance"
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "score": 92,
+      "what_works": [
+        "All JSON-LD parses without error",
+        "Person, WebSite, ProfessionalService sitewide plus BreadcrumbList, Service, CreativeWork, BlogPosting, ProfilePage, ItemList, Blog"
+      ],
+      "findings": [
+        {
+          "title": "FAQPage on homepage inconsistent with documented service-page decision",
+          "severity": "Info",
+          "description": "JsonLd.tsx:192 emits FAQPage while ServiceNarrative.tsx documents deliberately omitting it. Google retired FAQ rich results for all sites on 2026-05-07.",
+          "recommendation": "No removal needed - it earns nothing but costs nothing. Reconcile the two decisions deliberately."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "score": 75,
+      "what_works": [
+        "Preloaded woff2 fonts",
+        "Hero poster with responsive imageSrcSet and fetchPriority high",
+        "WebP throughout; loading=lazy on 10 of 17 homepage images"
+      ],
+      "findings": [
+        {
+          "title": "Duplicate hero image preload",
+          "severity": "Medium",
+          "description": "Two link rel=preload as=image tags for the same poster srcset: React auto-hoists one from ScrollVideoPlayer.tsx:217-223 and src/app/page.tsx:19-30 adds a manual one",
+          "recommendation": "Delete the manual preload block in src/app/page.tsx, then verify exactly one preload remains in the rendered head - revert if zero remain"
+        },
+        {
+          "title": "Homepage payload 291KB",
+          "severity": "Low",
+          "description": "Roughly 71KB inline script across 25 blocks, 19 JS chunks, 3 stylesheets; next heaviest page is 152KB",
+          "recommendation": "Acceptable for App Router; revisit only after field data confirms an LCP problem"
+        },
+        {
+          "title": "Performance not measured",
+          "severity": "Medium",
+          "description": "PageSpeed Insights returned HTTP 429 (anonymous quota exhausted) and no CrUX field data was available. This score is inferred from payload evidence only.",
+          "recommendation": "Obtain a PageSpeed API key or read Core Web Vitals from Search Console before further performance work"
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "score": 88,
+      "what_works": [
+        "AI crawlers unblocked - no GPTBot, ClaudeBot or PerplexityBot restrictions",
+        "llms.txt present and well-structured with grouped key pages",
+        "Articles carry concrete numbers, named systems and BlogPosting schema"
+      ],
+      "findings": [
+        {
+          "title": "Service pages lack a quotable standalone answer",
+          "severity": "Medium",
+          "description": "Articles answer engineering questions well, but service pages never state the hiring answer plainly up front",
+          "recommendation": "Open each service page with 2-3 self-contained sentences answering who it is for, what is done, and one number"
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "score": 92,
+      "what_works": [
+        "Zero missing alt attributes across all 30 pages",
+        "WebP with responsive srcset, lazy loading below the fold, fetchpriority on the LCP candidate"
+      ],
+      "findings": [
+        {
+          "title": "Three images missing explicit dimensions",
+          "severity": "Low",
+          "description": "One img each on /, /contact and /process lacks both width and height",
+          "recommendation": "Add width and height to prevent layout shift"
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Phase 1: Highest Leverage",
+        "timeframe": "Week 1",
+        "items": [
+          "Redistribute internal links from case studies to service pages",
+          "Collapse apex domain redirect to a single hop",
+          "Remove redundant hero preload in src/app/page.tsx and verify one remains"
+        ]
+      },
+      {
+        "name": "Phase 2: Content Depth",
+        "timeframe": "Weeks 2-3",
+        "items": [
+          "Add a quotable standalone answer paragraph to each of the 4 service pages",
+          "Expand the /insights hub by 300-400 words",
+          "Deepen the six 470-540 word case studies"
+        ]
+      },
+      {
+        "name": "Phase 3: Measurement",
+        "timeframe": "Month 2",
+        "items": [
+          "Get a PageSpeed API key or Search Console CWV report to replace inferred performance data",
+          "Install Python 3.10+ and run /seo setup to unlock rendered-DOM crawling and PDF reports",
+          "Housekeeping: image dimensions, /version footer link, 5 short titles, CSP header, FAQPage decision"
+        ]
+      },
+      {
+        "name": "Phase 4: Monitoring",
+        "timeframe": "Ongoing",
+        "items": [
+          "Capture a drift baseline for deploy-to-deploy comparison",
+          "Track Search Console impressions for /services/* as the Phase 1 success signal",
+          "Re-audit once field data is available"
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}

@@ -193,7 +193,7 @@ export class CaseQueueStore {
     title: 'Performance is a product requirement',
     dek: 'If Core Web Vitals are optional, they lose. Treat load, input delay and layout shift as part of the spec.',
     related: [
-      { label: 'Frontend architecture services', href: '/services/frontend-architecture' },
+      { label: 'Angular performance optimization', href: '/services/angular-performance-optimization' },
       { label: 'Fiji Immigration internal system — the 40% API reduction', href: '/work/fiji-immigration-internal' },
       { label: 'InsureMet — the dense table views', href: '/work/insuremet' },
       { label: 'Inheriting someone else’s Angular codebase', href: '/insights/angular-codebase-audit' },

@@ -169,6 +169,17 @@ export interface Project {
   /** Named only when the engagement is public. Omitted otherwise. */
   client?: string;
   /**
+   * The service this project is evidence for, surfaced in the closing CTA.
+   *
+   * A case study is the proof; the service page is the thing being sold, and
+   * until now the proof pages carried far more internal links than the pages
+   * they were proving. Populate ONLY where the project genuinely demonstrates
+   * that service — a link asserting work that was not done is worse than a
+   * missing link, and `label` is read as the anchor text, so it has to describe
+   * the service rather than the project.
+   */
+  service?: { label: string; href: string };
+  /**
    * What was personally contributed. Populate ONLY from the verified role
    * record — an empty array hides the section rather than inventing one.
    */
