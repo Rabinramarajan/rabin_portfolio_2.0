@@ -50,7 +50,7 @@
     },
     {
       "name": "Content Quality",
-      "score": 80,
+      "score": 88,
       "what_works": [
         "Strong E-E-A-T: named government and pension systems, specific metrics, real resume",
         "Articles take positions drawn from shipped work rather than summarising documentation"
@@ -64,9 +64,9 @@
         },
         {
           "title": "Six short case studies",
-          "severity": "Low",
-          "description": "470-540 words versus 758 for the strongest case study",
-          "recommendation": "Add constraint/decision/trade-off/outcome narrative, not padding"
+          "severity": "Info",
+          "description": "RESOLVED: now 645-762 words against a 778-word benchmark. The gap was three missing fields (responsibilities, metrics, decisions), not prose length.",
+          "recommendation": "Review the added decisions for factual accuracy; metrics left empty pending verified numbers."
         }
       ]
     },
@@ -189,7 +189,7 @@
         "items": [
           "DONE: quotable answer paragraph on all 4 service pages",
           "DONE: /insights expanded 265 -> 362 words",
-          "TODO: deepen the six 470-540 word case studies"
+          "DONE (needs factual sign-off): six short case studies deepened to 645-762 words via decisions; metrics deliberately left empty as no verified numbers exist"
         ]
       },
       {

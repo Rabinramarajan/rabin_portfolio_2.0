@@ -361,6 +361,34 @@ export const projects: Project[] = [
       'Delivered a unified mobile experience for iOS and Android.',
       'Brought provident fund information closer to members through mobile self-service.',
       'Integrated native mobile capabilities through Capacitor.'
+    ],
+    responsibilities: [
+      'Responsive interfaces across both mobile platforms',
+      'REST API integration for member account and contribution data',
+      'Secure authentication, including biometric sign-in',
+      'Support for both App Store and Play Store releases',
+    ],
+    decisions: [
+      {
+        problem:
+          'Members check balances and statements on the devices they already own, which are frequently older phones on unreliable connections — and the same financial screens have to be correct on both iOS and Android.',
+        decision:
+          'One Ionic and Angular codebase with Capacitor bridging the native capabilities, rather than two separately built native applications.',
+        why:
+          'The screens are the same account views on both platforms. What genuinely differs is the native surface — secure authentication and device storage — and Capacitor confines that difference to a bridge instead of spreading it across two codebases.',
+        tradeoff:
+          'Anything the bridge does not already expose has to be written as a plugin, and platform-specific behaviour still has to be tested and released on both stores rather than once.',
+      },
+      {
+        problem:
+          'Provident fund balances and contribution history are sensitive, but a member opening the app to check one number will not tolerate a full sign-in every time.',
+        decision:
+          'Biometric sign-in on top of the platform credential store, rather than a longer-lived session in the application layer.',
+        why:
+          'It moves the security cost onto the device, where the platform already solves it well, instead of trading safety for convenience in application code.',
+        tradeoff:
+          'Devices without usable biometric hardware need a maintained fallback path, so there are two sign-in routes to keep working rather than one.',
+      },
     ],
     seo: {
       title:
@@ -423,6 +451,28 @@ export const projects: Project[] = [
       'Unified multiple insurance operations into a centralized administration experience.',
       'Created reusable frontend patterns across department-specific modules.',
       'Improved visibility of operational information through dashboards and structured data views.'
+    ],
+    decisions: [
+      {
+        problem:
+          'Products, policies, claims and finance each wanted their own workflow, but all four read and write the same underlying business data and had to stay recognisably one product.',
+        decision:
+          'Department-specific modules composed from one shared component and data layer, rather than four separately built consoles.',
+        why:
+          'The differences between departments are in workflow, not in what a policy or a claim fundamentally is — so the shared layer is where consistency is cheapest to enforce, and the modules stay free to differ above it.',
+        tradeoff:
+          'A department-specific need now has to be negotiated against a shared API instead of solved locally, which makes some individual changes slower to ship.',
+      },
+      {
+        problem:
+          'Operational screens in insurance are dense — long tables, many columns, dashboards read all day rather than glanced at.',
+        decision:
+          'Structured table and dashboard primitives built once and reused across every module, fed by RxJS streams.',
+        why:
+          'Dense data views are where inconsistency is most expensive: a table that sorts or paginates differently in one module is a retraining cost for staff who move between them.',
+        tradeoff:
+          'The shared primitives carry more configuration than any single screen needs, which is complexity every consumer pays a little of.',
+      },
     ],
     seo: {
       title:
@@ -492,6 +542,18 @@ export const projects: Project[] = [
       'Created a modern digital storefront for a local furniture business.',
       'Structured product content for improved search visibility.',
       'Built a responsive experience optimized for desktop and mobile users.'
+    ],
+    decisions: [
+      {
+        problem:
+          'Furniture sells on large photography, and large photography is the fastest way to make a storefront slow — while the storefront still has to be findable in search.',
+        decision:
+          'Angular with server-side rendering, so product content is present in the HTML, with responsive image handling for the photography.',
+        why:
+          'Rendering on the server settles discoverability at the source rather than depending on a crawler executing the application, and it puts meaningful content on screen before the JavaScript has finished.',
+        tradeoff:
+          'SSR adds a server runtime to operate and a class of hydration bugs that a purely static build would not have.',
+      },
     ],
     seo: {
       title:
@@ -553,6 +615,28 @@ export const projects: Project[] = [
       'Created an end-to-end AI-assisted resume creation workflow.',
       'Combined structured form input with live visual editing.',
       'Built a modern Angular architecture around Signals and Zoneless application patterns.'
+    ],
+    decisions: [
+      {
+        problem:
+          'A resume builder has to feel trivial to a first-time user and still support detailed editing, with a preview that updates as they type.',
+        decision:
+          'A guided, structured input flow as the primary path, with Angular Signals driving the live preview.',
+        why:
+          'Guiding the input is what removes the blank page, and signals make the preview a direct consequence of the data rather than something kept in sync by hand.',
+        tradeoff:
+          'A guided flow is more opinionated than a free-form editor, so an experienced user who wants to jump straight to one section has to be given an explicit route around it.',
+      },
+      {
+        problem:
+          'A live preview that re-renders on every keystroke is exactly the workload that makes change detection expensive.',
+        decision:
+          'Zoneless change detection driven by signals, rather than relying on Zone.js to discover what changed.',
+        why:
+          'With signals the framework already knows precisely which values changed, so asking it to also patch and monitor every async API is redundant work on the hottest path in the product.',
+        tradeoff:
+          'Zoneless requires the whole codebase to be disciplined about state: any value not held in a signal will not trigger an update, and that fails more quietly than a missed render.',
+      },
     ],
     seo: {
       title:
@@ -620,6 +704,18 @@ export const projects: Project[] = [
       'Established a centralized operational architecture for multiple applications.',
       'Separated administration and content management from consuming applications.',
       'Created a scalable foundation for future Zellavora products and services.'
+    ],
+    decisions: [
+      {
+        problem:
+          'Several products need the same operational layer — users, roles, permissions, content and configuration — and each one solving it separately means the rules drift apart.',
+        decision:
+          'One control platform owning that layer for the whole ecosystem, exposed to the products through API contracts rather than shared code.',
+        why:
+          'Permissions and auditability are exactly the things that must not differ between products. A contract boundary lets each product evolve its own interface without being able to reinterpret who is allowed to do what.',
+        tradeoff:
+          'It becomes a central dependency: a contract change has to be coordinated across every product that consumes it, and the platform is a single point of failure for all of them.',
+      },
     ],
     seo: {
       title:
@@ -683,6 +779,28 @@ export const projects: Project[] = [
       'Created reusable UI foundations for enterprise Angular applications.',
       'Reduced duplication by standardizing frequently used interface patterns.',
       'Established a scalable approach for maintaining consistent application experiences.'
+    ],
+    decisions: [
+      {
+        problem:
+          'Shared components fail in two opposite directions — too rigid and teams work around them, too configurable and they become harder to use than writing the markup directly.',
+        decision:
+          'Standalone components with small, composable APIs and Signals for reactive state, rather than large components with wide option surfaces.',
+        why:
+          'Composition lets a team assemble the variant they need from parts that each stay simple, which keeps flexibility without pushing every new requirement into another boolean input.',
+        tradeoff:
+          'Composable parts mean more pieces to learn and more assembly at the call site than a single component that tries to do everything.',
+      },
+      {
+        problem:
+          'Interaction behaviour — focus management, overlays, keyboard handling — is the part teams most often reimplement slightly differently and slightly wrong.',
+        decision:
+          'Angular CDK primitives underneath the component layer wherever that behaviour is needed, rather than hand-rolled implementations per component.',
+        why:
+          'These are solved problems with accessibility requirements attached, and a bespoke version is usually a subtly inaccessible version.',
+        tradeoff:
+          'It ties the component layer to CDK conventions and adds a dependency that has to be upgraded in step with Angular.',
+      },
     ],
     seo: {
       title:

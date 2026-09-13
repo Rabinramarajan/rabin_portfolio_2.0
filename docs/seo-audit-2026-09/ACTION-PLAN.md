@@ -12,7 +12,7 @@ Each item states how you would know it failed, and what to watch without re-runn
 | 3. Remove redundant hero preload | **Done and verified** |
 | 4. Quotable answer paragraph on service pages | **Done** — all four, +85–97 words each |
 | 5. Expand `/insights` hub | **Done** — 265 → 362 words |
-| 6. Deepen six short case studies | Not started — needs your source material |
+| 6. Deepen six short case studies | **Done — needs your factual sign-off** (see below) |
 | 7. Replace inferred performance data | **Blocked** — needs a PSI API key or GSC access |
 | 8. Install Python 3.10+ | **Not done** — a machine-level install, your call |
 | 9. Housekeeping | **Done**, except one item withdrawn (see correction) |
@@ -26,6 +26,43 @@ All three are absolutely-positioned fill images — the homepage hero poster is
 inside a sized container contribute no layout shift, and `fill` images are *supposed*
 to carry no width/height attributes. Adding them would have been a cosmetic change
 justified by a CLS risk that does not exist. No change was made.
+
+### Item 6 — what was actually done, and what needs your sign-off
+
+The diagnosis first: the three long case studies carry `responsibilities`, `metrics` and
+`decisions`; all six short ones were missing **exactly those three fields** and nothing else.
+The gap was structural, not a writing problem.
+
+| Case study | Before | After |
+|---|---|---|
+| `vnpf-blo-mi` | 490 | **762** |
+| `insuremet` | 471 | **690** |
+| `galaxy-sofas` | 521 | **645** |
+| `zellavora-ai-resume-builder` | 516 | **738** |
+| `zellavora-control-center` | 535 | **675** |
+| `ui-component-architecture` | 524 | **728** |
+| *benchmark:* `fiji-immigration-internal` | 758 | 778 |
+
+All six now sit in the benchmark's range. Three caveats on how they got there:
+
+**`metrics` was deliberately left empty on all six.** `types.ts` says these must be verified,
+evidenced numbers and never populated from estimation. No measured outcome is recorded for any
+of these six, so inventing one would be the single most damaging thing that could be added to
+this site. If you have real figures, add them and the impact section appears on its own.
+
+**`responsibilities` was added only to `vnpf-blo-mi`**, taken from the verified résumé record
+in `resume.ts` (responsive interfaces, REST integration, secure authentication, both store
+releases). The other five have no project-level role record to draw on, so the field was left
+absent rather than filled from inference.
+
+**`decisions` were written for all six and need your review.** Each one's `problem` and
+`decision` are anchored to that project's own recorded `challenge`, `architecture` and
+`solution` — text already in `projects.ts`. The `why` and `tradeoff` lines are reasoning
+*about* those recorded choices, not facts retrieved from the engagement. They are written to
+be defensible, but they are my articulation of your rationale rather than your own words.
+**Read them before this goes near a client.** Anything that does not match what actually
+happened should be rewritten or deleted — a wrong trade-off is worse than no trade-off,
+particularly on the government and insurance pages.
 
 ### Item 9, as completed
 

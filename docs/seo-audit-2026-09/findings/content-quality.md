@@ -13,8 +13,13 @@
 
 **Recommendation:** Expand /insights by 300-400 words stating topical scope and perspective
 
-### Six short case studies (Low)
+### Six short case studies (RESOLVED)
 
-470-540 words versus 758 for the strongest case study
+Now 645-762 words against a 778-word benchmark. The gap was three missing fields -
+responsibilities, metrics and decisions - present on the three long case studies and absent
+from all six short ones.
 
-**Recommendation:** Add constraint/decision/trade-off/outcome narrative, not padding
+**Recommendation:** Review the added `decisions` for factual accuracy — their `why` and
+`tradeoff` lines are reasoning about recorded architecture choices, not facts retrieved from
+the engagements. `metrics` was left empty on all six: no verified numbers exist, and
+`types.ts` forbids populating that field from estimation.
