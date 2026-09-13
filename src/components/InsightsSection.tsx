@@ -8,17 +8,26 @@ import type { SectionHeadingLevel } from "@/components/ui";
  * `showIntro` is on for the /insights route and off for the homepage teaser,
  * where the surrounding page already carries the context and a second framing
  * paragraph would just repeat it.
+ *
+ * `standalone` says this section is the first thing on its own route, so it
+ * has to clear the fixed header. The homepage teaser is scrolled to and must
+ * not carry that offset.
  */
 export function InsightsSection({
   headingLevel = "h2",
   showIntro = false,
-}: { headingLevel?: SectionHeadingLevel; showIntro?: boolean } = {}) {
+  standalone = false,
+}: {
+  headingLevel?: SectionHeadingLevel;
+  showIntro?: boolean;
+  standalone?: boolean;
+} = {}) {
   const Heading = headingLevel;
   const intro = sections.insights;
   // Scheduled pieces are not live yet, so the listing must not advertise them.
   const items = publishedInsights();
   return (
-    <section id="insights" className="section">
+    <section id="insights" className={standalone ? "section ins-page" : "section"}>
       <div className="shell">
         <SectionKicker index={intro.index} label={intro.label} />
         <Heading className="sec-title">{intro.title[0].text}</Heading>

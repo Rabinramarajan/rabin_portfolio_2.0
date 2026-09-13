@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <>
       <BlogJsonLd />
-      <InsightsSection headingLevel="h1" showIntro />
+      <InsightsSection headingLevel="h1" showIntro standalone />
     </>
   );
 }

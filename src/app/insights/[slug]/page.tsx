@@ -51,7 +51,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const related = item.related?.filter((r) => isLinkLive(r.href)) ?? [];
   const scheduled = !live && (item.body?.length ?? 0) > 0;
   return (
-    <article className="section">
+    <article className="section ins-page">
       <div className="shell" style={{ maxWidth: "42rem" }}>
         {/* Article schema only once the post has a body — a stub is thin
             content and is already kept out of the index. */}

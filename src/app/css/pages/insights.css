@@ -1,3 +1,10 @@
+/* The header is fixed, so a route that opens on an insights section has to
+   clear it on top of the usual section rhythm — otherwise the kicker tucks
+   under the nav. Not applied to the homepage teaser, which is scrolled to. */
+.ins-page {
+  padding-top: calc(var(--header-h) + var(--section-y));
+}
+
 /* ============================================================
    INSIGHTS
    ============================================================ */
