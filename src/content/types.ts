@@ -447,6 +447,15 @@ export type InsightBlock =
       priority?: boolean;
     };
 
+/** The closed set of subjects the insights listing filters on. */
+export type InsightTopic =
+  | "Architecture"
+  | "Performance"
+  | "Design"
+  | "Accessibility"
+  | "Mobile"
+  | "Practice";
+
 export interface Insight {
   id: string;
   /**
@@ -461,6 +470,20 @@ export interface Insight {
   number?: string;
   title?: string;
   dek?: string;
+  /**
+   * The subject the piece belongs to. Authored rather than derived: the
+   * listing filters on it, so it has to be a small closed set a reader can
+   * scan, not whatever a keyword extractor decides today.
+   */
+  topic?: InsightTopic;
+  /**
+   * Cover art for the listing. Optional: an article without one falls back to
+   * the generated plate for its topic (see lib/insightCover.ts), so a piece
+   * is never published with an empty image box. `width` and `height` are the
+   * file's intrinsic pixels, which reserve the card's image area and keep the
+   * listing off the CLS list.
+   */
+  cover?: { src: string; alt: string; width: number; height: number };
   kicker?: string;
   value?: string;
   note?: string;

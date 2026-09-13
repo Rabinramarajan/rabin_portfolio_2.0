@@ -1,83 +1,52 @@
 import Link from "next/link";
-import { insightNumber, publishedInsights } from "@/content/insights";
+import { featuredInsight, publishedInsights } from "@/content/insights";
 import { sections } from "@/content/sections";
 import { SectionKicker } from "@/components/ui";
+import { InsightCard } from "@/components/insights/InsightCard";
 import type { SectionHeadingLevel } from "@/components/ui";
 
 /**
- * `showIntro` is on for the /insights route and off for the homepage teaser,
- * where the surrounding page already carries the context and a second framing
- * paragraph would just repeat it.
+ * The insights teaser in the homepage stack.
  *
- * `standalone` says this section is the first thing on its own route, so it
- * has to clear the fixed header. The homepage teaser is scrolled to and must
- * not carry that offset.
+ * The full listing — filters, search, the figures and the whole set — lives
+ * on /insights in `InsightsHub`. This one stays a server component and shows
+ * the lead piece plus three more, because the homepage's job here is to prove
+ * the writing exists and hand the reader to the index, not to be a second
+ * index a scroll above the contact form.
  */
 export function InsightsSection({
   headingLevel = "h2",
-  showIntro = false,
-  standalone = false,
 }: {
   headingLevel?: SectionHeadingLevel;
-  showIntro?: boolean;
-  standalone?: boolean;
 } = {}) {
   const Heading = headingLevel;
   const intro = sections.insights;
-  // Scheduled pieces are not live yet, so the listing must not advertise them.
+  // Scheduled pieces are not live yet, so the teaser must not advertise them.
   const items = publishedInsights();
+  const featured = featuredInsight();
+  /* Two followers, not three: the lead card takes two of the four columns,
+     so a third would wrap onto a row of its own and leave the teaser looking
+     like a listing that ran out. */
+  const rest = items.filter((i) => i.id !== featured?.id).slice(0, 2);
+
   return (
-    <section id="insights" className={standalone ? "section ins-page" : "section"}>
+    <section id="insights" className="section inh-teaser">
       <div className="shell">
-        <SectionKicker index={intro.index} label={intro.label} />
-        <Heading className="sec-title">{intro.title[0].text}</Heading>
-        <p className="sec-lede">{intro.lede}</p>
-        {showIntro ? (
-          <>
-            <p className="ins-intro">
-              These are engineering notes rather than tutorials. Each one argues a position I
-              arrived at on a specific production system — a government case management
-              platform, a pension member portal, a cross-platform member app — and says what
-              the decision cost as well as what it bought.
-            </p>
-            <p className="ins-intro">
-              The recurring subjects are Angular architecture and state, where the useful
-              question is usually when Signals are enough and a store is overhead rather than
-              which library to adopt; rendering and network performance, where load behaviour
-              belongs in the feature spec rather than in a later optimisation phase; and
-              restraint in interfaces for software people are required to use every day rather
-              than choose to.
-            </p>
-            <p className="ins-intro">
-              I write one of these when a problem turns out to have a general shape worth
-              naming. That means there are fewer of them than a publishing schedule would
-              produce, and each is drawn from work that actually shipped, with the projects
-              that produced it named.
-            </p>
-          </>
-        ) : null}
-        <div style={{ marginTop: "1.5rem" }}>
-          {items.map((item) => (
-            <Link className="ins-row" href={"/insights/" + item.id} key={item.id}>
-              <span className="mono faint">{insightNumber(item.id)}</span>
-              <span>
-                <strong style={{ display: "block", fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontWeight: 500 }}>
-                  {item.title}
-                </strong>
-                <span className="muted">{item.dek}</span>
-                {item.datePublished ? (
-                  <time className="ins-row__date" dateTime={item.datePublished}>
-                    {new Date(item.datePublished + "T00:00:00Z").toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                      timeZone: "UTC",
-                    })}
-                  </time>
-                ) : null}
-              </span>
-              <span aria-hidden>→</span>
-            </Link>
+        <div className="inh-teaser__head">
+          <div>
+            <SectionKicker index={intro.index} label={intro.label} />
+            <Heading className="sec-title">{intro.title[0].text}</Heading>
+            <p className="sec-lede">{intro.lede}</p>
+          </div>
+          <Link className="inh-teaser__all" href="/insights">
+            All insights
+            <span aria-hidden>→</span>
+          </Link>
+        </div>
+
+        <div className="inh-grid inh-grid--teaser">
+          {(featured ? [featured, ...rest] : rest).map((item, i) => (
+            <InsightCard item={item} key={item.id} headingLevel={headingLevel} index={i} />
           ))}
         </div>
       </div>

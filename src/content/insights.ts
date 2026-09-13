@@ -1,4 +1,4 @@
-import type { Insight } from '@/content/types';
+import type { Insight, InsightBlock, InsightTopic } from '@/content/types';
 
 /**
  * An insight is published once it has body blocks AND its publication date has
@@ -55,9 +55,66 @@ export const insightNumber = (id: string, now: Date = new Date()): string => {
   return insights.find((i) => i.id === id)?.number ?? '01';
 };
 
+/**
+ * Prose words in an article body.
+ *
+ * Code blocks are excluded on purpose: nobody reads a 30-line listing at
+ * prose speed, and counting it would push a short argument with two listings
+ * past a long one without. Headings, asides and captions do count — they are
+ * read.
+ */
+function proseWords(blocks: InsightBlock[] = []): number {
+  const text = blocks
+    .map((b) => {
+      if (typeof b === 'string') return b;
+      if (b.type === 'heading' || b.type === 'aside') return b.text;
+      if (b.type === 'image') return b.caption ?? '';
+      return b.caption ?? '';
+    })
+    .join(' ');
+  return text.split(/\s+/).filter(Boolean).length;
+}
+
+/**
+ * Reading time in whole minutes, at 220 wpm, floored at 1.
+ *
+ * Derived rather than authored so it cannot drift away from the article when
+ * a section is added, and so a stub never advertises a read time it has not
+ * earned.
+ */
+export const insightReadMinutes = (insight: Insight): number =>
+  Math.max(1, Math.round(proseWords(insight.body) / 220));
+
+/**
+ * Topics that actually have a live article behind them, in the order they
+ * first appear in the set. A filter pill that returns nothing is worse than
+ * an absent pill, so the listing only ever offers these.
+ */
+export const insightTopics = (now: Date = new Date()): InsightTopic[] => {
+  const seen: InsightTopic[] = [];
+  for (const i of publishedInsights(now)) {
+    if (i.topic && !seen.includes(i.topic)) seen.push(i.topic);
+  }
+  return seen;
+};
+
+/**
+ * The piece the listing leads with: the most recently published one. Falls
+ * back to the first live article on the (impossible in practice) chance that
+ * nothing carries a date.
+ */
+export const featuredInsight = (now: Date = new Date()): Insight | undefined => {
+  const live = publishedInsights(now);
+  return (
+    [...live].sort((a, b) => (b.datePublished ?? '').localeCompare(a.datePublished ?? ''))[0] ??
+    live[0]
+  );
+};
+
 export const insights: Insight[] = [
   {
     id: 'angular-signals-state-management',
+    topic: 'Architecture',
     seoTitle: 'Angular Signals State Management: When You Don’t Need a Store',
     seoDescription:
       'When Angular Signals are enough and a store is overhead — the promotion rule I use, drawn from a pension portal and an immigration case system.',
@@ -200,6 +257,7 @@ export class CaseQueueStore {
   },
   {
     id: 'angular-performance-core-web-vitals',
+    topic: 'Performance',
     seoTitle: 'Angular Performance: Core Web Vitals as a Product Requirement',
     seoDescription:
       'Why load behaviour belongs in the feature spec rather than an optimisation phase, and what that changes about how Angular applications get built.',
@@ -335,6 +393,7 @@ export class ReferenceDataService {
   },
   {
     id: 'enterprise-ui-design-restraint',
+    topic: 'Design',
     seoTitle: 'Enterprise UI Design: Why Quiet Interfaces Age Better',
     seoDescription:
       'Restraint as an engineering decision in software people are required to use every day, from government case systems and member portals.',
@@ -461,6 +520,7 @@ export class ReferenceDataService {
   },
   {
     id: 'angular-zoneless-change-detection',
+    topic: 'Architecture',
     seoTitle: 'Angular Zoneless Change Detection: Migrating Without a Long-Lived Branch',
     seoDescription:
       'An incremental path to zoneless Angular — what to make precise first, what ships independently, and the checks I run at each step.',
@@ -620,6 +680,7 @@ export class CaseListComponent {
   },
   {
     id: 'ionic-offline-first-architecture',
+    topic: 'Mobile',
     seoTitle: 'Ionic Offline-First Architecture with Angular and Capacitor',
     seoDescription:
       'Treating offline as a design input rather than an error state, in a member app shipped to iOS and Android.',
@@ -766,6 +827,7 @@ private async flush(): Promise<void> {
   },
   {
     id: 'accessible-angular-forms',
+    topic: 'Accessibility',
     seoTitle: 'Accessible Angular Forms: Validation and Error Recovery',
     seoDescription:
       'Form design when a failed submission costs the user something real — validation timing, error recovery and the accessibility that makes both work.',
@@ -895,6 +957,7 @@ private async flush(): Promise<void> {
   },
   {
     id: 'angular-codebase-audit',
+    topic: 'Practice',
     seoTitle: 'Inheriting an Angular Codebase: A Practical Audit',
     seoDescription:
       'What a scoped assessment of an unfamiliar Angular application covers, and why it comes before any code changes.',
@@ -1005,6 +1068,7 @@ rg -L "ChangeDetectionStrategy.OnPush" src --type ts -g "*.component.ts" | wc -l
   },
   {
     id: 'rxjs-reduce-api-calls',
+    topic: 'Performance',
     seoTitle: 'RxJS: How I Cut Angular API Calls by 40%',
     seoDescription:
       'A government case system fired the same reference lookups five times per screen. The fix was one shared, cached RxJS stream — here is the pattern and what it cost.',
@@ -1111,6 +1175,7 @@ invalidateCountries(): void {
   },
   {
     id: 'angular-performance-checklist',
+    topic: 'Performance',
     seoTitle: 'Angular Performance Optimization Checklist (In Diagnostic Order)',
     seoDescription:
       'The checks I run on a slow Angular application, in the order that finds the cause fastest — network duplication, change detection, bundle, then rendering.',
@@ -1174,6 +1239,7 @@ invalidateCountries(): void {
   },
   {
     id: 'ux-problem-approach',
+    topic: 'Design',
     seoTitle: 'How I Approach UX Problems as a Product Designer',
     seoDescription:
       'The questions I work through before opening Figma — defining the problem, mapping journey friction, removing fields, and validating the assumption underneath the design.',
