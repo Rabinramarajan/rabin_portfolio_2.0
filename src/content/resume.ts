@@ -51,7 +51,7 @@ export const resumeTitles = [
  */
 export const resumeContact = {
   location: "Chennai, Tamil Nadu, India",
-  phone: "+91 9789376992",
+  phone: "+91 7305076992",
   /* One identity everywhere. The résumé used to carry a Gmail address while
      the footer, FAQ and contact page carried hello@rabinr.in — a visitor who
      noticed both had to wonder which one was real. */

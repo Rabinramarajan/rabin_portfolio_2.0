@@ -12,7 +12,7 @@ export const profile: Profile = {
   location: "Chennai, Tamil Nadu, India",
   locationShort: "Chennai, India",
   email: "hello@rabinr.in",
-  phone: "+91 97893 76992",
+  phone: "+91 73050 76992",
   phoneHours: "Mon - Sat, 10AM - 8PM",
   yearsExperienceLabel: "4+", // CALCULATED from experience.ts via calculateExperienceYears()
   availability: {
