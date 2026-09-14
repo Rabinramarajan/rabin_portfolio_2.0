@@ -1,19 +1,9 @@
 import Link from "next/link";
-import { insightNumber, insightReadMinutes } from "@/content/insights";
+import { insightDate, insightNumber, insightReadMinutes } from "@/content/insights";
 import type { Insight } from "@/content/types";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { itemHeadingLevel } from "@/components/ui";
 import { InsightCover } from "@/components/insights/InsightCover";
-
-/** "12 Sep 2026" — short enough to sit in a card meta row without wrapping. */
-export function shortDate(iso: string): string {
-  return new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 /**
  * One article in a grid.
@@ -69,7 +59,7 @@ export function InsightCard({
         <span className="inh-card__foot">
           {item.datePublished ? (
             <time className="inh-card__date" dateTime={item.datePublished}>
-              {shortDate(item.datePublished)}
+              {insightDate(item.datePublished)}
             </time>
           ) : (
             <span />

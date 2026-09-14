@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, clientKey } from "@/lib/rate-limit";
 import { buildActions, buildProjectCards, buildSources, buildSuggestions } from "@/chat/actions";
 import { resolveProvider } from "@/chat/ai";
 import { logChatEvent } from "@/chat/analytics";
@@ -37,14 +37,6 @@ const encoder = new TextEncoder();
 function rateLimitCeiling(): number {
   const configured = Number(process.env.CHAT_RATE_LIMIT);
   return Number.isFinite(configured) && configured > 0 ? configured : 20;
-}
-
-function clientKey(req: NextRequest): string {
-  const ip =
-    req.headers.get("cf-connecting-ip") ??
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "anon";
-  return `chat:${ip}:${(req.headers.get("user-agent") ?? "").slice(0, 48)}`;
 }
 
 /** One SSE frame. `meta` precedes the answer; `delta` carries text; `done` ends it. */
@@ -85,7 +77,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Request is too large." }, { status: 413 });
   }
 
-  if (!rateLimit(clientKey(req), rateLimitCeiling(), RATE_WINDOW_MS)) {
+  if (!rateLimit(clientKey(req, "chat", 48), rateLimitCeiling(), RATE_WINDOW_MS)) {
     logChatEvent("chat_error", { reason: "rate_limited" });
     return NextResponse.json(
       { error: "Too many messages. Give it a minute and try again." },

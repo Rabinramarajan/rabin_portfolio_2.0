@@ -86,6 +86,20 @@ export const insightReadMinutes = (insight: Insight): number =>
   Math.max(1, Math.round(proseWords(insight.body) / 220));
 
 /**
+ * "12 Sep 2026" — the byline date, short enough to sit on one line on a phone.
+ *
+ * Pinned to UTC so the card, the article byline and the JSON-LD date can never
+ * disagree by a day depending on where the page is rendered.
+ */
+export const insightDate = (iso: string): string =>
+  new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+
+/**
  * Topics that actually have a live article behind them, in the order they
  * first appear in the set. A filter pill that returns nothing is worse than
  * an absent pill, so the listing only ever offers these.

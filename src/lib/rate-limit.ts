@@ -38,3 +38,27 @@ export function rateLimit(id: string, limit = 5, windowMs = 10 * 60 * 1000) {
   rec.count += 1;
   return rec.count <= limit;
 }
+
+/**
+ * The rate-limit identity for a request.
+ *
+ * `namespace` scopes the key per endpoint, so traffic to one route cannot
+ * spend another route's budget. `uaChars` mixes a truncated user-agent in
+ * where an endpoint needs to separate clients sharing an IP (office NAT,
+ * mobile carriers); omit it to key on IP alone.
+ *
+ * Typed on `headers` rather than NextRequest so the limiter stays independent
+ * of the framework it is called from.
+ */
+export function clientKey(
+  req: { headers: Headers },
+  namespace: string,
+  uaChars = 0,
+): string {
+  const ip =
+    req.headers.get("cf-connecting-ip") ??
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "anon";
+  const ua = uaChars > 0 ? `:${(req.headers.get("user-agent") ?? "").slice(0, uaChars)}` : "";
+  return `${namespace}:${ip}${ua}`;
+}

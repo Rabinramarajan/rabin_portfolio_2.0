@@ -52,9 +52,6 @@ export function trackEvent(eventName: ConversionEvent, params?: EventParams) {
 }
 
 /**
- * Track CTA clicks in the conversion funnel
- */
-/**
  * A CTA click, routed to the event for where it was clicked.
  *
  * Everything used to arrive as `view_hero_cta` regardless of which button it
@@ -75,21 +72,6 @@ export function trackCtaClick(ctaLabel: string, ctaLocation: string) {
     location: ctaLocation,
     timestamp: new Date().toISOString(),
   });
-}
-
-/** A mailto, tel or résumé link — an enquiry that never touches the form. */
-export function trackDirectContact(
-  channel: 'email' | 'phone' | 'resume',
-  location: string,
-) {
-  const event: ConversionEvent =
-    channel === 'email' ? 'email_click' : channel === 'phone' ? 'phone_click' : 'resume_download';
-  trackEvent(event, { location, timestamp: new Date().toISOString() });
-}
-
-/** An article handing the reader off to the work that produced the argument. */
-export function trackArticleHandoff(fromSlug: string, href: string) {
-  trackEvent('article_to_case_study', { from: fromSlug, href });
 }
 
 /** The form: started (first edit) and submitted. Counted once each per page. */

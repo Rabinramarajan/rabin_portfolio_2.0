@@ -361,7 +361,7 @@ export const projects: Project[] = [
       'Delivered a unified mobile experience for iOS and Android.',
       'Brought provident fund information closer to members through mobile self-service.',
       'Integrated native mobile capabilities through Capacitor.'
-    ],
+    ],
     responsibilities: [
       'Responsive interfaces across both mobile platforms',
       'REST API integration for member account and contribution data',
@@ -451,7 +451,7 @@ export const projects: Project[] = [
       'Unified multiple insurance operations into a centralized administration experience.',
       'Created reusable frontend patterns across department-specific modules.',
       'Improved visibility of operational information through dashboards and structured data views.'
-    ],
+    ],
     decisions: [
       {
         problem:
@@ -542,7 +542,7 @@ export const projects: Project[] = [
       'Created a modern digital storefront for a local furniture business.',
       'Structured product content for improved search visibility.',
       'Built a responsive experience optimized for desktop and mobile users.'
-    ],
+    ],
     decisions: [
       {
         problem:
@@ -615,7 +615,7 @@ export const projects: Project[] = [
       'Created an end-to-end AI-assisted resume creation workflow.',
       'Combined structured form input with live visual editing.',
       'Built a modern Angular architecture around Signals and Zoneless application patterns.'
-    ],
+    ],
     decisions: [
       {
         problem:
@@ -704,7 +704,7 @@ export const projects: Project[] = [
       'Established a centralized operational architecture for multiple applications.',
       'Separated administration and content management from consuming applications.',
       'Created a scalable foundation for future Zellavora products and services.'
-    ],
+    ],
     decisions: [
       {
         problem:
@@ -779,7 +779,7 @@ export const projects: Project[] = [
       'Created reusable UI foundations for enterprise Angular applications.',
       'Reduced duplication by standardizing frequently used interface patterns.',
       'Established a scalable approach for maintaining consistent application experiences.'
-    ],
+    ],
     decisions: [
       {
         problem:
@@ -860,7 +860,7 @@ export function galleryFrames(project: Project) {
  * named — the work section, the work page explorer and any future surface all
  * read it from here, so a renamed category cannot disagree with itself.
  */
-export const FILTER_LABEL: Record<ProjectFilter, string> = {
+const FILTER_LABEL: Record<ProjectFilter, string> = {
   web: 'Web Applications',
   dashboards: 'Dashboards',
   platforms: 'Platforms',

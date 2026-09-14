@@ -40,7 +40,7 @@ export function isBlobFolder(value: string): value is BlobFolder {
  * every non `[a-z0-9-/]` character are stripped, so no upload can escape its
  * folder or collide with the site's own structure.
  */
-export function safeName(input: string, extension: string): string {
+function safeName(input: string, extension: string): string {
   const segments = input
     .replace(/\\/g, "/")
     .split("/")

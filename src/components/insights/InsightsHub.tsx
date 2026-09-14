@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   featuredInsight,
+  insightDate,
   insightNumber,
   insightReadMinutes,
   insightTopics,
@@ -14,7 +15,7 @@ import {
 import type { Insight, InsightTopic } from "@/content/types";
 import { sections } from "@/content/sections";
 import { SectionKicker } from "@/components/ui";
-import { InsightCard, shortDate } from "@/components/insights/InsightCard";
+import { InsightCard } from "@/components/insights/InsightCard";
 import { InsightCover } from "@/components/insights/InsightCover";
 
 const ALL = "All" as const;
@@ -378,7 +379,7 @@ function Featured({ item }: { item: Insight }) {
           <span className="inh-featured__meta">
             <span className="inh-card__read">{insightReadMinutes(item)} min read</span>
             {item.datePublished ? (
-              <time dateTime={item.datePublished}>{shortDate(item.datePublished)}</time>
+              <time dateTime={item.datePublished}>{insightDate(item.datePublished)}</time>
             ) : null}
           </span>
         </span>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  insightDate,
   insightReadMinutes,
   isLinkLive,
   isPublished,
@@ -14,16 +15,6 @@ import { InsightShare } from "@/components/insights/InsightShare";
 import { InsightToc } from "@/components/insights/InsightToc";
 import { insightSections } from "@/lib/insightSections";
 import { absoluteUrl } from "@/lib/seo";
-
-/** "12 Sep 2026" — the byline date, short enough to sit on one line on a phone. */
-function shortDate(iso: string): string {
-  return new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 /**
  * The three sibling articles offered in the rail.
@@ -134,7 +125,7 @@ export function InsightArticle({ item }: { item: Insight }) {
               {item.datePublished ? (
                 <>
                   {scheduled ? "Scheduled for " : null}
-                  <time dateTime={item.datePublished}>{shortDate(item.datePublished)}</time>
+                  <time dateTime={item.datePublished}>{insightDate(item.datePublished)}</time>
                 </>
               ) : null}
               <span className="insd-byline__sep" aria-hidden>
@@ -147,7 +138,7 @@ export function InsightArticle({ item }: { item: Insight }) {
                     &bull;
                   </span>
                   Updated{" "}
-                  <time dateTime={item.dateModified}>{shortDate(item.dateModified)}</time>
+                  <time dateTime={item.dateModified}>{insightDate(item.dateModified)}</time>
                 </>
               ) : null}
             </p>

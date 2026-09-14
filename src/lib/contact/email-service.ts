@@ -21,7 +21,7 @@ export interface EmailProvider {
   send(message: EmailMessage): Promise<void>;
 }
 
-export const EMAIL_MAX_RETRIES = 3;
+const EMAIL_MAX_RETRIES = 3;
 
 /** Keeps credentials out of the server log when a transport error is printed. */
 function maskSensitiveData(message: string): string {

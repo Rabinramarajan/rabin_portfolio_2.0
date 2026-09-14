@@ -1,5 +1,5 @@
 import { knowledgeBase } from "@/chat/knowledge";
-import type { DetectedEntities } from "@/chat/intent";
+import { normalizeText, type DetectedEntities } from "@/chat/intent";
 import type { ChatIntent, KnowledgeRecord, KnowledgeType } from "@/chat/models";
 
 /**
@@ -25,7 +25,7 @@ export interface SearchOptions {
 }
 
 /** Which record types are most likely to answer each intent. */
-export const INTENT_TYPES: Record<ChatIntent, KnowledgeType[]> = {
+const INTENT_TYPES: Record<ChatIntent, KnowledgeType[]> = {
   PROFILE: ["profile", "skills", "experience"],
   EXPERIENCE: ["experience", "profile"],
   SKILLS: ["skills", "profile", "service"],
@@ -54,16 +54,8 @@ const STOP_WORDS = new Set([
   "why","will","with","would","you","your","about","show","give","get","please","many","much","any","also",
 ]);
 
-const normalize = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/[’']/g, "")
-    .replace(/[^a-z0-9+#.\s-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
 function tokenize(value: string): string[] {
-  return normalize(value)
+  return normalizeText(value)
     .split(" ")
     .filter((token) => token.length > 1 && !STOP_WORDS.has(token));
 }
@@ -123,10 +115,10 @@ export class JsonRetriever implements KnowledgeRetriever {
       if (record) pinned.push(record);
     }
     if (entities.technologies.length) {
-      const wanted = entities.technologies.map(normalize);
+      const wanted = entities.technologies.map(normalizeText);
       for (const record of this.records) {
         if (record.type !== "project" && record.type !== "skills" && record.type !== "service") continue;
-        const tags = record.tags.map(normalize);
+        const tags = record.tags.map(normalizeText);
         if (wanted.some((tech) => tags.includes(tech))) pinned.push(record);
       }
     }
@@ -160,9 +152,9 @@ export class JsonRetriever implements KnowledgeRetriever {
   private score(record: KnowledgeRecord, tokens: string[], types?: KnowledgeType[]): number {
     if (!tokens.length) return types?.includes(record.type) ? 1 : 0;
 
-    const title = normalize(record.title);
-    const content = normalize(record.content);
-    const tags = record.tags.map(normalize);
+    const title = normalizeText(record.title);
+    const content = normalizeText(record.content);
+    const tags = record.tags.map(normalizeText);
     const tagTokens = new Set(tags.flatMap((tag) => tag.split(" ")));
 
     let score = 0;
@@ -207,7 +199,7 @@ function dedupeRecords(records: KnowledgeRecord[]): KnowledgeRecord[] {
 
 let defaultRetriever: KnowledgeRetriever | null = null;
 
-export function getRetriever(): KnowledgeRetriever {
+function getRetriever(): KnowledgeRetriever {
   return (defaultRetriever ??= new JsonRetriever());
 }
 

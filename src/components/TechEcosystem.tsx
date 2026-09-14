@@ -22,7 +22,7 @@ import {
    Root: (550, 700) -> Trunk: (550, 440) -> 7 Branch Hubs
 ------------------------------------------------------------------ */
 
-export interface EcoBranch {
+interface EcoBranch {
   id: string;
   label: string;
   subtitle: string;
@@ -40,7 +40,7 @@ export interface EcoBranch {
   description: string;
 }
 
-export interface EcoTechNode {
+interface EcoTechNode {
   id: string;
   label: string;
   branchId: string;
@@ -52,13 +52,13 @@ export interface EcoTechNode {
   insight: string;
 }
 
-export interface EcoConnection {
+interface EcoConnection {
   from: string;
   to: string;
   strength: number;
 }
 
-export const ECO_BRANCHES: EcoBranch[] = [
+const ECO_BRANCHES: EcoBranch[] = [
   {
     id: "frontend",
     label: "Frontend",
@@ -159,7 +159,7 @@ export const ECO_BRANCHES: EcoBranch[] = [
   },
 ];
 
-export const ECO_NODES: EcoTechNode[] = [
+const ECO_NODES: EcoTechNode[] = [
   /* --- FRONTEND --- */
   {
     id: "angular",

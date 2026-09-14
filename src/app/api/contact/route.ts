@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, clientKey } from "@/lib/rate-limit";
 import { submitContact } from "@/lib/contact/contact-service";
 import { createEmailProvider } from "@/lib/contact/email-service";
 import { ATTACHMENT } from "@/content/contact-fields";
@@ -69,12 +69,6 @@ async function readMultipart(
   return { body, attachment };
 }
 
-function clientKey(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
-  const forwarded = req.headers.get("cf-connecting-ip") ?? ip;
-  return `${forwarded}:${(req.headers.get("user-agent") ?? "").slice(0, 60)}`;
-}
-
 export async function POST(req: NextRequest) {
   const isMultipart = (req.headers.get("content-type") ?? "").includes("multipart/form-data");
   const limit = isMultipart ? MAX_MULTIPART_BYTES : MAX_BODY_BYTES;
@@ -84,7 +78,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Request is too large." }, { status: 413 });
   }
 
-  if (!rateLimit(clientKey(req), 4, 10 * 60 * 1000)) {
+  if (!rateLimit(clientKey(req, "contact", 60), 4, 10 * 60 * 1000)) {
     return NextResponse.json({ error: "Too many requests. Please wait a few minutes and try again." }, { status: 429 });
   }
 

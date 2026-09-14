@@ -110,7 +110,7 @@ export function IconGrid(p: IconProps) {
   );
 }
 
-export function IconCompass(p: IconProps) {
+function IconCompass(p: IconProps) {
   return (
     <Svg {...p}>
       <circle cx="12" cy="12" r="8.5" />
@@ -119,7 +119,7 @@ export function IconCompass(p: IconProps) {
   );
 }
 
-export function IconBlueprint(p: IconProps) {
+function IconBlueprint(p: IconProps) {
   return (
     <Svg {...p}>
       <rect x="4" y="4" width="16" height="16" rx="1.6" />
@@ -128,7 +128,7 @@ export function IconBlueprint(p: IconProps) {
   );
 }
 
-export function IconPen(p: IconProps) {
+function IconPen(p: IconProps) {
   return (
     <Svg {...p}>
       <path d="M15.2 4.6 19.4 8.8 8.6 19.6l-5 .8.8-5z" />
@@ -145,7 +145,7 @@ export function IconCode(p: IconProps) {
   );
 }
 
-export function IconGauge(p: IconProps) {
+function IconGauge(p: IconProps) {
   return (
     <Svg {...p}>
       <circle cx="12" cy="12" r="8.5" />

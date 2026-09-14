@@ -22,7 +22,7 @@ export type InsightSection = {
 const SELF_NUMBERED = /^\d+\s*[.)]\s+/;
 
 /** Stable anchor for a heading, so sections are linkable and citable. */
-export function insightHeadingId(text: string): string {
+function insightHeadingId(text: string): string {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")

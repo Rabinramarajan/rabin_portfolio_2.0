@@ -26,7 +26,7 @@ function Svg({ className, children }: IconProps & { children: React.ReactNode })
   );
 }
 
-export function IconUser(props: IconProps) {
+function IconUser(props: IconProps) {
   return (
     <Svg {...props}>
       <circle cx="10" cy="6.5" r="3" />
@@ -64,7 +64,7 @@ export function IconSpark(props: IconProps) {
   );
 }
 
-export function IconMail(props: IconProps) {
+function IconMail(props: IconProps) {
   return (
     <Svg {...props}>
       <rect x="2.5" y="4.5" width="15" height="11" rx="2" />

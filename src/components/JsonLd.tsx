@@ -15,7 +15,6 @@ const PERSON_ID = SITE_URL + "/#person";
 const SITE_ID = SITE_URL + "/#website";
 const SERVICE_ID = SITE_URL + "/#service";
 
-export { PERSON_ID };
 
 /** Everything Rabin is shown to work with, deduped across the skill matrix. */
 const knowsAbout = Array.from(
