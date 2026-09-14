@@ -1,5 +1,9 @@
 "use client";
 
+/* The panel's stylesheet lives with the panel rather than in globals.css:
+   these rules only ever apply once the reader opens the assistant. */
+import "@/app/css/components/chat-panel.css";
+
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { trackChat } from "@/chat/analytics";
 import { chatConfig } from "@/chat/config";

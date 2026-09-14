@@ -88,7 +88,16 @@ export function Hero() {
       as="section"
       containerProps={{ id: "hero", "aria-labelledby": "hero-heading" }}
       trackClassName="chero-track"
-      className={scrub ? "chero chero--scrub" : "chero"}
+      /* Both classes, always. The pin used to be added and removed with
+         `scrub`, which resolves only after hydration, so a phone rendered a
+         sticky 100vh hero inside a 240vh track and then unpinned it — a
+         layout change on every load. `.chero--scrub` now carries its own
+         `@media (min-width: 768px) and (prefers-reduced-motion:
+         no-preference)` guard, matching `.chero-track`, so the markup is
+         identical on the server and the client and CSS alone decides whether
+         the hero pins. `scrub` still drives the video behaviour below, which
+         is not layout. */
+      className="chero chero--scrub"
       mediaClassName="chero__stage"
       videoClassName="chero__reel"
       posterClassName="chero__reel"

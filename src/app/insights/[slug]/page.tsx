@@ -5,6 +5,10 @@ import { InsightArticle } from "@/components/insights/InsightArticle";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pageMetadata } from "@/lib/seo";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/pages/insights.css";
+
 export function generateStaticParams() {
   return insights.map((i) => ({ slug: i.id }));
 }

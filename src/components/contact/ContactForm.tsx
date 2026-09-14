@@ -16,6 +16,10 @@ import { duration, ease } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import type { InquiryType } from "@/types/contact";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/components/form.css";
+
 type SubmitState = "idle" | "loading" | "ok" | "err";
 
 function formatBytes(bytes: number): string {

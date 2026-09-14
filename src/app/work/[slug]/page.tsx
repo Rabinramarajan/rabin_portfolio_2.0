@@ -36,6 +36,10 @@ import type { Project, ProjectChallenge, ProjectFeature } from "@/content/types"
 import { BreadcrumbJsonLd, ProjectJsonLd } from "@/components/JsonLd";
 import { absoluteUrl, pageMetadata } from "@/lib/seo";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/pages/work-detail.css";
+
 /**
  * Every case study is prerendered from the project records, so a slug that is
  * not in that list is not a project. Closing dynamic params makes Next answer

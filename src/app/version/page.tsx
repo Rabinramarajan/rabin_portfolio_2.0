@@ -9,6 +9,10 @@ import {
   versionRecord,
 } from "@/lib/version";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/pages/version.css";
+
 export const metadata = {
   ...pageMetadata({
     title: "Release History",

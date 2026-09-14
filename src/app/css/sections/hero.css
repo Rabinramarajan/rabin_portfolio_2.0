@@ -4,13 +4,29 @@
 
 /* --- cinematic hero: full-bleed reel + editorial overlay --- */
 /* Scroll-scrub track — the extra height below the viewport is the scroll
-   distance that drives `video.currentTime` in Hero.tsx. Only rendered on the
-   full motion tier; the basic tier keeps the plain 100vh hero. */
+   distance that drives `video.currentTime` in Hero.tsx.
+
+   This height is decided by CSS alone, never by JS, and that is the whole
+   point of the rule. Hero.tsx picks scrub vs autoplay from matchMedia and
+   prefers-reduced-motion, neither of which the server can know, so the track
+   used to render 240vh tall on the server and then collapse to `display:
+   contents` on the commit after hydration — every phone load shifted the rest
+   of the page up by ~1.4 viewports, which is where most of the 0.31 CLS came
+   from. The same media queries live here instead, so first paint and every
+   paint after it agree and the JS flip changes no layout at all.
+
+   Below 768px and under prefers-reduced-motion there is no scrub, so the
+   track is exactly one viewport and the hero is an ordinary section. */
 .chero-track {
   position: relative;
-  height: 240vh;
+  /* auto, not a viewport number: where the hero does not pin, the track is
+     only a wrapper and `.chero`'s own min-height is the real measure. Fixing
+     a height here instead would fight that min-height on phones, where 100vh
+     and 100dvh differ by the browser chrome, and leave the hero overflowing
+     its own track into the section below. */
+  height: auto;
 }
-@media (min-width: 768px) {
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
   .chero-track {
     /* 400vh over a 60fps 10s reel is ~1.7 scroll-pixels per frame, so the
        reel advances on almost every wheel tick rather than jumping. */
@@ -18,13 +34,13 @@
   }
 }
 /* Constrained-height laptops (14", 15.6"): reduce scroll track to prevent overlap */
-@media (min-width: 768px) and (max-height: 950px) {
+@media (min-width: 768px) and (max-height: 950px) and (prefers-reduced-motion: no-preference) {
   .chero-track {
     height: 280vh;
   }
 }
 /* 15.6" HD laptops (768px height): further reduce for tight height */
-@media (min-width: 768px) and (max-height: 768px) {
+@media (min-width: 768px) and (max-height: 768px) and (prefers-reduced-motion: no-preference) {
   .chero-track {
     height: 220vh;
   }
@@ -307,12 +323,19 @@
   isolation: isolate;
 }
 /* Pinned variant used inside .chero-track. Declared after `.chero` on
-   purpose: same specificity, so source order is what lets `sticky` win. */
-.chero--scrub {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  min-height: 0;
+   purpose: same specificity, so source order is what lets `sticky` win.
+
+   Gated on the same query as the tall track. The class is now always present
+   in the markup — Hero.tsx no longer adds and removes it around hydration —
+   so the pin has to switch off wherever the track is only one viewport tall,
+   or a phone would stick a 100vh hero inside a 100dvh parent for no reason. */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .chero--scrub {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    min-height: 0;
+  }
 }
 .chero__stage {
   position: absolute;

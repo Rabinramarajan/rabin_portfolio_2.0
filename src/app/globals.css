@@ -35,14 +35,8 @@
 @import "./css/components/cursor.css";
 @import "./css/components/footer.css";
 
-@import "./css/pages/insights.css";
 @import "./css/pages/insights-hub.css";
 @import "./css/pages/misc.css";
-@import "./css/pages/version.css";
-@import "./css/pages/legal.css";
-@import "./css/pages/service-narrative.css";
-@import "./css/pages/about-story.css";
-@import "./css/pages/skills-narrative.css";
 
 @import "./css/components/chat-widget.css";
 
@@ -60,29 +54,52 @@
 @import "./css/sections/work-preview.css";
 
 
-@import "./css/pages/work-detail.css";
 @import "./css/pages/work.css";
-@import "./css/pages/resume.css";
 
-@import "./css/components/project-card.css";
 
 @import "./css/base/touch-targets.css";
 
-@import "./css/pages/process-cinematic.css";
 @import "./css/pages/process-flow.css";
 
 @import "./css/components/sidebar.css";
 
 @import "./css/pages/contact.css";
 
-@import "./css/components/form.css";
 
-@import "./css/pages/contact-premium.css";
-@import "./css/pages/contact-fields.css";
 
 @import "./css/sections/tech-ecosystem-tree.css";
 @import "./css/sections/tech-ecosystem-notes.css";
 @import "./css/sections/tech-ecosystem-mobile.css";
+
+/* ------------------------------------------------------------
+   Route-scoped stylesheets are NOT imported here.
+
+   Everything above ships on every route, so a sheet only one page
+   can ever use was render-blocking CSS the homepage paid for and
+   never read. Those sheets now live next to the route or the
+   component that owns them, and Next emits each as its own chunk
+   that only that route requests:
+
+     insights.css ............ app/insights/[slug]/page.tsx
+     version.css ............. app/version/page.tsx
+     legal.css ............... app/privacy + app/terms
+     about-story.css ......... app/about/page.tsx
+     skills-narrative.css .... app/skills/page.tsx
+     process-cinematic.css ... app/process/page.tsx
+     work-detail.css ......... app/work/[slug]/page.tsx
+     resume.css .............. app/resume/page.tsx
+     contact-premium.css ..... app/contact/page.tsx
+     contact-fields.css ...... app/contact/page.tsx
+     service-narrative.css ... components/pages/ServiceNarrative.tsx
+     project-card.css ........ components/work/ProjectCard.tsx
+     form.css ................ components/contact/ContactForm.tsx
+
+   The rule for adding one: if every route renders it, import it
+   above; if one route does, import it from that route. Before
+   moving a sheet out, check its selectors against what the shared
+   routes render — each of these was verified to match nothing the
+   homepage renders.
+   ------------------------------------------------------------ */
 
 /* Global motion kill-switch — must stay last. */
 @import "./css/base/motion-off.css";
