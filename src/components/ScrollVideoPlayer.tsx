@@ -133,14 +133,7 @@ export function ScrollVideoPlayer({
   const [fullPreload, setFullPreload] = useState(false);
   useEffect(() => {
     if (reduced) return;
-    /* Only scroll mode reloads the element. autoplay mode has a play() in
-       flight by now and load() would restart the stream out from under it;
-       raising `preload` to "auto" is enough there, because the browser keeps
-       buffering the source it already has. */
-    const boost = () => {
-      setFullPreload(true);
-      if (mode === "scroll") videoRef.current?.load();
-    };
+    const boost = () => setFullPreload(true);
     if (document.readyState === "complete") {
       const id = window.setTimeout(boost, 200);
       return () => window.clearTimeout(id);
@@ -148,6 +141,16 @@ export function ScrollVideoPlayer({
     window.addEventListener("load", boost, { once: true });
     return () => window.removeEventListener("load", boost);
   }, [reduced, mode]);
+
+  /* The <source> children only mount once `fullPreload` is true, and a <video>
+     ignores sources added after it has already picked one — load() is what
+     makes it re-run selection against the children that now exist. Separate
+     effect rather than inside `boost` so it runs after React has committed
+     them. */
+  useEffect(() => {
+    if (!fullPreload) return;
+    videoRef.current?.load();
+  }, [fullPreload]);
 
   /* scroll mode */
   useGSAP(
@@ -203,13 +206,25 @@ export function ScrollVideoPlayer({
     // A reduced-motion visitor gets the poster and no playback at all, rather
     // than a single non-looping pass.
     if (mode !== "autoplay" || reduced) return;
+    /* Held until `fullPreload`, which is the window load event plus 200ms.
+       play() is a download trigger: it makes the browser buffer the reel
+       regardless of the preload attribute, so calling it on mount put the
+       whole ~4.7 MB file on the wire during the exact window that decides
+       LCP. On a phone that is the entire connection, and the poster — already
+       decoded and waiting since ~190ms — could not get painted behind it.
+       Measured as 79% of a 5.3s LCP spent in render delay.
+
+       Deferring only moves the first frame, not the painted pixel: the poster
+       IS the reel's first frame and holds at opacity 1 until `painted`, so
+       there is nothing to see happen. */
+    if (!fullPreload) return;
     const video = videoRef.current;
     if (!video) return;
     video.play().then(
       () => setBlocked(false),
       () => setBlocked(true),
     );
-  }, [mode, reduced]);
+  }, [mode, reduced, fullPreload]);
 
   /* One listener for both modes: the crossfade is about pixels, not playback,
      so it does not care which mode put the frame there. `loadeddata` fires
@@ -242,6 +257,16 @@ export function ScrollVideoPlayer({
 
   const media = (
     <div className={mediaClassName ?? "absolute inset-0 -z-[1] overflow-hidden"} aria-hidden>
+      {/* The poster never fades out. It used to drop to opacity 0 once
+          `painted` flipped, which handed the largest paint on the page to the
+          <video> — and an element at opacity 0 is not an LCP candidate at all,
+          so the poster's own paint (decoded and ready at ~190ms) was
+          discarded and LCP waited on the first decoded video frame instead.
+          Measured as the LCP element, at 5.3-6.7s.
+
+          The fade bought nothing: the video is layered directly on top at the
+          same size with object-cover, and the poster IS the reel's first
+          frame, so the pixels underneath are identical and never visible. */}
       {poster ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -253,7 +278,7 @@ export function ScrollVideoPlayer({
           decoding="async"
           className={`${
             posterClassName ?? "absolute inset-0 h-full w-full object-cover"
-          } transition-opacity duration-500 ${painted && !posterOnly ? "opacity-0" : "opacity-100"}`}
+          } transition-opacity duration-500 opacity-100`}
         />
       ) : null}
 
@@ -280,14 +305,37 @@ export function ScrollVideoPlayer({
              reel's first frame, so there is nothing to see happen. */
           preload={fullPreload ? "auto" : "metadata"}
           tabIndex={-1}
-          autoPlay={mode === "autoplay" && !reduced}
+          /* Deliberately NOT set, even in autoplay mode. The attribute makes
+             the browser fetch and buffer the source as soon as the element is
+             parsed, which overrides preload="metadata" above and defeats the
+             point of it. Playback is started by the effect further up instead,
+             after the window load event, so the reel downloads once the page
+             that has to paint is done competing for the connection. */
           loop={mode === "autoplay" && loop && !reduced}
           className={`${
             videoClassName ?? "absolute inset-0 h-full w-full object-cover"
           } transition-opacity duration-500 ${painted ? "opacity-100" : "opacity-0"}`}
         >
-          {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
-          <source src={src} type="video/mp4" />
+          {/* Held back until the window load event. `preload="metadata"` is
+              not a download budget: Chrome opens the source with an
+              open-ended `Range: bytes=0-` and keeps streaming, so on a fast
+              connection it pulled the entire ~4.7 MB reel — 82% of the page's
+              transfer — while the poster, fonts and JS were still competing
+              for the same pipe. Verified: the element reported
+              `preload="metadata"` at the time it issued `bytes=0-` for the
+              full 4,801,627 bytes.
+
+              A <video> with no source fetches nothing at all, which is the
+              only reliable way to hold it. The poster is the reel's first
+              frame and stays at opacity 1 until `painted`, so deferring the
+              source changes no pixel — it only stops the reel from bidding
+              against the paint. */}
+          {fullPreload ? (
+            <>
+              {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
+              <source src={src} type="video/mp4" />
+            </>
+          ) : null}
         </video>
       )}
 
