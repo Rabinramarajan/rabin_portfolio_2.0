@@ -24,6 +24,16 @@ export function ProofBar() {
           ))}
         </ul>
         <p className="proofbar__context proofbar__clients">Government, pension and mobile delivery: Fiji Immigration · PRIMS · VNPF blo mi</p>
+        <p className="proofbar__context">
+          On Fiji Immigration, sharing and caching reference lookups in one RxJS stream
+          reduced duplicate panel requests, with approximately 40% lower API consumption
+          than the earlier frontend data flow.{" "}
+          <Link href={`/work/${homeCaseStudy.projectSlug}`}>Read the Fiji Immigration engineering decisions</Link>.
+        </p>
+        <p className="proofbar__context">
+          Project-based delivery, monthly retainers and dedicated engineering.{" "}
+          <Link href="/pricing">Explore pricing and engagement options</Link>.
+        </p>
       </div>
     </section>
   );

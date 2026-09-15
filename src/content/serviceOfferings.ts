@@ -14,7 +14,7 @@ export const serviceOfferings: ServiceOffering[] = [
     id: "angular",
     number: "01",
     title: "Angular Engineering",
-    description: "Angular with Signals and zoneless change detection, plus server-side rendering (SSR) and hydration for public pages.",
+    description: "Angular 17–22 with standalone components, Signals and zoneless change detection, plus server-side rendering (SSR) and hydration for public pages.",
     stack: ["Angular 17–22", "Signals", "RxJS"],
     icon: "code",
     href: "/services/angular-development",
