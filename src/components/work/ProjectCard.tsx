@@ -75,10 +75,10 @@ export function ProjectCard({
 
         <span className="pcard__body">
           <Heading className="pcard__title">{p.title}</Heading>
-          <span className="pcard__cat">{p.category}</span>
+          <span className="pcard__cat">{p.category} · {p.year}</span>
           <span className="pcard__tagline">{p.overview}</span>
-          <span className="pcard__cta" aria-hidden>
-            View Case Study
+          <span className="pcard__cta">
+            See the {p.title} case study
             <ArrowIcon />
           </span>
         </span>

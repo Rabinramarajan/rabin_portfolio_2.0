@@ -167,6 +167,7 @@
   font-weight: 500;
 }
 .pcard__cta svg {
+  flex-shrink: 0;
   width: 20px;
   height: 12px;
   transition: translate var(--duration-ui) var(--ease-out-quart);

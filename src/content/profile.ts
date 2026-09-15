@@ -173,7 +173,7 @@ export const hero: HeroContent = {
     posterSizes: "100vw",
   },
   description:
-    "Frontend Angular Consultant building scalable enterprise applications with Angular, TypeScript, Signals and RxJS — from architecture to production.",
+    "Remote Angular consultant building government and enterprise systems across 3 countries — from immigration workflows serving 10K+ users to pension member portals.",
   primaryCta: { label: "View Case Studies", href: "/work" },
   secondaryCta: { label: "Discuss a Project", href: "/contact" },
   /* Recruiters and clients land on the same hero and want different things.
@@ -196,9 +196,9 @@ export const hero: HeroContent = {
 };
 
 export const defaultSeo: SeoContent = {
-  title: "Rabin R — Angular Consultant & Frontend Engineer",
+  title: "Angular Consultant & Frontend Engineer | Rabin R — Chennai",
   description:
-    "Angular consultant and frontend engineer building scalable enterprise web and mobile products with Angular, TypeScript, RxJS, Signals and Ionic.",
+    "Hire a remote Angular consultant with 4+ years in government and enterprise systems serving 10K+ users. Explore Fiji Immigration and pension platform case studies.",
   /* Clustered rather than generic. "Frontend developer" on its own is a term
      this site cannot win and would not convert if it did; the specific ones
      below are what the work actually evidences. */
@@ -213,4 +213,3 @@ export const defaultSeo: SeoContent = {
     "Frontend software engineer",
   ],
 };
-

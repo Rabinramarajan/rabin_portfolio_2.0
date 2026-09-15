@@ -1,4 +1,4 @@
-import { principles } from "@/content/profile";
+import { principles, profile } from "@/content/profile";
 import { sections } from "@/content/sections";
 import { SectionKicker } from "@/components/ui";
 
@@ -24,6 +24,13 @@ export function PrinciplesSection() {
           ))}
         </h2>
         <p className="sec-lede">{intro.lede}</p>
+        <p className="sec-lede">
+          Explore my public code on{" "}
+          <a href={profile.socials.find((social) => social.id === "github")!.href} className="accent">
+            GitHub — Rabin R
+          </a>{" "}
+          alongside the project decisions and trade-offs in the case studies.
+        </p>
         <ul className="principles__grid">
           {principles.map((item) => (
             <li className="principles__item" key={item.title}>

@@ -285,12 +285,14 @@
   transition: color var(--duration-ui) var(--ease-out-quart);
 }
 .wcard__cta-dot {
+  flex-shrink: 0;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--color-accent);
 }
 .wcard__cta svg {
+  flex-shrink: 0;
   width: 20px;
   height: 12px;
   transition: transform var(--duration-ui) var(--ease-out-quart);

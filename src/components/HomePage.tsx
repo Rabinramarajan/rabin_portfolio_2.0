@@ -37,10 +37,10 @@ export function HomePage() {
       <Hero />
       <ProofBar />
       <WorkSection id="work" limit={3} />
-      <ServicesHorizontalScroll id="services" />
-      <PrinciplesSection />
       {/* Renders nothing until content/testimonials.ts has real quotes in it. */}
       <TestimonialsSection />
+      <ServicesHorizontalScroll id="services" />
+      <PrinciplesSection />
       <JourneySection />
       <InsightsSection />
       <SkillsSection />

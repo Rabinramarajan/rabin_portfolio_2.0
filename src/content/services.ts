@@ -29,9 +29,9 @@ const catalogue: Service[] = [
     number: "02",
     title: "Angular Engineering",
     proposition:
-      "Enterprise Angular applications with signals, standalone APIs, and architecture that stays maintainable under real traffic and real teams.",
+      "Enterprise Angular with Signals, standalone components and zoneless change detection. Server-side rendering (SSR) and hydration where public pages need searchable content and a fast first load.",
     summary:
-      "Enterprise Angular with signals and standalone APIs, maintainable under real traffic.",
+      "Enterprise Angular with Signals, zoneless change detection and SSR with hydration for public-facing pages.",
     deliverables: ["Angular 17–22 applications", "Signals and RxJS", "Standalone architecture", "Migration and modernization"],
     technologies: ["Angular 17–22", "Signals", "Standalone APIs", "RxJS"],
     idealFor: "Government, insurance, and enterprise platforms.",
@@ -85,9 +85,9 @@ const catalogue: Service[] = [
     number: "05",
     title: "Performance Optimization",
     proposition:
-      "Faster loads and calmer runtime through profiling, splitting, and budgets — measured, not guessed.",
+      "Profile loading, interaction and layout stability with Core Web Vitals (LCP, INP and CLS), then address duplicate API calls, rendering costs and bundle size.",
     summary:
-      "Faster loads and calmer runtime through profiling, splitting, and budgets.",
+      "Core Web Vitals (LCP, INP and CLS), API request profiling and rendering budgets guide performance work.",
     deliverables: ["Core Web Vitals", "Rendering and runtime", "API and network optimization", "Bundle optimization"],
     technologies: ["Lighthouse", "Code splitting", "SSR", "Image strategy"],
     idealFor: "Products that already work, but feel heavy.",
