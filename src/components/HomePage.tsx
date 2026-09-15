@@ -1,5 +1,5 @@
 import { Hero } from "@/components/Hero";
-import { ProofBar } from "@/components/ProofBar";
+import { ProofBar, HomeCaseStudy } from "@/components/ProofBar";
 import { ServicesHorizontalScroll } from "@/components/ServicesHorizontalScroll";
 import { WorkSection } from "@/components/WorkSection";
 import { PrinciplesSection } from "@/components/PrinciplesSection";
@@ -39,6 +39,7 @@ export function HomePage() {
       <WorkSection id="work" limit={3} />
       {/* Renders nothing until content/testimonials.ts has real quotes in it. */}
       <TestimonialsSection />
+      <HomeCaseStudy />
       <ServicesHorizontalScroll id="services" />
       <PrinciplesSection />
       <JourneySection />

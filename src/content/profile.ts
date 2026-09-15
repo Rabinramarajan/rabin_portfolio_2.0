@@ -198,7 +198,7 @@ export const hero: HeroContent = {
 export const defaultSeo: SeoContent = {
   title: "Angular Consultant & Frontend Engineer | Rabin R — Chennai",
   description:
-    "Hire a remote Angular consultant with 4+ years in government and enterprise systems serving 10K+ users. Explore Fiji Immigration and pension platform case studies.",
+    "Angular consultant with 4+ years building enterprise & government platforms serving 10K+ users. Angular, RxJS, Signals, Ionic.",
   /* Clustered rather than generic. "Frontend developer" on its own is a term
      this site cannot win and would not convert if it did; the specific ones
      below are what the work actually evidences. */
