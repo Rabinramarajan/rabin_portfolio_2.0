@@ -104,6 +104,17 @@ export const MEDIA_MANIFEST = {
      at monitor sizes. The poster srcset carries a matching 1920w cut for the
      same reason. */
   "hero/home-reel-v6.mp4": "/media/hero/banner_v2.scrub.mp4",
+  /* Phones never scrub — Hero gates the scrub on `(max-width: 767px)` and
+     drops to autoplay below it — so the all-intra encode above buys them
+     nothing but bytes. Every frame being a keyframe is what makes that file
+     ~7.7 Mbps; at a normal GOP the same five seconds is ~0.43 Mbps. Paired
+     with a 720p cut (a phone's full-bleed hero is nowhere near 1080p even at
+     3x DPR), that is 263 KB against 4.7 MB — 82% of the page's entire
+     transfer taken off the one connection least able to afford it. Selected
+     in Hero from the same media query that already decides the mode, and
+     only ever mounted inside the post-load <source>, so no SSR branch
+     exists and the scrub path is untouched. */
+  "hero/home-reel-v6-mobile.mp4": "/media/hero/banner_v2.mobile.mp4",
   "hero/home-poster-v6.webp": "/media/hero/banner2-poster.webp",
   /* Other cuts of the same frame. The poster is the LCP element on mobile,
      where the full-width file is ~4x the bytes the layout can use — and on a

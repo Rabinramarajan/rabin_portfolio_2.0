@@ -159,6 +159,11 @@ export const hero: HeroContent = {
   },
   reel: {
     src: media("hero/home-reel-v6.mp4"),
+    /* The phone cut. Same five seconds, normal GOP, 720p — 263 KB against
+       the scrub encode's 4.7 MB. Hero picks between the two with the media
+       query that already decides scroll vs autoplay, so the file that can be
+       seeked is only ever fetched by the viewports that seek. */
+    mobileSrc: media("hero/home-reel-v6-mobile.mp4"),
     poster: media("hero/home-poster-v6.webp"),
     /* The poster is the LCP element. This srcset and the <link rel="preload">
        on the home page are read from these same two fields precisely so they

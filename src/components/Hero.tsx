@@ -41,6 +41,16 @@ export function Hero() {
   const phone = useMediaQuery("(max-width: 767px)");
   const scrub = hydrated ? !reduce && !phone : true;
 
+  /* Phones get the small encode, and it is the same `phone` query that just
+     decided they will not scrub — the two facts are one decision, so they are
+     read from one source.
+
+     Safe against hydration despite `phone` being false on the first render:
+     ScrollVideoPlayer holds the <source> out of the DOM entirely until the
+     window load event, and `phone` has settled long before that. The server
+     renders no source, so there is nothing for this to mismatch. */
+  const reelSrc = (phone ? hero.reel?.mobileSrc : hero.reel?.src) ?? hero.reel?.src ?? "";
+
   const t = (delay: number) => ({
     duration: reduce ? duration.micro : duration.section,
     delay: reduce ? 0 : delay,
@@ -80,7 +90,7 @@ export function Hero() {
   return (
     <ScrollVideoPlayer
       mode={scrub ? "scroll" : "autoplay"}
-      src={hero.reel?.src ?? ""}
+      src={reelSrc}
       poster={hero.reel?.poster}
       posterSrcSet={hero.reel?.posterSrcSet}
       posterSizes={hero.reel?.posterSizes}

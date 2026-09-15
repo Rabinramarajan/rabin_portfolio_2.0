@@ -51,6 +51,11 @@ export interface HeroContent {
   reel?: {
     src: string;
     poster?: string;
+    /** Small-viewport cut of the same reel. `src` is encoded all-intra so
+     *  the scroll scrub can seek any frame, which costs several megabytes;
+     *  below the scrub breakpoint nothing seeks, so Hero serves this instead.
+     *  Falls back to `src` when absent. */
+    mobileSrc?: string;
     /** Candidate widths for `poster`. The hero poster is the LCP element, so
      *  the home page also preloads it — both the <img> and that preload read
      *  these fields, which is what keeps them from resolving different files. */
