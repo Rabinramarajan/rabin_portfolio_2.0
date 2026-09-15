@@ -20,19 +20,30 @@ export function ProofBar() {
             <li className="proofbar__item" key={metric.label}>
               <strong className="proofbar__value">{metric.value}</strong>
               <span className="proofbar__label">{metric.label}</span>
+              <span className="proofbar__source">{metric.source}</span>
             </li>
           ))}
         </ul>
-        <p className="proofbar__context proofbar__clients">Government, pension and mobile delivery: Fiji Immigration · PRIMS · VNPF blo mi</p>
-        <p className="proofbar__context">
-          On Fiji Immigration, sharing and caching reference lookups in one RxJS stream
-          reduced duplicate panel requests, with approximately 40% lower API consumption
-          than the earlier frontend data flow.{" "}
-          <Link href={`/work/${homeCaseStudy.projectSlug}`}>Read the Fiji Immigration engineering decisions</Link>.
-        </p>
-        <p className="proofbar__context">
-          Project-based delivery, monthly retainers and dedicated engineering.{" "}
-          <Link href="/pricing">Explore pricing and engagement options</Link>.
+
+        <div className="proofbar__ledger">
+          <p className="proofbar__evidence-note">
+            Every figure above was measured on shipped work. On Fiji Immigration, sharing and
+            caching reference lookups in one RxJS stream removed duplicate panel requests and
+            cut roughly 40% of the frontend&rsquo;s API traffic.{" "}
+            <Link href={`/work/${homeCaseStudy.projectSlug}`}>
+              Read the Fiji Immigration engineering decisions
+            </Link>
+            .
+          </p>
+          <p className="proofbar__clients">
+            Shipped on government, pension and mobile platforms for Fiji Immigration, PRIMS
+            and VNPF blo mi.
+          </p>
+        </div>
+
+        <p className="proofbar__engagement">
+          <span>Project-based delivery, monthly retainers and dedicated engineering.</span>
+          <Link href="/pricing">See pricing and engagement options</Link>
         </p>
       </div>
     </section>

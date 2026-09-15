@@ -61,11 +61,11 @@ export const credentials: Credentials = {
  * count to the same deployment, the country count to Fiji, India and the US.
  * Approximations stay approximate ("~40%"): they were measured, not audited.
  */
-export const proofMetrics: { value: string; label: string }[] = [
-  { value: credentials.users, label: "Active users served" },
-  { value: "~40%", label: "Lower API consumption" },
-  { value: "~50%", label: "Frontend performance gain" },
-  { value: credentials.countries, label: "Countries served" },
+export const proofMetrics: { value: string; label: string; source: string }[] = [
+  { value: credentials.users, label: "Active users served", source: "Fiji Immigration case management" },
+  { value: "~40%", label: "Lower API consumption", source: "Shared, cached RxJS reference stream" },
+  { value: "~50%", label: "Frontend performance gain", source: "Rendering and workflow optimisation" },
+  { value: credentials.countries, label: "Countries served", source: "Fiji, India and the United States" },
 ];
 
 /**

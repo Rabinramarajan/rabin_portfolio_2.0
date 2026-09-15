@@ -1,57 +1,160 @@
 /* ── PROOF STRIP ──────────────────────────────────────────────────────────
-   Sits between the hero and the first real section, so it is deliberately
-   quiet: a rule above, numbers, labels, nothing that competes with the
-   headline it follows. It wraps to two columns on phones rather than
-   scrolling sideways — four numbers are the whole point, and a horizontal
-   scroller hides half of them. */
+   Four measured figures read as one instrument panel: hairline-separated
+   columns, each carrying the work that produced it, so the numbers arrive as
+   citations rather than claims. The prose underneath is deliberately ranked —
+   one evidence sentence, one delivery line, one engagement row — instead of
+   three paragraphs of equal grey weight. */
 .proofbar {
-  border-block: 1px solid var(--line, rgba(255, 255, 255, 0.12));
-  padding-block: clamp(1.5rem, 4vw, 2.5rem);
+  border-block: 1px solid var(--color-line-strong, rgba(255, 255, 255, 0.16));
+  padding-block: clamp(2rem, 5vw, 3.25rem);
 }
 
 .proofbar__list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1.25rem, 3vw, 2rem);
+  gap: clamp(1.5rem, 3vw, 2rem) 0;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.proofbar__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-inline: clamp(1rem, 2.5vw, 1.75rem);
+  border-inline-start: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+}
+
+/* The first column in each row sits flush with the shell edge, so the panel
+   aligns with the headline above it rather than floating inside its own gutter. */
+.proofbar__item:nth-child(odd) {
+  padding-inline-start: 0;
+  border-inline-start: 0;
 }
 
 @media (min-width: 768px) {
   .proofbar__list {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-}
 
-.proofbar__item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  .proofbar__item:nth-child(odd) {
+    padding-inline-start: clamp(1rem, 2.5vw, 1.75rem);
+    border-inline-start: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+  }
+
+  .proofbar__item:first-child {
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
 }
 
 .proofbar__value {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-size: clamp(2rem, 5vw, 3.25rem);
   font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.02em;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "ss01", "tnum";
 }
 
 .proofbar__label {
-  font-size: var(--text-sm);
-  color: var(--muted, rgba(255, 255, 255, 0.65));
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-text, #f2f1ec);
 }
 
+.proofbar__source {
+  font-size: var(--type-xs);
+  line-height: var(--leading-snug);
+  color: var(--color-text-faint, #83838c);
+  text-wrap: balance;
+}
+
+/* The reading beneath the readings: one sentence that earns the ~40%, and one
+   line naming where the work shipped. Two columns on wide screens so neither
+   is mistaken for the other's continuation. */
+.proofbar__ledger {
+  display: grid;
+  gap: clamp(0.75rem, 2vw, 2.5rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+}
+
+@media (min-width: 900px) {
+  .proofbar__ledger {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+
+.proofbar__evidence-note,
+.proofbar__clients {
+  margin: 0;
+  font-size: var(--type-sm);
+  line-height: var(--leading-relaxed);
+  max-width: 62ch;
+}
+
+.proofbar__evidence-note {
+  color: var(--color-text-muted, #9a9aa3);
+}
+
+.proofbar__evidence-note a {
+  color: var(--color-text, #f2f1ec);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: color 180ms ease;
+}
+
+.proofbar__evidence-note a:hover {
+  color: var(--color-accent);
+}
+
+.proofbar__clients {
+  color: var(--color-text-faint, #83838c);
+}
+
+.proofbar__engagement {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+  padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+  font-size: var(--type-sm);
+  color: var(--color-text-faint, #83838c);
+}
+
+.proofbar__engagement a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgb(201 242 77 / 35%);
+  padding-bottom: 0.15em;
+  transition: border-color 180ms ease;
+}
+
+.proofbar__engagement a:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+.proofbar__evidence-note a:focus-visible,
+.proofbar__engagement a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ── HOME CASE STUDY ────────────────────────────────────────────────────── */
 .proofbar__evidence {
   display: grid;
   gap: 1rem;
   max-width: 76ch;
   line-height: 1.7;
-}
-
-.proofbar__clients {
-  margin-top: 1.5rem;
 }
 
 .proofbar__detail {
