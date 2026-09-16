@@ -45,19 +45,18 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
   const topics = useMemo(() => insightTopics(), []);
   const featured = useMemo(() => featuredInsight(), []);
 
-  /* The featured piece keeps its own slot at the top, so the rail and the
-     grid below both work from the set with it removed — otherwise the lead
-     article appears three times on one screen. */
+  /* Keep the featured piece out of the recommendation rail. The complete
+     article grid still includes it, including when searching or filtering. */
   const rest = useMemo(() => items.filter((i) => i.id !== featured?.id), [items, featured]);
 
   const matches = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return rest.filter((i) => {
+    return items.filter((i) => {
       if (filter !== ALL && i.topic !== filter) return false;
       if (!q) return true;
       return (i.title + " " + i.dek + " " + (i.topic ?? "")).toLowerCase().includes(q);
     });
-  }, [rest, filter, query]);
+  }, [items, filter, query]);
 
   const stats = useMemo(() => buildStats(items), [items]);
   const cadence = useMemo(() => buildCadence(items), [items]);
@@ -233,7 +232,7 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
             <h2 className="inh-grid-title">{filter === ALL ? "Every insight" : filter}</h2>
           </div>
           <p className="inh-count" aria-live="polite">
-            {matches.length} {filter === ALL && featured ? "more " : ""}
+            {matches.length}{" "}
             {matches.length === 1 ? "article" : "articles"}
           </p>
         </div>
