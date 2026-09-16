@@ -138,13 +138,13 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
               </button>
             </div>
             <ol className="inh-rail__list">
-              {rest.slice(0, 4).map((i) => (
+              {rest.slice(0, 4).map((i, index) => (
                 <li key={i.id}>
                   <Link href={"/insights/" + i.id} className="inh-rail__item">
                     <span className="inh-rail__thumb">
                       <InsightCover item={i} sizes="72px" />
                       <span className="inh-rail__no" aria-hidden>
-                        {insightNumber(i.id)}
+                        {String(index + 1).padStart(2, "0")}
                       </span>
                     </span>
                     <span>

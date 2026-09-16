@@ -149,84 +149,294 @@
   border-radius: 2px;
 }
 
-/* ── HOME CASE STUDY ────────────────────────────────────────────────────── */
-.proofbar__evidence {
+/* ── HOME CASE STUDY ──────────────────────────────────────────────────────
+   Long-form engineering notes, set as a document rather than a column of
+   undifferentiated grey: a standing rail on the left names whose system this
+   is and stays with the reader, the argument runs in one measured column, and
+   the three results lead with the figure — the part a scanning reader is
+   actually looking for. */
+.casestudy {
   display: grid;
-  gap: 1rem;
-  max-width: 76ch;
-  line-height: 1.7;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  grid-template-areas:
+    "meta"
+    "body"
+    "spec"
+    "shot"
+    "links";
 }
 
-.proofbar__detail {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1rem;
+@media (min-width: 1024px) {
+  .casestudy {
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas:
+      "meta body"
+      "links body"
+      "spec spec"
+      "shot shot";
+    align-content: start;
+    column-gap: clamp(2.5rem, 5vw, 4rem);
+    row-gap: 2.5rem;
+  }
 }
 
-.proofbar__detail h3 {
+/* Wide enough for three columns: the rail holds identity and exits, the
+   argument keeps its measure in the middle, and the delivery record takes the
+   space the text was leaving empty on the right. */
+@media (min-width: 1280px) {
+  .casestudy {
+    grid-template-columns: minmax(0, 13rem) minmax(0, 62ch) minmax(0, 15rem);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "meta body spec"
+      "links body spec"
+      "shot shot spec";
+  }
+}
+
+.casestudy__meta {
+  grid-area: meta;
+  align-self: start;
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.4rem;
+  border-top: 2px solid var(--color-accent);
+}
+
+.casestudy__client,
+.casestudy__kind {
   margin: 0;
-  font-size: var(--text-lg);
-  font-weight: 500;
-  line-height: 1.4;
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
 }
 
-.proofbar__outcomes {
+.casestudy__client {
+  color: var(--color-text, #f2f1ec);
+  font-weight: var(--weight-medium);
+}
+
+.casestudy__kind {
+  color: var(--color-text-faint, #83838c);
+}
+
+.casestudy__body {
+  grid-area: body;
   display: grid;
-  gap: 1rem;
+  gap: clamp(1.5rem, 3vw, 2rem);
+  line-height: var(--leading-relaxed);
+}
+
+.casestudy__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: var(--weight-medium);
+  text-wrap: balance;
+}
+
+/* Results, figure first. The anchors exist so a reader can link to a single
+   result, so they stay quiet until used: no standing underline, and the
+   targeted one lights its own rule rather than the whole list. */
+.casestudy__outcomes {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+}
+
+.casestudy__outcomes li {
+  border-bottom: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+  scroll-margin-top: 7rem;
+}
+
+.casestudy__outcomes a {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.25rem 1.5rem;
+  padding: 0.9rem 0;
+  color: inherit;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.casestudy__figure {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+}
+
+.casestudy__claim {
+  font-size: var(--type-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted, #9a9aa3);
+}
+
+.casestudy__outcomes a:hover .casestudy__claim {
+  color: var(--color-text, #f2f1ec);
+}
+
+.casestudy__outcomes a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.casestudy__outcomes li:target {
+  border-inline-start: 2px solid var(--color-accent);
+  padding-inline-start: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  /* Wide enough for the marker to hang outside the measure, so a deep-linked
+     result is flagged without reflowing the text it points at. */
+  .casestudy__outcomes li:target {
+    padding-inline-start: 1rem;
+    margin-inline-start: -1rem;
+  }
+}
+
+.casestudy__detail {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.casestudy__detail h3 {
+  margin: 0;
+  font-size: var(--type-lg);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.01em;
+}
+
+.casestudy__detail p {
+  margin: 0;
+  max-width: 68ch;
+}
+
+/* The delivery record. Reference material, so it is set quietly — hairline
+   rows, label above value — and never competes with the argument beside it. */
+.casestudy__spec {
+  grid-area: spec;
+  align-self: start;
+  display: grid;
+  gap: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+}
+
+.casestudy__spec-group {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.casestudy__spec h3 {
+  margin: 0;
+  font-size: var(--type-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  color: var(--color-text, #f2f1ec);
+}
+
+.casestudy__spec p {
+  margin: 0;
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-text-muted, #9a9aa3);
+}
+
+.casestudy__stack {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.casestudy__stack div {
+  display: grid;
+  gap: 0.1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+}
+
+.casestudy__stack dt {
+  font-size: var(--type-xs);
+  line-height: var(--leading-snug);
+  color: var(--color-text-faint, #83838c);
+}
+
+.casestudy__stack dd {
+  margin: 0;
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-text, #f2f1ec);
+}
+
+.casestudy__scope {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.proofbar__outcomes li {
-  border-inline-start: 2px solid var(--color-accent);
-  padding-inline-start: 1rem;
-  scroll-margin-top: 7rem;
+.casestudy__scope li {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-text-muted, #9a9aa3);
 }
 
-.proofbar__outcomes a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.25em;
+/* Below three columns the record sits under the notes, so it reads across
+   rather than down. */
+@media (max-width: 1279px) {
+  .casestudy__spec {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 1.5rem 2.5rem;
+  }
 }
 
-.proofbar__outcomes a:focus-visible {
+/* The rail's second stop: where to go once the notes have made their case. */
+.casestudy__links {
+  grid-area: links;
+  align-self: start;
+  display: grid;
+  gap: 0.85rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+  font-size: var(--type-sm);
+  line-height: var(--leading-snug);
+}
+
+.casestudy__links a {
+  color: var(--color-text, #f2f1ec);
+  text-decoration: none;
+  border-bottom: 1px solid rgb(201 242 77 / 35%);
+  padding-bottom: 0.2em;
+  justify-self: start;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.casestudy__links a:hover {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+.casestudy__links a:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;
+  border-radius: 2px;
 }
 
-.proofbar__evidence p,
-.proofbar__heading {
-  margin: 0;
-}
-
-.proofbar__heading {
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  line-height: 1.3;
-  font-weight: 500;
-}
-
-.proofbar__context {
-  font-size: var(--text-sm);
-  color: var(--muted, rgba(255, 255, 255, 0.65));
-}
-
-.proofbar__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1.5rem;
-}
-
-.proofbar__links a {
-  color: var(--color-accent);
-  text-decoration: underline;
-  text-underline-offset: 0.25em;
-}
-
-.proofbar__links a:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 4px;
-}
 
 /* ── WHY WORK WITH ME ───────────────────────────────────────────────────── */
 .principles__grid {
@@ -286,3 +496,44 @@
   font-size: var(--text-sm);
   color: var(--muted, rgba(255, 255, 255, 0.65));
 }
+
+/* proof strip + case study — see section comments above. */
+
+/* Three columns and a tall enough window: the record travels with the reader,
+   so the right-hand column stays occupied through the whole argument instead
+   of emptying out after the first screen. The height query keeps it from
+   pinning a panel taller than the window. */
+@media (min-width: 1280px) and (min-height: 900px) {
+  .casestudy__spec {
+    position: sticky;
+    top: 7rem;
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+/* The only picture in the section, and it closes it: the screen the notes have
+   been describing, at the full width of the argument. */
+.casestudy__shot {
+  grid-area: shot;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.casestudy__shot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--color-line, rgba(255, 255, 255, 0.09));
+  border-radius: var(--radius-sm, 4px);
+}
+
+.casestudy__shot figcaption {
+  font-size: var(--type-xs);
+  line-height: var(--leading-snug);
+  color: var(--color-text-faint, #83838c);
+}
+
+

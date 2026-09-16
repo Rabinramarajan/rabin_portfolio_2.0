@@ -128,6 +128,12 @@ export const featuredInsight = (now: Date = new Date()): Insight | undefined => 
 export const insights: Insight[] = [
   {
     id: 'angular-signals-state-management',
+    cover: {
+      src: '/media/insights/angular-signals-state-management/Gemini_Generated_Image_a8ob2ga8ob2ga8ob.png',
+      alt: 'Angular signals connecting local state, computed values and the user interface.',
+      width: 2848,
+      height: 1504,
+    },
     takeaways: [
       'Most UI state has exactly one reader — declare it in the component, not in a service.',
       'Promote state only when a second consumer actually exists in the code, not when one is imagined.',
@@ -150,9 +156,26 @@ export const insights: Insight[] = [
     ],
     cta: 'If you have an Angular codebase where changing one screen means opening six files, that is usually a state-layer problem rather than a discipline problem. I do scoped assessments that say which parts are worth fixing, and in what order.',
     body: [
+      {
+        type: 'image',
+        src: '/media/insights/angular-signals-state-management/Gemini_Generated_Image_a8ob2ga8ob2ga8ob.png',
+        alt: 'Angular signals connecting local state, computed values and the user interface.',
+        width: 2848,
+        height: 1504,
+        priority: true,
+      },
+
       'Every Angular codebase I have inherited has had the same layer in it: a store that exists because the team was told a store was best practice, not because any two parts of the application actually needed to agree on the same value. On the Fiji immigration internal system there were services holding BehaviorSubjects for state that never left the component that created it — a filter panel open/closed flag, the currently expanded row in a table. Each one cost a subscription, an unsubscribe, and a file to open before anyone could understand the template.',
 
       { type: 'heading', text: 'What the ceremony actually costs' },
+
+      {
+        type: 'image',
+        src: '/media/insights/angular-signals-state-management/Gemini_Generated_Image_azm0ggazm0ggazm0.png',
+        alt: 'Observable state with subscriptions and teardown compared with a component-local Angular signal.',
+        width: 2752,
+        height: 1536,
+      },
 
       'Here is the shape it usually takes. A boolean that one template reads, wrapped in enough machinery to look like architecture:',
 
@@ -210,6 +233,14 @@ export class FilterPanelComponent implements OnInit, OnDestroy {
 
       { type: 'heading', text: 'The promotion rule' },
 
+      {
+        type: 'image',
+        src: '/media/insights/angular-signals-state-management/Gemini_Generated_Image_sz04cysz04cysz04.png',
+        alt: 'Angular state promotion from a local component signal to a shared service and then a store.',
+        width: 2752,
+        height: 1536,
+      },
+
       'The rule I now apply is narrow, and it has held up across immigration case management, a pension member portal and an insurance administration console: state starts in the template, and it is promoted only when a second consumer appears. Not when a second consumer is imagined — when one actually exists in the code.',
 
       'Promotion has three steps and I take them in order. First the signal moves from the component to a service, still a signal. Second, if derived values start being recomputed in more than one place, those become computed signals in the same service, so the derivation has exactly one definition. Third — and this is rare — if the state has to survive navigation or be written from unrelated parts of the tree, it earns a store.',
@@ -255,6 +286,14 @@ export class CaseQueueStore {
 
       { type: 'heading', text: 'Zoneless makes the same point from the other side' },
 
+      {
+        type: 'image',
+        src: '/media/insights/angular-signals-state-management/Gemini_Generated_Image_fb563xfb563xfb56.png',
+        alt: 'A signal update highlights only the components that depend on its value.',
+        width: 2752,
+        height: 1536,
+      },
+
       'Once change detection is driven by signal reads rather than by a zone patching every async API, the framework rewards state that is precisely scoped, because only the components that actually read a signal re-render. Broad, shared, store-held state means broad invalidation.',
 
       {
@@ -277,6 +316,12 @@ export class CaseQueueStore {
   },
   {
     id: 'angular-performance-core-web-vitals',
+    cover: {
+      src: '/media/insights/angular-performance-core-web-vitals/Gemini_Generated_Image_ag90tvag90tvag90.png',
+      alt: 'Angular performance overview showing loading, layout stability and interaction timing.',
+      width: 2752,
+      height: 1536,
+    },
     takeaways: [
       'A separate performance phase loses — the cost is composed from decisions already shipped.',
       'Layout shift is designed in, not introduced later: reserve the box before the content lands.',
@@ -299,6 +344,15 @@ export class CaseQueueStore {
     ],
     cta: 'If your application is slow and nobody can say precisely why, that is a measurement problem before it is an engineering one. I start these engagements by establishing which of the three usual causes you actually have.',
     body: [
+      {
+        type: 'image',
+        src: '/media/insights/angular-performance-core-web-vitals/Gemini_Generated_Image_ag90tvag90tvag90.png',
+        alt: 'Angular performance overview showing loading, layout stability and interaction timing.',
+        width: 2752,
+        height: 1536,
+        priority: true,
+      },
+
       'The Fiji immigration internal management system ended up roughly 50% faster on the frontend, with about 40% less API consumption. Neither number came from a performance sprint. They came from treating load behaviour as part of the acceptance criteria for the features being built, at the point they were being built, which is the only time the work is cheap.',
 
       { type: 'heading', text: 'Why a separate performance phase loses' },
@@ -306,6 +360,14 @@ export class CaseQueueStore {
       'When performance is its own phase it competes with features for schedule, and it loses, because a feature has a stakeholder asking for it and a percentage does not. Worse, by the time the phase arrives the causes are structural. A component that fires a request in its constructor is a one-line problem on the day it is written, and an architectural problem six months later when forty components do it and the fix is a caching layer nobody budgeted for.',
 
       { type: 'heading', text: 'The composition problem' },
+
+      {
+        type: 'image',
+        src: '/media/insights/angular-performance-core-web-vitals/Gemini_Generated_Image_rppzwbrppzwbrppz.png',
+        alt: 'Duplicate Angular API requests compared with one shared cached request.',
+        width: 2752,
+        height: 1536,
+      },
 
       'Most of the API reduction on the immigration system was exactly that class of problem, caught late enough to be real work. Case management screens are dense — a single officer view composed reference data, applicant history, document status and audit trail. Each panel had been built independently, and each fetched what it needed on init.',
 
@@ -356,6 +418,14 @@ export class ReferenceDataService {
 
       { type: 'heading', text: 'Layout shift has the same shape' },
 
+      {
+        type: 'image',
+        src: '/media/insights/angular-performance-core-web-vitals/Gemini_Generated_Image_f9jqkyf9jqkyf9jq.png',
+        alt: 'Unstable and stable layouts compared, showing how reserved image space prevents content shifts.',
+        width: 2752,
+        height: 1536,
+      },
+
       'It is almost never introduced deliberately; it accumulates from images without dimensions, content that swaps in after a fetch, and banners injected above the fold. Each instance is trivially fixable by the person who wrote it, on the day they wrote it. Collectively they become a score nobody owns.',
 
       {
@@ -389,6 +459,14 @@ export class ReferenceDataService {
 
       { type: 'heading', text: 'INP is the one that changed my habits' },
 
+      {
+        type: 'image',
+        src: '/media/insights/angular-performance-core-web-vitals/Gemini_Generated_Image_x932zpx932zpx932.png',
+        alt: 'Interaction timelines comparing blocking synchronous work with immediate feedback before expensive filtering.',
+        width: 2752,
+        height: 1536,
+      },
+
       'Interaction to Next Paint measures something users complained about long before there was a number for it. A button that runs a synchronous filter over a few thousand rows on click feels broken even when the total work is well under a second, and no amount of load-time optimisation compensates.',
 
       'On the insurance administration console the dense table views needed work here specifically. The fix is not to do less work — it is to let the browser paint the acknowledgement before doing it:',
@@ -419,6 +497,12 @@ export class ReferenceDataService {
   },
   {
     id: 'enterprise-ui-design-restraint',
+    cover: {
+      src: '/media/insights/enterprise-ui-design-restraint/Gemini_Generated_Image_fisiqyfisiqyfisi.png',
+      alt: 'Quiet enterprise interface design illustrated with restrained dashboard layouts.',
+      width: 2752,
+      height: 1536,
+    },
     takeaways: [
       'Design for the fortieth use, not the first — that is where the real product is.',
       'Motion earns its place only when it does work the layout cannot.',
@@ -441,6 +525,15 @@ export class ReferenceDataService {
     ],
     cta: 'If your product looked right at launch and feels tiring a year in, that is usually a systems problem in the interface layer rather than a visual one. That is the kind of work I do.',
     body: [
+      {
+        type: 'image',
+        src: '/media/insights/enterprise-ui-design-restraint/Gemini_Generated_Image_fisiqyfisiqyfisi.png',
+        alt: 'Quiet enterprise interface design illustrated with restrained dashboard layouts.',
+        width: 2752,
+        height: 1536,
+        priority: true,
+      },
+
       'The interfaces I have built that aged best are the ones where motion explains the structure and then gets out of the way. The ones that aged worst are the ones where the motion was the point. This is not a taste position — it is what I observed going back into these codebases a year later to add features.',
 
       { type: 'heading', text: 'The fortieth use is the real product' },
@@ -451,6 +544,14 @@ export class ReferenceDataService {
 
       { type: 'heading', text: 'Does the motion do work the layout cannot?' },
 
+      {
+        type: 'image',
+        src: '/media/insights/enterprise-ui-design-restraint/Gemini_Generated_Image_6tfd7s6tfd7s6tfd.png',
+        alt: 'Enterprise dashboards comparing decorative animation with motion that explains interface structure.',
+        width: 2752,
+        height: 1536,
+      },
+
       'The distinction I hold to is whether the motion carries information. A panel that slides in from the edge it will return to is telling the user where it came from and how to dismiss it — spatial information the static layout cannot express. A card that fades up because cards fade up is decoration. The first survives repetition because it answers a question the user is asking each time; the second only survives novelty.',
 
       {
@@ -459,6 +560,14 @@ export class ReferenceDataService {
       },
 
       { type: 'heading', text: 'One accent, one job' },
+
+      {
+        type: 'image',
+        src: '/media/insights/enterprise-ui-design-restraint/Gemini_Generated_Image_xxaf23xxaf23xxaf.png',
+        alt: 'A restrained enterprise dashboard uses one accent colour to identify the next action.',
+        width: 2752,
+        height: 1536,
+      },
 
       'A single accent colour applied to one job does more for coherence than any amount of transition polish. Across this portfolio and the client work behind it, the accent marks the thing you can act on next. Not headings, not decoration, not emphasis in running text.',
 
@@ -480,6 +589,14 @@ export class ReferenceDataService {
       },
 
       { type: 'heading', text: 'Reduced motion is not an edge case' },
+
+      {
+        type: 'image',
+        src: '/media/insights/enterprise-ui-design-restraint/Gemini_Generated_Image_j8ih3tj8ih3tj8ih.png',
+        alt: 'Reduced-motion layouts and mobile controls that preserve hierarchy and usability.',
+        width: 2752,
+        height: 1536,
+      },
 
       'A meaningful proportion of users browse with reduced motion enabled, and on a mid-range phone several years old the frames drop whether or not anyone asked. If the interface only works with motion running, both groups get a broken product.',
 
@@ -1124,6 +1241,12 @@ rg -L "ChangeDetectionStrategy.OnPush" src --type ts -g "*.component.ts" | wc -l
   },
   {
     id: 'rxjs-reduce-api-calls',
+    cover: {
+      src: '/media/insights/rxjs-reduce-api-calls/Gemini_Generated_Image_pwlsg1pwlsg1pwls.png',
+      alt: 'Enterprise panels share an RxJS stream and cache backed by one reference API request.',
+      width: 2752,
+      height: 1536,
+    },
     takeaways: [
       'A reasonable per-component decision composed into five identical requests per screen.',
       'One shared stream replaces the duplicates — shareReplay with refCount: false.',
@@ -1146,11 +1269,28 @@ rg -L "ChangeDetectionStrategy.OnPush" src --type ts -g "*.component.ts" | wc -l
     ],
     cta: 'If your network tab shows the same endpoint several times per screen, that is usually a data-layer problem rather than a slow API. I do scoped performance investigations that say which of the four usual causes you actually have before anyone writes a fix.',
     body: [
+      {
+        type: 'image',
+        src: '/media/insights/rxjs-reduce-api-calls/Gemini_Generated_Image_pwlsg1pwlsg1pwls.png',
+        alt: 'Enterprise panels share an RxJS stream and cache backed by one reference API request.',
+        width: 2752,
+        height: 1536,
+        priority: true,
+      },
+
       'The complaint was slow page loads. On the Fiji immigration internal system — the application officers use to assess visa and permit cases — opening a single case record took long enough that people noticed, and noticing is the threshold that matters on software somebody uses four hundred times a week.',
 
       'Slow page loads have an obvious suspect, so we checked it first and it was innocent. The bundle was not the problem. Lazy loading was already in place. The screen was not rendering an unreasonable number of components. What the network tab showed instead was the same three reference endpoints — country list, visa categories, office locations — being requested five and six times on a single navigation.',
 
       { type: 'heading', text: 'Why a good decision produced a bad outcome' },
+
+      {
+        type: 'image',
+        src: '/media/insights/rxjs-reduce-api-calls/Gemini_Generated_Image_q79k3aq79k3aq79k.png',
+        alt: 'Six panels on one enterprise screen independently request the same reference data.',
+        width: 2752,
+        height: 1536,
+      },
 
       'The cause was not carelessness. It was a reasonable rule applied consistently. Each panel on the case screen — applicant details, document checklist, assessment history, routing — had been built to be self-sufficient: fetch what you need in ngOnInit, do not assume a parent has already loaded it. That rule is what lets panels be reordered, reused on other screens and tested alone.',
 
@@ -1173,6 +1313,14 @@ export class DocumentChecklistComponent implements OnInit {
       },
 
       { type: 'heading', text: 'The fix: one stream, shared' },
+
+      {
+        type: 'image',
+        src: '/media/insights/rxjs-reduce-api-calls/Gemini_Generated_Image_h5sssmh5sssmh5ss.png',
+        alt: 'Multiple RxJS subscribers share one HTTP request and reuse the cached result with shareReplay.',
+        width: 2752,
+        height: 1536,
+      },
 
       'The obvious repair — lift the fetch into the parent and pass it down — would have undone the property that made the panels reusable. The better repair leaves every component exactly as written and changes what the service does underneath them.',
 
@@ -1201,6 +1349,14 @@ export class ReferenceApi {
       { type: 'aside', text: 'shareReplay without refCount: false is the version most codebases have. With refCount: true the subscription is torn down when the last subscriber leaves, so returning to the screen re-fetches — correct for volatile data, wasteful for a country list.' },
 
       { type: 'heading', text: 'The part that is actually hard' },
+
+      {
+        type: 'image',
+        src: '/media/insights/rxjs-reduce-api-calls/Gemini_Generated_Image_4dofoq4dofoq4dof.png',
+        alt: 'Event-driven cache invalidation clears reference data after a change and fetches it on the next subscription.',
+        width: 2752,
+        height: 1536,
+      },
 
       'Caching reference data is easy. Deciding when the cache is wrong is not. A cached list that changes underneath you is a bug that reaches production quietly, weeks later, as a question about why the dropdown does not show the new office.',
 

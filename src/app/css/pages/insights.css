@@ -109,7 +109,9 @@
 }
 
 @media (min-width: 900px) {
-  .insd-hero__inner {
+  /* Keep the shell aligned with the header and article body; constrain only
+     its content so the narrow headline column is not centered on the page. */
+  .insd-hero__inner > * {
     max-width: 40rem;
   }
 }
