@@ -708,6 +708,23 @@
   color: var(--color-text-faint);
 }
 
+/* The attribution is the article the line came from, so it is a link and it
+   keeps the headline's own casing — a title set in 0.18em uppercase tracking
+   runs to three shouted lines in a panel this narrow. */
+.inh-quote__source {
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--duration-ui, 200ms) var(--ease-out-expo);
+}
+.inh-quote__source:hover,
+.inh-quote__source:focus-visible {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* --- grid heading --------------------------------------------------- */
 
 .inh-grid-head {

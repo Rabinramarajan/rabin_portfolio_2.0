@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,8 @@ import {
   insightReadMinutes,
   insightTopics,
   publishedInsights,
+  quotableInsights,
+  quoteIndexForDay,
 } from "@/content/insights";
 import type { Insight, InsightTopic } from "@/content/types";
 import { sections } from "@/content/sections";
@@ -60,6 +62,19 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
 
   const stats = useMemo(() => buildStats(items), [items]);
   const cadence = useMemo(() => buildCadence(items), [items]);
+
+  /* The quote card rotates through the articles' own pull quotes.
+
+     It starts on index 0 — the newest piece — because that is what the
+     prerendered HTML contains, and hydration has to agree with it. The day's
+     pick is applied after mount, where "today" is the reader's day rather than
+     the day the site was built. */
+  const quotes = useMemo(() => quotableInsights(), []);
+  const [quoteIndex, setQuoteIndex] = useState(0);
+  useEffect(() => {
+    setQuoteIndex(quoteIndexForDay(quotes.length));
+  }, [quotes.length]);
+  const quoted = quotes[quoteIndex];
 
   return (
     <div className="inh">
@@ -212,17 +227,23 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
             </div>
           </section>
 
-          <section className="inh-panel inh-panel--quote">
-            <span className="inh-quote__mark" aria-hidden>
-              &ldquo;
-            </span>
-            <blockquote className="inh-quote">
-              I write one of these when a problem turns out to have a general shape worth
-              naming — not on a schedule.
-            </blockquote>
-            <p className="inh-quote__by">— Rabin R</p>
-            <span className="inh-quote__rule" aria-hidden />
-          </section>
+          {quoted ? (
+            <section className="inh-panel inh-panel--quote">
+              <span className="inh-quote__mark" aria-hidden>
+                &ldquo;
+              </span>
+              <blockquote className="inh-quote" cite={"/insights/" + quoted.id}>
+                {quoted.pullQuote}
+              </blockquote>
+              <p className="inh-quote__by">
+                —{" "}
+                <Link className="inh-quote__source" href={"/insights/" + quoted.id}>
+                  {quoted.title}
+                </Link>
+              </p>
+              <span className="inh-quote__rule" aria-hidden />
+            </section>
+          ) : null}
         </div>
 
         {/* --- the grid ----------------------------------------------- */}

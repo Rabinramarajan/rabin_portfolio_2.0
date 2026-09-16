@@ -525,6 +525,13 @@ export interface Insight {
    * has none, so this never has to be backfilled before a piece can publish.
    */
   takeaways?: string[];
+  /**
+   * The one sentence from this piece worth reading on its own, for the quote
+   * card on the listing. Authored rather than sliced out of the body: a line
+   * lifted from a paragraph reads as an excerpt, and this has to read as a
+   * position. A piece without one simply never rotates into the card.
+   */
+  pullQuote?: string;
 }
 
 export interface SeoContent {
