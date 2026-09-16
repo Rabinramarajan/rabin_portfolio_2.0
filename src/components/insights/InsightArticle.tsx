@@ -77,8 +77,18 @@ export function InsightArticle({ item }: { item: Insight }) {
           <InsightCover
             item={item}
             className="insd-hero__img"
-            sizes="(max-width: 1080px) 100vw, 46rem"
+            /* The art box is `object-fit: cover` over a hero that is at least
+               32rem tall (insights.css), so the covered width is driven by that
+               height, not by the box: 32rem x the ~1.9 aspect of the covers is
+               ~975px, near enough constant from 900px up. Describing the box
+               instead made the browser fetch a 750w file and stretch it, which
+               is what made the hero look soft. 1100px leaves room for a hero
+               that a long headline has pushed taller. Below 900px the art goes
+               full-bleed behind the whole hero, where the same height-driven
+               crop applies. */
+            sizes="(max-width: 899px) 150vw, 1100px"
             priority
+            quality={90}
           />
         </div>
 

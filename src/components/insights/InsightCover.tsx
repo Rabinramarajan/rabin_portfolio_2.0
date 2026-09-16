@@ -19,11 +19,13 @@ export function InsightCover({
   item,
   sizes,
   priority,
+  quality,
   className = "inh-cover",
 }: {
   item: Insight;
   sizes: string;
   priority?: boolean;
+  quality?: number;
   className?: string;
 }) {
   const cover = insightCover(item);
@@ -53,6 +55,7 @@ export function InsightCover({
       height={cover.height}
       sizes={sizes}
       priority={priority}
+      quality={quality}
     />
   );
 }

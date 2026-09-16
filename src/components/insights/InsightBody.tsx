@@ -79,8 +79,11 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
                 height={block.height}
                 priority={block.priority}
                 /* These diagrams break the prose measure, so the rendered box
-                   is wider than the column on desktop and full-width below. */
-                sizes="(max-width: 48rem) 100vw, 44rem"
+                   is wider than the column on desktop and full-width below.
+                   Matched to `.insd-figure`'s own `min(48rem, 92vw)` — 44rem
+                   understated it and cost a small upscale on every figure. */
+                sizes="(max-width: 48rem) 92vw, 768px"
+                quality={90}
               />
               {block.caption ? (
                 <figcaption className="insd-figure__caption">{block.caption}</figcaption>

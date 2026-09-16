@@ -38,6 +38,11 @@ const nextConfig: NextConfig = {
        14" and 16" laptops, and large desktop monitors at 1x and 2x. */
     deviceSizes: [360, 420, 640, 750, 828, 1080, 1200, 1512, 1920, 2560, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    /* 75 is the default and covers photography. The insight diagrams carry
+       small UI text and thin 1px rules, which are exactly what a lossy encoder
+       smears first, so those are requested at 90. Next 16 requires every
+       quality the app asks for to be listed here. */
+    qualities: [75, 90],
     minimumCacheTTL: 60 * 60 * 24 * 365,
   },
   async redirects() {
