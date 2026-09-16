@@ -31,6 +31,7 @@ export const BLOB_ROOT = "portfolio";
 
 /** Blob folders. Kept explicit so upload tooling cannot invent a new one. */
 export const BLOB_FOLDERS = [
+  "insights",
   "projects",
   "case-studies",
   "services",
@@ -171,6 +172,62 @@ export const MEDIA_MANIFEST = {
   "other/maintenance/cover.png": "/media/under-maintain/1.png",
   "other/chatbot/mark.png": "/media/chatbot/1.png",
   "other/footer/horizon.png": "/media/footer/2.png",
+
+  // ---- insights ---------------------------------------------------------
+  /* Article covers and the in-body diagrams. These were the one media set
+     still addressed as literal /media/insights/* paths in content, so the
+     migration script never saw them and they were served from /public in
+     production while everything else moved to Blob. */
+  // accessible-angular-forms
+  "insights/accessible-angular-forms/accessible-validation-messages.webp": "/media/insights/accessible-angular-forms/accessible-validation-messages.webp",
+  "insights/accessible-angular-forms/cover.webp": "/media/insights/accessible-angular-forms/cover.webp",
+  "insights/accessible-angular-forms/error-summary-focus-management.webp": "/media/insights/accessible-angular-forms/error-summary-focus-management.webp",
+  "insights/accessible-angular-forms/multi-step-form-draft-recovery.webp": "/media/insights/accessible-angular-forms/multi-step-form-draft-recovery.webp",
+  // angular-codebase-audit
+  "insights/angular-codebase-audit/codebase-structure-and-git-history.webp": "/media/insights/angular-codebase-audit/codebase-structure-and-git-history.webp",
+  "insights/angular-codebase-audit/cover.webp": "/media/insights/angular-codebase-audit/cover.webp",
+  "insights/angular-codebase-audit/evidence-to-prioritized-plan.webp": "/media/insights/angular-codebase-audit/evidence-to-prioritized-plan.webp",
+  "insights/angular-codebase-audit/symptom-vs-diagnosis.webp": "/media/insights/angular-codebase-audit/symptom-vs-diagnosis.webp",
+  // angular-performance-checklist
+  "insights/angular-performance-checklist/change-detection-and-bundle-analysis.webp": "/media/insights/angular-performance-checklist/change-detection-and-bundle-analysis.webp",
+  "insights/angular-performance-checklist/cover.webp": "/media/insights/angular-performance-checklist/cover.webp",
+  "insights/angular-performance-checklist/network-duplicate-and-serial-requests.webp": "/media/insights/angular-performance-checklist/network-duplicate-and-serial-requests.webp",
+  "insights/angular-performance-checklist/rendering-profile-and-regression-guard.webp": "/media/insights/angular-performance-checklist/rendering-profile-and-regression-guard.webp",
+  // angular-performance-core-web-vitals
+  "insights/angular-performance-core-web-vitals/cover.webp": "/media/insights/angular-performance-core-web-vitals/cover.webp",
+  "insights/angular-performance-core-web-vitals/duplicate-vs-cached-requests.webp": "/media/insights/angular-performance-core-web-vitals/duplicate-vs-cached-requests.webp",
+  "insights/angular-performance-core-web-vitals/interaction-responsiveness-inp.webp": "/media/insights/angular-performance-core-web-vitals/interaction-responsiveness-inp.webp",
+  "insights/angular-performance-core-web-vitals/layout-stability-cls.webp": "/media/insights/angular-performance-core-web-vitals/layout-stability-cls.webp",
+  // angular-signals-state-management
+  "insights/angular-signals-state-management/cover.webp": "/media/insights/angular-signals-state-management/cover.webp",
+  "insights/angular-signals-state-management/observable-vs-signal-state.webp": "/media/insights/angular-signals-state-management/observable-vs-signal-state.webp",
+  "insights/angular-signals-state-management/signals-precise-updates.webp": "/media/insights/angular-signals-state-management/signals-precise-updates.webp",
+  "insights/angular-signals-state-management/state-promotion-rule.webp": "/media/insights/angular-signals-state-management/state-promotion-rule.webp",
+  // angular-zoneless-change-detection
+  "insights/angular-zoneless-change-detection/cover.webp": "/media/insights/angular-zoneless-change-detection/cover.webp",
+  "insights/angular-zoneless-change-detection/incremental-zoneless-migration.webp": "/media/insights/angular-zoneless-change-detection/incremental-zoneless-migration.webp",
+  "insights/angular-zoneless-change-detection/rxjs-to-signal-boundary.webp": "/media/insights/angular-zoneless-change-detection/rxjs-to-signal-boundary.webp",
+  "insights/angular-zoneless-change-detection/zonejs-vs-signals-change-detection.webp": "/media/insights/angular-zoneless-change-detection/zonejs-vs-signals-change-detection.webp",
+  // enterprise-ui-design-restraint
+  "insights/enterprise-ui-design-restraint/cover.webp": "/media/insights/enterprise-ui-design-restraint/cover.webp",
+  "insights/enterprise-ui-design-restraint/decoration-vs-spatial-meaning.webp": "/media/insights/enterprise-ui-design-restraint/decoration-vs-spatial-meaning.webp",
+  "insights/enterprise-ui-design-restraint/one-accent-colour.webp": "/media/insights/enterprise-ui-design-restraint/one-accent-colour.webp",
+  "insights/enterprise-ui-design-restraint/reduced-motion-and-touch-targets.webp": "/media/insights/enterprise-ui-design-restraint/reduced-motion-and-touch-targets.webp",
+  // ionic-offline-first-architecture
+  "insights/ionic-offline-first-architecture/cover.webp": "/media/insights/ionic-offline-first-architecture/cover.webp",
+  "insights/ionic-offline-first-architecture/network-first-vs-offline-first.webp": "/media/insights/ionic-offline-first-architecture/network-first-vs-offline-first.webp",
+  "insights/ionic-offline-first-architecture/offline-write-queue.webp": "/media/insights/ionic-offline-first-architecture/offline-write-queue.webp",
+  "insights/ionic-offline-first-architecture/reconnection-and-conflict-resolution.webp": "/media/insights/ionic-offline-first-architecture/reconnection-and-conflict-resolution.webp",
+  // rxjs-reduce-api-calls
+  "insights/rxjs-reduce-api-calls/cover.webp": "/media/insights/rxjs-reduce-api-calls/cover.webp",
+  "insights/rxjs-reduce-api-calls/duplicate-reference-data-requests.webp": "/media/insights/rxjs-reduce-api-calls/duplicate-reference-data-requests.webp",
+  "insights/rxjs-reduce-api-calls/event-driven-cache-invalidation.webp": "/media/insights/rxjs-reduce-api-calls/event-driven-cache-invalidation.webp",
+  "insights/rxjs-reduce-api-calls/sharereplay-one-request.webp": "/media/insights/rxjs-reduce-api-calls/sharereplay-one-request.webp",
+  // ux-problem-approach
+  "insights/ux-problem-approach/cover.webp": "/media/insights/ux-problem-approach/cover.webp",
+  "insights/ux-problem-approach/explore-solutions.webp": "/media/insights/ux-problem-approach/explore-solutions.webp",
+  "insights/ux-problem-approach/journey-friction.webp": "/media/insights/ux-problem-approach/journey-friction.webp",
+  "insights/ux-problem-approach/simplify-signup.webp": "/media/insights/ux-problem-approach/simplify-signup.webp",
 } as const satisfies Record<string, string>;
 
 /** Every migrated asset, addressable by its Blob pathname. */
