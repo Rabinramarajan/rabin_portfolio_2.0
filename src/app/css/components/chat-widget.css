@@ -9,7 +9,6 @@
    ============================================================ */
 
 .chat-launch,
-.chat-preview,
 .chat-dock {
   /* One scale for the whole widget, so the docked panel, the preview card and
      the launcher share edge distances and never disagree about the gutter. */
@@ -91,89 +90,12 @@
   user-select: none;
 }
 
-/* ============================================================
-   PREVIEW CARD
-   ============================================================ */
-
-.chat-preview {
-  position: fixed;
-  right: var(--chat-edge);
-  bottom: calc(var(--chat-bottom) + 78px);
-  z-index: 240;
-  /* Mark beside the greeting, shortcuts on their own full-width row beneath —
-     three of them fit only when they are not sharing the text column. */
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.75rem 0.9rem;
-  width: min(25rem, calc(100vw - 2 * var(--chat-edge)));
-  padding: 1rem 1.05rem;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 24px 60px -24px rgb(0 0 0 / 75%);
-  animation: chat-rise 420ms var(--ease-out-expo) both;
-}
+/* The rise the panel and its messages enter on. */
 @keyframes chat-rise {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
-}
-.chat-preview__mark {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 60px;
-  height: 60px;
-}
-.chat-preview__body {
-  min-width: 0;
-  display: grid;
-  gap: 0.5rem;
-}
-.chat-preview__greeting {
-  margin: 0;
-  font-size: var(--type-base);
-  font-weight: var(--weight-semibold);
-}
-.chat-preview__line {
-  margin: 0;
-  font-size: var(--type-sm);
-  line-height: var(--leading-snug);
-  color: var(--color-text-muted);
-}
-.chat-preview__line strong {
-  color: var(--color-accent);
-  font-weight: var(--weight-semibold);
-}
-.chat-preview__actions {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-.chat-preview__actions .chat-quick {
-  padding: 0 0.6rem;
-}
-.chat-preview__dismiss {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.55rem;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-faint);
-}
-.chat-preview__dismiss svg {
-  width: 15px;
-  height: 15px;
-}
-.chat-preview__dismiss:hover,
-.chat-preview__dismiss:focus-visible {
-  color: var(--color-text);
 }
 
 .chat-quick {
@@ -228,10 +150,6 @@
   .chat-dock[data-expanded] .chat-panel {
     height: min(32rem, calc(100dvh - 8.5rem));
   }
-  .chat-preview {
-    width: auto;
-    left: var(--chat-edge);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -242,7 +160,6 @@
     animation: none;
   }
   .chat-dock,
-  .chat-preview,
   .chat-msg {
     animation-duration: 1ms;
   }
