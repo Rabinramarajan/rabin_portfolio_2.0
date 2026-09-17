@@ -284,6 +284,23 @@
   text-wrap: pretty;
 }
 
+.insd-h3 {
+  margin-top: var(--space-32);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 550;
+  line-height: var(--leading-snug);
+}
+
+.insd-list {
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+ol.insd-list { list-style-type: decimal; }
+.insd-list li + li { margin-top: 0.4rem; }
+.insd-p a { text-decoration: underline; text-underline-offset: 0.2em; }
+
 /* Numbered section heading. The number is a separate span so it can hang in
    its own column and stay optically aligned across sections whether the
    heading wraps to one line or three. */

@@ -358,7 +358,7 @@ export function MaintenancePage() {
             >
               <span className="mnt__art-glow" aria-hidden />
               <SmartImage
-                src={media("other/maintenance/cover.png")}
+                src={media("other/maintenance/cover.webp")}
                 alt="A 3D construction scene: a crane lifting an “Upgrading experience” board over a glowing lime letter R, flanked by gears, a barrier and a traffic cone."
                 width={1536}
                 height={1024}

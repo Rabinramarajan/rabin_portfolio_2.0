@@ -44,7 +44,7 @@ export function ProcessSection({ headingLevel = "h2" }: { headingLevel?: Section
                   bytes and format — this was previously the raw full-size PNG,
                   served unresized to every viewport. */}
               <Image
-                src={media("other/process/hero.png")}
+                src={media("other/process/hero.webp")}
                 alt="Product engineering process environment"
                 className="pr__hero-image"
                 fill

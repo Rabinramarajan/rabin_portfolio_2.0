@@ -53,9 +53,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'systems',
-    cover: img(media('projects/fiji-immigration-internal/hero.png'), 'Fiji Immigration officer workflow dashboard', 1370, 769),
+    cover: img(media('projects/fiji-immigration-internal/hero.webp'), 'Fiji Immigration officer workflow dashboard', 1370, 769),
     gallery: [
-      img(media('projects/fiji-immigration-internal/hero.png'), 'Fiji Immigration officer workflow list', 1370, 769)
+      img(media('projects/fiji-immigration-internal/hero.webp'), 'Fiji Immigration officer workflow list', 1370, 769)
     ],
     problem:
       'Immigration operations needed a centralized system where officers could assess applications, verify documents and move cases through complex workflows without losing context.',
@@ -157,9 +157,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'medium',
     filter: 'web',
-    cover: img(media('projects/fiji-immigration-external/hero.png'), 'Fiji Immigration citizen portal', 1366, 768),
+    cover: img(media('projects/fiji-immigration-external/hero.webp'), 'Fiji Immigration citizen portal', 1366, 768),
     gallery: [
-      img(media('projects/fiji-immigration-external/hero.png'), 'Fiji Immigration citizen portal welcome screen', 1366, 768)
+      img(media('projects/fiji-immigration-external/hero.webp'), 'Fiji Immigration citizen portal welcome screen', 1366, 768)
     ],
     problem:
       'Applicants needed a way to submit and track immigration applications remotely without depending on physical office visits or assistance from a training desk.',
@@ -255,9 +255,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'medium',
     filter: 'platforms',
-    cover: img(media('projects/prims-member-portal/hero.png'), 'PRIMS pension member transactions', 1919, 911),
+    cover: img(media('projects/prims-member-portal/hero.webp'), 'PRIMS pension member transactions', 1919, 911),
     gallery: [
-      img(media('projects/prims-member-portal/hero.png'), 'PRIMS pension contribution and transaction history', 1919, 911)
+      img(media('projects/prims-member-portal/hero.webp'), 'PRIMS pension contribution and transaction history', 1919, 911)
     ],
     problem:
       'Members depended heavily on staff to understand contributions, balances, statements and pension-related information that should have been available through self-service.',
@@ -334,9 +334,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'full',
     filter: 'web',
-    cover: img(media('projects/vnpf-blo-mi/hero.png'), 'VNPF blo mi mobile application screens', 1200, 900),
+    cover: img(media('projects/vnpf-blo-mi/hero.webp'), 'VNPF blo mi mobile application screens', 1200, 900),
     gallery: [
-      img(media('projects/vnpf-blo-mi/hero.png'), 'VNPF blo mi mobile application screens', 1200, 900)
+      img(media('projects/vnpf-blo-mi/hero.webp'), 'VNPF blo mi mobile application screens', 1200, 900)
     ],
     problem:
       'VNPF members needed convenient mobile access to their provident fund information without relying on desktop portals or physical offices.',
@@ -424,9 +424,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'platforms',
-    cover: img(media('projects/insuremet/hero.png'), 'InsureMet insurance administration dashboard', 1366, 768),
+    cover: img(media('projects/insuremet/hero.webp'), 'InsureMet insurance administration dashboard', 1366, 768),
     gallery: [
-      img(media('projects/insuremet/hero.png'), 'InsureMet enterprise dashboard', 1366, 768)
+      img(media('projects/insuremet/hero.webp'), 'InsureMet enterprise dashboard', 1366, 768)
     ],
     problem:
       'Insurance operations were distributed across different processes and systems, making it harder for teams to manage policies, claims, products and financial information from one place.',

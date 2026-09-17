@@ -9,11 +9,13 @@ import {
   insightDate,
   insightNumber,
   insightReadMinutes,
+  insightStatCopy,
   insightTopics,
   publishedInsights,
   quotableInsights,
   quoteIndexForDay,
 } from "@/content/insights";
+import type { InsightStatId } from "@/content/insights";
 import type { Insight, InsightTopic } from "@/content/types";
 import { sections } from "@/content/sections";
 import { SectionKicker } from "@/components/ui";
@@ -341,7 +343,7 @@ function Hero() {
               headline, which is text. */}
           <Image
             className="inh-orb"
-            src="/insights/1.png"
+            src="/media/insights/1.webp"
             alt=""
             width={1422}
             height={1106}
@@ -434,13 +436,26 @@ function featuredTags(item: Insight): string[] {
 const count = (items: Insight[], topic: InsightTopic) =>
   items.filter((i) => i.topic === topic).length;
 
+/* The glyph each figure is introduced by, keyed to the copy in content. A
+   function rather than a module constant because the icons are declared at the
+   foot of this file, and a constant would read them before they exist. */
+const statIcons = (): Record<InsightStatId, ReactNode> => ({
+  articles: <BookIcon />,
+  subjects: <LayersIcon />,
+  read: <ClockIcon />,
+  published: <PulseIcon />,
+});
+
 /**
  * The four figures above the grid.
  *
- * All four are derived from the content itself — article count, subjects
- * covered, typical length, last publication. A portfolio has no honest way to
- * show subscriber or rating numbers, and a figure nobody can verify costs
- * more trust than it buys.
+ * All four values are derived from the content itself — article count,
+ * subjects covered, typical length, last publication. A portfolio has no
+ * honest way to show subscriber or rating numbers, and a figure nobody can
+ * verify costs more trust than it buys.
+ *
+ * The labels and notes come from `insightStatCopy`; this only supplies the
+ * numbers and the icons, and follows that array's order.
  */
 function buildStats(items: Insight[]) {
   const minutes = items.map(insightReadMinutes);
@@ -452,38 +467,24 @@ function buildStats(items: Insight[]) {
     .filter(Boolean)
     .sort()
     .pop();
-  return [
-    {
-      value: String(items.length),
-      label: "Articles",
-      note: "Published, not scheduled",
-      icon: <BookIcon />,
-    },
-    {
-      value: String(insightTopics().length),
-      label: "Subjects",
-      note: "From architecture to interface",
-      icon: <LayersIcon />,
-    },
-    {
-      value: avg + " min",
-      label: "Average read",
-      note: "The argument, then the code",
-      icon: <ClockIcon />,
-    },
-    {
-      value: latest
-        ? new Date(latest + "T00:00:00Z").toLocaleDateString("en-GB", {
-            month: "short",
-            year: "numeric",
-            timeZone: "UTC",
-          })
-        : "—",
-      label: "Last published",
-      note: "Written when there is something to say",
-      icon: <PulseIcon />,
-    },
-  ];
+  const values: Record<InsightStatId, string> = {
+    articles: String(items.length),
+    subjects: String(insightTopics().length),
+    read: avg + " min",
+    published: latest
+      ? new Date(latest + "T00:00:00Z").toLocaleDateString("en-GB", {
+          month: "short",
+          year: "numeric",
+          timeZone: "UTC",
+        })
+      : "—",
+  };
+  const icons = statIcons();
+  return insightStatCopy.map((stat) => ({
+    ...stat,
+    value: values[stat.id],
+    icon: icons[stat.id],
+  }));
 }
 
 /**

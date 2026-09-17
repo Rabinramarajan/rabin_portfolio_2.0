@@ -155,7 +155,7 @@ export function accentIndex(intro: SectionIntro): number {
  * carries the shared headline and lede plus the ascent artwork.
  */
 export const journeyArt = {
-  src: media("other/experience/journey.png"),
+  src: media("other/experience/journey.webp"),
   alt: "A climber at the summit looking up a glowing path that switchbacks toward a flag on the next peak",
   width: 1536,
   height: 1024,

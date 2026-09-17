@@ -9,7 +9,7 @@
  * Served from `public/` rather than through `media()`: the asset is registered
  * in the manifest as `other/chatbot/mark.png`, but until `npm run blob:migrate`
  * uploads it the CDN has no such object, and a 404 leaves the widget faceless.
- * Swap this for `media("other/chatbot/mark.png")` once it is on the store.
+ * Swap this for `media("other/chatbot/mark.webp")` once it is on the store.
  *
  * Points at `mark-128.webp`, not the 1254px `1.png` source it was derived from.
  * The mark never renders above 64 CSS px — .chat-launch is 64px and every other

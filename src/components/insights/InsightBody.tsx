@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { isLinkLive } from "@/content/insights";
 import type { InsightBlock } from "@/content/types";
 import { insightSections } from "@/lib/insightSections";
 
@@ -34,6 +36,19 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
               {block}
             </p>
           );
+        }
+
+        if (block.type === "subheading") {
+          return <h3 className="insd-h3" key={i}>{block.text}</h3>;
+        }
+
+        if (block.type === "list") {
+          const List = block.ordered ? "ol" : "ul";
+          return <List className="insd-list insd-p" key={i}>{block.items.map((text, index) => <li key={index}>{text}</li>)}</List>;
+        }
+
+        if (block.type === "link") {
+          return <p className="insd-p" key={i}>{isLinkLive(block.href) ? <Link href={block.href}>{block.text}</Link> : block.text}</p>;
         }
 
         if (block.type === "heading") {

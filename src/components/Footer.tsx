@@ -56,7 +56,7 @@ function FooterInner() {
       {/* --- stage: the horizon art and the closing pitch --- */}
       <div className="ft__stage">
         <div className="ft__globe" aria-hidden>
-          <Image src={media("other/footer/horizon.png")} alt="" width={1672} height={941} sizes="100vw" />
+          <Image src={media("other/footer/horizon.webp")} alt="" width={1672} height={941} sizes="100vw" />
         </div>
 
         <div className="ft__stage-inner">

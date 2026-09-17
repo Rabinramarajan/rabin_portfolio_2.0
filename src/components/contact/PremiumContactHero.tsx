@@ -13,7 +13,7 @@ export function PremiumContactHero() {
         loop
         playsInline
         preload="auto"
-        poster={media("other/contact/hero.png")}
+        poster={media("other/contact/hero.webp")}
         className="premium-contact-hero__video"
         aria-hidden="true"
       >

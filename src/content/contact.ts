@@ -14,13 +14,13 @@ export const contactCopy = {
   },
   media: {
     hero: {
-      src: media("other/contact/hero.png"),
+      src: media("other/contact/hero.webp"),
       alt: "Dark workstation with a system map from frontend through API and data to production, marked available",
       width: 1672,
       height: 941,
     },
     conversation: {
-      src: media("other/contact/conversation.png"),
+      src: media("other/contact/conversation.webp"),
       alt: "Editorial diagram of an idea becoming a product through conversation, frontend, API, database, and deployment",
       width: 1448,
       height: 1086,

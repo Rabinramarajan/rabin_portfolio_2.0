@@ -432,6 +432,9 @@ export interface PricingPlan {
 export type InsightBlock =
   | string
   | { type: "heading"; text: string }
+  | { type: "subheading"; text: string }
+  | { type: "list"; items: string[]; ordered?: boolean }
+  | { type: "link"; text: string; href: string }
   | { type: "code"; language: string; caption?: string; code: string }
   | { type: "aside"; text: string }
   /**

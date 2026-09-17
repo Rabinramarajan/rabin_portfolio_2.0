@@ -193,7 +193,7 @@ export const hero: HeroContent = {
   ],
   portrait: { src: media("profile/rabin-hero.webp"), alt: "Portrait of Rabin R", width: 640, height: 800 },
   midground: {
-    src: media("projects/fiji-immigration-internal/hero.png"),
+    src: media("projects/fiji-immigration-internal/hero.webp"),
     alt: "Fiji Immigration officer workflow interface",
     width: 1600,
     height: 1000,

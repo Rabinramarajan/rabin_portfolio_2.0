@@ -43,6 +43,7 @@ next-env.d.ts
 /.claude/
 
 # local audit / screenshot artifacts
+lighthouse-local.report.*
 /screenshots/
 /responsive-screenshots/
 /final-audit-screenshots/
