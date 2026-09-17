@@ -10,6 +10,10 @@ import { useEffect, useRef, useState } from "react";
  * surface — nothing is loaded from LinkedIn, X or Facebook unless the reader
  * clicks. Only "copy link" needs the client, and it degrades to a link to the
  * article itself where the clipboard API is unavailable or refused.
+ *
+ * All three networks show a sign-in wall to a logged-out visitor before the
+ * composer appears. That is their behaviour, not a broken link — there is no
+ * endpoint that composes a share without a session.
  */
 export function InsightShare({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);
@@ -39,7 +43,7 @@ export function InsightShare({ url, title }: { url: string; title: string }) {
       <div className="insd-share__actions">
         <a
           className="insd-share__btn"
-          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+          href={`https://www.linkedin.com/feed/?shareActive=true&shareUrl=${encodedUrl}`}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Share on LinkedIn"
@@ -50,7 +54,7 @@ export function InsightShare({ url, title }: { url: string; title: string }) {
         </a>
         <a
           className="insd-share__btn"
-          href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+          href={`https://x.com/intent/post?url=${encodedUrl}&text=${encodedTitle}`}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Share on X"
