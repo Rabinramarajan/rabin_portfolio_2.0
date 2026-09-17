@@ -7,8 +7,8 @@
   },
   "prod": {
     "project": "rabin-portfolio-2-0",
-    "lastUpdated": "2026-09-16T09:30:08.543Z",
-    "version": "1.0.21",
+    "lastUpdated": "2026-09-17T09:53:32.933Z",
+    "version": "1.0.22",
     "docker": "vcr.vercel.com/rabin-projects/rabin-portfolio-2-0/rabin_portfolio_prod"
   }
 }
