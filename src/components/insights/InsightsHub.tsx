@@ -18,6 +18,7 @@ import {
 import type { InsightStatId } from "@/content/insights";
 import type { Insight, InsightTopic } from "@/content/types";
 import { sections } from "@/content/sections";
+import { media } from "@/lib/media";
 import { SectionKicker } from "@/components/ui";
 import { InsightCard } from "@/components/insights/InsightCard";
 import { InsightCover } from "@/components/insights/InsightCover";
@@ -343,7 +344,7 @@ function Hero() {
               headline, which is text. */}
           <Image
             className="inh-orb"
-            src="/media/insights/1.webp"
+            src={media("insights/hub-orb.webp")}
             alt=""
             width={1422}
             height={1106}

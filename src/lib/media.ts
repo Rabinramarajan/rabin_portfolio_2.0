@@ -171,6 +171,9 @@ export const MEDIA_MANIFEST = {
   "other/faq/orbit.webp": "/media/faq/banner_h.webp",
   "other/maintenance/cover.webp": "/media/under-maintain/1.webp",
   "other/chatbot/mark.webp": "/media/chatbot/1.webp",
+  /* The 128px cut BotMark actually renders. The 1254px source above is kept
+     as the regeneration master; this is the file that ships. */
+  "other/chatbot/mark-128.webp": "/media/chatbot/mark-128.webp",
   "other/footer/horizon.webp": "/media/footer/2.webp",
 
   // ---- insights ---------------------------------------------------------
@@ -178,6 +181,10 @@ export const MEDIA_MANIFEST = {
      still addressed as literal /media/insights/* paths in content, so the
      migration script never saw them and they were served from /public in
      production while everything else moved to Blob. */
+  // hub art (belongs to the /insights index, not to any one article)
+  "insights/hub-orb.webp": "/media/insights/1.webp",
+  "insights/angular-signals-state-management/hub-cover-v1.webp":
+    "/media/insights/angular-signals-cover-v1.webp",
   // accessible-angular-forms
   "insights/accessible-angular-forms/accessible-validation-messages.webp": "/media/insights/accessible-angular-forms/accessible-validation-messages.webp",
   "insights/accessible-angular-forms/cover.webp": "/media/insights/accessible-angular-forms/cover.webp",
@@ -223,6 +230,12 @@ export const MEDIA_MANIFEST = {
   "insights/rxjs-reduce-api-calls/duplicate-reference-data-requests.webp": "/media/insights/rxjs-reduce-api-calls/duplicate-reference-data-requests.webp",
   "insights/rxjs-reduce-api-calls/event-driven-cache-invalidation.webp": "/media/insights/rxjs-reduce-api-calls/event-driven-cache-invalidation.webp",
   "insights/rxjs-reduce-api-calls/sharereplay-one-request.webp": "/media/insights/rxjs-reduce-api-calls/sharereplay-one-request.webp",
+  // stopped-writing-angular-old-way-10-modern-patterns
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/cover.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/cover.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/signal-forms.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/signal-forms.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/signals-computed-rxjs.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/signals-computed-rxjs.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/traditional-vs-modern-angular.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/traditional-vs-modern-angular.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/zoneless-deferred-performance.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/zoneless-deferred-performance.webp",
   // ux-problem-approach
   "insights/ux-problem-approach/cover.webp": "/media/insights/ux-problem-approach/cover.webp",
   "insights/ux-problem-approach/explore-solutions.webp": "/media/insights/ux-problem-approach/explore-solutions.webp",

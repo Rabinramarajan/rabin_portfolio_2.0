@@ -1,4 +1,5 @@
 import type { Insight } from "@/content/types";
+import { media } from "@/lib/media";
 
 // Imported from https://www.linkedin.com/pulse/i-stopped-writing-angular-old-way-10-modern-patterns-use-rabin-r-2n77c/
 export const modernAngularPatterns: Insight = {
@@ -11,7 +12,7 @@ export const modernAngularPatterns: Insight = {
   "seoDescription": "A practical guide to Angular Signals, computed state, inject, standalone architecture, Signal Forms, RxJS, defer and zoneless change detection.",
   "dek": "The modern Angular patterns I use in 2026, why I use them, and when I would choose something else. A practical guide to clearer state, dependencies, forms, rendering and feature architecture.",
   "cover": {
-    "src": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/cover.webp",
+    "src": media("insights/stopped-writing-angular-old-way-10-modern-patterns/cover.webp"),
     "alt": "Modern Angular patterns: Signals, computed, inject, Signal Forms, RxJS, defer and zoneless rendering.",
     "width": 1730,
     "height": 909
@@ -345,7 +346,7 @@ export const modernAngularPatterns: Insight = {
     },
     {
       "type": "image",
-      "src": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/traditional-vs-modern-angular.webp",
+      "src": media("insights/stopped-writing-angular-old-way-10-modern-patterns/traditional-vs-modern-angular.webp"),
       "alt": "Traditional Angular architecture compared with explicit reactive state and focused components in modern Angular.",
       "width": 1586,
       "height": 992
@@ -400,7 +401,7 @@ export const modernAngularPatterns: Insight = {
     "The data model becomes the starting point.",
     {
       "type": "image",
-      "src": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/signal-forms.webp",
+      "src": media("insights/stopped-writing-angular-old-way-10-modern-patterns/signal-forms.webp"),
       "alt": "Signal Forms architecture from writable model to field tree, validation, field state and accessible reusable inputs.",
       "width": 1536,
       "height": 1024
@@ -579,7 +580,7 @@ export const modernAngularPatterns: Insight = {
     },
     {
       "type": "image",
-      "src": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/signals-computed-rxjs.webp",
+      "src": media("insights/stopped-writing-angular-old-way-10-modern-patterns/signals-computed-rxjs.webp"),
       "alt": "Signals and computed values update dependent UI, with RxJS handling asynchronous search requests.",
       "width": 1586,
       "height": 992
@@ -720,7 +721,7 @@ export const modernAngularPatterns: Insight = {
     "It can influence how the application is architected.",
     {
       "type": "image",
-      "src": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/zoneless-deferred-performance.webp",
+      "src": media("insights/stopped-writing-angular-old-way-10-modern-patterns/zoneless-deferred-performance.webp"),
       "alt": "Angular performance using critical initial content, deferred secondary content and zoneless signal updates.",
       "width": 1586,
       "height": 992
