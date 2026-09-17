@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useId, useMemo, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +25,11 @@ import { InsightCover } from "@/components/insights/InsightCover";
 
 const ALL = "All" as const;
 type Filter = typeof ALL | InsightTopic;
+
+/* The day's quote never changes while the page is open, so there is nothing to
+   subscribe to — the store exists only to read a client-side value after
+   hydration without re-rendering from an effect. */
+const subscribeToNothing = () => () => {};
 
 /**
  * The /insights index.
@@ -73,10 +78,11 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
      pick is applied after mount, where "today" is the reader's day rather than
      the day the site was built. */
   const quotes = useMemo(() => quotableInsights(), []);
-  const [quoteIndex, setQuoteIndex] = useState(0);
-  useEffect(() => {
-    setQuoteIndex(quoteIndexForDay(quotes.length));
-  }, [quotes.length]);
+  const quoteIndex = useSyncExternalStore(
+    subscribeToNothing,
+    useCallback(() => quoteIndexForDay(quotes.length), [quotes.length]),
+    () => 0,
+  );
   const quoted = quotes[quoteIndex];
 
   return (
