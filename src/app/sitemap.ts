@@ -18,7 +18,6 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
      crawlers rather than protecting anything. */
   { path: "/about", priority: 0.8, changeFrequency: "monthly" },
   { path: "/contact", priority: 0.8, changeFrequency: "yearly" },
-  { path: "/skills", priority: 0.7, changeFrequency: "monthly" },
   { path: "/process", priority: 0.6, changeFrequency: "yearly" },
   { path: "/pricing", priority: 0.6, changeFrequency: "yearly" },
   { path: "/insights", priority: 0.6, changeFrequency: "monthly" },

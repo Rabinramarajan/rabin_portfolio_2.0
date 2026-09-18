@@ -28,7 +28,6 @@
 @import "./css/sections/proof.css";
 @import "./css/sections/about.css";
 @import "./css/sections/skills.css";
-@import "./css/sections/tech-ecosystem.css";
 @import "./css/sections/engagement.css";
 @import "./css/sections/contact.css";
 
@@ -67,9 +66,6 @@
 
 
 
-@import "./css/sections/tech-ecosystem-tree.css";
-@import "./css/sections/tech-ecosystem-notes.css";
-@import "./css/sections/tech-ecosystem-mobile.css";
 
 /* ------------------------------------------------------------
    Route-scoped stylesheets are NOT imported here.
@@ -84,7 +80,6 @@
      version.css ............. app/version/page.tsx
      legal.css ............... app/privacy + app/terms
      about-story.css ......... app/about/page.tsx
-     skills-narrative.css .... app/skills/page.tsx
      process-cinematic.css ... app/process/page.tsx
      work-detail.css ......... app/work/[slug]/page.tsx
      resume.css .............. app/resume/page.tsx

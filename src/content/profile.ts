@@ -117,7 +117,7 @@ export const footerNavigation: NavItem[] = [
   { href: "/services", label: "Services" },
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
-  { href: "/skills", label: "Skills" },
+  { href: "/#skills", label: "Skills" },
   { href: "/process", label: "Process" },
   { href: "/pricing", label: "Pricing" },
   { href: "/insights", label: "Insights" },

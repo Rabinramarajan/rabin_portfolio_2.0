@@ -110,7 +110,7 @@ export default function Page() {
       <footer className="vr__foot">
         <p>
           Curious how it is built and deployed?{" "}
-          <Link href="/skills">
+          <Link href="/#skills">
             See the stack
             <ArrowUpRight size={14} aria-hidden />
           </Link>

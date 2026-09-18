@@ -178,7 +178,7 @@ function skillRecords(): KnowledgeRecord[] {
     slug: group.id,
     content: `${group.label}${group.note ? ` — ${group.note}` : ""} ${group.items.join(", ")}.`,
     tags: dedupe(["skill", "skills", "stack", "technology", group.label, ...group.items]),
-    url: "/skills",
+    url: "/#skills",
   }));
 
   return [
@@ -189,7 +189,7 @@ function skillRecords(): KnowledgeRecord[] {
       title: "Everyday stack",
       content: `Technologies Rabin uses day to day: ${everydayTech.join(", ")}.`,
       tags: dedupe(["stack", "everyday", "primary", "preferred", ...everydayTech]),
-      url: "/skills",
+      url: "/#skills",
     },
   ];
 }
