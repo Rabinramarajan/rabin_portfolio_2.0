@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -11,9 +11,14 @@ import { contactSchema, type ContactInput } from "@/lib/contact/validation";
 import { ATTACHMENT, CONTACT_ROLES, PROJECT_STAGES, PROJECT_TYPES } from "@/content/contact-fields";
 import { contactCopy } from "@/content/contact";
 import { profile } from "@/content/profile";
+import { trackContactStart, trackContactSubmit } from "@/lib/analytics";
 import { duration, ease } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import type { InquiryType } from "@/types/contact";
+
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/components/form.css";
 
 type SubmitState = "idle" | "loading" | "ok" | "err";
 
@@ -47,6 +52,9 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
   const [referenceId, setReferenceId] = useState("");
   const [responseTime, setResponseTime] = useState(profile.availability.responseTime);
   const [detailsOpen, setDetailsOpen] = useState(Boolean(defaultInquiryType));
+  /* contact_start fires once per mount, on the first edit. Counting every
+     keystroke would drown the completion rate this event exists to measure. */
+  const started = useRef(false);
 
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState("");
@@ -140,6 +148,7 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
       } | null;
 
       if (res.ok && body?.ok) {
+        trackContactSubmit(typeof window === "undefined" ? "" : window.location.pathname);
         setReferenceId(body.referenceId ?? "");
         setResponseTime(body.responseTime ?? profile.availability.responseTime);
         setSubmitState("ok");
@@ -235,10 +244,20 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
   const busy = submitState === "loading" || isSubmitting;
 
   return (
-    <form className="cp-form" onSubmit={onFormSubmit} noValidate aria-labelledby="contact-form-title">
+    <form
+      className="cp-form"
+      onSubmit={onFormSubmit}
+      onInput={() => {
+        if (started.current) return;
+        started.current = true;
+        trackContactStart(typeof window === "undefined" ? "" : window.location.pathname);
+      }}
+      noValidate
+      aria-labelledby="contact-form-title"
+    >
       <div className="cp-form__head">
         <h3 id="contact-form-title">Write to me</h3>
-        <p>Required fields are marked. Optional project details stay collapsed until you need them.</p>
+        <p>Name, email and a sentence is enough to start. Everything else is optional.</p>
       </div>
 
       <div className="hp" aria-hidden>
@@ -272,31 +291,27 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
         </Field>
       </div>
 
-      <Field label="Inquiry type" htmlFor="cp-inquiry" error={errors.inquiryType?.message} required>
-        <Controller
-          name="inquiryType"
-          control={control}
-          render={({ field }) => (
-            <select
-              id="cp-inquiry"
-              {...field}
-              value={field.value ?? ""}
-              aria-invalid={!!errors.inquiryType}
-              aria-describedby={errors.inquiryType ? "cp-inquiry-err" : undefined}
-            >
-              <option value="">Select one</option>
-              {contactCopy.form.inquiryTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          )}
-        />
-      </Field>
+      {/* Company and budget sit in the first block deliberately: they are the
+          only two optional answers that change how I reply, and asking for
+          them here keeps the rest of the form collapsed. */}
+      <div className="cp-form__grid">
+        <Field label="Company" htmlFor="cp-company" error={errors.company?.message}>
+          <input id="cp-company" type="text" autoComplete="organization" {...register("company")} />
+        </Field>
+        <Field label="Budget range" htmlFor="cp-budget" error={errors.budget?.message}>
+          <select id="cp-budget" {...register("budget")}>
+            <option value="">Not sure yet</option>
+            {contactCopy.form.budgets.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
 
       <Field
-        label="Message"
+        label="What can I help with?"
         htmlFor="cp-message"
         error={errors.message?.message}
         required
@@ -322,15 +337,34 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
         aria-controls="cp-optional"
         onClick={() => setDetailsOpen((open) => !open)}
       >
-        <span>{detailsOpen ? "Hide project details" : "Add optional project details"}</span>
+        <span>{detailsOpen ? "Hide project details" : "Add project details"}</span>
         <ChevronDown aria-hidden size={16} data-open={detailsOpen} />
       </button>
 
       <div id="cp-optional" hidden={!detailsOpen} className="cp-optional">
+        <Field label="Inquiry type" htmlFor="cp-inquiry" error={errors.inquiryType?.message}>
+          <Controller
+            name="inquiryType"
+            control={control}
+            render={({ field }) => (
+              <select
+                id="cp-inquiry"
+                {...field}
+                value={field.value ?? ""}
+                aria-invalid={!!errors.inquiryType}
+                aria-describedby={errors.inquiryType ? "cp-inquiry-err" : undefined}
+              >
+                <option value="">Select one</option>
+                {contactCopy.form.inquiryTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            )}
+          />
+        </Field>
         <div className="cp-form__grid">
-          <Field label="Company" htmlFor="cp-company" error={errors.company?.message}>
-            <input id="cp-company" type="text" autoComplete="organization" {...register("company")} />
-          </Field>
           <Field label="Website" htmlFor="cp-url" error={errors.projectUrl?.message}>
             <input
               id="cp-url"
@@ -372,16 +406,6 @@ export function ContactForm({ defaultInquiryType }: { defaultInquiryType?: Inqui
             <select id="cp-stage" {...register("projectStage")}>
               <option value="">Select project stage</option>
               {PROJECT_STAGES.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Budget" htmlFor="cp-budget" error={errors.budget?.message}>
-            <select id="cp-budget" {...register("budget")}>
-              <option value="">Not sure yet</option>
-              {contactCopy.form.budgets.map((item) => (
                 <option key={item} value={item}>
                   {item}
                 </option>

@@ -45,7 +45,7 @@ describe("ContactForm", () => {
     render(<ContactForm defaultInquiryType="Project" />);
     await user.type(screen.getByLabelText(/^name/i), "Ada Lovelace");
     await user.type(screen.getByLabelText(/^email/i), "ada@example.com");
-    await user.type(screen.getByLabelText(/^message/i), longMessage);
+    await user.type(screen.getByLabelText(/^what can i help with/i), longMessage);
 
     const submit = screen.getByRole("button", { name: /send message/i });
     await user.click(submit);
@@ -78,7 +78,7 @@ describe("ContactForm", () => {
     render(<ContactForm defaultInquiryType="Contract" />);
     await user.type(screen.getByLabelText(/^name/i), "Ada Lovelace");
     await user.type(screen.getByLabelText(/^email/i), "ada@example.com");
-    await user.type(screen.getByLabelText(/^message/i), longMessage);
+    await user.type(screen.getByLabelText(/^what can i help with/i), longMessage);
     await user.click(screen.getByRole("button", { name: /send message/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/too many requests/i);
@@ -90,6 +90,6 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText(/^name/i).tagName).toBe("INPUT");
     expect(screen.getByLabelText(/^email/i).tagName).toBe("INPUT");
     expect(screen.getByLabelText(/inquiry type/i).tagName).toBe("SELECT");
-    expect(screen.getByLabelText(/^message/i).tagName).toBe("TEXTAREA");
+    expect(screen.getByLabelText(/^what can i help with/i).tagName).toBe("TEXTAREA");
   });
 });

@@ -1,3 +1,5 @@
+import { media } from "@/lib/media";
+
 /**
  * The assistant's face.
  *
@@ -5,11 +7,6 @@
  * the widget needs: the launcher, the preview card, the panel header and the
  * transcript avatar. The artwork carries its own ring and glow, so the frames
  * around it stay borderless and let the mark be the whole shape.
- *
- * Served from `public/` rather than through `media()`: the asset is registered
- * in the manifest as `other/chatbot/mark.png`, but until `npm run blob:migrate`
- * uploads it the CDN has no such object, and a 404 leaves the widget faceless.
- * Swap this for `media("other/chatbot/mark.png")` once it is on the store.
  *
  * Points at `mark-128.webp`, not the 1254px `1.png` source it was derived from.
  * The mark never renders above 64 CSS px — .chat-launch is 64px and every other
@@ -31,7 +28,7 @@ export function BotMark({ className }: { className?: string }) {
     // eslint-disable-next-line @next/next/no-img-element -- fixed-size chrome inside an on-demand overlay; already sized to its display box, so the optimizer would add a request without shrinking the bytes
     <img
       className={className ? `chat-mark ${className}` : "chat-mark"}
-      src="/media/chatbot/mark-128.webp"
+      src={media("other/chatbot/mark-128.webp")}
       alt=""
       aria-hidden="true"
       fetchPriority="high"

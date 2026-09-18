@@ -30,7 +30,7 @@ export function PremiumContactCenterVisual({ children }: PremiumContactCenterVis
         children
       ) : (
         <Image
-          src={media("other/contact/globe.png")}
+          src={media("other/contact/globe.webp")}
           alt="Global orbital network visualization representing Rabin R's worldwide presence and connectivity"
           fill
           priority

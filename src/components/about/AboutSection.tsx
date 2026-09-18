@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ComponentType } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, Code2, Download, Lightbulb, Rocket, Star, Trophy, Users, UsersRound } from "lucide-react";
+import { ArrowRight, Code2, Download, Globe, Lightbulb, Rocket, Trophy, Users, UsersRound } from "lucide-react";
 import { about } from "@/content/about";
 import { profile } from "@/content/profile";
 import { TextReveal, Magnetic } from "@/components/motion";
@@ -20,7 +20,8 @@ const HIGHLIGHT_GLYPHS: Glyph[] = [Rocket, Code2, Lightbulb];
 const METRIC_GLYPHS: Record<MetricIcon, Glyph> = {
   experience: Trophy,
   projects: UsersRound,
-  commitment: Star,
+  users: UsersRound,
+  countries: Globe,
   clients: Users,
 };
 
@@ -113,7 +114,7 @@ export function AboutSection() {
 
             <ul className="abt__stats">
               {about.metrics.slice(0, STAT_COUNT).map((metric) => {
-                const Icon = metric.icon ? METRIC_GLYPHS[metric.icon] : Star;
+                const Icon = metric.icon ? METRIC_GLYPHS[metric.icon] : Trophy;
                 return (
                   <li className="abt-stat" key={metric.label}>
                     <Tile icon={Icon} className="abt-stat__icon" />

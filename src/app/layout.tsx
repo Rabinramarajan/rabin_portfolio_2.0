@@ -13,7 +13,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { ProgressSync } from "@/components/ProgressSync";
 import { ChatLauncher } from "@/components/ChatLauncher";
 import { Toaster } from "@/components/Toaster";
-import { CustomCursor } from "@/components/custom-cursor/CustomCursor";
+import { CustomCursorMount } from "@/components/custom-cursor/CustomCursorMount";
 import { ConsentManager } from "@/components/ConsentManager";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import { media } from "@/lib/media";
@@ -139,7 +139,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Footer />
         <ChatLauncher />
         <Toaster />
-        <CustomCursor />
+        <CustomCursorMount />
 
         {/* Google Tag Manager - Consent Mode */}
         {process.env.NEXT_PUBLIC_GTM_ID && (
@@ -159,11 +159,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </Script>
         )}
 
-        {/* Google Tag Manager Script */}
+        {/* Google Tag Manager Script — same reasoning as the GA loader below:
+            lazyOnload keeps gtag.js off the pre-paint network queue. The
+            consent defaults above still run first, and they are what has to
+            be in place before the tag loads, not the other way round. */}
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
         )}
 
@@ -176,14 +179,30 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           />
         )}
 
-        {/* Google Analytics */}
+        {/* Google Analytics.
+
+            `lazyOnload`, not `afterInteractive`. afterInteractive makes Next
+            emit a <link rel="preload" as="script"> for gtag.js into the head,
+            so a ~100 KB third-party script was being fetched at high priority
+            against the hero poster and the font files — on the same
+            connection, before the page had painted. lazyOnload drops that
+            preload and starts the fetch after `load`, which is past both FCP
+            and LCP. Nothing is lost but a few hundred milliseconds of
+            attribution on the very fastest bounces.
+
+            The loader is skipped when GTM is also configured: both tags are
+            the same gtag.js file from the same origin, and requesting it
+            twice downloads it twice. GTM's copy above already defines
+            `gtag`, so the config call below still lands. */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
+            {!process.env.NEXT_PUBLIC_GTM_ID && (
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+                strategy="lazyOnload"
+              />
+            )}
+            <Script id="google-analytics" strategy="lazyOnload">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

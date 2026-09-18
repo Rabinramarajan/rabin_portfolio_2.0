@@ -4,6 +4,7 @@ const img = (src: string, alt: string, width = 1600, height = 1000) => ({ src, a
 export const projects: Project[] = [
   {
     slug: 'fiji-immigration-internal',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '01',
     title: 'Fiji Immigration Internal Management System',
     tagline: 'The system immigration officers run a country borders on.',
@@ -23,13 +24,38 @@ export const projects: Project[] = [
       { value: '~50%', label: 'Frontend performance gain', note: 'From optimised rendering and workflow handling.' },
       { value: '10,000+', label: 'Active users', note: 'Fiji Government immigration case management, across three countries.' },
     ],
+    /* Written in the first person and scoped deliberately. This was a team
+       delivery; claiming the platform would be a claim a reference check
+       would contradict, and the specific list is the more useful answer to a
+       hiring manager anyway. */
+    responsibilities: [
+      'Frontend architecture for the officer-facing application',
+      'Data flow optimisation across the case workflow panels',
+      'Reusable component library shared by the assessment screens',
+      'API integration against the Sails.js services',
+      'Role-based UI rendering and route guards',
+      'Performance work on rendering and network behaviour',
+    ],
+    decisions: [
+      {
+        problem:
+          'Several panels on a single case screen each requested the same reference data independently, so opening one record produced the same lookup calls repeatedly.',
+        decision:
+          'Moved the reference lookups behind a shared RxJS stream with caching, so the panels subscribe to one in-flight request instead of issuing their own.',
+        why:
+          'The duplication was structural, not accidental: each panel was written to be self-sufficient. Caching at the data layer fixed every panel at once and left them independent.',
+        tradeoff:
+          'Cached reference data can go stale within a session, so the cache is invalidated on the workflow events that can change it rather than held for the lifetime of the page.',
+        result: 'Approximately 40% lower API consumption on the case workflow screens.',
+      },
+    ],
     technologies: ['Angular', 'TypeScript', 'Sails.js', 'RxJS', 'Tailwind CSS'],
     featured: true,
     layout: 'large',
     filter: 'systems',
-    cover: img(media('projects/fiji-immigration-internal/hero.png'), 'Fiji Immigration officer workflow dashboard', 1370, 769),
+    cover: img(media('projects/fiji-immigration-internal/hero.webp'), 'Fiji Immigration officer workflow dashboard', 1370, 769),
     gallery: [
-      img(media('projects/fiji-immigration-internal/hero.png'), 'Fiji Immigration officer workflow list', 1370, 769)
+      img(media('projects/fiji-immigration-internal/hero.webp'), 'Fiji Immigration officer workflow list', 1370, 769)
     ],
     problem:
       'Immigration operations needed a centralized system where officers could assess applications, verify documents and move cases through complex workflows without losing context.',
@@ -54,6 +80,28 @@ export const projects: Project[] = [
       'Frontend performance improved by approximately 50% through optimized rendering and application workflows.',
       'Designed to support high-volume government workflows across multiple operational teams.'
     ],
+    related: [
+      {
+        label: 'Angular performance optimization',
+        href: '/services/angular-performance-optimization',
+        note: 'The service this project is the evidence for.',
+      },
+      {
+        label: 'The same request, five times',
+        href: '/insights/rxjs-reduce-api-calls',
+        note: 'The shared-stream decision above, written out with the code and the trade-off.',
+      },
+      {
+        label: 'Angular Signals state management',
+        href: '/insights/angular-signals-state-management',
+        note: 'The state-precision argument the same work rests on.',
+      },
+      {
+        label: 'Performance as a product requirement',
+        href: '/insights/angular-performance-core-web-vitals',
+        note: 'Why the 40% mattered operationally, not just as a number.',
+      },
+    ],
     seo: {
       title:
         'Fiji Immigration Internal Management System',
@@ -64,6 +112,7 @@ export const projects: Project[] = [
 
   {
     slug: 'fiji-immigration-external',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '02',
     title: 'Fiji Immigration Citizen Portal',
     tagline: 'Visa and permit applications, without the queue.',
@@ -77,13 +126,40 @@ export const projects: Project[] = [
       { layer: 'Styling', value: 'Tailwind CSS' },
       { layer: 'API', value: 'Sails.js' },
     ],
+    /* No measured outcome was ever captured for this deployment, and an
+       invented conversion figure would be worth less than nothing here. What
+       can be stated precisely is the shape of what was built. */
+    metrics: [
+      { value: '7', label: 'Citizen-facing workflows', note: 'Applications, guided forms, uploads, appointments, payments, tracking and responsive delivery.' },
+      { value: 'Multi-step', label: 'Application journey', note: 'One guided flow carries an applicant from submission through documents, appointment and payment.' },
+      { value: 'Public web', label: 'Delivery target', note: 'Built to stay usable for first-time applicants on mixed devices and slower networks.' },
+    ],
+    responsibilities: [
+      'Frontend implementation of the guided application flows',
+      'Document upload and validation interfaces',
+      'Appointment scheduling and payment integration on the client side',
+      'Responsive behaviour across phone, tablet and desktop',
+      'Application status tracking views',
+    ],
+    decisions: [
+      {
+        problem:
+          'A first-time applicant abandoning a long immigration form loses everything typed so far, and the form cannot be shortened — the questions are statutory.',
+        decision:
+          'Split the submission into a guided multi-step journey with per-step validation, so each step is short, correctable and complete before the next one opens.',
+        why:
+          'The length was not negotiable, but the cost of an error was. Validating at each step keeps a mistake local instead of surfacing it at the end.',
+        tradeoff:
+          'More screens to build and test than one long form, and the step state has to survive navigation.',
+      },
+    ],
     technologies: ['Angular', 'TypeScript', 'Sails.js', 'RxJS', 'Tailwind CSS'],
     featured: true,
     layout: 'medium',
     filter: 'web',
-    cover: img(media('projects/fiji-immigration-external/hero.png'), 'Fiji Immigration citizen portal', 1366, 768),
+    cover: img(media('projects/fiji-immigration-external/hero.webp'), 'Fiji Immigration citizen portal', 1366, 768),
     gallery: [
-      img(media('projects/fiji-immigration-external/hero.png'), 'Fiji Immigration citizen portal welcome screen', 1366, 768)
+      img(media('projects/fiji-immigration-external/hero.webp'), 'Fiji Immigration citizen portal welcome screen', 1366, 768)
     ],
     problem:
       'Applicants needed a way to submit and track immigration applications remotely without depending on physical office visits or assistance from a training desk.',
@@ -109,6 +185,18 @@ export const projects: Project[] = [
       'Created a self-service digital journey for immigration applicants.',
       'Unified application, document and tracking experiences into one citizen-facing portal.'
     ],
+    related: [
+      {
+        label: 'Frontend architecture',
+        href: '/services/frontend-architecture',
+        note: 'Component architecture and data flow for public-facing platforms.',
+      },
+      {
+        label: 'Forms that carry consequences',
+        href: '/insights/accessible-angular-forms',
+        note: 'The validation and error-recovery thinking behind the guided flow.',
+      },
+    ],
     seo: {
       title:
         'Fiji Immigration Citizen Portal',
@@ -119,6 +207,7 @@ export const projects: Project[] = [
 
   {
     slug: 'prims-member-portal',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '03',
     title: 'PRIMS Member Portal',
     tagline: 'A pension account members can actually understand.',
@@ -139,12 +228,36 @@ export const projects: Project[] = [
       'RxJS',
       'Angular Material'
     ],
+    metrics: [
+      { value: '7', label: 'Member workflows', note: 'Dashboard, contributions, balances, transactions, statements, claims and beneficiaries.' },
+      { value: 'Multi-stream', label: 'Account data', note: 'Contribution, balance, transaction and claim streams composed into one member view.' },
+      { value: 'Enterprise web', label: 'Delivery target', note: 'Angular Material component system for consistency across the member screens.' },
+    ],
+    responsibilities: [
+      'Member dashboard and account views in Angular',
+      'Reactive composition of the contribution, balance and transaction streams',
+      'Statement and claims workflow interfaces',
+      'Angular Material component usage and interface consistency',
+      'API integration against the Sails.js services',
+    ],
+    decisions: [
+      {
+        problem:
+          'A pension member reads a balance once and acts on it. Dense financial tables are accurate and still leave the member calling the office to have them explained.',
+        decision:
+          'Led the member view with the few figures that answer the common questions, and kept the full transaction detail one level down rather than on the landing screen.',
+        why:
+          'The portal existed to reduce staff-assisted queries. Density on the first screen would have preserved exactly the calls it was meant to remove.',
+        tradeoff:
+          'A member who wants the full ledger takes one extra step to reach it.',
+      },
+    ],
     featured: true,
     layout: 'medium',
     filter: 'platforms',
-    cover: img(media('projects/prims-member-portal/hero.png'), 'PRIMS pension member transactions', 1919, 911),
+    cover: img(media('projects/prims-member-portal/hero.webp'), 'PRIMS pension member transactions', 1919, 911),
     gallery: [
-      img(media('projects/prims-member-portal/hero.png'), 'PRIMS pension contribution and transaction history', 1919, 911)
+      img(media('projects/prims-member-portal/hero.webp'), 'PRIMS pension contribution and transaction history', 1919, 911)
     ],
     problem:
       'Members depended heavily on staff to understand contributions, balances, statements and pension-related information that should have been available through self-service.',
@@ -170,6 +283,23 @@ export const projects: Project[] = [
       'Reduced dependency on manual staff assistance for common account information.',
       'Improved visibility into contributions, balances and pension transactions.'
     ],
+    related: [
+      {
+        label: 'Angular engineering',
+        href: '/services/angular-development',
+        note: 'Enterprise Angular work of the kind this portal required.',
+      },
+      {
+        label: 'Angular Signals state management',
+        href: '/insights/angular-signals-state-management',
+        note: 'The two pieces of PRIMS state that earned promotion, and why nothing else did.',
+      },
+      {
+        label: 'Quiet interfaces age better',
+        href: '/insights/enterprise-ui-design-restraint',
+        note: 'The restraint argument behind leading with figures instead of tables.',
+      },
+    ],
     seo: {
       title:
         'PRIMS Pension Member Portal',
@@ -180,6 +310,7 @@ export const projects: Project[] = [
 
   {
     slug: 'vnpf-blo-mi',
+    service: { label: 'Ionic cross-platform mobile development', href: '/services/ionic-development' },
     number: '04',
     title: 'VNPF blo mi Member Mobile App',
     tagline: 'A provident fund in your pocket, across iOS and Android.',
@@ -203,9 +334,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'full',
     filter: 'web',
-    cover: img(media('projects/vnpf-blo-mi/hero.png'), 'VNPF blo mi mobile application screens', 1200, 900),
+    cover: img(media('projects/vnpf-blo-mi/hero.webp'), 'VNPF blo mi mobile application screens', 1200, 900),
     gallery: [
-      img(media('projects/vnpf-blo-mi/hero.png'), 'VNPF blo mi mobile application screens', 1200, 900)
+      img(media('projects/vnpf-blo-mi/hero.webp'), 'VNPF blo mi mobile application screens', 1200, 900)
     ],
     problem:
       'VNPF members needed convenient mobile access to their provident fund information without relying on desktop portals or physical offices.',
@@ -231,6 +362,34 @@ export const projects: Project[] = [
       'Brought provident fund information closer to members through mobile self-service.',
       'Integrated native mobile capabilities through Capacitor.'
     ],
+    responsibilities: [
+      'Responsive interfaces across both mobile platforms',
+      'REST API integration for member account and contribution data',
+      'Secure authentication, including biometric sign-in',
+      'Support for both App Store and Play Store releases',
+    ],
+    decisions: [
+      {
+        problem:
+          'Members check balances and statements on the devices they already own, which are frequently older phones on unreliable connections — and the same financial screens have to be correct on both iOS and Android.',
+        decision:
+          'One Ionic and Angular codebase with Capacitor bridging the native capabilities, rather than two separately built native applications.',
+        why:
+          'The screens are the same account views on both platforms. What genuinely differs is the native surface — secure authentication and device storage — and Capacitor confines that difference to a bridge instead of spreading it across two codebases.',
+        tradeoff:
+          'Anything the bridge does not already expose has to be written as a plugin, and platform-specific behaviour still has to be tested and released on both stores rather than once.',
+      },
+      {
+        problem:
+          'Provident fund balances and contribution history are sensitive, but a member opening the app to check one number will not tolerate a full sign-in every time.',
+        decision:
+          'Biometric sign-in on top of the platform credential store, rather than a longer-lived session in the application layer.',
+        why:
+          'It moves the security cost onto the device, where the platform already solves it well, instead of trading safety for convenience in application code.',
+        tradeoff:
+          'Devices without usable biometric hardware need a maintained fallback path, so there are two sign-in routes to keep working rather than one.',
+      },
+    ],
     seo: {
       title:
         'VNPF blo mi Member Mobile App',
@@ -241,6 +400,7 @@ export const projects: Project[] = [
 
   {
     slug: 'insuremet',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '05',
     title: 'InsureMet',
     tagline: 'Policies, claims and finance for an insurer, in one console.',
@@ -264,9 +424,9 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'platforms',
-    cover: img(media('projects/insuremet/hero.png'), 'InsureMet insurance administration dashboard', 1366, 768),
+    cover: img(media('projects/insuremet/hero.webp'), 'InsureMet insurance administration dashboard', 1366, 768),
     gallery: [
-      img(media('projects/insuremet/hero.png'), 'InsureMet enterprise dashboard', 1366, 768)
+      img(media('projects/insuremet/hero.webp'), 'InsureMet enterprise dashboard', 1366, 768)
     ],
     problem:
       'Insurance operations were distributed across different processes and systems, making it harder for teams to manage policies, claims, products and financial information from one place.',
@@ -292,6 +452,28 @@ export const projects: Project[] = [
       'Created reusable frontend patterns across department-specific modules.',
       'Improved visibility of operational information through dashboards and structured data views.'
     ],
+    decisions: [
+      {
+        problem:
+          'Products, policies, claims and finance each wanted their own workflow, but all four read and write the same underlying business data and had to stay recognisably one product.',
+        decision:
+          'Department-specific modules composed from one shared component and data layer, rather than four separately built consoles.',
+        why:
+          'The differences between departments are in workflow, not in what a policy or a claim fundamentally is — so the shared layer is where consistency is cheapest to enforce, and the modules stay free to differ above it.',
+        tradeoff:
+          'A department-specific need now has to be negotiated against a shared API instead of solved locally, which makes some individual changes slower to ship.',
+      },
+      {
+        problem:
+          'Operational screens in insurance are dense — long tables, many columns, dashboards read all day rather than glanced at.',
+        decision:
+          'Structured table and dashboard primitives built once and reused across every module, fed by RxJS streams.',
+        why:
+          'Dense data views are where inconsistency is most expensive: a table that sorts or paginates differently in one module is a retraining cost for staff who move between them.',
+        tradeoff:
+          'The shared primitives carry more configuration than any single screen needs, which is complexity every consumer pays a little of.',
+      },
+    ],
     seo: {
       title:
         'InsureMet Insurance Administration',
@@ -302,6 +484,7 @@ export const projects: Project[] = [
 
   {
     slug: 'galaxy-sofas',
+    service: { label: 'Angular performance optimization', href: '/services/angular-performance-optimization' },
     number: '06',
     title: 'Galaxy Sofas',
     tagline: 'A furniture storefront designed to make choosing a sofa feel simple.',
@@ -360,6 +543,18 @@ export const projects: Project[] = [
       'Structured product content for improved search visibility.',
       'Built a responsive experience optimized for desktop and mobile users.'
     ],
+    decisions: [
+      {
+        problem:
+          'Furniture sells on large photography, and large photography is the fastest way to make a storefront slow — while the storefront still has to be findable in search.',
+        decision:
+          'Angular with server-side rendering, so product content is present in the HTML, with responsive image handling for the photography.',
+        why:
+          'Rendering on the server settles discoverability at the source rather than depending on a crawler executing the application, and it puts meaningful content on screen before the JavaScript has finished.',
+        tradeoff:
+          'SSR adds a server runtime to operate and a class of hydration bugs that a purely static build would not have.',
+      },
+    ],
     seo: {
       title:
         'Galaxy Sofas — Angular SSR Storefront',
@@ -370,6 +565,7 @@ export const projects: Project[] = [
 
   {
     slug: 'zellavora-ai-resume-builder',
+    service: { label: 'enterprise Angular development', href: '/services/angular-development' },
     number: '07',
     title: 'Zellavora AI Resume Builder',
     tagline: 'Guided input in. ATS-friendly resume out.',
@@ -420,6 +616,28 @@ export const projects: Project[] = [
       'Combined structured form input with live visual editing.',
       'Built a modern Angular architecture around Signals and Zoneless application patterns.'
     ],
+    decisions: [
+      {
+        problem:
+          'A resume builder has to feel trivial to a first-time user and still support detailed editing, with a preview that updates as they type.',
+        decision:
+          'A guided, structured input flow as the primary path, with Angular Signals driving the live preview.',
+        why:
+          'Guiding the input is what removes the blank page, and signals make the preview a direct consequence of the data rather than something kept in sync by hand.',
+        tradeoff:
+          'A guided flow is more opinionated than a free-form editor, so an experienced user who wants to jump straight to one section has to be given an explicit route around it.',
+      },
+      {
+        problem:
+          'A live preview that re-renders on every keystroke is exactly the workload that makes change detection expensive.',
+        decision:
+          'Zoneless change detection driven by signals, rather than relying on Zone.js to discover what changed.',
+        why:
+          'With signals the framework already knows precisely which values changed, so asking it to also patch and monitor every async API is redundant work on the hottest path in the product.',
+        tradeoff:
+          'Zoneless requires the whole codebase to be disciplined about state: any value not held in a signal will not trigger an update, and that fails more quietly than a missed render.',
+      },
+    ],
     seo: {
       title:
         'Zellavora AI Resume Builder',
@@ -430,6 +648,7 @@ export const projects: Project[] = [
 
   {
     slug: 'zellavora-control-center',
+    service: { label: 'frontend architecture consulting', href: '/services/frontend-architecture' },
     number: '08',
     title: 'Zellavora Control Center',
     tagline: 'One control plane for products, projects and operations.',
@@ -486,6 +705,18 @@ export const projects: Project[] = [
       'Separated administration and content management from consuming applications.',
       'Created a scalable foundation for future Zellavora products and services.'
     ],
+    decisions: [
+      {
+        problem:
+          'Several products need the same operational layer — users, roles, permissions, content and configuration — and each one solving it separately means the rules drift apart.',
+        decision:
+          'One control platform owning that layer for the whole ecosystem, exposed to the products through API contracts rather than shared code.',
+        why:
+          'Permissions and auditability are exactly the things that must not differ between products. A contract boundary lets each product evolve its own interface without being able to reinterpret who is allowed to do what.',
+        tradeoff:
+          'It becomes a central dependency: a contract change has to be coordinated across every product that consumes it, and the platform is a single point of failure for all of them.',
+      },
+    ],
     seo: {
       title:
         'Zellavora Control Center — Angular SaaS',
@@ -496,6 +727,7 @@ export const projects: Project[] = [
 
   {
     slug: 'ui-component-architecture',
+    service: { label: 'frontend architecture consulting', href: '/services/frontend-architecture' },
     number: '09',
     title: 'Enterprise UI Component Architecture',
     tagline: 'Build once. Reuse everywhere.',
@@ -547,6 +779,28 @@ export const projects: Project[] = [
       'Created reusable UI foundations for enterprise Angular applications.',
       'Reduced duplication by standardizing frequently used interface patterns.',
       'Established a scalable approach for maintaining consistent application experiences.'
+    ],
+    decisions: [
+      {
+        problem:
+          'Shared components fail in two opposite directions — too rigid and teams work around them, too configurable and they become harder to use than writing the markup directly.',
+        decision:
+          'Standalone components with small, composable APIs and Signals for reactive state, rather than large components with wide option surfaces.',
+        why:
+          'Composition lets a team assemble the variant they need from parts that each stay simple, which keeps flexibility without pushing every new requirement into another boolean input.',
+        tradeoff:
+          'Composable parts mean more pieces to learn and more assembly at the call site than a single component that tries to do everything.',
+      },
+      {
+        problem:
+          'Interaction behaviour — focus management, overlays, keyboard handling — is the part teams most often reimplement slightly differently and slightly wrong.',
+        decision:
+          'Angular CDK primitives underneath the component layer wherever that behaviour is needed, rather than hand-rolled implementations per component.',
+        why:
+          'These are solved problems with accessibility requirements attached, and a bespoke version is usually a subtly inaccessible version.',
+        tradeoff:
+          'It ties the component layer to CDK conventions and adds a dependency that has to be upgraded in step with Angular.',
+      },
     ],
     seo: {
       title:
@@ -606,7 +860,7 @@ export function galleryFrames(project: Project) {
  * named — the work section, the work page explorer and any future surface all
  * read it from here, so a renamed category cannot disagree with itself.
  */
-export const FILTER_LABEL: Record<ProjectFilter, string> = {
+const FILTER_LABEL: Record<ProjectFilter, string> = {
   web: 'Web Applications',
   dashboards: 'Dashboards',
   platforms: 'Platforms',

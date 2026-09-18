@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { useRef, type CSSProperties } from "react";
 import { hero } from "@/content/profile";
@@ -40,6 +41,16 @@ export function Hero() {
   const phone = useMediaQuery("(max-width: 767px)");
   const scrub = hydrated ? !reduce && !phone : true;
 
+  /* Phones get the small encode, and it is the same `phone` query that just
+     decided they will not scrub — the two facts are one decision, so they are
+     read from one source.
+
+     Safe against hydration despite `phone` being false on the first render:
+     ScrollVideoPlayer holds the <source> out of the DOM entirely until the
+     window load event, and `phone` has settled long before that. The server
+     renders no source, so there is nothing for this to mismatch. */
+  const reelSrc = (phone ? hero.reel?.mobileSrc : hero.reel?.src) ?? hero.reel?.src ?? "";
+
   const t = (delay: number) => ({
     duration: reduce ? duration.micro : duration.section,
     delay: reduce ? 0 : delay,
@@ -79,7 +90,7 @@ export function Hero() {
   return (
     <ScrollVideoPlayer
       mode={scrub ? "scroll" : "autoplay"}
-      src={hero.reel?.src ?? ""}
+      src={reelSrc}
       poster={hero.reel?.poster}
       posterSrcSet={hero.reel?.posterSrcSet}
       posterSizes={hero.reel?.posterSizes}
@@ -87,7 +98,16 @@ export function Hero() {
       as="section"
       containerProps={{ id: "hero", "aria-labelledby": "hero-heading" }}
       trackClassName="chero-track"
-      className={scrub ? "chero chero--scrub" : "chero"}
+      /* Both classes, always. The pin used to be added and removed with
+         `scrub`, which resolves only after hydration, so a phone rendered a
+         sticky 100vh hero inside a 240vh track and then unpinned it — a
+         layout change on every load. `.chero--scrub` now carries its own
+         `@media (min-width: 768px) and (prefers-reduced-motion:
+         no-preference)` guard, matching `.chero-track`, so the markup is
+         identical on the server and the client and CSS alone decides whether
+         the hero pins. `scrub` still drives the video behaviour below, which
+         is not layout. */
+      className="chero chero--scrub"
       mediaClassName="chero__stage"
       videoClassName="chero__reel"
       posterClassName="chero__reel"
@@ -140,10 +160,18 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={t(0.42)}
             >
+              {/* The separator trails its item instead of leading the next
+                  one. Each item is one inline-flex box, so a wrap happens
+                  between boxes — with a leading dot that put a bare bullet at
+                  the start of row two, floating under the headline with
+                  nothing before it. Trailing, a wrap leaves the dot at the end
+                  of the row it belongs to, which reads as continuation. */}
               {disciplines.map((item, i) => (
                 <span key={item}>
-                  {i > 0 ? <span className="chero__dot" aria-hidden /> : null}
                   {item}
+                  {i < disciplines.length - 1 ? (
+                    <span className="chero__dot" aria-hidden />
+                  ) : null}
                 </span>
               ))}
             </motion.p>
@@ -184,6 +212,28 @@ export function Hero() {
               {hero.secondaryCta.label}
             </Btn>
           </motion.div>
+
+          {/* Recruiters and clients read the same hero. Everything above this
+              line is written for the client funnel; this is the one-line exit
+              to the résumé so a hiring manager does not have to work out
+              which of five nav items is for them. */}
+          {hero.recruiterCta ? (
+            <motion.p
+              className="chero__recruiter"
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={t(0.66)}
+            >
+              {hero.recruiterCta.label}{" "}
+              <Link
+                href={hero.recruiterCta.href}
+                className="chero__recruiter-link"
+                onClick={() => trackCtaClick(hero.recruiterCta!.linkLabel, "hero_recruiter")}
+              >
+                {hero.recruiterCta.linkLabel} →
+              </Link>
+            </motion.p>
+          ) : null}
         </div>
 
         {quote ? (

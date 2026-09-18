@@ -14,6 +14,7 @@ export function MagneticButton({
   variant = "solid",
   className,
   strength = 8,
+  onClick,
   "data-cursor": dataCursor,
   "data-cursor-label": dataCursorLabel,
 }: {
@@ -22,6 +23,7 @@ export function MagneticButton({
   variant?: "solid" | "line";
   className?: string;
   strength?: number;
+  onClick?: () => void;
   "data-cursor"?: string;
   "data-cursor-label"?: string;
 }) {
@@ -31,6 +33,7 @@ export function MagneticButton({
         href={href}
         variant={variant}
         className={className}
+        {...(onClick ? { onClick } : {})}
         {...(dataCursor ? { "data-cursor": dataCursor } : {})}
         {...(dataCursorLabel ? { "data-cursor-label": dataCursorLabel } : {})}
       >

@@ -31,6 +31,7 @@ export const BLOB_ROOT = "portfolio";
 
 /** Blob folders. Kept explicit so upload tooling cannot invent a new one. */
 export const BLOB_FOLDERS = [
+  "insights",
   "projects",
   "case-studies",
   "services",
@@ -104,6 +105,17 @@ export const MEDIA_MANIFEST = {
      at monitor sizes. The poster srcset carries a matching 1920w cut for the
      same reason. */
   "hero/home-reel-v6.mp4": "/media/hero/banner_v2.scrub.mp4",
+  /* Phones never scrub — Hero gates the scrub on `(max-width: 767px)` and
+     drops to autoplay below it — so the all-intra encode above buys them
+     nothing but bytes. Every frame being a keyframe is what makes that file
+     ~7.7 Mbps; at a normal GOP the same five seconds is ~0.43 Mbps. Paired
+     with a 720p cut (a phone's full-bleed hero is nowhere near 1080p even at
+     3x DPR), that is 263 KB against 4.7 MB — 82% of the page's entire
+     transfer taken off the one connection least able to afford it. Selected
+     in Hero from the same media query that already decides the mode, and
+     only ever mounted inside the post-load <source>, so no SSR branch
+     exists and the scrub path is untouched. */
+  "hero/home-reel-v6-mobile.mp4": "/media/hero/banner_v2.mobile.mp4",
   "hero/home-poster-v6.webp": "/media/hero/banner2-poster.webp",
   /* Other cuts of the same frame. The poster is the LCP element on mobile,
      where the full-width file is ~4x the bytes the layout can use — and on a
@@ -129,11 +141,11 @@ export const MEDIA_MANIFEST = {
   "services/performance-optimization.mp4": "/media/service/performance.mp4",
 
   // ---- projects (keyed by case-study slug) ------------------------------
-  "projects/fiji-immigration-internal/hero.png": "/media/fiji_internal_application/image3.png",
-  "projects/fiji-immigration-external/hero.png": "/media/fiji_external_application/image1.png",
-  "projects/prims-member-portal/hero.png": "/media/prims_member_portal/image3.png",
-  "projects/vnpf-blo-mi/hero.png": "/media/vnpf_mobile/composite-thumb.png",
-  "projects/insuremet/hero.png": "/media/insuremet/image2.png",
+  "projects/fiji-immigration-internal/hero.webp": "/media/fiji_internal_application/image3.webp",
+  "projects/fiji-immigration-external/hero.webp": "/media/fiji_external_application/image1.webp",
+  "projects/prims-member-portal/hero.webp": "/media/prims_member_portal/image3.webp",
+  "projects/vnpf-blo-mi/hero.webp": "/media/vnpf_mobile/composite-thumb.webp",
+  "projects/insuremet/hero.webp": "/media/insuremet/image2.webp",
   "projects/galaxy-sofas/gallery-01.webp": "/media/galaxy-sofas/1.webp",
   "projects/galaxy-sofas/gallery-02.webp": "/media/galaxy-sofas/2.webp",
   "projects/galaxy-sofas/gallery-03.webp": "/media/galaxy-sofas/3.webp",
@@ -143,23 +155,92 @@ export const MEDIA_MANIFEST = {
   "projects/galaxy-sofas/gallery-07.webp": "/media/galaxy-sofas/7.webp",
 
   // ---- other (page art that belongs to no single case study) ------------
-  "other/process/hero.png": "/media/process/process_hero.png",
-  "other/process/discover.png": "/media/process/discover.png",
-  "other/process/define.png": "/media/process/Define.png",
-  "other/process/design.png": "/media/process/Design.png",
-  "other/process/engineer.png": "/media/process/Engineer.png",
-  "other/process/validate.png": "/media/process/Validate.png",
-  "other/process/launch.png": "/media/process/Launch.png",
-  "other/process/evolve.png": "/media/process/Evolve.png",
+  "other/process/hero.webp": "/media/process/process_hero.webp",
+  "other/process/discover.webp": "/media/process/discover.webp",
+  "other/process/define.webp": "/media/process/Define.webp",
+  "other/process/design.webp": "/media/process/Design.webp",
+  "other/process/engineer.webp": "/media/process/Engineer.webp",
+  "other/process/validate.webp": "/media/process/Validate.webp",
+  "other/process/launch.webp": "/media/process/Launch.webp",
+  "other/process/evolve.webp": "/media/process/Evolve.webp",
   "other/contact/hero-loop.mp4": "/media/contact/hero.mp4",
-  "other/contact/hero.png": "/media/contact/hero_b.png",
-  "other/contact/conversation.png": "/media/contact/intelligent.png",
-  "other/contact/globe.png": "/media/contact/contact_h.png",
-  "other/experience/journey.png": "/media/experience/banner_img.png",
-  "other/faq/orbit.png": "/media/faq/banner_h.png",
-  "other/maintenance/cover.png": "/media/under-maintain/1.png",
-  "other/chatbot/mark.png": "/media/chatbot/1.png",
-  "other/footer/horizon.png": "/media/footer/2.png",
+  "other/contact/hero.webp": "/media/contact/hero_b.webp",
+  "other/contact/conversation.webp": "/media/contact/intelligent.webp",
+  "other/contact/globe.webp": "/media/contact/contact_h.webp",
+  "other/experience/journey.webp": "/media/experience/banner_img.webp",
+  "other/faq/orbit.webp": "/media/faq/banner_h.webp",
+  "other/maintenance/cover.webp": "/media/under-maintain/1.webp",
+  "other/chatbot/mark.webp": "/media/chatbot/1.webp",
+  /* The 128px cut BotMark actually renders. The 1254px source above is kept
+     as the regeneration master; this is the file that ships. */
+  "other/chatbot/mark-128.webp": "/media/chatbot/mark-128.webp",
+  "other/footer/horizon.webp": "/media/footer/2.webp",
+
+  // ---- insights ---------------------------------------------------------
+  /* Article covers and the in-body diagrams. These were the one media set
+     still addressed as literal /media/insights/* paths in content, so the
+     migration script never saw them and they were served from /public in
+     production while everything else moved to Blob. */
+  // hub art (belongs to the /insights index, not to any one article)
+  "insights/hub-orb.webp": "/media/insights/1.webp",
+  "insights/angular-signals-state-management/hub-cover-v1.webp":
+    "/media/insights/angular-signals-cover-v1.webp",
+  // accessible-angular-forms
+  "insights/accessible-angular-forms/accessible-validation-messages.webp": "/media/insights/accessible-angular-forms/accessible-validation-messages.webp",
+  "insights/accessible-angular-forms/cover.webp": "/media/insights/accessible-angular-forms/cover.webp",
+  "insights/accessible-angular-forms/error-summary-focus-management.webp": "/media/insights/accessible-angular-forms/error-summary-focus-management.webp",
+  "insights/accessible-angular-forms/multi-step-form-draft-recovery.webp": "/media/insights/accessible-angular-forms/multi-step-form-draft-recovery.webp",
+  // angular-codebase-audit
+  "insights/angular-codebase-audit/codebase-structure-and-git-history.webp": "/media/insights/angular-codebase-audit/codebase-structure-and-git-history.webp",
+  "insights/angular-codebase-audit/cover.webp": "/media/insights/angular-codebase-audit/cover.webp",
+  "insights/angular-codebase-audit/evidence-to-prioritized-plan.webp": "/media/insights/angular-codebase-audit/evidence-to-prioritized-plan.webp",
+  "insights/angular-codebase-audit/symptom-vs-diagnosis.webp": "/media/insights/angular-codebase-audit/symptom-vs-diagnosis.webp",
+  // angular-performance-checklist
+  "insights/angular-performance-checklist/change-detection-and-bundle-analysis.webp": "/media/insights/angular-performance-checklist/change-detection-and-bundle-analysis.webp",
+  "insights/angular-performance-checklist/cover.webp": "/media/insights/angular-performance-checklist/cover.webp",
+  "insights/angular-performance-checklist/network-duplicate-and-serial-requests.webp": "/media/insights/angular-performance-checklist/network-duplicate-and-serial-requests.webp",
+  "insights/angular-performance-checklist/rendering-profile-and-regression-guard.webp": "/media/insights/angular-performance-checklist/rendering-profile-and-regression-guard.webp",
+  // angular-performance-core-web-vitals
+  "insights/angular-performance-core-web-vitals/cover.webp": "/media/insights/angular-performance-core-web-vitals/cover.webp",
+  "insights/angular-performance-core-web-vitals/duplicate-vs-cached-requests.webp": "/media/insights/angular-performance-core-web-vitals/duplicate-vs-cached-requests.webp",
+  "insights/angular-performance-core-web-vitals/interaction-responsiveness-inp.webp": "/media/insights/angular-performance-core-web-vitals/interaction-responsiveness-inp.webp",
+  "insights/angular-performance-core-web-vitals/layout-stability-cls.webp": "/media/insights/angular-performance-core-web-vitals/layout-stability-cls.webp",
+  // angular-signals-state-management
+  "insights/angular-signals-state-management/cover.webp": "/media/insights/angular-signals-state-management/cover.webp",
+  "insights/angular-signals-state-management/observable-vs-signal-state.webp": "/media/insights/angular-signals-state-management/observable-vs-signal-state.webp",
+  "insights/angular-signals-state-management/signals-precise-updates.webp": "/media/insights/angular-signals-state-management/signals-precise-updates.webp",
+  "insights/angular-signals-state-management/state-promotion-rule.webp": "/media/insights/angular-signals-state-management/state-promotion-rule.webp",
+  // angular-zoneless-change-detection
+  "insights/angular-zoneless-change-detection/cover.webp": "/media/insights/angular-zoneless-change-detection/cover.webp",
+  "insights/angular-zoneless-change-detection/incremental-zoneless-migration.webp": "/media/insights/angular-zoneless-change-detection/incremental-zoneless-migration.webp",
+  "insights/angular-zoneless-change-detection/rxjs-to-signal-boundary.webp": "/media/insights/angular-zoneless-change-detection/rxjs-to-signal-boundary.webp",
+  "insights/angular-zoneless-change-detection/zonejs-vs-signals-change-detection.webp": "/media/insights/angular-zoneless-change-detection/zonejs-vs-signals-change-detection.webp",
+  // enterprise-ui-design-restraint
+  "insights/enterprise-ui-design-restraint/cover.webp": "/media/insights/enterprise-ui-design-restraint/cover.webp",
+  "insights/enterprise-ui-design-restraint/decoration-vs-spatial-meaning.webp": "/media/insights/enterprise-ui-design-restraint/decoration-vs-spatial-meaning.webp",
+  "insights/enterprise-ui-design-restraint/one-accent-colour.webp": "/media/insights/enterprise-ui-design-restraint/one-accent-colour.webp",
+  "insights/enterprise-ui-design-restraint/reduced-motion-and-touch-targets.webp": "/media/insights/enterprise-ui-design-restraint/reduced-motion-and-touch-targets.webp",
+  // ionic-offline-first-architecture
+  "insights/ionic-offline-first-architecture/cover.webp": "/media/insights/ionic-offline-first-architecture/cover.webp",
+  "insights/ionic-offline-first-architecture/network-first-vs-offline-first.webp": "/media/insights/ionic-offline-first-architecture/network-first-vs-offline-first.webp",
+  "insights/ionic-offline-first-architecture/offline-write-queue.webp": "/media/insights/ionic-offline-first-architecture/offline-write-queue.webp",
+  "insights/ionic-offline-first-architecture/reconnection-and-conflict-resolution.webp": "/media/insights/ionic-offline-first-architecture/reconnection-and-conflict-resolution.webp",
+  // rxjs-reduce-api-calls
+  "insights/rxjs-reduce-api-calls/cover.webp": "/media/insights/rxjs-reduce-api-calls/cover.webp",
+  "insights/rxjs-reduce-api-calls/duplicate-reference-data-requests.webp": "/media/insights/rxjs-reduce-api-calls/duplicate-reference-data-requests.webp",
+  "insights/rxjs-reduce-api-calls/event-driven-cache-invalidation.webp": "/media/insights/rxjs-reduce-api-calls/event-driven-cache-invalidation.webp",
+  "insights/rxjs-reduce-api-calls/sharereplay-one-request.webp": "/media/insights/rxjs-reduce-api-calls/sharereplay-one-request.webp",
+  // stopped-writing-angular-old-way-10-modern-patterns
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/cover.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/cover.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/signal-forms.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/signal-forms.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/signals-computed-rxjs.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/signals-computed-rxjs.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/traditional-vs-modern-angular.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/traditional-vs-modern-angular.webp",
+  "insights/stopped-writing-angular-old-way-10-modern-patterns/zoneless-deferred-performance.webp": "/media/insights/stopped-writing-angular-old-way-10-modern-patterns/zoneless-deferred-performance.webp",
+  // ux-problem-approach
+  "insights/ux-problem-approach/cover.webp": "/media/insights/ux-problem-approach/cover.webp",
+  "insights/ux-problem-approach/explore-solutions.webp": "/media/insights/ux-problem-approach/explore-solutions.webp",
+  "insights/ux-problem-approach/journey-friction.webp": "/media/insights/ux-problem-approach/journey-friction.webp",
+  "insights/ux-problem-approach/simplify-signup.webp": "/media/insights/ux-problem-approach/simplify-signup.webp",
 } as const satisfies Record<string, string>;
 
 /** Every migrated asset, addressable by its Blob pathname. */

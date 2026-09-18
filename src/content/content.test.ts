@@ -76,7 +76,7 @@ describe("projects", () => {
 
 describe("section registry", () => {
   it("numbers sections from their position in ORDER", () => {
-    expect(sectionIndex("about")).toBe("01");
+    expect(sectionIndex(ORDER[0])).toBe("01");
     expect(sectionIndex(ORDER[ORDER.length - 1])).toBe(String(ORDER.length).padStart(2, "0"));
   });
 

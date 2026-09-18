@@ -9,6 +9,10 @@ import {
   versionRecord,
 } from "@/lib/version";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/pages/version.css";
+
 export const metadata = {
   ...pageMetadata({
     title: "Release History",
@@ -106,7 +110,7 @@ export default function Page() {
       <footer className="vr__foot">
         <p>
           Curious how it is built and deployed?{" "}
-          <Link href="/skills">
+          <Link href="/#skills">
             See the stack
             <ArrowUpRight size={14} aria-hidden />
           </Link>

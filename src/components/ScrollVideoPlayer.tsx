@@ -97,7 +97,20 @@ export function ScrollVideoPlayer({
 }: ScrollVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [ready, setReady] = useState(false);
+  /* Whether the video has a decoded frame to show, which is a different
+     question from whether it is wired up.
+     A `ready` flag used to drive the crossfade too, set the moment the
+     mode's setup runs — on `loadedmetadata` in scroll mode, synchronously on
+     mount in autoplay mode. Both are before a single frame exists, so the
+     poster faded out and handed the largest paint on the page to an empty
+     <video>. LCP then waited on the first frame of a 4.8 MB reel instead of
+     resolving against the 14 KB poster the head already preloads at high
+     priority — measured as the LCP element on a phone, at 2.1s on a
+     connection with no throttling at all.
+     Gating the swap on `loadeddata` (readyState 2, first frame decoded)
+     leaves the poster as the painted pixel until the video can actually
+     replace it. The swap is opacity-only either way, so nothing shifts. */
+  const [painted, setPainted] = useState(false);
   const [blocked, setBlocked] = useState(false);
   /* Gated on prefers-reduced-motion only - deliberately NOT on the site's
      motion tier, which also drops to "basic" for low core counts, low memory
@@ -119,13 +132,8 @@ export function ScrollVideoPlayer({
      requested once the page has finished loading. */
   const [fullPreload, setFullPreload] = useState(false);
   useEffect(() => {
-    /* autoplay mode is excluded: it calls play() on mount, and load() would
-       restart the stream out from under it. */
-    if (mode !== "scroll" || reduced) return;
-    const boost = () => {
-      setFullPreload(true);
-      videoRef.current?.load();
-    };
+    if (reduced) return;
+    const boost = () => setFullPreload(true);
     if (document.readyState === "complete") {
       const id = window.setTimeout(boost, 200);
       return () => window.clearTimeout(id);
@@ -133,6 +141,16 @@ export function ScrollVideoPlayer({
     window.addEventListener("load", boost, { once: true });
     return () => window.removeEventListener("load", boost);
   }, [reduced, mode]);
+
+  /* The <source> children only mount once `fullPreload` is true, and a <video>
+     ignores sources added after it has already picked one — load() is what
+     makes it re-run selection against the children that now exist. Separate
+     effect rather than inside `boost` so it runs after React has committed
+     them. */
+  useEffect(() => {
+    if (!fullPreload) return;
+    videoRef.current?.load();
+  }, [fullPreload]);
 
   /* scroll mode */
   useGSAP(
@@ -145,8 +163,6 @@ export function ScrollVideoPlayer({
       let trigger: ScrollTrigger | null = null;
 
       const bind = () => {
-        setReady(true);
-
         // iOS Safari throttles seeks on a video the decoder has never been
         // handed. One play/pause primes it; playback never advances a frame.
         video
@@ -190,14 +206,43 @@ export function ScrollVideoPlayer({
     // A reduced-motion visitor gets the poster and no playback at all, rather
     // than a single non-looping pass.
     if (mode !== "autoplay" || reduced) return;
+    /* Held until `fullPreload`, which is the window load event plus 200ms.
+       play() is a download trigger: it makes the browser buffer the reel
+       regardless of the preload attribute, so calling it on mount put the
+       whole ~4.7 MB file on the wire during the exact window that decides
+       LCP. On a phone that is the entire connection, and the poster — already
+       decoded and waiting since ~190ms — could not get painted behind it.
+       Measured as 79% of a 5.3s LCP spent in render delay.
+
+       Deferring only moves the first frame, not the painted pixel: the poster
+       IS the reel's first frame and holds at opacity 1 until `painted`, so
+       there is nothing to see happen. */
+    if (!fullPreload) return;
     const video = videoRef.current;
     if (!video) return;
-    setReady(true);
     video.play().then(
       () => setBlocked(false),
       () => setBlocked(true),
     );
-  }, [mode, reduced]);
+  }, [mode, reduced, fullPreload]);
+
+  /* One listener for both modes: the crossfade is about pixels, not playback,
+     so it does not care which mode put the frame there. `loadeddata` fires
+     once per source load, and the readyState check covers the case where the
+     frame arrived before this effect ran. */
+  useEffect(() => {
+    const video = videoRef.current;
+    /* Same condition as `posterOnly` below, inlined because that constant is
+       declared further down with the markup it belongs to. */
+    if (!video || (reduced && mode === "scroll")) return;
+    if (video.readyState >= 2) {
+      setPainted(true);
+      return;
+    }
+    const onData = () => setPainted(true);
+    video.addEventListener("loadeddata", onData);
+    return () => video.removeEventListener("loadeddata", onData);
+  }, [reduced, mode, src]);
 
   const playManually = () => {
     videoRef.current?.play().then(
@@ -212,6 +257,16 @@ export function ScrollVideoPlayer({
 
   const media = (
     <div className={mediaClassName ?? "absolute inset-0 -z-[1] overflow-hidden"} aria-hidden>
+      {/* The poster never fades out. It used to drop to opacity 0 once
+          `painted` flipped, which handed the largest paint on the page to the
+          <video> — and an element at opacity 0 is not an LCP candidate at all,
+          so the poster's own paint (decoded and ready at ~190ms) was
+          discarded and LCP waited on the first decoded video frame instead.
+          Measured as the LCP element, at 5.3-6.7s.
+
+          The fade bought nothing: the video is layered directly on top at the
+          same size with object-cover, and the poster IS the reel's first
+          frame, so the pixels underneath are identical and never visible. */}
       {poster ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -223,7 +278,7 @@ export function ScrollVideoPlayer({
           decoding="async"
           className={`${
             posterClassName ?? "absolute inset-0 h-full w-full object-cover"
-          } transition-opacity duration-500 ${ready && !posterOnly ? "opacity-0" : "opacity-100"}`}
+          } transition-opacity duration-500 opacity-100`}
         />
       ) : null}
 
@@ -231,23 +286,56 @@ export function ScrollVideoPlayer({
         <video
           ref={videoRef}
           /* Deliberately no `poster` attribute. The <img> above already holds
-             the first frame and sits at opacity 1 until `ready`, so the video's
+             the first frame and sits at opacity 1 until `painted`, so the video's
              own poster is painted underneath it and never seen — but it is a
              separate resource fetch, and one that ignores the img's srcset, so
              it pulled the full-width file on phones on top of the narrow cut
              the img had already chosen. Two downloads of the LCP image. */
           muted
           playsInline
-          preload={mode === "scroll" && !fullPreload ? "metadata" : "auto"}
+          /* Both modes start at "metadata" and are raised to "auto" after the
+             window load event. The reel is ~4.8 MB; at "auto" from the first
+             render it competes with the poster, the fonts and the JS bundle
+             for the same connection during the exact window that decides FCP
+             and LCP. Metadata is a few KB and is all either mode needs to get
+             wired up. autoplay mode used to be exempt and so pulled the whole
+             file on phones mid-paint — the one place where bandwidth is
+             scarcest. Playback still starts from the buffered head; the
+             poster holds the frame until it does, and the poster IS the
+             reel's first frame, so there is nothing to see happen. */
+          preload={fullPreload ? "auto" : "metadata"}
           tabIndex={-1}
-          autoPlay={mode === "autoplay" && !reduced}
+          /* Deliberately NOT set, even in autoplay mode. The attribute makes
+             the browser fetch and buffer the source as soon as the element is
+             parsed, which overrides preload="metadata" above and defeats the
+             point of it. Playback is started by the effect further up instead,
+             after the window load event, so the reel downloads once the page
+             that has to paint is done competing for the connection. */
           loop={mode === "autoplay" && loop && !reduced}
           className={`${
             videoClassName ?? "absolute inset-0 h-full w-full object-cover"
-          } transition-opacity duration-500 ${ready ? "opacity-100" : "opacity-0"}`}
+          } transition-opacity duration-500 ${painted ? "opacity-100" : "opacity-0"}`}
         >
-          {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
-          <source src={src} type="video/mp4" />
+          {/* Held back until the window load event. `preload="metadata"` is
+              not a download budget: Chrome opens the source with an
+              open-ended `Range: bytes=0-` and keeps streaming, so on a fast
+              connection it pulled the entire ~4.7 MB reel — 82% of the page's
+              transfer — while the poster, fonts and JS were still competing
+              for the same pipe. Verified: the element reported
+              `preload="metadata"` at the time it issued `bytes=0-` for the
+              full 4,801,627 bytes.
+
+              A <video> with no source fetches nothing at all, which is the
+              only reliable way to hold it. The poster is the reel's first
+              frame and stays at opacity 1 until `painted`, so deferring the
+              source changes no pixel — it only stops the reel from bidding
+              against the paint. */}
+          {fullPreload ? (
+            <>
+              {webmSrc ? <source src={webmSrc} type="video/webm" /> : null}
+              <source src={src} type="video/mp4" />
+            </>
+          ) : null}
         </video>
       )}
 
@@ -286,7 +374,18 @@ export function ScrollVideoPlayer({
       /* In scroll mode this is the measured ScrollTrigger trigger. A caller
          needing its own triggers on this range targets it via trackClassName. */
       ref={wrapperRef}
-      className={isScroll ? (trackClassName ?? "relative w-full") : "contents"}
+      /* A caller-supplied trackClassName is kept in BOTH modes, and that is
+         load-bearing for CLS. `mode` is derived from matchMedia and
+         prefers-reduced-motion, so it can flip on the commit after hydration;
+         swapping the track to `display: contents` there deleted its height
+         mid-load and shoved the whole page up. A caller that names its own
+         track class owns that height in CSS and can express the same
+         mode split as a media query, which costs nothing at hydration.
+         Only the unnamed default — whose height is the inline style below —
+         still collapses, and it has no stylesheet to express it in. */
+      className={
+        trackClassName ?? (isScroll ? "relative w-full" : "contents")
+      }
       /* The reduced-motion fallback is a single static viewport, so it must
          not reserve the full scroll track it no longer uses. A caller-supplied
          trackClassName owns its own heights and opts out of this. */

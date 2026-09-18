@@ -54,15 +54,15 @@ function emit() {
   for (const listener of listeners) listener();
 }
 
-export function getMotionTier(): MotionTier {
+function getMotionTier(): MotionTier {
   return tier;
 }
 
-export function getMotionPreference(): MotionPreference {
+function getMotionPreference(): MotionPreference {
   return preference;
 }
 
-export function setMotionPreference(next: MotionPreference) {
+function setMotionPreference(next: MotionPreference) {
   preference = next;
   try {
     if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, next);

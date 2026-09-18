@@ -4,13 +4,29 @@
 
 /* --- cinematic hero: full-bleed reel + editorial overlay --- */
 /* Scroll-scrub track — the extra height below the viewport is the scroll
-   distance that drives `video.currentTime` in Hero.tsx. Only rendered on the
-   full motion tier; the basic tier keeps the plain 100vh hero. */
+   distance that drives `video.currentTime` in Hero.tsx.
+
+   This height is decided by CSS alone, never by JS, and that is the whole
+   point of the rule. Hero.tsx picks scrub vs autoplay from matchMedia and
+   prefers-reduced-motion, neither of which the server can know, so the track
+   used to render 240vh tall on the server and then collapse to `display:
+   contents` on the commit after hydration — every phone load shifted the rest
+   of the page up by ~1.4 viewports, which is where most of the 0.31 CLS came
+   from. The same media queries live here instead, so first paint and every
+   paint after it agree and the JS flip changes no layout at all.
+
+   Below 768px and under prefers-reduced-motion there is no scrub, so the
+   track is exactly one viewport and the hero is an ordinary section. */
 .chero-track {
   position: relative;
-  height: 240vh;
+  /* auto, not a viewport number: where the hero does not pin, the track is
+     only a wrapper and `.chero`'s own min-height is the real measure. Fixing
+     a height here instead would fight that min-height on phones, where 100vh
+     and 100dvh differ by the browser chrome, and leave the hero overflowing
+     its own track into the section below. */
+  height: auto;
 }
-@media (min-width: 768px) {
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
   .chero-track {
     /* 400vh over a 60fps 10s reel is ~1.7 scroll-pixels per frame, so the
        reel advances on almost every wheel tick rather than jumping. */
@@ -18,13 +34,13 @@
   }
 }
 /* Constrained-height laptops (14", 15.6"): reduce scroll track to prevent overlap */
-@media (min-width: 768px) and (max-height: 950px) {
+@media (min-width: 768px) and (max-height: 950px) and (prefers-reduced-motion: no-preference) {
   .chero-track {
     height: 280vh;
   }
 }
 /* 15.6" HD laptops (768px height): further reduce for tight height */
-@media (min-width: 768px) and (max-height: 768px) {
+@media (min-width: 768px) and (max-height: 768px) and (prefers-reduced-motion: no-preference) {
   .chero-track {
     height: 220vh;
   }
@@ -132,15 +148,25 @@
     justify-content: center !important;
     align-self: center !important;
     width: auto !important;
-    max-width: 40rem !important;
+    /* 48rem, not 40rem. At 40rem neither of the two widest things in the copy
+       column fit: the headline's longest declared line ("Angular Engineer
+       for") wrapped mid-line, and the discipline strip needed ~46rem so it
+       broke and left a separator dot orphaned at the start of row two. One
+       measure governs both, so widening here is what squares them up. */
+    max-width: 48rem !important;
   }
   /* Title - dominant focal point */
   .chero__title {
-    font-size: clamp(3rem, 0.4rem + 5.4vw, 4.6rem) !important;
+    font-size: clamp(3rem, 0.4rem + 5vw, 4.4rem) !important;
     line-height: 0.94 !important;
     margin-bottom: 0.5rem !important;
     text-align: left !important;
-    max-width: 12ch !important;
+    /* The ch-based measure is what forced the wrap: 12ch is narrower than
+       every line the headline actually declares, so each one broke again
+       inside itself — "Angular Engineer / for", and "High-" / "Performance"
+       splitting at its own hyphen. The declared lines are the line breaks;
+       the column width above is the only constraint they need. */
+    max-width: none !important;
     font-weight: 800 !important;
     letter-spacing: -0.03em !important;
   }
@@ -297,12 +323,19 @@
   isolation: isolate;
 }
 /* Pinned variant used inside .chero-track. Declared after `.chero` on
-   purpose: same specificity, so source order is what lets `sticky` win. */
-.chero--scrub {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  min-height: 0;
+   purpose: same specificity, so source order is what lets `sticky` win.
+
+   Gated on the same query as the tall track. The class is now always present
+   in the markup — Hero.tsx no longer adds and removes it around hydration —
+   so the pin has to switch off wherever the track is only one viewport tall,
+   or a phone would stick a 100vh hero inside a 100dvh parent for no reason. */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .chero--scrub {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    min-height: 0;
+  }
 }
 .chero__stage {
   position: absolute;
@@ -509,11 +542,21 @@
 
 .chero__title {
   font-family: var(--font-display);
-  font-size: clamp(2.9rem, 1rem + 8.4vw, 7.4rem);
+  /* Held to 5.4rem rather than 7.4rem so the longest declared line stays
+     inside the copy column on a tall desktop viewport. Above that size it
+     needed a measure wider than the column and wrapped mid-line. */
+  font-size: clamp(2.9rem, 1rem + 5.6vw, 5.4rem);
   line-height: 0.9;
   letter-spacing: -0.03em;
   font-weight: 800;
-  max-width: 12ch;
+  /* See the laptop block above: a ch-based cap re-breaks lines the markup has
+     already broken. The lines are declared in content/profile.ts. */
+  max-width: none;
+}
+/* The copy column is the headline's measure on tall desktop viewports, where
+   the laptop-height block does not apply. */
+.chero__copy {
+  max-width: 56rem;
 }
 .chero__line {
   display: block;
@@ -1086,4 +1129,22 @@
     max-width: 280px;
     flex-shrink: 0;
   }
+}
+
+/* --- recruiter exit line under the hero CTAs --- */
+.chero__recruiter {
+  margin-top: clamp(1rem, 2.5vw, 1.5rem);
+  font-size: var(--text-sm);
+  color: var(--muted, rgba(255, 255, 255, 0.65));
+}
+
+.chero__recruiter-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.chero__recruiter-link:hover,
+.chero__recruiter-link:focus-visible {
+  color: var(--accent, currentColor);
 }

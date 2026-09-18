@@ -57,7 +57,7 @@ function profileRecords(): KnowledgeRecord[] {
       title: "Track record",
       content:
         `Years of experience: ${credentials.years}. Projects delivered: ${credentials.projects}. ` +
-        `Clients: ${credentials.clients}. ${credentials.commitment.value} ${credentials.commitment.label}. ` +
+        `Clients: ${credentials.clients}. Users served: ${credentials.users}. Countries: ${credentials.countries}. ` +
         `${projects.length} published case studies are on the site.`,
       tags: ["years", "experience", "projects", "clients", "metrics", "track record", "how many"],
       url: "/about",
@@ -178,7 +178,7 @@ function skillRecords(): KnowledgeRecord[] {
     slug: group.id,
     content: `${group.label}${group.note ? ` — ${group.note}` : ""} ${group.items.join(", ")}.`,
     tags: dedupe(["skill", "skills", "stack", "technology", group.label, ...group.items]),
-    url: "/skills",
+    url: "/#skills",
   }));
 
   return [
@@ -189,7 +189,7 @@ function skillRecords(): KnowledgeRecord[] {
       title: "Everyday stack",
       content: `Technologies Rabin uses day to day: ${everydayTech.join(", ")}.`,
       tags: dedupe(["stack", "everyday", "primary", "preferred", ...everydayTech]),
-      url: "/skills",
+      url: "/#skills",
     },
   ];
 }

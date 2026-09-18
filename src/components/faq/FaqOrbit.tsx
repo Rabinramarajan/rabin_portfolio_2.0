@@ -30,7 +30,7 @@ export function FaqOrbit({ className }: { className?: string }) {
     >
       <span className="faqx-orbit__bloom" />
       <Image
-        src={media("other/faq/orbit.png")}
+        src={media("other/faq/orbit.webp")}
         alt=""
         width={1536}
         height={1024}

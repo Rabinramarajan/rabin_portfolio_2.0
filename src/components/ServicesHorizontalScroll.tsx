@@ -81,6 +81,23 @@ export function ServicesHorizontalScroll({
             scrollTrigger: {
               trigger: wrapper,
               pin: true,
+              /* Pin by transform, not by `position: fixed` — GSAP's default
+                 for an element pinned against the window scroller.
+
+                 That default swaps the section from `position: relative` to
+                 `position: fixed` the instant the pin engages. Chrome scores
+                 the swap as a layout shift of the entire element: leaving
+                 normal flow is reported with a 0×0 previous rect against a
+                 full-viewport current one, which is a shift value of ~1.0 by
+                 itself. It fired twice per visit — once engaging, once on the
+                 way back — and the pin is desktop-only (it lives behind
+                 `min-width: 768px`), which is exactly why field CLS read 0.31
+                 on desktop and 0 on mobile.
+
+                 `pinType: "transform"` keeps the element in flow and
+                 translates it instead. Nothing enters or leaves layout, so
+                 there is no shift to score and the pin behaves the same. */
+              pinType: "transform",
               scrub: 1,
               start: "top top",
               end: () => `+=${distance()}`,

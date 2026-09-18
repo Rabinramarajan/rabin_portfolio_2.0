@@ -3,6 +3,10 @@ import { AboutStory } from "@/components/about/AboutStory";
 import { pageMetadata } from "@/lib/seo";
 import { ProfilePageJsonLd } from "@/components/JsonLd";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/pages/about-story.css";
+
 export const metadata = pageMetadata({
   title: "About Rabin R",
   description:

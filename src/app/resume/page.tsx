@@ -15,8 +15,12 @@ import {
 } from "@/content/resume";
 import { pageMetadata } from "@/lib/seo";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/pages/resume.css";
+
 export const metadata = pageMetadata({
-  title: "Resume",
+  title: "Resume — Frontend Angular Consultant",
   description:
     "Resume of Rabin R — Frontend Angular Consultant in Chennai, India, with roles, responsibilities, delivered projects and the full technology stack.",
   path: "/resume",

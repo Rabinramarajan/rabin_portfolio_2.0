@@ -3,7 +3,7 @@ export type AvailabilityStatus = "available" | "limited" | "unavailable";
 export interface SocialLink { id: "github" | "linkedin" | "email" | "website"; label: string; href: string; }
 export interface NavItem { href: string; label: string; sectionId?: string; desktopOnly?: boolean; }
 /** Which glyph renders beside a metric. Maps to an icon in the consuming component. */
-export type MetricIcon = "projects" | "clients" | "experience" | "commitment";
+export type MetricIcon = "projects" | "clients" | "experience" | "users" | "countries";
 export interface Metric {
   value: string;
   label: string;
@@ -51,6 +51,11 @@ export interface HeroContent {
   reel?: {
     src: string;
     poster?: string;
+    /** Small-viewport cut of the same reel. `src` is encoded all-intra so
+     *  the scroll scrub can seek any frame, which costs several megabytes;
+     *  below the scrub breakpoint nothing seeks, so Hero serves this instead.
+     *  Falls back to `src` when absent. */
+    mobileSrc?: string;
     /** Candidate widths for `poster`. The hero poster is the LCP element, so
      *  the home page also preloads it — both the <img> and that preload read
      *  these fields, which is what keeps them from resolving different files. */
@@ -60,6 +65,8 @@ export interface HeroContent {
   description: string;
   primaryCta: Cta;
   secondaryCta: Cta;
+  /** Recruiter escape hatch out of the client funnel. */
+  recruiterCta?: Cta & { linkLabel: string };
   metadata: { label: string; value: string }[];
   portrait: Required<MediaRef>;
   midground: Required<MediaRef>;
@@ -167,6 +174,17 @@ export interface Project {
   /** Named only when the engagement is public. Omitted otherwise. */
   client?: string;
   /**
+   * The service this project is evidence for, surfaced in the closing CTA.
+   *
+   * A case study is the proof; the service page is the thing being sold, and
+   * until now the proof pages carried far more internal links than the pages
+   * they were proving. Populate ONLY where the project genuinely demonstrates
+   * that service — a link asserting work that was not done is worse than a
+   * missing link, and `label` is read as the anchor text, so it has to describe
+   * the service rather than the project.
+   */
+  service?: { label: string; href: string };
+  /**
    * What was personally contributed. Populate ONLY from the verified role
    * record — an empty array hides the section rather than inventing one.
    */
@@ -201,6 +219,16 @@ export interface Project {
    * as title-only cards — nothing is described that the record does not say.
    */
   keyFeatures?: ProjectFeature[];
+  /**
+   * Where this case study points next: the service that sells this kind of
+   * work, and the article arguing the position it demonstrates.
+   *
+   * Case studies used to be a dead end — every inbound link, no outbound
+   * ones — so a reader convinced by the Fiji write-up had nowhere to go but
+   * the browser's back button. Each link is a claim that the two pages are
+   * about the same thing, so populate it by hand, never by category.
+   */
+  related?: { label: string; href: string; note: string }[];
   seo: { title: string; description: string };
 }
 
@@ -404,14 +432,66 @@ export interface PricingPlan {
 export type InsightBlock =
   | string
   | { type: "heading"; text: string }
+  | { type: "subheading"; text: string }
+  | { type: "list"; items: string[]; ordered?: boolean }
+  | { type: "link"; text: string; href: string }
   | { type: "code"; language: string; caption?: string; code: string }
-  | { type: "aside"; text: string };
+  | { type: "aside"; text: string }
+  /**
+   * A diagram or screenshot. `alt` is required rather than optional: these
+   * carry the argument of the section they sit in, so an image without one
+   * silently drops that argument for anyone not seeing it. `width` and
+   * `height` are the file's intrinsic pixels — they reserve the box and keep
+   * the article off the CLS list.
+   */
+  | {
+      type: "image";
+      src: string;
+      alt: string;
+      width: number;
+      height: number;
+      caption?: string;
+      /** Set on the first image in an article; it is the LCP candidate. */
+      priority?: boolean;
+    };
+
+/** The closed set of subjects the insights listing filters on. */
+export type InsightTopic =
+  | "Architecture"
+  | "Performance"
+  | "Design"
+  | "Accessibility"
+  | "Mobile"
+  | "Practice";
 
 export interface Insight {
   id: string;
+  /**
+   * Metadata title, when the editorial headline is not what anyone searches
+   * for. "Signals before ceremony" is the better thing to read and a worse
+   * thing to rank: the <h1> keeps the headline, the <title> gets this.
+   * Falls back to `title` when absent.
+   */
+  seoTitle?: string;
+  /** Metadata description, when the dek is written for a reader, not a SERP. */
+  seoDescription?: string;
   number?: string;
   title?: string;
   dek?: string;
+  /**
+   * The subject the piece belongs to. Authored rather than derived: the
+   * listing filters on it, so it has to be a small closed set a reader can
+   * scan, not whatever a keyword extractor decides today.
+   */
+  topic?: InsightTopic;
+  /**
+   * Cover art for the listing. Optional: an article without one falls back to
+   * the generated plate for its topic (see lib/insightCover.ts), so a piece
+   * is never published with an empty image box. `width` and `height` are the
+   * file's intrinsic pixels, which reserve the card's image area and keep the
+   * listing off the CLS list.
+   */
+  cover?: { src: string; alt: string; width: number; height: number };
   kicker?: string;
   value?: string;
   note?: string;
@@ -439,6 +519,22 @@ export interface Insight {
    * lead who just read 1,300 words and agreed with them.
    */
   cta?: string;
+  /**
+   * The article's own claims, in the reader's order, for the sidebar panel on
+   * the detail page. Authored rather than extracted: a summariser would
+   * produce four restatements of the dek, and this is the block a skimming
+   * engineering lead reads instead of the article. Four entries is the shape
+   * the panel is designed around; the panel is omitted entirely when a piece
+   * has none, so this never has to be backfilled before a piece can publish.
+   */
+  takeaways?: string[];
+  /**
+   * The one sentence from this piece worth reading on its own, for the quote
+   * card on the listing. Authored rather than sliced out of the body: a line
+   * lifted from a paragraph reads as an excerpt, and this has to read as a
+   * position. A piece without one simply never rotates into the card.
+   */
+  pullQuote?: string;
 }
 
 export interface SeoContent {
@@ -501,10 +597,13 @@ export interface Credentials {
   /** Clients served. `review: true` means the figure is unverified. */
   clients: string;
   /**
-   * Qualitative commitment tile. Deliberately NOT a satisfaction percentage:
-   * a "100% Client Satisfaction" claim is unverifiable and reads as filler.
+   * People who actually use the shipped software, and the number of countries
+   * those deployments run in. Both are countable from the case studies, which
+   * is why they replaced the old "100% Focus on Quality" tile: that figure
+   * measured nothing and read as filler.
    */
-  commitment: { value: string; label: string };
+  users: string;
+  countries: string;
   /** Figures that still need the owner to confirm a real number. */
   needsReview: readonly ("projects" | "clients")[];
 }

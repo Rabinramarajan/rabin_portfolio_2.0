@@ -24,7 +24,7 @@ function asInquiryType(value: string | undefined): InquiryType {
   return "Other";
 }
 
-export function normalizePayload(raw: unknown): { honeypot: boolean; payload?: ContactPayload; error?: ContactResult } {
+function normalizePayload(raw: unknown): { honeypot: boolean; payload?: ContactPayload; error?: ContactResult } {
   if (!raw || typeof raw !== "object") {
     console.error("[contact] Invalid payload type:", typeof raw, "value:", raw);
     return { honeypot: false, error: { ok: false, error: "Invalid request: payload must be an object." } };

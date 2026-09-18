@@ -123,7 +123,7 @@ function WorkCard({
 
         <span className="wcard__body">
           <ItemHeading className="wcard__title">{p.title}</ItemHeading>
-          <span className="wcard__cat">{p.category}</span>
+          <span className="wcard__cat">{p.category} · {p.year}</span>
           <span className="wcard__copy">{p.overview}</span>
 
           {p.metrics && p.metrics.length > 0 && (
@@ -142,7 +142,7 @@ function WorkCard({
 
           <span className="wcard__cta">
             <span className="wcard__cta-dot" aria-hidden />
-            <span>View Case Study</span>
+            <span>See the {p.title} case study</span>
             <ArrowRight />
           </span>
         </span>

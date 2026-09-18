@@ -36,7 +36,10 @@ const RAIL = footerNavigation;
 
 /* Standing for the person, not the stack — read top to bottom down the left
    rail, the way the reference lockup does. */
-const TRAITS = ["Full Stack", "Developer", "Tech Enthusiast", "Lifelong Learner"];
+/* "Tech Enthusiast" and "Lifelong Learner" are what a portfolio says before
+   it has shipped anything. Four years of government and enterprise platforms
+   is not that, so the marquee now says what the work is. */
+const TRAITS = ["Frontend Engineer", "Angular Consultant", "Product Engineering", "Performance"];
 
 function FooterInner() {
   const reduce = useReducedMotion();
@@ -53,7 +56,7 @@ function FooterInner() {
       {/* --- stage: the horizon art and the closing pitch --- */}
       <div className="ft__stage">
         <div className="ft__globe" aria-hidden>
-          <Image src={media("other/footer/horizon.png")} alt="" width={1672} height={941} sizes="100vw" />
+          <Image src={media("other/footer/horizon.webp")} alt="" width={1672} height={941} sizes="100vw" />
         </div>
 
         <div className="ft__stage-inner">
@@ -147,8 +150,12 @@ function FooterInner() {
       <div className="ft__legal">
         <p>
           © {new Date().getFullYear()} <span className="ft__legal-name">{profile.name}</span>. All rights reserved.
-          {/* The running build, linked to the full release ledger. */}
-          <Link className="ft__version" href="/version" title="Release history">
+          {/* The running build, linked to the full release ledger.
+              `/version` is noindex, so this sitewide link is nofollow: without it
+              every page spends a link on a target search engines are being asked
+              to ignore. It stays a real link because it is genuinely useful to a
+              human reading a bug report. */}
+          <Link className="ft__version" href="/version" title="Release history" rel="nofollow">
             {displayVersion}
           </Link>
         </p>

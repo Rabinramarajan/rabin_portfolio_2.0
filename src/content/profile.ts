@@ -12,7 +12,7 @@ export const profile: Profile = {
   location: "Chennai, Tamil Nadu, India",
   locationShort: "Chennai, India",
   email: "hello@rabinr.in",
-  phone: "+91 97893 76992",
+  phone: "+91 73050 76992",
   phoneHours: "Mon - Sat, 10AM - 8PM",
   yearsExperienceLabel: "4+", // CALCULATED from experience.ts via calculateExperienceYears()
   availability: {
@@ -43,7 +43,8 @@ export const credentials: Credentials = {
   years: profile.yearsExperienceLabel,
   projects: "20+",
   clients: "15+",
-  commitment: { value: "100%", label: "Focus on Quality" },
+  users: "10K+",
+  countries: "3",
   needsReview: ["projects", "clients"],
 };
 
@@ -52,6 +53,33 @@ export const credentials: Credentials = {
  * timeline because `careerHorizon` records the 2021 foundation *year* as a
  * narrative beat and never names the institution.
  */
+/**
+ * The hero proof strip.
+ *
+ * Every figure here is traceable to a case study in `projects.ts` — the API
+ * and frontend numbers to the Fiji Immigration internal platform, the user
+ * count to the same deployment, the country count to Fiji, India and the US.
+ * Approximations stay approximate ("~40%"): they were measured, not audited.
+ */
+export const proofMetrics: { value: string; label: string; source: string }[] = [
+  { value: credentials.users, label: "Active users served", source: "Fiji Immigration case management" },
+  { value: "~40%", label: "Lower API consumption", source: "Shared, cached RxJS reference stream" },
+  { value: "~50%", label: "Frontend performance gain", source: "Rendering and workflow optimisation" },
+  { value: credentials.countries, label: "Countries served", source: "Fiji, India and the United States" },
+];
+
+/**
+ * The engineering positions the About page argues at length. The homepage
+ * carries the short form, because a visitor deciding whether to read further
+ * will not reach the long one.
+ */
+export const principles: { title: string; body: string }[] = [
+  { title: "Performance", body: "Measured, not assumed." },
+  { title: "Maintainability", body: "Built for the third release." },
+  { title: "Accessibility", body: "Part of engineering, not final QA." },
+  { title: "Product context", body: "Technology follows the problem." },
+];
+
 export const education: EducationEntry[] = [
   {
     id: "bsc-it",
@@ -70,9 +98,10 @@ export const education: EducationEntry[] = [
 
 export const navigation: NavItem[] = [
   { href: "/work", label: "Work" },
-  { href: "/experience", label: "Experience" },
   { href: "/services", label: "Services" },
+  { href: "/insights", label: "Insights" },
   { href: "/about", label: "About" },
+  { href: "/resume", label: "Résumé" },
 ];
 
 /**
@@ -88,7 +117,7 @@ export const footerNavigation: NavItem[] = [
   { href: "/services", label: "Services" },
   { href: "/work", label: "Work" },
   { href: "/experience", label: "Experience" },
-  { href: "/skills", label: "Skills" },
+  { href: "/#skills", label: "Skills" },
   { href: "/process", label: "Process" },
   { href: "/pricing", label: "Pricing" },
   { href: "/insights", label: "Insights" },
@@ -109,20 +138,32 @@ export const hero: HeroContent = {
   name: profile.name,
   role: profile.role,
   availability: profile.availability.label,
-  headline: "I Engineer High-Performance Digital Products.",
-  headlineLines: ["I Engineer High-Performance", "Digital Products built", "for real users."],
+  headline: "Angular Engineer for High-Performance Digital Products.",
+  headlineLines: ["Angular Engineer for", "High-Performance", "Digital Products."],
   displayLines: [
-    { text: "I Engineer" },
+    { text: "Angular Engineer for" },
     { text: "High-Performance", accent: true },
     { text: "Digital Products", accent: true },
   ],
-  disciplines: ["Frontend Engineer", "Angular Specialist", "Product Engineering"],
+  /* The proof line, not a list of labels: tenure, volume, the sector the work
+     actually sits in, and where I work from. */
+  disciplines: [
+    `${profile.yearsExperienceLabel} years`,
+    `${credentials.projects} projects`,
+    "Government & enterprise systems",
+    "Chennai / Remote",
+  ],
   quote: {
     lines: ["Code is my craft.", "Impact is my goal."],
     signature: profile.shortName,
   },
   reel: {
     src: media("hero/home-reel-v6.mp4"),
+    /* The phone cut. Same five seconds, normal GOP, 720p — 263 KB against
+       the scrub encode's 4.7 MB. Hero picks between the two with the media
+       query that already decides scroll vs autoplay, so the file that can be
+       seeked is only ever fetched by the viewports that seek. */
+    mobileSrc: media("hero/home-reel-v6-mobile.mp4"),
     poster: media("hero/home-poster-v6.webp"),
     /* The poster is the LCP element. This srcset and the <link rel="preload">
        on the home page are read from these same two fields precisely so they
@@ -137,18 +178,22 @@ export const hero: HeroContent = {
     posterSizes: "100vw",
   },
   description:
-    "Frontend Software Engineer specializing in Angular, TypeScript & modern web architecture — building scalable products used by real users.",
-  primaryCta: { label: "View My Work", href: "/work" },
-  secondaryCta: { label: "Hire / Let's Talk", href: "/contact" },
+    "Remote Angular consultant building government and enterprise systems across 3 countries — from immigration workflows serving 10K+ users to pension member portals.",
+  primaryCta: { label: "View Case Studies", href: "/work" },
+  secondaryCta: { label: "Discuss a Project", href: "/contact" },
+  /* Recruiters and clients land on the same hero and want different things.
+     The client path runs hero -> case study -> service -> contact; this is
+     the one door out of it, straight to the resume. */
+  recruiterCta: { label: "Hiring for a frontend role?", linkLabel: "View résumé", href: "/resume" },
   metadata: [
     { label: "Experience", value: profile.yearsExperienceLabel + " years" },
     { label: "Projects", value: credentials.projects },
-    { label: "Active Users", value: "10K+" },
-    { label: "Clients", value: credentials.clients },
+    { label: "Active Users", value: credentials.users },
+    { label: "Countries", value: credentials.countries },
   ],
   portrait: { src: media("profile/rabin-hero.webp"), alt: "Portrait of Rabin R", width: 640, height: 800 },
   midground: {
-    src: media("projects/fiji-immigration-internal/hero.png"),
+    src: media("projects/fiji-immigration-internal/hero.webp"),
     alt: "Fiji Immigration officer workflow interface",
     width: 1600,
     height: 1000,
@@ -156,16 +201,20 @@ export const hero: HeroContent = {
 };
 
 export const defaultSeo: SeoContent = {
-  title: "Rabin R | Angular Developer & Frontend Software Engineer",
+  title: "Angular Consultant & Frontend Engineer | Rabin R — Chennai",
   description:
-    "Senior Frontend Angular Consultant in Chennai. Engineering fast, scalable, accessible digital products with Angular, React and TypeScript.",
+    "Angular consultant in Chennai building enterprise apps with TypeScript, RxJS and Signals. Government platforms serving 10K+ users.",
+  /* Clustered rather than generic. "Frontend developer" on its own is a term
+     this site cannot win and would not convert if it did; the specific ones
+     below are what the work actually evidences. */
   keywords: [
+    "Angular consultant",
     "Angular developer",
+    "Angular developer Chennai",
+    "Angular performance optimization",
+    "Frontend architecture",
+    "Ionic Angular developer",
+    "Enterprise Angular architecture",
     "Frontend software engineer",
-    "React developer",
-    "Next.js",
-    "Freelance software engineer",
-    "Chennai",
   ],
 };
-

@@ -1,0 +1,1245 @@
+/* ============================================================
+   INSIGHTS HUB
+   The /insights index and the homepage teaser that shares its
+   card. Article-body styling stays in insights.css.
+
+   Everything here is built from the site tokens — near-black
+   ground, one lime accent, Inter — so the listing reads as the
+   same product as the rest of the site rather than as a blog
+   bolted onto it. A topic is distinguished by where the accent
+   light falls, never by a second colour.
+   ============================================================ */
+
+.inh {
+  padding-bottom: var(--space-80);
+}
+
+/* --- hero ---------------------------------------------------------- */
+
+.inh-hero {
+  position: relative;
+  padding-top: calc(var(--header-h) + var(--space-48));
+  padding-bottom: var(--space-40);
+  overflow: hidden;
+}
+
+/* The wash behind the hero. Sits in the layer below content and fades out
+   before the controls so the rest of the page stays flat near-black. */
+.inh-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60rem 32rem at 78% 18%, rgb(201 242 77 / 7%), transparent 62%),
+    radial-gradient(48rem 28rem at 8% 0%, rgb(255 255 255 / 4%), transparent 60%);
+  pointer-events: none;
+}
+
+.inh-hero__inner {
+  position: relative;
+  display: grid;
+  gap: var(--space-32);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .inh-hero__inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: var(--space-48);
+  }
+}
+
+.inh-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 550;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.inh-hero__lede {
+  margin-top: var(--space-20);
+  max-width: 34rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+}
+
+/* The hero visual. There is no photography in this section and stock art
+   would say nothing true about the writing, so the counterweight to the
+   headline is a rendered object: an accent-lit sphere and a vertical rotule.
+   It is decorative and marked aria-hidden in the markup. */
+.inh-hero__visual {
+  position: relative;
+  display: none;
+  min-height: 26rem;
+}
+@media (min-width: 900px) {
+  .inh-hero__visual {
+    display: block;
+  }
+}
+
+.inh-orb {
+  position: absolute;
+  top: 50%;
+  /* The render's planet sits in the left third of its frame, so the image is
+     pushed well past the shell: what lands in the hero is the planet, and the
+     empty right half of the file hangs off the viewport. */
+  right: calc(var(--shell-edge) * -1 - 30vw);
+  width: clamp(40rem, 66vw, 70rem);
+  max-width: none;
+  height: auto;
+  translate: 0 -50%;
+  /* The file is a planet on pure black. Screen blending drops that black
+     against the near-black page instead of leaving a visible rectangle, so no
+     mask or pre-cropped cut-out is needed. */
+  mix-blend-mode: screen;
+  animation: inh-float 14s var(--ease-out-cubic) infinite alternate;
+}
+
+@keyframes inh-float {
+  from {
+    translate: 0 -50%;
+  }
+  to {
+    translate: 0 calc(-50% - 14px);
+  }
+}
+
+.inh-hero__rotule {
+  position: absolute;
+  top: 50%;
+  /* Left of the planet: at right:0 it sat underneath the sphere, which is
+     both unreadable and the opposite of the reference's arrangement. */
+  left: 0;
+  translate: 0 -50%;
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  line-height: 2.1;
+  color: var(--color-text-faint);
+  text-align: left;
+}
+
+/* --- standing intro -------------------------------------------------
+   Moved below the listing: in the reference the filters sit directly under
+   the hero, and three paragraphs of preamble in that slot pushed the whole
+   grid under the fold. The copy is unchanged and still server-rendered. */
+
+.inh-intro {
+  margin-top: var(--space-56);
+  padding: var(--space-40);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-elevated);
+}
+
+.inh-intro__title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 550;
+  letter-spacing: -0.025em;
+}
+
+.inh-intro__body {
+  margin-top: var(--space-16);
+  max-width: 46rem;
+  display: grid;
+  gap: var(--space-16);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* --- controls ------------------------------------------------------ */
+
+.inh-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.inh-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.inh-pill {
+  padding: 0.55rem 1.05rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition:
+    color var(--duration-ui) var(--ease-out-expo),
+    border-color var(--duration-ui) var(--ease-out-expo),
+    background var(--duration-ui) var(--ease-out-expo);
+}
+.inh-pill:hover {
+  color: var(--color-text);
+  border-color: var(--color-line-strong);
+}
+/* aria-pressed is the source of truth for the active pill: the button already
+   has to carry it for assistive tech, so styling off it keeps one state. */
+.inh-pill[aria-pressed="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.inh-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: 0.55rem 1rem;
+  min-width: min(20rem, 100%);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  color: var(--color-text-faint);
+  transition: border-color var(--duration-ui) var(--ease-out-expo);
+}
+.inh-search:focus-within {
+  border-color: var(--color-accent);
+}
+.inh-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  outline: none;
+}
+.inh-search input::placeholder {
+  color: var(--color-text-faint);
+}
+/* Safari draws its own clear affordance, which sits badly in a pill. */
+.inh-search input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* --- figures ------------------------------------------------------- */
+
+.inh-stats {
+  margin-top: var(--space-24);
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  /* The 1px grid gap over a line-coloured ground draws the dividers, so the
+     tiles need no borders of their own and no double lines at the joins. */
+  background: var(--color-line);
+}
+@media (min-width: 640px) {
+  .inh-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .inh-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.inh-stat {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  background: var(--color-bg-elevated);
+}
+
+.inh-stat__icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 3%);
+  color: var(--color-accent);
+}
+
+.inh-stat__text {
+  display: block;
+  min-width: 0;
+}
+.inh-stat__value {
+  display: block;
+  font-size: var(--text-2xl);
+  font-weight: 550;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.inh-stat__label {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+.inh-stat__note {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: var(--type-xs);
+  color: var(--color-text-faint);
+}
+
+/* --- featured + rail ----------------------------------------------- */
+
+.inh-lead {
+  margin-top: var(--space-24);
+  display: grid;
+  gap: var(--space-24);
+}
+@media (min-width: 1024px) {
+  .inh-lead {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  }
+}
+
+.inh-featured {
+  position: relative;
+  display: flex;
+  min-height: 21rem;
+  padding: var(--space-32);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-elevated);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-interaction) var(--ease-out-expo),
+    box-shadow var(--duration-interaction) var(--ease-out-expo);
+}
+.inh-featured:hover {
+  border-color: var(--color-line-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-depth-md);
+}
+
+/* The lit ground. Scaled up on hover rather than moved, so the light appears
+   to come closer without anything in the card shifting under the cursor. */
+.inh-featured__wash {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    /* Scrim first: the copy sits on the left half, so that half has to stay
+       dark enough to read whatever the cover behind it is. */
+    linear-gradient(
+      95deg,
+      var(--color-bg-elevated) 18%,
+      rgb(16 16 20 / 82%) 46%,
+      rgb(16 16 20 / 25%) 78%
+    ),
+    radial-gradient(38rem 22rem at 88% 0%, rgb(201 242 77 / 13%), transparent 60%),
+    radial-gradient(30rem 20rem at 0% 100%, rgb(255 255 255 / 5%), transparent 62%);
+  transition: scale var(--duration-cinematic) var(--ease-out-expo);
+}
+.inh-featured:hover .inh-featured__wash {
+  scale: 1.12;
+}
+
+/* The featured cover sits under the wash, which is what keeps the headline
+   readable over it. */
+.inh-featured__img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Anchored right so the motif sits in the empty half of the card rather
+     than behind the headline. */
+  object-position: 78% 50%;
+  opacity: 0.6;
+  transition:
+    opacity var(--duration-cinematic) var(--ease-out-expo),
+    scale var(--duration-cinematic) var(--ease-out-expo);
+}
+.inh-featured:hover .inh-featured__img {
+  opacity: 0.7;
+  scale: 1.04;
+}
+
+.inh-featured__no {
+  position: absolute;
+  top: 0.25rem;
+  right: 1.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 11vw, 9rem);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: rgb(255 255 255 / 4%);
+  pointer-events: none;
+  user-select: none;
+}
+
+.inh-featured__inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-12);
+  width: 100%;
+}
+
+.inh-badge {
+  align-self: flex-start;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.inh-featured__title {
+  margin-top: var(--space-8);
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 550;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.inh-featured__dek {
+  max-width: 44ch;
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.inh-featured__foot {
+  margin-top: var(--space-12);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+/* The featured card is itself a link, so this is a span wearing the button's
+   clothes — nesting a real <a> inside a link would be invalid. */
+.inh-featured__btn {
+  pointer-events: none;
+}
+.inh-featured:hover .inh-featured__btn {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.inh-featured__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-12);
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+}
+
+/* --- rail ---------------------------------------------------------- */
+
+.inh-rail {
+  padding: var(--space-24);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-elevated);
+}
+
+.inh-rail__head {
+  padding-bottom: var(--space-16);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.inh-rail__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inh-rail__item {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: var(--space-16);
+  align-items: center;
+  padding: var(--space-16) 0;
+  border-bottom: 1px solid var(--color-line);
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.inh-rail__list li:last-child .inh-rail__item {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* The rail's thumbnail. Same cover as the card, at 4.5rem, with the slot
+   number sitting on it so the rail keeps its numbered-list reading. */
+.inh-rail__thumb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-line);
+  background: linear-gradient(150deg, #1b1b22, #0d0d11);
+  overflow: hidden;
+}
+
+.inh-rail__no {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  text-shadow: 0 1px 10px rgb(0 0 0 / 70%);
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.inh-rail__item:hover .inh-rail__no {
+  color: var(--color-accent);
+}
+
+.inh-rail__title {
+  display: block;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  text-wrap: balance;
+}
+.inh-rail__item:hover .inh-rail__title {
+  color: var(--color-accent);
+}
+
+.inh-rail__meta {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+}
+
+/* --- panels -------------------------------------------------------- */
+
+.inh-panels {
+  margin-top: var(--space-24);
+  display: grid;
+  gap: var(--space-24);
+}
+@media (min-width: 900px) {
+  .inh-panels {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.inh-panel {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-24);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+}
+
+.inh-panel__title {
+  font-size: var(--text-lg);
+  font-weight: 550;
+  letter-spacing: -0.015em;
+}
+
+.inh-panel__note {
+  margin-top: 0.35rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+}
+
+.inh-panel__chips {
+  margin-top: var(--space-16);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+/* --- chips --------------------------------------------------------- */
+
+.inh-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 3%);
+  color: var(--color-text-muted);
+  font-size: var(--type-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.inh-chip--button {
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    color var(--duration-ui) var(--ease-out-expo),
+    border-color var(--duration-ui) var(--ease-out-expo);
+}
+.inh-chip--button:hover {
+  color: var(--color-text);
+  border-color: var(--color-line-strong);
+}
+.inh-chip--button[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.inh-chip__count {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+}
+
+/* --- cadence chart -------------------------------------------------- */
+
+.inh-chart {
+  margin-top: auto;
+  padding-top: var(--space-24);
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-12);
+  height: 9rem;
+}
+
+.inh-chart__col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-8);
+  height: 100%;
+}
+
+.inh-chart__bar {
+  width: 100%;
+  max-width: 1.5rem;
+  height: var(--h);
+  border-radius: var(--radius-sm) var(--radius-sm) 2px 2px;
+  background: linear-gradient(
+    180deg,
+    var(--color-accent),
+    color-mix(in oklab, var(--color-accent) 35%, transparent)
+  );
+  /* Grows from the baseline on first paint. transform-origin rather than a
+     height animation so it composites. */
+  transform-origin: 50% 100%;
+  animation: inh-grow var(--duration-cinematic) var(--ease-out-expo) both;
+}
+
+/* A month with nothing published. Kept as a flat tick on the baseline so the
+   six-month window reads as a timeline rather than as four bars floating in
+   an unexplained gap. */
+.inh-chart__bar[data-empty] {
+  background: var(--color-line-strong);
+  border-radius: 2px;
+}
+
+@keyframes inh-grow {
+  from {
+    scale: 1 0;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+.inh-chart__tick {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+}
+
+/* --- quote panel ---------------------------------------------------- */
+
+.inh-panel--quote {
+  justify-content: center;
+  gap: var(--space-12);
+}
+
+.inh-quote__mark {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 0.6;
+  color: var(--color-accent);
+  opacity: 0.5;
+}
+
+.inh-quote {
+  margin: 0;
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.inh-quote__by {
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+/* The attribution is the article the line came from, so it is a link and it
+   keeps the headline's own casing — a title set in 0.18em uppercase tracking
+   runs to three shouted lines in a panel this narrow. */
+.inh-quote__source {
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--duration-ui, 200ms) var(--ease-out-expo);
+}
+.inh-quote__source:hover,
+.inh-quote__source:focus-visible {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- grid heading --------------------------------------------------- */
+
+.inh-grid-head {
+  margin-top: var(--space-56);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-12);
+  padding-bottom: var(--space-16);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.inh-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.inh-grid-title {
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 550;
+  letter-spacing: -0.03em;
+}
+
+.inh-count {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+}
+
+/* --- card grid ------------------------------------------------------ */
+
+.inh-grid {
+  margin-top: var(--space-24);
+  display: grid;
+  gap: var(--space-16);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+.inh-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    border-color var(--duration-ui) var(--ease-out-expo),
+    transform var(--duration-interaction) var(--ease-out-expo),
+    box-shadow var(--duration-interaction) var(--ease-out-expo);
+  animation: inh-rise var(--duration-section) var(--ease-out-expo) both;
+  /* --i is set per card in InsightCard and capped there. */
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.inh-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-line-strong);
+  box-shadow: var(--shadow-depth-md);
+}
+
+@keyframes inh-rise {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* The typographic plate that stands in for cover art.
+   A topic changes where the light falls, not what colour it is: rotating the
+   hue off the accent produced muddy oranges and teals that belong to no part
+   of this site. One lime, moved around the plate, still tells four cards
+   apart in a row. */
+.inh-card__plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  background:
+    radial-gradient(
+      18rem 11rem at var(--plate-x, 72%) var(--plate-y, 6%),
+      rgb(201 242 77 / 16%),
+      transparent 66%
+    ),
+    linear-gradient(var(--plate-angle, 150deg), #1b1b22, #0d0d11);
+  border-bottom: 1px solid var(--color-line);
+  overflow: hidden;
+}
+.inh-card[data-topic="Performance"] {
+  --plate-x: 18%;
+  --plate-y: 96%;
+  --plate-angle: 200deg;
+}
+.inh-card[data-topic="Design"] {
+  --plate-x: 50%;
+  --plate-y: 110%;
+  --plate-angle: 110deg;
+}
+.inh-card[data-topic="Accessibility"] {
+  --plate-x: 6%;
+  --plate-y: 10%;
+  --plate-angle: 60deg;
+}
+.inh-card[data-topic="Mobile"] {
+  --plate-x: 96%;
+  --plate-y: 92%;
+  --plate-angle: 250deg;
+}
+.inh-card[data-topic="Practice"] {
+  --plate-x: 50%;
+  --plate-y: -10%;
+  --plate-angle: 170deg;
+}
+
+/* The cover fills the plate. The generated gradient behind it still covers
+   the moment before a lazy image lands, and shows through the transparent
+   edges of a real cover. */
+.inh-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale var(--duration-cinematic) var(--ease-out-expo);
+}
+.inh-card:hover .inh-cover {
+  scale: 1.05;
+}
+
+/* Corner, not centre: the plate now carries artwork, and a 4rem numeral over
+   the middle of it obscured the one thing the image was there to show. */
+.inh-card__plate-no {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: rgb(255 255 255 / 45%);
+  text-shadow: 0 1px 10px rgb(0 0 0 / 70%);
+  transition: color var(--duration-interaction) var(--ease-out-expo);
+}
+.inh-card:hover .inh-card__plate-no {
+  color: var(--color-accent);
+}
+
+.inh-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-20);
+}
+
+.inh-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.inh-card__read {
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+
+.inh-card__title {
+  margin-top: 0.15rem;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 550;
+  line-height: var(--leading-snug);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.inh-card:hover .inh-card__title {
+  color: var(--color-accent);
+}
+
+.inh-card__dek {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.inh-card__foot {
+  margin-top: auto;
+  padding-top: var(--space-12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+
+.inh-card__date {
+  font-size: var(--type-xs);
+  color: var(--color-text-faint);
+}
+
+.inh-card__arrow {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  transition:
+    color var(--duration-ui) var(--ease-out-expo),
+    border-color var(--duration-ui) var(--ease-out-expo),
+    background var(--duration-ui) var(--ease-out-expo);
+}
+.inh-card:hover .inh-card__arrow {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+/* --- empty state ---------------------------------------------------- */
+
+.inh-empty {
+  margin-top: var(--space-40);
+  color: var(--color-text-muted);
+}
+
+.inh-link {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--color-accent);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- closing ask ---------------------------------------------------- */
+
+.inh-cta {
+  position: relative;
+  margin-top: var(--space-56);
+  padding: var(--space-40);
+  display: grid;
+  gap: var(--space-24);
+  align-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(40rem 20rem at 85% 0%, rgb(201 242 77 / 9%), transparent 62%),
+    var(--color-bg-elevated);
+  overflow: hidden;
+}
+@media (min-width: 900px) {
+  .inh-cta {
+    grid-template-columns: minmax(0, 1.5fr) auto;
+    gap: var(--space-40);
+  }
+}
+
+.inh-cta__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 550;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.inh-cta__text {
+  margin-top: var(--space-12);
+  max-width: 46rem;
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.inh-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+}
+
+/* --- homepage teaser ------------------------------------------------ */
+
+.inh-teaser__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.inh-teaser__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition:
+    color var(--duration-ui) var(--ease-out-expo),
+    border-color var(--duration-ui) var(--ease-out-expo);
+}
+.inh-teaser__all:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.inh-teaser__all span {
+  transition: translate var(--duration-ui) var(--ease-out-expo);
+}
+.inh-teaser__all:hover span {
+  translate: 3px 0;
+}
+
+.inh-grid--teaser {
+  margin-top: var(--space-32);
+}
+
+/* The teaser's first card is the featured piece, so on a wide viewport it
+   takes two columns and a wider plate rather than sitting in the row as an
+   equal — the homepage should still say which one to read first. */
+@media (min-width: 1024px) {
+  .inh-grid--teaser {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .inh-grid--teaser .inh-card:first-child {
+    grid-column: span 2;
+  }
+  .inh-grid--teaser .inh-card:first-child .inh-card__plate {
+    aspect-ratio: 21 / 8;
+  }
+  .inh-grid--teaser .inh-card:first-child .inh-card__title {
+    font-size: var(--text-xl);
+  }
+}
+
+/* --- motion preferences --------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .inh-orb,
+  .inh-card,
+  .inh-chart__bar {
+    animation: none;
+  }
+  .inh-card:hover,
+  .inh-featured:hover {
+    transform: none;
+  }
+  .inh-featured:hover .inh-featured__wash,
+  .inh-card:hover .inh-cover,
+  .inh-featured:hover .inh-featured__img {
+    scale: 1;
+  }
+}
+
+/* ============================================================
+   REFERENCE PARITY
+   Affordances the reference carries that the first pass left
+   out: panel heads with a glyph and a right-hand action, the
+   featured card's tag row and vertical caption, and the band
+   treatment on the closing ask.
+   ============================================================ */
+
+/* --- panel + rail heads --------------------------------------------- */
+
+.inh-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.inh-panel__title svg {
+  color: var(--color-accent);
+  flex: none;
+}
+
+.inh-panel__head,
+.inh-rail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+/* The cadence window is fixed at six months, so this is a label, not a
+   control — it must not look like the dropdown it resembles. */
+.inh-panel__tag {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+
+.inh-panel__action {
+  margin-top: auto;
+  padding-top: var(--space-20);
+  align-self: flex-start;
+}
+
+/* A quieter link than .inh-link, for the ones that sit inside a panel head
+   where an underlined accent link would outweigh the heading next to it. */
+.inh-link--quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-text-faint);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-ui) var(--ease-out-expo);
+}
+.inh-link--quiet:hover {
+  color: var(--color-accent);
+}
+.inh-link--quiet span {
+  transition: translate var(--duration-ui) var(--ease-out-expo);
+}
+.inh-link--quiet:hover span {
+  translate: 3px 0;
+}
+
+/* --- featured: tags and vertical caption ----------------------------- */
+
+.inh-featured__tags {
+  margin-top: var(--space-12);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.inh-tag {
+  padding: 0.28rem 0.7rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 4%);
+  font-family: var(--font-mono);
+  font-size: var(--type-xs);
+  color: var(--color-text-muted);
+}
+
+/* Set over the image half, in the reference's stacked micro-caps. Hidden
+   below the width where the copy reaches the image and would collide. */
+.inh-featured__rotule {
+  position: absolute;
+  top: 50%;
+  right: var(--space-32);
+  translate: 0 -50%;
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  line-height: 2.4;
+  text-align: right;
+  color: rgb(255 255 255 / 40%);
+  pointer-events: none;
+}
+@media (min-width: 1180px) {
+  .inh-featured__rotule {
+    display: block;
+  }
+  /* The caption occupies the right edge, so the copy stops short of it. */
+  .inh-featured__inner {
+    max-width: 72%;
+  }
+}
+
+/* --- quote rule ------------------------------------------------------ */
+
+.inh-quote__rule {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  margin-top: var(--space-12);
+  background: var(--color-line-strong);
+}
+
+/* --- closing ask, as a band ------------------------------------------ */
+
+.inh-cta {
+  /* The reference closes on a wide gradient band rather than another flat
+     panel; this is that treatment with the site's own accent. */
+  background:
+    radial-gradient(52rem 26rem at 82% 120%, rgb(201 242 77 / 16%), transparent 62%),
+    radial-gradient(40rem 22rem at 6% -20%, rgb(255 255 255 / 6%), transparent 60%),
+    linear-gradient(120deg, #14141a, #0c0c10 70%);
+}
+.inh-cta::after {
+  /* Hairline highlight along the top edge — the band reads as lit from above
+     rather than as a lighter rectangle. */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(201 242 77 / 35%) 45%,
+    transparent
+  );
+}

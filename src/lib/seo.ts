@@ -10,7 +10,7 @@ import { SITE_URL, defaultSeo, profile } from "@/content/profile";
  * canonical + OG + Twitter triple from one call keeps them in sync and unique.
  */
 
-export const TITLE_SUFFIX = "Rabin R";
+const TITLE_SUFFIX = "Rabin R";
 
 export function absoluteUrl(path = "/"): string {
   if (!path || path === "/") return SITE_URL + "/";
@@ -34,7 +34,7 @@ export interface PageSeoInput {
   inheritOgImage?: boolean;
 }
 
-export const OG_IMAGE_ALT = "Rabin R — Angular Developer & Frontend Software Engineer";
+const OG_IMAGE_ALT = "Rabin R — Angular Developer & Frontend Software Engineer";
 
 const DEFAULT_OG_IMAGE = {
   url: absoluteUrl("/opengraph-image"),

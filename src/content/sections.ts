@@ -43,16 +43,17 @@ export interface SectionIntro {
  * move an entry and every index follows.
  */
 export const ORDER = [
-  "about",
-  "services",
   "work",
+  "services",
+  "principles",
   "journey",
+  "insights",
   "skills",
   "process",
   "faq",
+  "about",
   "engagement",
   "contact",
-  "insights",
 ] as const;
 
 export type SectionId = (typeof ORDER)[number];
@@ -117,6 +118,12 @@ const COPY: Record<SectionId, IntroCopy> = {
     title: [],
     lede: "",
   },
+  principles: {
+    label: "Why Work With Me",
+    title: [{ text: "Why I build" }, { text: "this way.", newline: true, accent: true }],
+    lede:
+      "Four positions that decide how the work gets done long before a framework does.",
+  },
   insights: {
     label: "Insights",
     title: [{ text: "Notes from the work." }],
@@ -148,7 +155,7 @@ export function accentIndex(intro: SectionIntro): number {
  * carries the shared headline and lede plus the ascent artwork.
  */
 export const journeyArt = {
-  src: media("other/experience/journey.png"),
+  src: media("other/experience/journey.webp"),
   alt: "A climber at the summit looking up a glowing path that switchbacks toward a flag on the next peak",
   width: 1536,
   height: 1024,

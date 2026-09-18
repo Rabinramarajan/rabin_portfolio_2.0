@@ -1,4 +1,6 @@
-import type { Insight } from '@/content/types';
+import { modernAngularPatterns } from "@/content/articles/stopped-writing-angular-old-way-10-modern-patterns";
+import type { Insight, InsightBlock, InsightTopic } from '@/content/types';
+import { media } from "@/lib/media";
 
 /**
  * An insight is published once it has body blocks AND its publication date has
@@ -40,931 +42,137 @@ export const isLinkLive = (href: string, now: Date = new Date()): boolean => {
 export const publishedInsights = (now: Date = new Date()): Insight[] =>
   insights.filter((i) => isPublished(i, now));
 
-export const insights: Insight[] = [
-  {
-    id: 'signals',
-    datePublished: '2026-09-12',
-    number: '01',
-    title: 'Signals before ceremony',
-    dek: 'Most UI state does not need a store. Start in the template, promote only what the product actually shares.',
-    related: [
-      { label: 'Angular development services', href: '/services/angular-development' },
-      { label: 'PRIMS Member Portal — where two pieces of state earned a store', href: '/work/prims-member-portal' },
-      { label: 'Fiji Immigration internal system', href: '/work/fiji-immigration-internal' },
-      { label: 'Going zoneless without a long-lived branch', href: '/insights/zoneless-migration' },
-    ],
-    cta: 'If you have an Angular codebase where changing one screen means opening six files, that is usually a state-layer problem rather than a discipline problem. I do scoped assessments that say which parts are worth fixing, and in what order.',
-    body: [
-      'Every Angular codebase I have inherited has had the same layer in it: a store that exists because the team was told a store was best practice, not because any two parts of the application actually needed to agree on the same value. On the Fiji immigration internal system there were services holding BehaviorSubjects for state that never left the component that created it — a filter panel open/closed flag, the currently expanded row in a table. Each one cost a subscription, an unsubscribe, and a file to open before anyone could understand the template.',
+/**
+ * The number shown against an article in the UI.
+ *
+ * The authored `number` is a stable slot across the whole set, so once
+ * scheduled or unwritten pieces are filtered out those slots read as gaps — a
+ * listing of four articles numbered 01, 02, 03, 08. The displayed number is
+ * therefore the position within the *published* set, falling back to the
+ * authored slot for a piece that is not live yet (its own page, viewed direct).
+ */
+export const insightNumber = (id: string, now: Date = new Date()): string => {
+  const position = publishedInsights(now).findIndex((i) => i.id === id);
+  if (position >= 0) return String(position + 1).padStart(2, '0');
+  return insights.find((i) => i.id === id)?.number ?? '01';
+};
 
-      { type: 'heading', text: 'What the ceremony actually costs' },
-
-      'Here is the shape it usually takes. A boolean that one template reads, wrapped in enough machinery to look like architecture:',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'The version I keep finding: two files, one boolean, exactly one reader.',
-        code: `// filter-panel.service.ts
-@Injectable({ providedIn: 'root' })
-export class FilterPanelService {
-  private readonly openSubject = new BehaviorSubject<boolean>(false);
-  readonly open$ = this.openSubject.asObservable();
-
-  toggle(): void {
-    this.openSubject.next(!this.openSubject.value);
-  }
+/**
+ * Prose words in an article body.
+ *
+ * Code blocks are excluded on purpose: nobody reads a 30-line listing at
+ * prose speed, and counting it would push a short argument with two listings
+ * past a long one without. Headings, asides and captions do count — they are
+ * read.
+ */
+function proseWords(blocks: InsightBlock[] = []): number {
+  const text = blocks
+    .map((b) => {
+      if (typeof b === 'string') return b;
+      if (b.type === 'heading' || b.type === 'subheading' || b.type === 'aside' || b.type === 'link') return b.text;
+      if (b.type === 'list') return b.items.join(' ');
+      if (b.type === 'image') return b.caption ?? '';
+      return b.caption ?? '';
+    })
+    .join(' ');
+  return text.split(/\s+/).filter(Boolean).length;
 }
 
-// filter-panel.component.ts
-export class FilterPanelComponent implements OnInit, OnDestroy {
-  open = false;
-  private readonly destroy$ = new Subject<void>();
+/**
+ * Reading time in whole minutes, at 220 wpm, floored at 1.
+ *
+ * Derived rather than authored so it cannot drift away from the article when
+ * a section is added, and so a stub never advertises a read time it has not
+ * earned.
+ */
+export const insightReadMinutes = (insight: Insight): number =>
+  Math.max(1, Math.round(proseWords(insight.body) / 220));
 
-  constructor(private readonly panel: FilterPanelService) {}
-
-  ngOnInit(): void {
-    this.panel.open$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((open) => (this.open = open));
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-}`,
-      },
-
-      'Nothing here is wrong, exactly. It is that the entire file pair exists to do what one line does:',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'The same behaviour, declared where it is read.',
-        code: `export class FilterPanelComponent {
-  readonly open = signal(false);
-
-  toggle(): void {
-    this.open.update((v) => !v);
-  }
-}`,
-      },
-
-      'No subscription, no teardown, no second file. A developer reading the template sees the declaration without navigating anywhere. That proximity is the whole benefit, and it is worth more than it looks — most of the time I have spent being slow in an unfamiliar Angular codebase went on following a value backwards through layers to find out where it came from.',
-
-      { type: 'heading', text: 'The promotion rule' },
-
-      'The rule I now apply is narrow, and it has held up across immigration case management, a pension member portal and an insurance administration console: state starts in the template, and it is promoted only when a second consumer appears. Not when a second consumer is imagined — when one actually exists in the code.',
-
-      'Promotion has three steps and I take them in order. First the signal moves from the component to a service, still a signal. Second, if derived values start being recomputed in more than one place, those become computed signals in the same service, so the derivation has exactly one definition. Third — and this is rare — if the state has to survive navigation or be written from unrelated parts of the tree, it earns a store.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'Step two. The derivation has one definition, and every consumer reads it.',
-        code: `@Injectable({ providedIn: 'root' })
-export class CaseQueueStore {
-  private readonly cases = signal<Case[]>([]);
-  readonly filter = signal<CaseFilter>('all');
-
-  readonly visible = computed(() => {
-    const filter = this.filter();
-    return filter === 'all'
-      ? this.cases()
-      : this.cases().filter((c) => c.status === filter);
+/**
+ * "12 Sep 2026" — the byline date, short enough to sit on one line on a phone.
+ *
+ * Pinned to UTC so the card, the article byline and the JSON-LD date can never
+ * disagree by a day depending on where the page is rendered.
+ */
+export const insightDate = (iso: string): string =>
+  new Date(iso + "T00:00:00Z").toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
   });
 
-  readonly outstanding = computed(
-    () => this.visible().filter((c) => !c.assignedTo).length,
-  );
-
-  load(cases: Case[]): void {
-    this.cases.set(cases);
+/**
+ * Topics that actually have a live article behind them, in the order they
+ * first appear in the set. A filter pill that returns nothing is worse than
+ * an absent pill, so the listing only ever offers these.
+ */
+export const insightTopics = (now: Date = new Date()): InsightTopic[] => {
+  const seen: InsightTopic[] = [];
+  for (const i of publishedInsights(now)) {
+    if (i.topic && !seen.includes(i.topic)) seen.push(i.topic);
   }
-}`,
-      },
-
-      'Most state never reaches step three. On the PRIMS member portal, exactly two pieces of state did: the authenticated member context, and the active claim being edited across a multi-step flow. Everything else — table filters, expanded rows, form step position, panel visibility — stayed local or stopped at a service.',
-
-      { type: 'heading', text: 'Why the ordering matters' },
-
-      'Ceremony is not free, and its cost is paid at the wrong time. A store adds actions, reducers or updaters, selectors, and a mental model that a new developer has to load before they can change a label. That cost is invisible while the team that wrote it is still on the project, and it is the dominant cost afterwards. I have spent more hours tracing a value back through three layers of abstraction to find it was only ever read once than I have spent fixing genuine shared-state bugs.',
-
-      'Signals changed the economics here in a way I think is still underrated. Before signals, keeping state in a component and sharing it later meant a rewrite: template-local fields became observables, templates gained async pipes, and change detection behaviour shifted. The migration was expensive enough that teams pre-emptively started in the store to avoid it. With signals, a component-local signal and a service-level signal are the same primitive — moving one to the other is a cut and a paste. The cost of starting small dropped to nearly zero, which makes starting small the rational default rather than an optimistic one.',
-
-      {
-        type: 'aside',
-        text: 'This is not an argument against NgRx. It is an argument against reaching for it before you can name the second consumer. On a genuinely event-driven workflow with auditable state transitions, a store is the right tool and I will use one.',
-      },
-
-      { type: 'heading', text: 'Zoneless makes the same point from the other side' },
-
-      'Once change detection is driven by signal reads rather than by a zone patching every async API, the framework rewards state that is precisely scoped, because only the components that actually read a signal re-render. Broad, shared, store-held state means broad invalidation.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'Zoneless: the re-render set is whatever the template read, not whatever the zone noticed.',
-        code: `bootstrapApplication(AppComponent, {
-  providers: [provideZonelessChangeDetection()],
-});`,
-      },
-
-      'On the Zellavora resume builder, which is zoneless and signal-driven throughout, the components that re-render on a keystroke are the ones displaying the edited field — not because of an optimisation pass, but because that is what the state graph says should happen. When state is scoped precisely, performance is a consequence of the architecture rather than a separate workstream.',
-
-      { type: 'heading', text: 'The test I actually use' },
-
-      'Before adding a store: can I name the second consumer, and can I point at its file? If the answer is a shape the application might take next quarter, the state stays in the template.',
-
-      'It is far easier to promote state that turned out to be shared than to demote state that turned out not to be. The first direction is a cut and paste; the second is a conversation with a product owner about why you want to spend a sprint changing nothing a user can see. That asymmetry is the entire argument. Refactors nobody schedules never happen, so the ceremony stays in the codebase for as long as the codebase lives.',
-    ],
-  },
-  {
-    id: 'vitals',
-    datePublished: '2026-09-12',
-    number: '02',
-    title: 'Performance is a product requirement',
-    dek: 'If Core Web Vitals are optional, they lose. Treat load, input delay and layout shift as part of the spec.',
-    related: [
-      { label: 'Web application development services', href: '/services/web-application-development' },
-      { label: 'Fiji Immigration internal system — the 40% API reduction', href: '/work/fiji-immigration-internal' },
-      { label: 'InsureMet — the dense table views', href: '/work/insuremet' },
-      { label: 'Inheriting someone else’s Angular codebase', href: '/insights/inheriting-angular' },
-    ],
-    cta: 'If your application is slow and nobody can say precisely why, that is a measurement problem before it is an engineering one. I start these engagements by establishing which of the three usual causes you actually have.',
-    body: [
-      'The Fiji immigration internal management system ended up roughly 50% faster on the frontend, with about 40% less API consumption. Neither number came from a performance sprint. They came from treating load behaviour as part of the acceptance criteria for the features being built, at the point they were being built, which is the only time the work is cheap.',
-
-      { type: 'heading', text: 'Why a separate performance phase loses' },
-
-      'When performance is its own phase it competes with features for schedule, and it loses, because a feature has a stakeholder asking for it and a percentage does not. Worse, by the time the phase arrives the causes are structural. A component that fires a request in its constructor is a one-line problem on the day it is written, and an architectural problem six months later when forty components do it and the fix is a caching layer nobody budgeted for.',
-
-      { type: 'heading', text: 'The composition problem' },
-
-      'Most of the API reduction on the immigration system was exactly that class of problem, caught late enough to be real work. Case management screens are dense — a single officer view composed reference data, applicant history, document status and audit trail. Each panel had been built independently, and each fetched what it needed on init.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'Correct in isolation. Multiplied by the six panels sharing these lookups, it is a waterfall.',
-        code: `export class DocumentPanelComponent implements OnInit {
-  countries: Country[] = [];
-  documentTypes: DocumentType[] = [];
-
-  constructor(private readonly api: ReferenceApi) {}
-
-  ngOnInit(): void {
-    this.api.countries().subscribe((c) => (this.countries = c));
-    this.api.documentTypes().subscribe((t) => (this.documentTypes = t));
-  }
-}`,
-      },
-
-      'Panels shared reference data heavily, so the same lookup endpoints were being called five and six times per page load. The fix was unglamorous — shared lookups behind a service that caches for the session, with in-flight deduplication so concurrent callers join one request rather than starting six:',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'shareReplay with refCount:false holds the value for the session; concurrent callers join the in-flight request instead of starting their own.',
-        code: `@Injectable({ providedIn: 'root' })
-export class ReferenceDataService {
-  private readonly cache = new Map<string, Observable<unknown>>();
-
-  private lookup<T>(key: string, fetch: () => Observable<T>): Observable<T> {
-    if (!this.cache.has(key)) {
-      this.cache.set(
-        key,
-        fetch().pipe(shareReplay({ bufferSize: 1, refCount: false })),
-      );
-    }
-    return this.cache.get(key) as Observable<T>;
-  }
-
-  countries(): Observable<Country[]> {
-    return this.lookup('countries', () => this.api.countries());
-  }
-}`,
-      },
-
-      'The second half of the fix was a rule rather than code: components receive reference data as inputs, and the route resolves it once. The interesting part of this episode is that no individual developer did anything wrong. Every panel was correct on its own. The composition was the defect, and composition is nobody’s ticket.',
-
-      { type: 'heading', text: 'Layout shift has the same shape' },
-
-      'It is almost never introduced deliberately; it accumulates from images without dimensions, content that swaps in after a fetch, and banners injected above the fold. Each instance is trivially fixable by the person who wrote it, on the day they wrote it. Collectively they become a score nobody owns.',
-
-      {
-        type: 'code',
-        language: 'html',
-        caption: 'Reserving space is a habit, not a task — and habits are only installable during implementation.',
-        code: `<!-- shifts when the image arrives -->
-<img [src]="applicant.photoUrl" alt="" />
-
-<!-- reserves its box from first paint -->
-<img [src]="applicant.photoUrl" alt="" width="240" height="320" />
-
-<!-- async content: reserve the box, do not collapse it -->
-<div class="panel" style="min-height: 18rem">
-  @if (documents(); as docs) {
-    <app-document-list [documents]="docs" />
-  } @else {
-    <app-skeleton-rows [count]="4" />
-  }
-</div>`,
-      },
-
-      { type: 'heading', text: 'What I put in the spec' },
-
-      'The changes are small. A ticket that adds a view says what it may fetch on load and what it must receive from its parent. A ticket that adds an image or an embed says the space is reserved. Interaction work states what happens on the input that triggers it — whether the UI acknowledges immediately or waits for the server. These are one-line additions to tickets that were being written anyway, and they move the decision to the only moment when it costs nothing.',
-
-      {
-        type: 'aside',
-        text: 'None of this needs a performance culture or a dashboard on a wall. It needs performance statements in the same document as the functional requirements, reviewed by the same people at the same time. In the spec, they get built. In a backlog labelled "optimisation", they get discussed.',
-      },
-
-      { type: 'heading', text: 'INP is the one that changed my habits' },
-
-      'Interaction to Next Paint measures something users complained about long before there was a number for it. A button that runs a synchronous filter over a few thousand rows on click feels broken even when the total work is well under a second, and no amount of load-time optimisation compensates.',
-
-      'On the insurance administration console the dense table views needed work here specifically. The fix is not to do less work — it is to let the browser paint the acknowledgement before doing it:',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'Same total work, entirely different product. The interface responds in the same frame; the expensive pass happens after the paint.',
-        code: `applyFilter(filter: PolicyFilter): void {
-  // Paints this frame: the user sees the click land.
-  this.pending.set(true);
-  this.activeFilter.set(filter);
-
-  // Yields to the browser, then does the expensive pass.
-  afterNextRender(() => {
-    this.rows.set(this.filterPolicies(filter));
-    this.pending.set(false);
-  }, { injector: this.injector });
-}`,
-      },
-
-      'For genuinely heavy work the same principle scales up: move it to a web worker, or page it so the first screenful renders and the rest streams. The constant is that the main thread must be free to acknowledge the input. A user who sees their click register will wait; a user who sees nothing assumes it failed and clicks again, which is how you get duplicate submissions in a system that handles money.',
-
-      { type: 'heading', text: 'The measurement discipline' },
-
-      'Measure before changing anything. Angular performance work divides into three causes with three different fixes: bundle and lazy-loading problems, change detection running more than it needs to, and network waterfalls from components that fetch on init. They look identical from the outside — "the page is slow" — and the fix for one does nothing for the others. Establishing which one you actually have is most of the work, and skipping that step is how teams spend a quarter optimising something that was never the bottleneck.',
-    ],
-  },
-  {
-    id: 'quiet-ui',
-    datePublished: '2026-09-12',
-    number: '03',
-    title: 'Quiet interfaces age better',
-    dek: 'Motion should explain hierarchy, not decorate it. One accent, one rhythm, and copy that can stand without animation.',
-    related: [
-      { label: 'Mobile app development services', href: '/services/mobile-app-development' },
-      { label: 'VNPF blo mi member app', href: '/work/vnpf-blo-mi' },
-      { label: 'Angular UI component architecture', href: '/work/ui-component-architecture' },
-      { label: 'Offline is a design input, not an error state', href: '/insights/offline-first' },
-    ],
-    cta: 'If your product looked right at launch and feels tiring a year in, that is usually a systems problem in the interface layer rather than a visual one. That is the kind of work I do.',
-    body: [
-      'The interfaces I have built that aged best are the ones where motion explains the structure and then gets out of the way. The ones that aged worst are the ones where the motion was the point. This is not a taste position — it is what I observed going back into these codebases a year later to add features.',
-
-      { type: 'heading', text: 'The fortieth use is the real product' },
-
-      'Government and pension software makes the argument clearly, because the usage pattern is extreme. An immigration officer works the same case queue for eight hours. A VNPF member opens the app to check a balance and leaves. Neither has any appetite for a transition they have seen four hundred times.',
-
-      'Animation that reads as considered on first use reads as latency on the fortieth, and the fortieth use is the one that describes the actual product. Design review looks at the first use. Nobody schedules a review of the fortieth.',
-
-      { type: 'heading', text: 'Does the motion do work the layout cannot?' },
-
-      'The distinction I hold to is whether the motion carries information. A panel that slides in from the edge it will return to is telling the user where it came from and how to dismiss it — spatial information the static layout cannot express. A card that fades up because cards fade up is decoration. The first survives repetition because it answers a question the user is asking each time; the second only survives novelty.',
-
-      {
-        type: 'aside',
-        text: 'The test: turn the animation off and read the screen. If the hierarchy collapses, the animation was carrying meaning the layout should have carried — fix the layout. If the screen still reads correctly, the animation is genuinely additive and free to stay.',
-      },
-
-      { type: 'heading', text: 'One accent, one job' },
-
-      'A single accent colour applied to one job does more for coherence than any amount of transition polish. Across this portfolio and the client work behind it, the accent marks the thing you can act on next. Not headings, not decoration, not emphasis in running text.',
-
-      'When the accent means exactly one thing, a user learns it in a single screen and carries it through the entire product, and every subsequent screen is cheaper to read. The moment it also marks a heading somewhere, it means nothing anywhere. This is easy to state and hard to hold, because there is always one screen where the accent would look good on something else.',
-
-      {
-        type: 'code',
-        language: 'css',
-        caption: 'A small token set, reused. Every ad-hoc duration is a small inconsistency; enough of them read as an interface assembled by several people who did not speak.',
-        code: `:root {
-  /* One accent. One job: the next action. */
-  --color-accent: oklch(0.72 0.17 48);
-
-  /* Three durations, one curve. Nothing else. */
-  --duration-ui: 160ms;
-  --duration-section: 420ms;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-}`,
-      },
-
-      { type: 'heading', text: 'Reduced motion is not an edge case' },
-
-      'A meaningful proportion of users browse with reduced motion enabled, and on a mid-range phone several years old the frames drop whether or not anyone asked. If the interface only works with motion running, both groups get a broken product.',
-
-      'The correct default is to treat motion as an enhancement applied on top of a layout that already works, rather than a layer the layout depends on:',
-
-      {
-        type: 'code',
-        language: 'css',
-        caption: 'The layout is correct first; motion is added for users who can take it.',
-        code: `.panel {
-  /* Correct with no animation at all. */
-  transform: none;
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .panel {
-    animation: panel-in var(--duration-section) var(--ease-out-expo);
-  }
-}
-
-@keyframes panel-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: none; }
-}`,
-      },
-
-      'Writing it in this order matters more than it appears. The common alternative — animate by default, then disable under a reduced-motion query — means the no-motion path is the one nobody tests, and it is the path a real share of your users are on. Inverting the default makes the tested path the resilient one.',
-
-      { type: 'heading', text: 'Density is the mobile version of the same argument' },
-
-      'On the VNPF member app the constraint was not taste, it was thumbs. A pension member checking a balance is standing up, one-handed, often on a screen that has been dropped a few times. Interfaces designed on a desktop monitor and then made responsive tend to shrink everything uniformly, which keeps the visual composition and destroys the ergonomics.',
-
-      'Restraint helps here for an unglamorous reason: fewer elements means each one can be bigger. Every decorative affordance you remove is space returned to the controls that actually get pressed.',
-
-      {
-        type: 'code',
-        language: 'css',
-        caption: 'The floor is the pointer-accurate one, not the mouse one. Padding expands the hit area without changing the visual weight of the control.',
-        code: `.control {
-  /* Visual size and hit size are different problems. */
-  min-height: 44px;
-  min-width: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Coarse pointers get the larger floor even where the design is compact. */
-@media (pointer: coarse) {
-  .control {
-    min-height: 48px;
-    min-width: 48px;
-  }
-}`,
-      },
-
-      'The same logic applies to what the screen shows at all. A member app that opens on the balance, in the largest type on the screen, with everything else one tap away, beats a dashboard that shows nine things at once — because there is exactly one reason most people opened it, and the design either respects that or charges them a scan for it every single time.',
-
-      { type: 'heading', text: 'Copy has to survive the same test' },
-
-      'If a heading only makes sense once the words have staggered into place, it is a heading that depends on a rendering condition. That condition fails in a search result, in a screen reader’s heading list, in an AI-generated summary, and in a browser that decided this frame belonged to something else.',
-
-      'This site is a working example of the rule. Its motion primitives compile down to plain markup — the animations are off, and the headings, the reading order and the document outline are identical with or without them. Text that stands still is text that works everywhere it gets quoted, which is now most of the places that matter.',
-
-      { type: 'heading', text: 'What this buys you a year later' },
-
-      'The payoff is not aesthetic. It is that a restrained interface has fewer places to be inconsistent, so the second team to touch it can stay consistent without reading a document. A product with three durations and one accent has a shape a new developer can infer from any single screen. A product with forty ad-hoc timings has a shape that exists only in the head of whoever left.',
-    ],
-  },
-  {
-    id: 'zoneless-migration',
-    datePublished: '2026-09-15',
-    number: '04',
-    title: 'Going zoneless without a long-lived branch',
-    dek: 'Zoneless is the last step of a migration, not the first. What to fix before you flip the provider, and how to ship it in pieces.',
-    related: [
-      { label: 'Signals before ceremony', href: '/insights/signals' },
-      { label: 'Angular development services', href: '/services/angular-development' },
-      { label: 'Zellavora AI Resume Builder — zoneless in production', href: '/work/zellavora-ai-resume-builder' },
-    ],
-    cta: 'If you are looking at a zoneless migration on a codebase that cannot stop shipping, the sequencing matters more than the flag. I plan and execute these incrementally, inside the running application.',
-    body: [
-      'Zoneless is the least interesting part of a zoneless migration. Turning it on is one provider. Everything that makes the migration succeed or fail happens before that line, and the teams that get into trouble are the ones that flip the flag first and then spend a quarter chasing views that stopped updating.',
-
-      'The framing that works: zoneless is not a feature you adopt, it is a property your application earns once its change detection is driven by state rather than by side effects. Get the state right and the flag is a formality.',
-
-      { type: 'heading', text: 'Why the big-bang branch fails' },
-
-      'The instinct is to branch, migrate everything, and merge. On any codebase with active feature work this fails for a reason that has nothing to do with Angular: the branch diverges faster than it converges. Six weeks in you are resolving conflicts in files you already migrated, against features written by people who did not know the rules changed.',
-
-      'Every step below ships independently to main. None of them require zoneless to be on. That is the point — if the migration is paused for a release, or for a quarter, the codebase is left in a coherent state rather than half-converted.',
-
-      { type: 'heading', text: 'Step 1: find what actually depends on the zone' },
-
-      'Zone.js patches async APIs and triggers change detection when they fire. Remove it and anything relying on that implicit trigger stops updating. The offenders are findable before you change anything:',
-
-      {
-        type: 'code',
-        language: 'bash',
-        caption: 'A morning of grep tells you the real size of the migration. Do this before estimating it.',
-        code: `# Timers that mutate state and rely on the zone to notice
-rg -n "setTimeout|setInterval" src --type ts
-
-# Explicit zone usage — each one is a decision to re-make
-rg -n "NgZone|runOutsideAngular|ApplicationRef.tick" src --type ts
-
-# Manual change detection — often a symptom, sometimes the fix
-rg -n "detectChanges|markForCheck|ChangeDetectorRef" src --type ts
-
-# Non-Angular async sources: these never had a zone guarantee worth trusting
-rg -n "addEventListener|new Worker|WebSocket|IntersectionObserver" src --type ts`,
-      },
-
-      'Sort the results into three piles: state mutations that should become signal writes, genuine outside-Angular work that should stay outside, and manual `detectChanges` calls that are papering over the first category. The third pile is usually the largest and the most informative — every one of them is a place where someone already noticed the zone was not doing what they expected.',
-
-      { type: 'heading', text: 'Step 2: convert the triggers, not the components' },
-
-      'The migration unit is not the component, it is the async source. A timer that writes to a signal is zoneless-safe regardless of which component reads it, which means you can convert data flows one at a time without touching the templates that consume them.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'Before and after. The consuming template is unchanged in both cases — which is why this can be done incrementally.',
-        code: `// Before: relies on the zone noticing the timer fired
-export class SessionBannerComponent implements OnInit {
-  remaining = 0;
-
-  ngOnInit(): void {
-    setInterval(() => {
-      this.remaining = this.session.secondsLeft();
-    }, 1000);
-  }
-}
-
-// After: the write itself notifies. No zone required.
-export class SessionBannerComponent {
-  readonly remaining = signal(0);
-  private readonly session = inject(SessionService);
-
-  constructor() {
-    const id = setInterval(() => {
-      this.remaining.set(this.session.secondsLeft());
-    }, 1000);
-    inject(DestroyRef).onDestroy(() => clearInterval(id));
-  }
-}`,
-      },
-
-      {
-        type: 'aside',
-        text: 'A useful property of this step: converted code is strictly better under Zone.js too. Signal writes are more precise than zone-triggered global checks, so you get a performance improvement before the flag is ever flipped, and nothing to roll back if priorities change.',
-      },
-
-      { type: 'heading', text: 'Step 3: fix the RxJS boundary' },
-
-      'Observables do not notify change detection by themselves — the `async` pipe does, by calling `markForCheck`. Under zoneless the async pipe still works, so a wholesale RxJS rewrite is not required. What does break is the pattern of subscribing manually and assigning to a field, which was only ever working because the zone saw the HTTP call.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'toSignal is the smallest correct fix at the RxJS boundary. Keep the observable where it is genuinely a stream.',
-        code: `// Breaks under zoneless: nothing tells the view the field changed
-export class CaseListComponent implements OnInit {
-  cases: Case[] = [];
-  ngOnInit(): void {
-    this.api.cases().subscribe((c) => (this.cases = c));
-  }
-}
-
-// Works: the signal write is the notification
-export class CaseListComponent {
-  private readonly api = inject(CaseApi);
-  readonly cases = toSignal(this.api.cases(), { initialValue: [] as Case[] });
-}`,
-      },
-
-      'Do not take this as licence to delete RxJS. Debouncing a search box, merging a websocket with a poll, cancelling an in-flight request on navigation — these are still stream problems and signals are a poor substitute. Convert the boundary, keep the streams.',
-
-      { type: 'heading', text: 'Step 4: third-party libraries' },
-
-      'This is where migrations actually stall, and it is worth auditing early because it can change the plan. Any library that mutates state from a non-Angular callback — chart libraries with animation loops, older date pickers, map SDKs, anything wrapping a jQuery-era widget — assumed the zone was watching.',
-
-      'The fix is a signal write inside the callback. The risk is the library you cannot patch, which is a reason to know about it in week one rather than week nine.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'Wrap the boundary once, at the point the third-party callback re-enters your code.',
-        code: `export class ChartHostComponent {
-  readonly selectedPoint = signal<Point | null>(null);
-
-  private init(el: HTMLElement): void {
-    thirdPartyChart(el, {
-      // Fires outside Angular. The signal write is what makes it visible.
-      onSelect: (point: Point) => this.selectedPoint.set(point),
-    });
-  }
-}`,
-      },
-
-      { type: 'heading', text: 'Step 5: flip the flag' },
-
-      'Only now, and it is genuinely two lines. Angular v21 is zoneless by default; on v20 and earlier you opt in:',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'Then remove zone.js from the polyfills in angular.json — both the build and the test target, which is the one people forget.',
-        code: `bootstrapApplication(AppComponent, {
-  providers: [
-    provideZonelessChangeDetection(),
-    provideBrowserGlobalErrorListeners(),
-  ],
-});`,
-      },
-
-      'Removing `zone.js` from the test polyfills matters as much as the build one. Left in place, your tests keep passing under a zone your production application no longer has, which is the worst of both worlds: a green suite that is no longer testing the thing you ship.',
-
-      { type: 'heading', text: 'What this costs, honestly' },
-
-      'On an application of moderate size with disciplined state management, this is days. On a large codebase with years of manual `detectChanges` calls and a few unpatchable libraries, it is weeks — but they are weeks of small merged pull requests rather than one terrifying merge.',
-
-      'The reason to do it is not the benchmark. It is that zoneless makes imprecise state expensive and precise state cheap, so it applies steady pressure in the direction you wanted the codebase to go anyway. Most of the value arrives during step two, before the flag is ever set.',
-    ],
-  },
-  {
-    id: 'offline-first',
-    datePublished: '2026-09-18',
-    number: '05',
-    title: 'Offline is a design input, not an error state',
-    dek: 'Apps for real users on real networks need cached data with an honest age, queued actions, and failure messages that say what to do.',
-    related: [
-      { label: 'Mobile app development services', href: '/services/mobile-app-development' },
-      { label: 'VNPF blo mi member app', href: '/work/vnpf-blo-mi' },
-      { label: 'Quiet interfaces age better', href: '/insights/quiet-ui' },
-    ],
-    cta: 'If you are building a member or field app where the network is unreliable, the offline behaviour should be specified before the screens are designed. That is the part I would want to scope first.',
-    body: [
-      'The VNPF member app was built for provident fund members in Vanuatu, checking balances and statements on the phones they actually own, over the networks they actually have. That sentence contains the entire design brief, and most of it is about the network.',
-
-      'Teams that have only shipped web applications tend to treat connectivity as a binary that is almost always true, and handle the false case with a toast. On a member app for a public institution, the false case is a substantial share of sessions, and a toast is not a design.',
-
-      { type: 'heading', text: 'The three states, not two' },
-
-      'Online and offline is the wrong model. The states that matter are: fresh data, stale data with a known age, and no data. Most apps collapse the middle state into one of the others, which is where the bad experiences come from — either stale data presented as current, or a spinner where a perfectly useful cached balance could have been.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'The age is part of the value. A balance with no timestamp is a claim the app cannot support.',
-        code: `export interface Cached<T> {
-  value: T;
-  fetchedAt: number;
-}
-
-@Injectable({ providedIn: 'root' })
-export class BalanceStore {
-  private readonly cached = signal<Cached<Balance> | null>(null);
-  readonly balance = computed(() => this.cached()?.value ?? null);
-
-  readonly freshness = computed(() => {
-    const entry = this.cached();
-    if (!entry) return 'none' as const;
-    const age = Date.now() - entry.fetchedAt;
-    return age < 5 * 60_000 ? ('fresh' as const) : ('stale' as const);
-  });
-}`,
-      },
-
-      'Rendering that third state honestly is a one-line template change and it removes an entire category of support call:',
-
-      {
-        type: 'code',
-        language: 'html',
-        caption: 'Show the number. Say when it is from. Never show a stale figure as though it were live.',
-        code: `@switch (freshness()) {
-  @case ('fresh') {
-    <app-balance [value]="balance()" />
-  }
-  @case ('stale') {
-    <app-balance [value]="balance()" />
-    <p class="note">
-      Last updated {{ updatedAt() | date: 'short' }} · showing saved data
-    </p>
-  }
-  @case ('none') {
-    <app-empty-state
-      message="Your balance will appear here once you are back online." />
-  }
-}`,
-      },
-
-      { type: 'heading', text: 'Storage: pick by consequence, not convenience' },
-
-      'On Capacitor the options are not equivalent and the choice should follow what happens if the data leaks or is lost. Preferences is a key-value store, fine for flags and the last-seen tab. SQLite is the right home for anything list-shaped you want to query offline. The secure store is the only acceptable home for tokens.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'The common mistake is the first line being Preferences. Tokens in a key-value store survive backups and device transfers.',
-        code: `// Credentials: platform secure storage, biometric-gated.
-await SecureStoragePlugin.set({ key: 'refresh_token', value: token });
-
-// Queryable member data: SQLite, so a statement list works offline.
-await db.run(
-  'INSERT OR REPLACE INTO statements (id, period, payload) VALUES (?, ?, ?)',
-  [s.id, s.period, JSON.stringify(s)],
-);
-
-// Trivial UI state only.
-await Preferences.set({ key: 'last_tab', value: 'balance' });`,
-      },
-
-      { type: 'heading', text: 'Queued actions and the idempotency problem' },
-
-      'Reads are the easy half. Writes submitted with no connection have to be queued and replayed, and the moment you replay you have a duplicate-submission problem — because the failure you are recovering from may have been a response that was lost rather than a request that never arrived.',
-
-      'The fix is a client-generated key on every mutation, checked by the server. Without it, a retry after a dropped response creates a second record, and in a system handling money that is a real incident rather than a glitch.',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'The key is generated once, when the user acts — not on retry. That is what makes the replay safe.',
-        code: `async submit(claim: ClaimDraft): Promise<void> {
-  const action: QueuedAction = {
-    key: crypto.randomUUID(),   // generated once, reused on every retry
-    kind: 'claim.submit',
-    payload: claim,
-    queuedAt: Date.now(),
-  };
-
-  await this.queue.add(action);
-  void this.flush();            // best effort now, guaranteed later
-}
-
-private async flush(): Promise<void> {
-  if (!(await Network.getStatus()).connected) return;
-
-  for (const action of await this.queue.pending()) {
-    try {
-      await this.api.send(action, { idempotencyKey: action.key });
-      await this.queue.remove(action.key);
-    } catch (error) {
-      if (isPermanent(error)) await this.queue.fail(action.key);
-      break; // transient: keep order, retry on the next connectivity event
-    }
-  }
-}`,
-      },
-
-      {
-        type: 'aside',
-        text: 'Breaking out of the loop on a transient failure rather than continuing is deliberate. Queued actions on a member account are frequently order-dependent, and a queue that skips ahead on failure produces states that are very hard to reason about afterwards.',
-      },
-
-      { type: 'heading', text: 'Tell the user which of the three things happened' },
-
-      'A submission can be accepted, queued, or rejected, and these have completely different consequences for the person holding the phone. Collapsing them into "Something went wrong" is the single most common failure in this category.',
-
-      'Queued should say so explicitly and say what happens next: the claim is saved on the device and will be submitted when there is a connection. That sentence turns an apparent failure into a completed task, and it is the difference between a member walking away satisfied and a member submitting four times.',
-
-      { type: 'heading', text: 'Retrofitting this is close to a rewrite' },
-
-      'Every decision above lives in the data layer — where state comes from, what shape it has, when it was fetched, and what a write means. An application built assuming connectivity has none of those seams, so adding them later means rewriting the layer every feature depends on.',
-
-      'That is why this belongs in the specification rather than the backlog. Deciding on day one that reads are cached with an age and writes are queued with an idempotency key costs almost nothing. Deciding it in month eight costs the data layer.',
-    ],
-  },
-  {
-    id: 'consequential-forms',
-    datePublished: '2026-09-22',
-    number: '06',
-    title: 'Forms that carry consequences',
-    dek: 'What building immigration and pension forms teaches you about accessibility, error recovery and never losing what someone typed.',
-    related: [
-      { label: 'Fiji Immigration Citizen Portal', href: '/work/fiji-immigration-external' },
-      { label: 'PRIMS Member Portal', href: '/work/prims-member-portal' },
-      { label: 'Web application development services', href: '/services/web-application-development' },
-    ],
-    cta: 'If you are building a form where failure costs the user something real — an application, a claim, a submission with a deadline — the error and recovery paths deserve as much design as the happy path. That is the work I would scope first.',
-    body: [
-      'Most form advice is written about forms people choose to fill in. A checkout, a signup, a newsletter box. If those forms frustrate someone, they leave, and the cost is a conversion.',
-
-      'The forms I have spent most time on are not like that. A Fiji immigration application, a PRIMS pension claim — the person has no alternative, frequently has a deadline, and sometimes has one shot before an office closes. When those forms fail, the cost is not a conversion. It is somebody travelling to an office.',
-
-      'That difference changes almost every default.',
-
-      { type: 'heading', text: 'Never lose what someone typed' },
-
-      'This is the first rule and the one most often broken. A validation failure that clears fields, a session timeout that discards a half-finished application, a back button that resets step two — each of these is a small technical event and a large human one, because the person now has to find their passport again.',
-
-      'Persist the draft locally on every meaningful change, and restore it without being asked:',
-
-      {
-        type: 'code',
-        language: 'typescript',
-        caption: 'The debounce matters less than the restore. An application that comes back after a browser crash is the difference between a bad day and a lost afternoon.',
-        code: `export class ApplicationFormComponent {
-  private readonly drafts = inject(DraftStore);
-  readonly form = inject(FormBuilder).group({ /* ... */ });
-
-  constructor() {
-    const restored = this.drafts.load('immigration.application');
-    if (restored) this.form.patchValue(restored, { emitEvent: false });
-
-    this.form.valueChanges
-      .pipe(debounceTime(500), takeUntilDestroyed())
-      .subscribe((value) => this.drafts.save('immigration.application', value));
-  }
-}`,
-      },
-
-      {
-        type: 'aside',
-        text: 'Session timeouts on government systems are usually non-negotiable — they come from a security policy, not a product decision. That makes the local draft more important, not less: the session can expire without the work expiring with it.',
-      },
-
-      { type: 'heading', text: 'Errors have to be findable, not just present' },
-
-      'A red border is not error handling. On a long application the failing field is frequently off-screen, and for a screen reader user a colour change is nothing at all.',
-
-      'Three things are needed together: a summary at the top that lists what failed and links to each field, programmatic association between each input and its message, and focus moved somewhere useful.',
-
-      {
-        type: 'code',
-        language: 'html',
-        caption: 'aria-invalid marks the state, aria-describedby carries the message, and the summary makes a twelve-field failure navigable rather than a hunt.',
-        code: `<div role="alert" tabindex="-1" #errorSummary>
-  <h2>There are {{ errors().length }} problems with this application</h2>
-  <ul>
-    @for (error of errors(); track error.field) {
-      <li><a [href]="'#' + error.field">{{ error.message }}</a></li>
-    }
-  </ul>
-</div>
-
-<label for="passport-number">Passport number</label>
-<input
-  id="passport-number"
-  formControlName="passportNumber"
-  [attr.aria-invalid]="hasError('passportNumber')"
-  [attr.aria-describedby]="
-    hasError('passportNumber') ? 'passport-number-error' : 'passport-number-hint'
-  " />
-<p id="passport-number-hint">As printed on the photo page, without spaces.</p>
-@if (hasError('passportNumber')) {
-  <p id="passport-number-error">
-    Enter your passport number. It is 7 to 9 characters, letters and numbers.
-  </p>
-}`,
-      },
-
-      'Note the hint exists before the error does. Describing the expected format up front prevents more failures than any error message repairs.',
-
-      { type: 'heading', text: 'Write errors as instructions' },
-
-      'The message has to say what to do, not what went wrong. "Invalid format" describes the system\'s state. "Enter your passport number — 7 to 9 characters, letters and numbers" describes the user\'s next action. The second one is longer and that is fine; nobody has ever been harmed by a clear sentence.',
-
-      'Validate on blur rather than on keystroke. Telling someone their passport number is invalid while they are typing the third character of it is technically accurate and experientially hostile.',
-
-      { type: 'heading', text: 'Multi-step flows need an honest position' },
-
-      'Splitting a long application into steps is usually right. It reduces the sense of an endless page and lets you save progress meaningfully. But a step counter is load-bearing: a screen reader user who presses Next on step one of an unknown number of steps cannot plan their time or energy.',
-
-      {
-        type: 'code',
-        language: 'html',
-        caption: 'The heading carries the position, so it is announced on focus rather than only being visible.',
-        code: `<nav aria-label="Application progress">
-  <ol>
-    @for (step of steps; track step.id; let i = $index) {
-      <li [attr.aria-current]="i === current() ? 'step' : null">
-        {{ i + 1 }}. {{ step.label }}
-      </li>
-    }
-  </ol>
-</nav>
-
-<h1 tabindex="-1" #stepHeading>
-  Step {{ current() + 1 }} of {{ steps.length }}: {{ steps[current()].label }}
-</h1>`,
-      },
-
-      'Move focus to that heading on every step change. Without it, a keyboard user presses Next and their focus stays on a button that no longer relates to anything on screen, with no announcement that the page changed at all.',
-
-      { type: 'heading', text: 'Why government work makes you better at this' },
-
-      'On public-sector projects, accessibility is usually a procurement requirement rather than an aspiration, which removes the argument about whether it is worth doing. That constraint turns out to be a gift: it forces the keyboard path, the screen reader path and the error-recovery path to be designed rather than discovered.',
-
-      'The side effect is that these forms are better for everyone. Preserved drafts help a distracted person on a laptop as much as a screen reader user. An error summary helps anyone who filled in twelve fields and got three wrong. Format hints help people who have never seen the form before — which, on a government service, is nearly all of them.',
-
-      'The general rule I would take to any product: design the failure path with the same care as the success path, in proportion to what failure costs the person. For a newsletter box, a red border is proportionate. For something with a deadline attached, it is not remotely enough.',
-    ],
-  },
-  {
-    id: 'inheriting-angular',
-    datePublished: '2026-09-25',
-    number: '07',
-    title: 'Inheriting someone else’s Angular codebase',
-    dek: 'How I assess an inherited application: what to measure, what to ignore, and why the expensive problem is rarely the one the team reported.',
-    related: [
-      { label: 'Angular development services', href: '/services/angular-development' },
-      { label: 'Performance is a product requirement', href: '/insights/vitals' },
-      { label: 'Signals before ceremony', href: '/insights/signals' },
-    ],
-    cta: 'A scoped assessment like this is usually how my engagements start: one to two weeks, ending in a prioritised plan with a cost against each item. You can act on it with or without me.',
-    body: [
-      'Most engagements start the same way. An Angular application that works, a team that has noticed changing it is getting more expensive than it should be, and a request for an opinion about what to do. The temptation is to propose an architecture in week one. I have learned not to, because the expensive problem is rarely the one that was reported.',
-
-      'What follows is roughly what I actually do, in order.',
-
-      { type: 'heading', text: 'Run it before reading it' },
-
-      'Before opening a file I use the application as a user, on the slowest hardware I have, with the network throttled. Fifteen minutes of this tells you more about where the pain is than a day of reading, because it surfaces the things people have stopped noticing. Teams habituate to their own product; the third-second delay on every save became invisible eighteen months ago.',
-
-      'I keep the network tab open while doing it. Duplicated requests are the single most common finding and they are visible in the first minute.',
-
-      { type: 'heading', text: 'Measure the shape of the codebase, not its quality' },
-
-      'Quality judgements this early are usually wrong and always unwelcome. Structural facts are neither:',
-
-      {
-        type: 'code',
-        language: 'bash',
-        caption: 'None of this is a quality judgement. It is a map, and it takes about an hour.',
-        code: `# How much of the app is still NgModule-based?
-rg -c "@NgModule" src --type ts | wc -l
-rg -c "standalone: true" src --type ts | wc -l
-
-# Where does state actually live?
-rg -n "BehaviorSubject|new Subject" src --type ts | wc -l
-rg -n "signal\\(|computed\\(" src --type ts | wc -l
-rg -l "StoreModule|createReducer|createEffect" src --type ts
-
-# Components fetching their own data — the composition smell
-rg -n "ngOnInit" -A 6 src --type ts | rg -c "subscribe\\("
-
-# Manual change detection: each one marks a place someone was surprised
-rg -n "detectChanges\\(\\)" src --type ts | wc -l
-
-# The components everything depends on
-rg -o "app-[a-z-]+" src --type html | sort | uniq -c | sort -rn | head -20`,
-      },
-
-      'That last one is the most useful and the least obvious. The most-referenced components are where a change is most expensive and most valuable, and they are almost never the ones the team nominates.',
-
-      { type: 'heading', text: 'Look at the git history, not just the code' },
-
-      'Files that change constantly are where the cost actually is. A messy file nobody has touched in two years is not costing anything; a moderately messy file edited in forty of the last fifty pull requests is the tax.',
-
-      {
-        type: 'code',
-        language: 'bash',
-        caption: 'Change frequency over the last year. Cross-reference with file size: big and frequently edited is where to spend.',
-        code: `git log --since="1 year ago" --name-only --pretty=format: \\
-  | rg "^src/.*\\.(ts|html)$" \\
-  | sort | uniq -c | sort -rn | head -25`,
-      },
-
-      {
-        type: 'aside',
-        text: 'This is also how you find the file everyone is afraid of. It is usually large, frequently edited, has no tests, and three people will independently mention it unprompted. That convergence is a strong signal and worth listening to.',
-      },
-
-      { type: 'heading', text: 'Ask what broke last' },
-
-      'The most valuable hour of the assessment is not technical. Ask the team: what was the last thing that broke in production, what was the last change that took far longer than estimated, and what part of the codebase do you avoid?',
-
-      'The answers locate the real problem with far more precision than static analysis. On one case management system the reported complaint was slow page loads. The answer to "what takes longer than you expect" was "adding a panel to the officer view" — which pointed straight at the composition problem where independently built panels each fetched their own shared reference data. Same root cause, but the second framing told me it was structural rather than a rendering issue.',
-
-      { type: 'heading', text: 'Separate the three performance causes' },
-
-      'If performance is in scope, it divides into three causes with three different fixes, and they are indistinguishable from the outside:',
-
-      {
-        type: 'code',
-        language: 'bash',
-        caption: 'Bundle first because it is the cheapest to rule out. Then change detection. Then the network waterfall, which is usually the real one.',
-        code: `# 1. Bundle and lazy-loading: is everything in the initial chunk?
-ng build --configuration production --stats-json
-npx source-map-explorer dist/**/*.js
-
-# 2. Change detection: how many components check on each cycle?
-#    (Angular DevTools profiler, or count the always-checked ones)
-rg -L "ChangeDetectionStrategy.OnPush" src --type ts -g "*.component.ts" | wc -l
-
-# 3. Network waterfall: duplicated and serial requests on one route
-#    — read this off the network tab, sorted by name.`,
-      },
-
-      'Fixing the wrong one costs a quarter and changes nothing. Establishing which you have is most of the work.',
-
-      { type: 'heading', text: 'The deliverable' },
-
-      'The assessment ends in a written document, not a conversation. For each finding: what it is, what it costs today in concrete terms, what fixing it involves, and roughly what that costs. Then a recommended order, with the dependencies stated — because some fixes unblock others and doing them out of sequence wastes both.',
-
-      'I try hard to include the items that argue against work. "This is ugly and you should leave it alone" is a legitimate finding, and including a few of them is what makes the rest credible. A report where every observation conveniently requires the author to be hired is not an assessment, it is a proposal wearing one as a costume.',
-
-      'The test of a good assessment is that the team can act on it without me. If they read it, agree with the ordering, and do the work themselves, it did its job. That happens reasonably often, and it is a better outcome than a long engagement that starts with a plan nobody understood.',
-    ],
-  },
+  return seen;
+};
+
+/**
+ * The wording of the four figures above the article grid.
+ *
+ * Only the copy lives here — every value is still counted off the articles at
+ * render time (see `buildStats` in InsightsHub). The two are split because
+ * they change for different reasons and by different hands: the numbers move
+ * whenever a piece ships, the labels move when the page is rewritten, and
+ * having the second buried in a component meant editing TSX to change four
+ * words. `id` is what the component keys its derived value and icon to, so
+ * reordering this array reorders the row.
+ */
+export const insightStatCopy: { id: InsightStatId; label: string; note: string }[] = [
+  { id: 'articles', label: 'Articles', note: 'Published, not scheduled' },
+  { id: 'subjects', label: 'Subjects', note: 'From architecture to interface' },
+  { id: 'read', label: 'Average read', note: 'The argument, then the code' },
+  { id: 'published', label: 'Last published', note: 'Written when there is something to say' },
 ];
+
+export type InsightStatId = 'articles' | 'subjects' | 'read' | 'published';
+
+/**
+ * The published pieces that carry a quotable line, newest first.
+ *
+ * The listing's quote card rotates through these rather than repeating one
+ * hand-written sentence, so the panel says something the reader can click
+ * through to. Newest first means the build-time pick — index 0 — is the piece
+ * the page already leads with.
+ */
+export const quotableInsights = (now: Date = new Date()): Insight[] =>
+  publishedInsights(now)
+    .filter((i) => i.pullQuote)
+    .sort((a, b) => (b.datePublished ?? '').localeCompare(a.datePublished ?? ''));
+
+/**
+ * Which quote a given day shows.
+ *
+ * A date rather than `Math.random` so the card is stable for the length of a
+ * visit and still moves between them; the caller decides when to apply it,
+ * because the prerendered HTML is built on a different day from the one the
+ * reader arrives on.
+ */
+export const quoteIndexForDay = (total: number, now: Date = new Date()): number => {
+  if (total <= 0) return 0;
+  const day = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) / 86_400_000);
+  return day % total;
+};
+
+/**
+ * The piece the listing leads with: the most recently published one. Falls
+ * back to the first live article on the (impossible in practice) chance that
+ * nothing carries a date.
+ */
+export const featuredInsight = (now: Date = new Date()): Insight | undefined => {
+  const live = publishedInsights(now);
+  return (
+    [...live].sort((a, b) => (b.datePublished ?? '').localeCompare(a.datePublished ?? ''))[0] ??
+    live[0]
+  );
+};
+
+export const insights: Insight[] = [modernAngularPatterns, { id: 'angular-signals-state-management', cover: { src: media('insights/angular-signals-state-management/hub-cover-v1.webp'), alt: 'A glowing state source connected to dependent nodes, illustrating Angular Signals reactivity.', width: 1672, height: 941, }, takeaways: ['Keep UI state local with Angular Signals when only one component needs it.', 'Promote state only when a second real consumer exists in the application.', 'Use a simple progression: component signal → service signals → application store.', 'Precise signal-based state makes zoneless Angular easier to reason about.',], topic: 'Architecture', seoTitle: 'Angular Signals State Management: When You Don’t Need NgRx', seoDescription: 'Learn when Angular Signals are enough for state management, when to move state into a service, and when shared application state actually needs NgRx or another store.', datePublished: '2026-09-12', number: '01', title: 'Angular Signals for State Management: Start Without a Store', pullQuote: 'A store is something an architecture earns, not something it starts with.', dek: 'Most Angular UI state does not need a store. Start with a local signal, promote it when the application actually shares it, and introduce a store only when the architecture earns one.', related: [{ label: 'Angular development services', href: '/services/angular-development', }, { label: 'PRIMS Member Portal — where shared state earned a store', href: '/work/prims-member-portal', }, { label: 'Fiji Immigration internal system', href: '/work/fiji-immigration-internal', }, { label: 'Angular zoneless change detection migration', href: '/insights/angular-zoneless-change-detection', },], cta: 'Working with an Angular codebase where a simple UI change means touching multiple services, subscriptions and files? I can help identify where the state architecture can be simplified and which abstractions are actually worth keeping.', body: ['Most Angular UI state does not need a global store. A filter panel, expanded table row, selected tab or modal state often has exactly one consumer: the component rendering it. Moving that state into a service or store before another consumer exists adds architecture without solving a real sharing problem.', 'That is why I start Angular state management with the smallest primitive that solves the current problem: a local signal. State moves outward only when the application proves that it needs to be shared.', { type: 'heading', text: 'When Angular Signals are enough' }, { type: 'image', src: media('insights/angular-signals-state-management/observable-vs-signal-state.webp'), alt: 'Observable-based Angular state spread across services and subscriptions compared with a single component signal.', width: 1586, height: 992, caption: 'The same toggle: several files and a subscription lifecycle on one side, one signal on the other.', }, 'Consider a filter panel whose open state is used by only one component. A service backed by a BehaviorSubject works, but it introduces another file, an observable, a subscription and teardown logic for a value that never leaves the component.', { type: 'code', language: 'typescript', caption: 'Local UI state can stay close to the component that owns it.', code: `export class FilterPanelComponent { readonly open = signal(false); toggle(): void { this.open.update((value) => !value); } }`, }, 'There is no subscription or teardown, and a developer reading the component can immediately see where the state originates. For component-specific UI state, that proximity is valuable.', { type: 'heading', text: 'The Angular state promotion rule' }, { type: 'image', src: media('insights/angular-signals-state-management/state-promotion-rule.webp'), alt: 'Angular state promotion from a local component signal, to shared service signals, to an application store.', width: 1536, height: 1024, caption: 'State moves outward only when a second real consumer appears — not in anticipation of one.', }, 'The rule I use is simple: promote state only when a second real consumer appears. Do not design around a consumer that might exist next quarter. Wait until another component actually needs the same state.', 'The progression then becomes predictable: start with a signal inside the component, move shared signals and computed values into a service when multiple consumers appear, and introduce a store when the state becomes genuinely application-wide or workflow-driven.', { type: 'aside', text: 'Before adding a store, ask one question: can I name the second consumer and point to its file? If not, keep the state local.', }, { type: 'heading', text: 'When to move Signals into a service' }, 'A service becomes useful when multiple components need the same source of truth. Derived state can then live beside the source state as computed signals instead of being recreated independently by every consumer.', { type: 'code', language: 'typescript', caption: 'Shared Signals and computed state keep one definition for every consumer.', code: `@Injectable({ providedIn: 'root' }) export class CaseQueueState { private readonly cases = signal<Case[]>([]); readonly filter = signal<CaseFilter>('all'); readonly visibleCases = computed(() => { const filter = this.filter(); return filter === 'all' ? this.cases() : this.cases().filter( (caseItem) => caseItem.status === filter ); }); load(cases: Case[]): void { this.cases.set(cases); } }`, }, { type: 'heading', text: 'When Angular state actually needs a store' }, 'A store becomes more useful when state must survive navigation, multiple unrelated areas of the application can update it, complex workflows depend on predictable transitions, or the application benefits from centralized event-driven state management.', 'This is not an argument against NgRx or other Angular state-management libraries. They solve real problems. The important decision is whether the application currently has those problems.', { type: 'heading', text: 'Signals and zoneless Angular' }, { type: 'image', src: media('insights/angular-signals-state-management/signals-precise-updates.webp'), alt: 'Angular components with no dependency on a changed signal staying untouched while dependent components update.', width: 1586, height: 992, caption: 'Under zoneless change detection, only the components that read the signal do any work.', }, 'Signals also fit naturally with zoneless Angular because state changes become explicit. Components depending on a signal can be notified when that signal changes instead of relying on broad asynchronous change-detection triggers.', { type: 'code', language: 'typescript', caption: 'Angular can run without Zone.js when application state changes are explicit.', code: `bootstrapApplication(AppComponent, { providers: [ provideZonelessChangeDetection(), ], });`, }, { type: 'heading', text: 'The state-management test I use' }, 'Before introducing another state-management layer, I ask: who owns this state, who reads it, who writes it, and does it need to survive the component or route that created it?', 'If there is one owner and one consumer, a component signal is usually enough. If several components need it, promote it to a service. If unrelated parts of the application coordinate through it or the workflow requires centralized transitions, then a store has earned its place.', 'Starting small is easier to reverse than starting with unnecessary architecture. Angular Signals make that progression inexpensive, which is why local state is now my default rather than something I optimize toward later.',], }, { id: 'angular-performance-core-web-vitals', cover: { src: media('insights/angular-performance-core-web-vitals/cover.webp'), alt: 'Angular Core Web Vitals performance architecture showing loading, layout stability and interaction responsiveness.', width: 1730, height: 909, }, takeaways: ['Treat Angular performance as a product requirement instead of a separate optimization phase.', 'Prevent layout shift by reserving space before asynchronous content arrives.', 'Put performance budgets and loading expectations directly into feature requirements.', 'Use INP to identify main-thread work that makes Angular interfaces feel unresponsive.',], topic: 'Performance', seoTitle: 'Angular Performance Optimization with Core Web Vitals', seoDescription: 'Improve Angular Core Web Vitals by treating loading, INP, layout stability and API behaviour as product requirements instead of post-launch optimizations.', datePublished: '2026-09-12', number: '02', title: 'Angular Performance: Make Core Web Vitals a Product Requirement', pullQuote: 'Performance is cheaper to protect while a feature is being built than to recover after it has shipped.', dek: 'Angular performance is easier to protect while features are being built than to recover later. Treat loading, interaction delay and layout stability as part of the feature specification.', related: [{ label: 'Angular performance optimization', href: '/services/angular-performance-optimization', }, { label: 'Fiji Immigration internal system — the 40% API reduction', href: '/work/fiji-immigration-internal', }, { label: 'InsureMet — the dense table views', href: '/work/insuremet', }, { label: 'Angular codebase audit', href: '/insights/angular-codebase-audit', },], cta: 'If your Angular application feels slow but the team cannot identify whether the cause is network traffic, change detection, bundle size or rendering, start with measurement. I use scoped performance investigations to identify the actual bottleneck before changing the architecture.', body: ['The Fiji immigration internal management system ended up roughly 50% faster on the frontend, with about 40% less API consumption. Those improvements did not come from a dedicated performance sprint. They came from treating loading behaviour as part of the feature requirements while the application was being built.', 'That distinction matters because most frontend performance problems are inexpensive when they are created and expensive after they become architecture.', { type: 'heading', text: 'Why Angular performance cannot be a final optimization phase' }, 'When performance becomes a separate phase, it competes with feature work for schedule. Feature work usually wins because it has an immediate stakeholder and visible product output.', 'The larger problem is that performance issues compound. One component fetching reference data independently is harmless. Forty components following the same pattern can turn into duplicate API requests, network waterfalls and a caching problem that now requires architectural work.', { type: 'heading', text: 'Reduce duplicate Angular API requests before optimizing rendering' }, { type: 'image', src: media('insights/angular-performance-core-web-vitals/duplicate-vs-cached-requests.webp'), alt: 'Duplicate Angular HTTP requests compared with one shared cached API request.', width: 1586, height: 992, }, 'On the immigration case-management screens, independently developed panels requested the same reference data when they initialized. Each component was reasonable in isolation, but together they produced five or six calls to identical endpoints during one navigation.', { type: 'code', language: 'typescript', caption: 'A component-level request is simple in isolation but becomes expensive when several panels repeat it.', code: `export class DocumentPanelComponent implements OnInit { countries: Country[] = []; documentTypes: DocumentType[] = []; constructor(private readonly api: ReferenceApi) {} ngOnInit(): void { this.api.countries().subscribe((countries) => { this.countries = countries; }); this.api.documentTypes().subscribe((types) => { this.documentTypes = types; }); } }`, }, 'Shared reference data belongs behind a shared data boundary. Using a cached RxJS stream allows multiple consumers to join the same request instead of independently starting new ones.', { type: 'code', language: 'typescript', caption: 'shareReplay allows multiple Angular consumers to reuse the same reference-data request.', code: `@Injectable({ providedIn: 'root' }) export class ReferenceDataService { private readonly cache = new Map<string, Observable<unknown>>(); private lookup<T>( key: string, fetch: () => Observable<T> ): Observable<T> { if (!this.cache.has(key)) { this.cache.set( key, fetch().pipe( shareReplay({ bufferSize: 1, refCount: false, }) ) ); } return this.cache.get(key) as Observable<T>; } }`, }, { type: 'heading', text: 'Prevent Cumulative Layout Shift at implementation time' }, { type: 'image', src: media('insights/angular-performance-core-web-vitals/layout-stability-cls.webp'), alt: 'Comparison of unstable and stable layouts demonstrating how reserved space prevents cumulative layout shift.', width: 1586, height: 992, }, 'Cumulative Layout Shift has the same pattern. It rarely comes from one major mistake. It accumulates from images without dimensions, asynchronous sections that collapse before content arrives, and banners inserted above existing content.', { type: 'code', language: 'html', caption: 'Reserve the final layout before asynchronous content arrives.', code: `<img [src]="applicant.photoUrl" alt="" width="240" height="320" /> <div class="panel" style="min-height: 18rem"> @if (documents(); as docs) { <app-document-list [documents]="docs" /> } @else { <app-skeleton-rows [count]="4" /> } </div>`, }, { type: 'heading', text: 'Put performance requirements into the feature specification' }, 'A feature specification can state how many requests a route may perform on initial load, which data should come from a parent or resolver, whether image space must be reserved and what immediate feedback should appear after an interaction.', { type: 'aside', text: 'Performance requirements work best when they live beside functional requirements. When they live in a future optimization backlog, they are much easier to postpone.', }, { type: 'heading', text: 'Improve Angular INP by protecting the main thread' }, { type: 'image', src: media('insights/angular-performance-core-web-vitals/interaction-responsiveness-inp.webp'), alt: 'Interaction timelines comparing blocking work with immediate UI feedback before expensive Angular processing.', width: 1586, height: 992, }, 'Interaction to Next Paint exposes a different category of performance problem. A click can technically complete quickly while still feeling broken if synchronous work prevents the browser from painting feedback.', 'For dense data views, acknowledge the interaction first and then perform expensive work. For genuinely heavy computation, move the work to a worker or reduce the amount processed in one frame.', { type: 'heading', text: 'Measure the Angular bottleneck before fixing it' }, 'Angular performance problems usually fall into several different categories: network waterfalls and duplicate requests, unnecessary change detection, oversized initial bundles, or expensive rendering. They can all appear to the user as the same complaint: the page feels slow.', 'The fix for one category does not necessarily improve another. Measurement is therefore not a final verification step. It is the first step in deciding what work should happen at all.',], }, { id: 'enterprise-ui-design-restraint', cover: { src: media('insights/enterprise-ui-design-restraint/cover.webp'), alt: 'Enterprise UI design showing restrained dashboard layouts, clear hierarchy and minimal visual noise.', width: 1730, height: 909, }, takeaways: ['Design enterprise software for repeated daily use rather than first-impression novelty.', 'Use motion only when it communicates hierarchy, location or state.', 'Give one accent colour one consistent semantic purpose across the product.', 'Reduced motion, touch targets and interface density are part of the same restraint principle.',], topic: 'Design', seoTitle: 'Enterprise UI Design Principles for Complex Applications', seoDescription: 'Practical enterprise UI design principles for complex applications: restrained motion, clear hierarchy, consistent accent colour, accessibility and usable interface density.', datePublished: '2026-08-20', number: '03', title: 'Enterprise UI Design: Why Quiet Interfaces Age Better', pullQuote: 'Enterprise software is used every day for years — restraint is what makes it survivable.', dek: 'Enterprise interfaces are used repeatedly, often for years. Restraint in motion, colour, density and hierarchy makes complex software easier to understand and maintain.', related: [{ label: 'Ionic and cross-platform mobile services', href: '/services/ionic-development', }, { label: 'VNPF blo mi member app', href: '/work/vnpf-blo-mi', }, { label: 'Angular UI component architecture', href: '/work/ui-component-architecture', }, { label: 'Ionic offline-first architecture', href: '/insights/ionic-offline-first-architecture', },], cta: 'If an enterprise product looked polished at launch but now feels visually noisy, inconsistent or tiring to use, the problem is often the interface system rather than an individual screen. I help teams simplify those systems without redesigning everything from scratch.', body: ['The enterprise interfaces I have seen age best are rarely the ones with the most animation, decoration or visual variety. They are the ones where hierarchy is obvious, interactions are predictable and the interface gets out of the way after the user understands it.', 'That matters because enterprise software is not experienced once. An immigration officer may work through the same case-management interface hundreds of times a week. A pension member may open an app repeatedly for one specific piece of information. The repeated experience is the real product.', { type: 'heading', text: 'Design enterprise UI for the fortieth use' }, 'Animation that feels polished during a design review can feel like latency after repeated daily use. This does not mean enterprise applications should have no motion. It means motion needs a job.', { type: 'heading', text: 'Use UI motion only when it communicates information' }, { type: 'image', src: media('insights/enterprise-ui-design-restraint/decoration-vs-spatial-meaning.webp'), alt: 'Enterprise dashboards comparing decorative animation with functional motion that explains interface structure.', width: 1586, height: 992, }, 'A panel sliding from the edge it will return to communicates spatial information. It tells the user where the panel came from and supports the mental model for dismissing it. A card fading upward simply because every card fades upward communicates much less.', { type: 'aside', text: 'Turn the animation off and read the interface. If the hierarchy collapses, the layout is relying on motion to explain something the static design should already communicate.', }, { type: 'heading', text: 'Give your enterprise UI accent colour one job' }, { type: 'image', src: media('insights/enterprise-ui-design-restraint/one-accent-colour.webp'), alt: 'Restrained enterprise dashboard using a single accent colour to identify the primary next action.', width: 1586, height: 992, }, 'A consistent accent colour can become part of the product language. If it always identifies the next meaningful action, users learn that relationship quickly and carry it across screens.', 'The system becomes weaker when the same accent is also used for decorative headings, arbitrary emphasis and unrelated status information. Consistency reduces the amount of interpretation each new screen requires.', { type: 'code', language: 'css', caption: 'A small design-token system is easier for future developers to understand and preserve.', code: `:root { --color-accent: oklch(0.72 0.17 48); --duration-ui: 160ms; --duration-section: 420ms; --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); }`, }, { type: 'heading', text: 'Treat reduced motion as part of the default design' }, { type: 'image', src: media('insights/enterprise-ui-design-restraint/reduced-motion-and-touch-targets.webp'), alt: 'Reduced-motion enterprise layouts and accessible mobile controls preserving hierarchy and usability.', width: 1586, height: 992, }, 'The interface should remain understandable when animation is unavailable. Reduced-motion preferences, older devices and constrained rendering environments all make that a practical requirement rather than an edge case.', { type: 'code', language: 'css', caption: 'Make the static interface correct first, then add motion as an enhancement.', code: `.panel { transform: none; opacity: 1; } @media (prefers-reduced-motion: no-preference) { .panel { animation: panel-in var(--duration-section) var(--ease-out-expo); } }`, }, { type: 'heading', text: 'Enterprise mobile UI needs usable density' }, 'Restraint matters on mobile for a different reason: every decorative element consumes space that could have belonged to something the user needs to press, read or understand.', { type: 'code', language: 'css', caption: 'Keep interactive controls large enough for touch without making every visual element oversized.', code: `.control { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; } @media (pointer: coarse) { .control { min-height: 48px; min-width: 48px; } }`, }, { type: 'heading', text: 'Why restrained enterprise interfaces are easier to maintain' }, 'The long-term advantage is not only visual. A restrained system has fewer arbitrary decisions. A new developer can infer a product with one accent rule, a small spacing system and three motion durations by inspecting a few screens.', 'When every screen introduces new colours, timings and interaction patterns, the interface system exists only in the memory of the people who originally built it. Restraint makes the product easier for users to learn and easier for future teams to maintain.',], }, { id: 'angular-zoneless-change-detection', cover: { src: media('insights/angular-zoneless-change-detection/cover.webp'), alt: 'Zone.js global change detection compared with explicit Angular Signals updating only dependent components.', width: 1730, height: 909, }, takeaways: ['Migrate to zoneless Angular incrementally instead of creating a long-lived migration branch.', 'Audit timers, manual change detection and async callbacks before disabling Zone.js.', 'Convert notification boundaries to Signals while keeping RxJS for genuine stream problems.', 'Audit third-party libraries before enabling zoneless change detection in production.',], topic: 'Architecture', seoTitle: 'Angular Zoneless Change Detection: Practical Migration Guide', seoDescription: 'A practical Angular zoneless migration guide covering Signals, RxJS, timers, third-party libraries, Zone.js removal and incremental change detection migration.', datePublished: '2026-09-15', number: '04', title: 'Angular Zoneless Change Detection: A Practical Migration Guide', pullQuote: 'Going zoneless is the last step of a migration, not the first.', dek: 'Going zoneless is the final step, not the first. Make Angular state changes explicit, fix async boundaries and migrate incrementally before removing Zone.js.', related: [{ label: 'Angular Signals for state management', href: '/insights/angular-signals-state-management', }, { label: 'Angular development services', href: '/services/angular-development', }, { label: 'Zellavora AI Resume Builder — zoneless in production', href: '/work/zellavora-ai-resume-builder', },], cta: 'Planning a zoneless Angular migration while the application is still shipping features? I help teams audit Zone.js dependencies, sequence the migration and move toward explicit state updates without maintaining a risky long-lived branch.', body: ['Enabling zoneless change detection is one of the smallest parts of a zoneless Angular migration. The difficult part is finding the places where the application currently depends on Zone.js to notice that something changed.', 'The migration becomes much safer when zoneless is treated as a property the application earns rather than a flag that gets enabled first.', { type: 'heading', text: 'Why a big-bang Angular zoneless migration is risky' }, { type: 'image', src: media('insights/angular-zoneless-change-detection/zonejs-vs-signals-change-detection.webp'), alt: 'Before and after comparison of Zone.js global change detection and explicit signal notification in Angular.', width: 1586, height: 992, caption: 'Zone.js checks the whole component tree; a signal notifies only the components that read it.', }, 'A long-lived migration branch quickly diverges from active feature development. Every feature merged into main creates another conflict with code that may already have been converted on the migration branch.', 'A safer approach is to make each preparation step independently useful and merge it directly into the application while Zone.js is still present.', { type: 'heading', text: 'Step 1: audit your Angular Zone.js dependencies' }, { type: 'code', language: 'bash', caption: 'Search for common places where Angular code may depend on implicit Zone.js change detection.', code: `rg -n "setTimeout|setInterval" src --type ts rg -n \ "NgZone|runOutsideAngular|ApplicationRef.tick" \ src --type ts rg -n \ "detectChanges|markForCheck|ChangeDetectorRef" \ src --type ts rg -n \ "addEventListener|new Worker|WebSocket|IntersectionObserver" \ src --type ts`, }, 'Classify the results instead of automatically replacing them. Some are state mutations that should become explicit signal writes. Some are legitimate work outside Angular. Others are manual change-detection calls that reveal an existing notification problem.', { type: 'heading', text: 'Step 2: convert change-detection triggers to Signals' }, 'The useful migration boundary is the source of the asynchronous state change rather than the component consuming it. Once a timer or callback writes to a signal, every consumer of that signal has an explicit notification mechanism.', { type: 'code', language: 'typescript', caption: 'A Signal makes the state update itself the notification.', code: `export class SessionBannerComponent { readonly remaining = signal(0); private readonly session = inject(SessionService); constructor() { const id = setInterval(() => { this.remaining.set( this.session.secondsLeft() ); }, 1000); inject(DestroyRef).onDestroy(() => { clearInterval(id); }); } }`, }, { type: 'aside', text: 'This work is useful even before Zone.js is removed. Explicit Signal updates create more precise state boundaries in a normal Angular application too.', }, { type: 'heading', text: 'Step 3: handle the Angular RxJS boundary correctly' }, { type: 'image', src: media('insights/angular-zoneless-change-detection/rxjs-to-signal-boundary.webp'), alt: 'Angular async sources flowing through an RxJS pipeline and converting to signals at an explicit toSignal boundary.', width: 1586, height: 992, caption: 'RxJS stays where the problem is a stream; toSignal marks the single boundary where it becomes template state.', }, 'Zoneless Angular does not mean removing RxJS. Search debouncing, cancellation, WebSockets and merged asynchronous sources are still stream problems.', 'The important distinction is the boundary where an observable result becomes component state. Converting that boundary to a signal makes the notification explicit.', { type: 'code', language: 'typescript', caption: 'Use toSignal when an RxJS stream becomes state consumed by the Angular template.', code: `export class CaseListComponent { private readonly api = inject(CaseApi); readonly cases = toSignal( this.api.cases(), { initialValue: [] as Case[], } ); }`, }, { type: 'heading', text: 'Step 4: audit third-party Angular libraries' }, 'Third-party libraries often determine the real migration timeline. Charting libraries, map SDKs, older UI components and browser integrations may invoke callbacks outside Angular.', 'At those boundaries, update application state explicitly rather than depending on the zone to observe the callback.', { type: 'code', language: 'typescript', caption: 'A Signal write makes a third-party callback visible to Angular without Zone.js.', code: `export class ChartHostComponent { readonly selectedPoint = signal<Point | null>(null); private init(el: HTMLElement): void { thirdPartyChart(el, { onSelect: (point: Point) => { this.selectedPoint.set(point); }, }); } }`, }, { type: 'heading', text: 'Step 5: enable Angular zoneless change detection' }, { type: 'image', src: media('insights/angular-zoneless-change-detection/incremental-zoneless-migration.webp'), alt: 'A five-step incremental Angular zoneless migration: audit, signals, RxJS boundary, library audit, then zoneless.', width: 1536, height: 1024, caption: 'Each step is useful on its own and can merge into main while Zone.js is still enabled.', }, 'Once application state changes are explicit and third-party boundaries have been audited, enabling zoneless change detection becomes the final verification step rather than the beginning of the migration.', { type: 'code', language: 'typescript', caption: 'Enable zoneless change detection after the application has been prepared for it.', code: `bootstrapApplication(AppComponent, { providers: [ provideZonelessChangeDetection(), provideBrowserGlobalErrorListeners(), ], });`, }, 'Remove Zone.js from both application and test polyfills. Keeping it in the test environment can hide exactly the notification problems the migration is intended to expose.', { type: 'heading', text: 'The real benefit of zoneless Angular' }, 'The strongest reason to migrate is not a single benchmark. Zoneless architecture encourages precise state ownership and explicit notification boundaries.', 'Most of that architectural value appears before Zone.js is removed. If each migration step improves the running application independently, the project remains safe to pause, ship and continue without a branch that becomes increasingly difficult to merge.',], }, { id: 'ionic-offline-first-architecture', cover: { src: media('insights/ionic-offline-first-architecture/cover.webp'), alt: 'Ionic offline-first architecture with a local data layer, sync engine and pending sync queue against a remote API.', width: 1731, height: 909, }, takeaways: ['Model fresh, stale and unavailable data instead of treating connectivity as a simple online/offline boolean.', 'Choose Capacitor storage based on the consequence of losing or exposing the data.', 'Use idempotency keys for queued offline mutations so retries cannot create duplicate records.', 'Tell users clearly whether an action was accepted, queued or rejected.',], topic: 'Mobile', seoTitle: 'Ionic Offline-First Architecture with Angular and Capacitor', seoDescription: 'Build offline-first Ionic apps with Angular and Capacitor using cached data, SQLite, secure storage, queued mutations, idempotency keys and honest offline UX.', datePublished: '2026-09-16', number: '05', title: 'Ionic Offline-First Architecture with Angular & Capacitor', pullQuote: 'An offline error message is not an offline strategy.', dek: 'Reliable mobile apps need more than an offline error message. Cache useful data, preserve its age, queue safe mutations and tell users exactly what happened.', related: [{ label: 'Ionic and cross-platform mobile services', href: '/services/ionic-development', }, { label: 'VNPF blo mi member app', href: '/work/vnpf-blo-mi', }, { label: 'Enterprise UI design principles', href: '/insights/enterprise-ui-design-restraint', },], cta: 'Building an Ionic member, field or service application for users with unreliable connectivity? Define the offline data and mutation model before designing the screens. I help teams establish that architecture early so offline support does not become a rewrite later.', body: ['The VNPF member application was built for provident-fund members in Vanuatu using the phones and networks available to them. That environment makes connectivity part of the architecture rather than an error case.', 'An offline-first Ionic application therefore needs to answer more than whether the device currently has a network connection. It needs to know what data is available, how old that data is and what happens when the user performs an action that cannot yet reach the server.', { type: 'heading', text: 'Model fresh, stale and unavailable data' }, { type: 'image', src: media('insights/ionic-offline-first-architecture/network-first-vs-offline-first.webp'), alt: 'Network-first Ionic app blocked by a failed request compared with an offline-first app reading from a local database.', width: 1586, height: 992, caption: 'In a network-first app the connection is a dependency; in an offline-first app it is only what synchronisation needs.', }, 'For read operations, three states are more useful than online and offline: fresh data, cached data with a known age, and no available data.', { type: 'code', language: 'typescript', caption: 'Store the fetch timestamp beside cached data so the UI can represent freshness honestly.', code: `export interface Cached<T> { value: T; fetchedAt: number; } @Injectable({ providedIn: 'root' }) export class BalanceStore { private readonly cached = signal<Cached<Balance> | null>(null); readonly balance = computed( () => this.cached()?.value ?? null ); readonly freshness = computed(() => { const entry = this.cached(); if (!entry) { return 'none' as const; } const age = Date.now() - entry.fetchedAt; return age < 5 * 60_000 ? ('fresh' as const) : ('stale' as const); }); }`, }, 'A stale balance can still be useful when its age is visible. Hiding cached information behind an indefinite loading state often produces a worse experience than showing the last known value honestly.', { type: 'code', language: 'html', caption: 'Keep cached data useful while clearly communicating that it is not current.', code: `@switch (freshness()) { @case ('fresh') { <app-balance [value]="balance()" /> } @case ('stale') { <app-balance [value]="balance()" /> <p class="note"> Showing saved data from {{ updatedAt() | date: 'short' }} </p> } @case ('none') { <app-empty-state message="Your balance will appear here once you are back online." /> } }`, }, { type: 'heading', text: 'Choose Capacitor storage based on the data' }, 'Not every local-storage option has the same purpose. Small UI preferences can live in a key-value store. Queryable offline records fit a database such as SQLite. Authentication credentials belong in platform-backed secure storage.', { type: 'code', language: 'typescript', caption: 'Use different storage mechanisms for credentials, structured offline data and disposable UI preferences.', code: `await SecureStoragePlugin.set({ key: 'refresh_token', value: token, }); await db.run( \`INSERT OR REPLACE INTO statements (id, period, payload) VALUES (?, ?, ?)\`, [ statement.id, statement.period, JSON.stringify(statement), ] ); await Preferences.set({ key: 'last_tab', value: 'balance', });`, }, { type: 'heading', text: 'Queue offline writes with idempotency keys' }, { type: 'image', src: media('insights/ionic-offline-first-architecture/offline-write-queue.webp'), alt: 'Ionic offline write queue: save locally, queue while offline, then sync in the background when connectivity returns.', width: 1536, height: 1024, caption: 'The write succeeds locally first, so the queue — not the user — carries the retry.', }, 'Offline reads are relatively straightforward. Offline writes are harder because a failed response does not prove that the server never received the request.', 'Generate an idempotency key when the user performs the action and reuse that key on every retry. The server can then recognize repeated delivery of the same mutation instead of creating another record.', { type: 'code', language: 'typescript', caption: 'Generate the mutation identity once and preserve it for every retry.', code: `async submit( claim: ClaimDraft ): Promise<void> { const action: QueuedAction = { key: crypto.randomUUID(), kind: 'claim.submit', payload: claim, queuedAt: Date.now(), }; await this.queue.add(action); void this.flush(); }`, }, { type: 'aside', text: 'If queued operations depend on order, stop processing after a transient failure instead of skipping ahead and producing an application state that never existed on the client.', }, { type: 'heading', text: 'Design the offline status message as part of the workflow' }, { type: 'image', src: media('insights/ionic-offline-first-architecture/reconnection-and-conflict-resolution.webp'), alt: 'Offline-first reconnection flow showing successful sync, retry after temporary failure, and conflict resolution options.', width: 1536, height: 1024, caption: 'Reconnection has three outcomes, and each one needs a message the user can act on.', }, 'A user action can be accepted by the server, saved locally for later submission or rejected. Those outcomes have different consequences and should not share the same generic error message.', 'A queued action should explain that the work has been saved on the device and what will happen when connectivity returns. That gives the user confidence that pressing the button repeatedly is unnecessary.', { type: 'heading', text: 'Why offline-first architecture must be decided early' }, 'Offline support changes the data layer: where values come from, whether they have an age, how mutations are represented and what retry means. Retrofitting those concepts after every feature assumes permanent connectivity can approach a rewrite.', 'Designing those boundaries at the beginning is comparatively inexpensive. That is why offline behaviour belongs in the product and architecture specification rather than a later resilience backlog.',], }, { id: 'accessible-angular-forms', cover: { src: media('insights/accessible-angular-forms/cover.webp'), alt: 'Accessible Angular form field with a label, hint and error message wired together with aria-invalid and aria-describedby.', width: 1731, height: 909, }, takeaways: ['Preserve form data so validation, navigation or session failure never destroys completed work.', 'Make errors announced, programmatically associated and easy to navigate.', 'Write validation messages as instructions that tell the user how to recover.', 'Give multi-step Angular forms a clear current position and remaining journey.',], topic: 'Accessibility', seoTitle: 'Accessible Angular Forms: Validation, Errors & Recovery', seoDescription: 'Build accessible Angular forms with clear validation, ARIA error associations, error summaries, focus management, draft recovery and usable multi-step form patterns.', datePublished: '2026-09-16', number: '06', title: 'Accessible Angular Forms: Validation, Errors & Recovery', pullQuote: 'A form that loses what someone typed has already failed, whatever the validation says.', dek: 'When a failed form costs users real time or opportunity, accessibility and recovery cannot be optional. Preserve input, make errors findable and explain exactly how to continue.', related: [{ label: 'Fiji Immigration Citizen Portal', href: '/work/fiji-immigration-external', }, { label: 'PRIMS Member Portal', href: '/work/prims-member-portal', }, { label: 'Frontend architecture services', href: '/services/frontend-architecture', },], cta: 'If you are building an Angular application, claim or onboarding flow where users cannot afford to lose their progress, the validation and recovery paths deserve the same engineering attention as successful submission. I help teams design and implement those flows accessibly.', body: ['Many form examples assume that failure costs the user very little. That assumption changes when the form is an immigration application, pension claim or another process the person is required to complete.', 'In those workflows, preserving progress, explaining errors and helping users recover are part of the core functionality rather than optional usability improvements.', { type: 'heading', text: 'Never lose the user’s Angular form data' }, 'A validation failure should not clear valid fields. Navigation should not silently destroy completed steps. A security-driven session timeout should not automatically mean that the user loses the work they already entered.', 'Persist drafts at meaningful points and restore them when the user returns. The exact persistence mechanism depends on the sensitivity of the data, but recovery should be designed before the failure happens.', { type: 'aside', text: 'Security requirements and draft recovery are separate concerns. A session may need to expire while the product still provides an appropriate, secure way to preserve recoverable work.', }, { type: 'heading', text: 'Make Angular validation errors findable' }, { type: 'image', src: media('insights/accessible-angular-forms/accessible-validation-messages.webp'), alt: 'Validation shown only as a red border compared with an accessible error message announced to assistive technology.', width: 1586, height: 992, caption: 'A red border is invisible to a screen reader; the accessibility tree has to carry the same information.', }, 'A red border alone is not an accessible validation strategy. On a long form, the invalid control may be outside the viewport. Colour alone also does not provide enough information to assistive technology.', 'A robust error experience combines field-level associations, clear text, an error summary for larger forms and intentional focus management after submission.', { type: 'code', language: 'html', caption: 'Associate the input with both its hint and validation message and expose invalid state programmatically.', code: `<label for="passport-number"> Passport number </label> <input id="passport-number" [attr.aria-invalid]=" hasError('passportNumber') " [attr.aria-describedby]=" hasError('passportNumber') ? 'passport-number-error' : 'passport-number-hint' " /> <p id="passport-number-hint"> As printed on the photo page, without spaces. </p> @if (hasError('passportNumber')) { <p id="passport-number-error"> Enter your passport number. Use 7 to 9 letters or numbers. </p> }`, }, { type: 'heading', text: 'Use an accessible form error summary' }, { type: 'image', src: media('insights/accessible-angular-forms/error-summary-focus-management.webp'), alt: 'Angular form error summary listing three problems, each linking to the field that needs correcting, with focus management.', width: 1536, height: 1024, caption: 'Focus moves to the summary, the summary links to the field, and the user never has to hunt for the error.', }, { type: 'code', language: 'html', caption: 'An error summary gives users a navigable overview when several fields fail validation.', code: `<div role="alert" tabindex="-1" #errorSummary > <h2> There are {{ errors().length }} problems with this application </h2> <ul> @for ( error of errors(); track error.field ) { <li> <a [href]="'#' + error.field"> {{ error.message }} </a> </li> } </ul> </div>`, }, { type: 'heading', text: 'Write Angular validation messages as instructions' }, 'Messages such as “Invalid format” describe the system. They do not tell the person how to continue. A useful message explains the expected value and the action required to correct it.', 'Hints should also appear before failure when a format is easy to misunderstand. Preventing an error is usually better than improving the message shown afterwards.', { type: 'heading', text: 'Choose validation timing carefully' }, 'Not every validation rule needs to run visibly on every keystroke. Showing an error while someone is still entering a perfectly valid value creates unnecessary noise.', 'Use timing that matches the rule and interaction. Format errors often make more sense after the field has been interacted with or when the user attempts to continue.', { type: 'heading', text: 'Make multi-step Angular forms announce position' }, { type: 'image', src: media('insights/accessible-angular-forms/multi-step-form-draft-recovery.webp'), alt: 'Multi-step Angular form with step indicators and a restored draft after an expired session.', width: 1536, height: 1024, caption: 'The step indicator answers “where am I?” and the saved draft answers “can I safely come back?”.', }, 'Long forms are often easier to complete when divided into meaningful steps, but users need to know where they are and how much remains.', { type: 'code', language: 'html', caption: 'Expose the current step in both navigation and the page heading.', code: `<nav aria-label="Application progress"> <ol> @for ( step of steps; track step.id; let i = $index ) { <li [attr.aria-current]=" i === current() ? 'step' : null " > {{ i + 1 }}. {{ step.label }} </li> } </ol> </nav> <h1 tabindex="-1" #stepHeading> Step {{ current() + 1 }} of {{ steps.length }}: {{ steps[current()].label }} </h1>`, }, 'When a step changes, move focus to an appropriate heading or other meaningful location so keyboard and assistive-technology users receive the same transition that sighted users see visually.', { type: 'heading', text: 'Design form failure with the same care as success' }, 'Accessibility improvements in high-consequence forms usually improve the experience for everyone. Draft recovery helps interrupted users. Error summaries help anyone dealing with several invalid fields. Clear hints help first-time users understand unfamiliar formats.', 'The amount of recovery design should reflect the consequence of failure. The more expensive it is for a person to restart, the more important it becomes to preserve their work and make the path back to success obvious.',], }, { id: 'angular-codebase-audit', cover: { src: media('insights/angular-codebase-audit/cover.webp'), alt: 'Angular codebase audit combining runtime behaviour, architecture, Git history, network and bundle evidence into a prioritized plan.', width: 1731, height: 909, }, takeaways: ['Run and profile an unfamiliar Angular application before forming opinions from the source code.', 'Measure codebase size, coupling, state patterns and change frequency before proposing architecture changes.', 'Use Git history and recent production failures to identify the areas creating real maintenance cost.', 'Separate network, change-detection, bundle and rendering problems before optimizing performance.',], topic: 'Practice', seoTitle: 'Angular Codebase Audit: A Practical Step-by-Step Guide', seoDescription: 'A practical Angular codebase audit covering architecture, Signals, RxJS, Git history, performance, change detection, bundle analysis and technical-debt prioritization.', datePublished: '2026-09-16', number: '07', title: 'How I Audit an Existing Angular Codebase', pullQuote: 'Before refactoring an inherited codebase, find out where its cost actually lives.', dek: 'Before refactoring an inherited Angular application, understand where its real cost lives. Measure the application, architecture, history and runtime behaviour before proposing changes.', related: [{ label: 'Angular development services', href: '/services/angular-development', }, { label: 'Angular performance with Core Web Vitals', href: '/insights/angular-performance-core-web-vitals', }, { label: 'Angular Signals state management', href: '/insights/angular-signals-state-management', },], cta: 'Inherited an Angular application that works but has become increasingly expensive to change? I run scoped codebase assessments that turn runtime behaviour, architecture and technical debt into a prioritized plan your team can execute with or without me.', body: ['Most inherited Angular applications arrive with a symptom: the application feels slow, features take too long to build, one area is difficult to change, or the team believes the architecture needs modernization.', 'The expensive mistake is treating the reported symptom as the diagnosis. Before recommending a rewrite, state-management change or Angular upgrade, I first establish where the actual cost is.', { type: 'heading', text: 'Step 1: run the Angular application before reading the code' }, { type: 'image', src: media('insights/angular-codebase-audit/symptom-vs-diagnosis.webp'), alt: 'A slow Angular application split into network, change detection, bundle and rendering evidence rather than guessed fixes.', width: 1586, height: 992, caption: '“The app feels slow” is a symptom. Measuring each category first is what turns it into a diagnosis.', }, 'Use the product like a user before opening the architecture. Test representative workflows on realistic hardware and network conditions while keeping browser performance and network tools visible.', 'This quickly exposes repeated requests, delayed interactions, unexpected layout shifts and workflow friction that developers working in the application every day may have learned to ignore.', { type: 'heading', text: 'Step 2: measure the shape of the Angular codebase' }, 'Early auditing should focus on structural facts rather than subjective quality judgments.', { type: 'code', language: 'bash', caption: 'A small set of searches can quickly map Angular architecture and state-management patterns.', code: `# NgModules and standalone components rg -c "@NgModule" src --type ts rg -c "standalone: true" src --type ts # RxJS state and Signals rg -n \ "BehaviorSubject|new Subject" \ src --type ts rg -n \ "signal\\(|computed\\(" \ src --type ts # Store usage rg -l \ "StoreModule|createReducer|createEffect" \ src --type ts # Manual change detection rg -n \ "detectChanges\\(\\)" \ src --type ts`, }, 'These numbers do not tell you whether the code is good or bad. They tell you where architectural decisions live and which areas deserve closer inspection.', { type: 'heading', text: 'Step 3: use Git history to find expensive Angular files' }, { type: 'image', src: media('insights/angular-codebase-audit/codebase-structure-and-git-history.webp'), alt: 'Angular codebase structure and architectural patterns beside Git change frequency and hotspot analysis per file.', width: 1536, height: 1024, caption: 'Complexity only costs you where the file also changes often — that intersection is the hotspot.', }, 'A complicated file that has not changed for two years may create less practical cost than a moderately complicated component modified in almost every release.', { type: 'code', language: 'bash', caption: 'Find Angular files that change most frequently and compare that with size and complexity.', code: `git log \ --since="1 year ago" \ --name-only \ --pretty=format: \ | rg "^src/.*\\.(ts|html)$" \ | sort \ | uniq -c \ | sort -rn \ | head -25`, }, { type: 'aside', text: 'Large, frequently changed and poorly tested files deserve attention because they combine architectural risk with real ongoing development cost.', }, { type: 'heading', text: 'Step 4: ask the team what broke recently' }, 'Production history is another architectural signal. Ask what last failed in production, which recent change took much longer than expected and which area developers avoid touching.', 'Those answers often reveal coupling and ownership problems that static analysis cannot show.', { type: 'heading', text: 'Step 5: separate Angular performance problems' }, 'Do not treat “the application is slow” as one category. Network duplication, change detection, initial bundle cost and rendering pressure need different evidence and different fixes.', { type: 'code', language: 'bash', caption: 'Use production build statistics and profiling tools to eliminate performance causes systematically.', code: `ng build \ --configuration production \ --stats-json npx source-map-explorer \ dist/**/*.js rg -L \ "ChangeDetectionStrategy.OnPush" \ src \ --type ts \ -g "*.component.ts"`, }, 'Then inspect the network waterfall for duplicate and unnecessarily serial requests. A performance recommendation should name the bottleneck rather than simply list every optimization Angular supports.', { type: 'heading', text: 'Turn the Angular audit into a prioritized plan' }, { type: 'image', src: media('insights/angular-codebase-audit/evidence-to-prioritized-plan.webp'), alt: 'Angular audit findings scored by cost, risk, change frequency and effort, then split into act now, plan and leave alone.', width: 1536, height: 1024, caption: 'The output is not a list of everything imperfect, but an ordered list of what is worth changing next.', }, 'The useful output of an audit is a written plan. Each finding should explain what is happening, what it costs today, what changing it requires, what dependencies exist and approximately how large the work is.', 'A good audit should also identify code that looks imperfect but is not worth changing. Technical debt only deserves priority when it creates measurable risk, performance cost or development friction.', 'The final test is whether the team can act on the report without the person who wrote it. If the recommendations are specific, evidence-based and ordered correctly, the assessment remains useful even if another developer performs the implementation.',], }, { id: 'rxjs-reduce-api-calls', cover: { src: media('insights/rxjs-reduce-api-calls/cover.webp'), alt: 'Angular panels sharing one cached RxJS stream instead of making duplicate HTTP API requests.', width: 1730, height: 909, }, takeaways: ['Duplicate Angular HTTP requests can emerge even when every component looks correct in isolation.', 'Use a shared RxJS stream with shareReplay to reuse stable reference-data requests.', 'Choose refCount deliberately because it controls whether cached streams survive after subscribers leave.', 'Design cache invalidation around events that change the data rather than arbitrary timers.',], topic: 'Performance', seoTitle: 'RxJS Angular API Optimization: Reduce Duplicate HTTP Requests', seoDescription: 'Learn how RxJS shareReplay can reduce duplicate Angular HTTP requests, how refCount affects caching and how to design reliable cache invalidation.', datePublished: '2026-08-13', number: '08', title: 'How RxJS Reduced Our Angular API Calls by 40%', pullQuote: 'Five requests for the same reference data is not a network problem — it is a missing boundary.', dek: 'One enterprise Angular screen requested the same reference data five times. A shared RxJS caching layer removed the duplication without rewriting the consuming components.', related: [{ label: 'Angular performance optimization', href: '/services/angular-performance-optimization', }, { label: 'Fiji Immigration internal system — where this was measured', href: '/work/fiji-immigration-internal', }, { label: 'Angular performance with Core Web Vitals', href: '/insights/angular-performance-core-web-vitals', }, { label: 'Angular Signals state management', href: '/insights/angular-signals-state-management', },], cta: 'Seeing the same Angular endpoint multiple times during one navigation? The API may not be the bottleneck at all. I help teams trace duplicate requests, RxJS subscription behaviour and data ownership before changing backend or rendering code.', body: ['The original complaint on the Fiji immigration internal case-management system was simple: case pages felt slow. The initial assumption was that rendering or bundle size was responsible.', 'The network tab showed something different. Several stable reference endpoints — including country lists and workflow categories — were requested five or six times during one navigation.', { type: 'heading', text: 'Why duplicate Angular API requests happen' }, { type: 'image', src: media('insights/rxjs-reduce-api-calls/duplicate-reference-data-requests.webp'), alt: 'Multiple Angular panels independently requesting identical reference API data.', width: 1586, height: 992, }, 'Each panel had been designed to be self-contained. It requested the data it needed during initialization instead of assuming that a parent component had already loaded it.', 'That is a reasonable component design in isolation. The problem appears when several independently reusable components need the same stable reference data.', { type: 'code', language: 'typescript', caption: 'A harmless request pattern becomes expensive when several components repeat it on the same screen.', code: `export class DocumentChecklistComponent implements OnInit { countries: Country[] = []; constructor( private readonly api: ReferenceApi ) {} ngOnInit(): void { this.api .getCountries() .subscribe((countries) => { this.countries = countries; }); } }`, }, { type: 'heading', text: 'Use RxJS shareReplay to share one HTTP request' }, { type: 'image', src: media('insights/rxjs-reduce-api-calls/sharereplay-one-request.webp'), alt: 'Multiple RxJS subscribers sharing one Angular HTTP request through shareReplay.', width: 1586, height: 992, }, 'Moving every request into the parent would reduce duplication, but it would also make reusable panels dependent on a specific screen structure. A shared service can solve the request problem without changing those component boundaries.', { type: 'code', language: 'typescript', caption: 'shareReplay allows every subscriber to reuse the same Angular HTTP result.', code: `@Injectable({ providedIn: 'root' }) export class ReferenceApi { private readonly countries$ = this.http .get<Country[]>( '/api/reference/countries' ) .pipe( shareReplay({ bufferSize: 1, refCount: false, }) ); constructor( private readonly http: HttpClient ) {} getCountries(): Observable<Country[]> { return this.countries$; } }`, }, 'Multiple subscribers now share one HTTP request. Because the stream is created once at service level, returning to the screen can reuse the previously emitted value instead of automatically starting another request.', { type: 'aside', text: 'refCount is an architectural choice. refCount: false is useful for stable reference data you intentionally want to retain. More volatile or lifecycle-sensitive streams may require different behaviour.', }, { type: 'heading', text: 'RxJS caching is easy; cache invalidation is harder' }, { type: 'image', src: media('insights/rxjs-reduce-api-calls/event-driven-cache-invalidation.webp'), alt: 'Event-driven RxJS cache invalidation clearing Angular reference data before the next request.', width: 1586, height: 992, }, 'Caching a value is only correct while that value remains valid. A country list may be effectively static for a session, while workflow categories or office locations may change after an administrative action.', 'Instead of choosing an arbitrary timeout, invalidate the cache when an event occurs that can actually make the cached value stale.', { type: 'code', language: 'typescript', caption: 'Invalidate cached RxJS data when the underlying resource changes.', code: `private countriesCache$?: Observable<Country[]>; getCountries(): Observable<Country[]> { this.countriesCache$ ??= this.http .get<Country[]>( '/api/reference/countries' ) .pipe( shareReplay({ bufferSize: 1, refCount: false, }) ); return this.countriesCache$; } invalidateCountries(): void { this.countriesCache$ = undefined; }`, }, { type: 'heading', text: 'The performance impact of removing duplicate requests' }, 'Across the case workflow, API consumption dropped by approximately 40%, while frontend load behaviour improved substantially. The important point is that the improvement came from changing the data layer rather than rewriting component rendering logic.', 'This is why the network tab is one of the first places I look when an Angular screen feels slow. Sort requests by URL and count duplicates before assuming the problem is rendering, change detection or the backend.', { type: 'heading', text: 'The RxJS lesson worth keeping' }, 'A duplicated HTTP request is often not a mistake in the component where it appears. It is evidence that several reasonable local decisions are composing into an expensive global behaviour.', 'Shared RxJS streams are useful because they let the data layer solve that composition problem while consumers keep simple boundaries. The important work is deciding what should be shared, how long it remains valid and what event makes it stale.',], }, { id: 'angular-performance-checklist', cover: { src: media('insights/angular-performance-checklist/cover.webp'), alt: 'Angular performance checklist covering network, change detection, bundle, rendering and regression guards.', width: 1731, height: 909, }, takeaways: ['Reproduce Angular performance problems on realistic hardware and network conditions before optimizing.', 'Check duplicate requests before change detection, bundle size and rendering.', 'Use Angular DevTools and bundle analysis to identify evidence rather than applying optimizations globally.', 'Add budgets and automated checks so performance regressions do not return after the fix.',], topic: 'Performance', seoTitle: 'Angular Performance Optimization Checklist: Step-by-Step', seoDescription: 'Use this Angular performance optimization checklist in diagnostic order: network requests, change detection, bundle size, rendering and regression prevention.', datePublished: '2026-09-16', number: '09', title: 'Angular Performance Optimization Checklist — In the Right Order', pullQuote: 'Most Angular performance work is won by checking the highest-probability cause first.', dek: 'Angular performance work becomes much faster when you check the highest-probability causes first. Start with the network, then change detection, bundle cost and rendering.', related: [{ label: 'Angular performance optimization', href: '/services/angular-performance-optimization', }, { label: 'Reduce Angular API calls with RxJS', href: '/insights/rxjs-reduce-api-calls', }, { label: 'Angular performance with Core Web Vitals', href: '/insights/angular-performance-core-web-vitals', }, { label: 'Fiji Immigration internal system', href: '/work/fiji-immigration-internal', },], cta: 'Worked through the obvious Angular performance fixes but the application still feels slow? I run scoped performance investigations that identify the actual bottleneck and leave your team with a written, prioritized diagnosis.', body: ['Most Angular performance checklists are collections of possible optimizations. They tell you what can make an application slow but not which cause is worth investigating first.', 'I prefer a diagnostic order. Start with the causes that are fast to verify and frequently responsible, then move deeper only when the evidence requires it.', { type: 'heading', text: '0. Reproduce Angular performance on realistic hardware' }, 'Before changing code, reproduce the complaint on hardware and network conditions that resemble the environment where users experience it.', 'A fast development laptop on a local connection can hide network waterfalls, main-thread pressure and rendering costs that become obvious on a mid-range device.', { type: 'heading', text: '1. Check duplicate and serial Angular API requests' }, { type: 'image', src: media('insights/angular-performance-checklist/network-duplicate-and-serial-requests.webp'), alt: 'Angular network panel showing duplicate requests to one endpoint and a serial request waterfall that could run in parallel.', width: 1586, height: 992, caption: 'Two different problems live in the same panel: the same request repeated, and requests that wait on each other for no reason.', }, 'Open the network panel, reload the route and sort requests by name. Identical endpoints appearing several times during one navigation are often the cheapest performance problem to identify and remove.', 'Then inspect the waterfall. Requests that execute sequentially even though they do not depend on each other unnecessarily extend the route loading time.', { type: 'heading', text: '2. Profile Angular change detection' }, { type: 'image', src: media('insights/angular-performance-checklist/change-detection-and-bundle-analysis.webp'), alt: 'Angular DevTools change detection profile beside a production bundle split into initial load and lazy-loaded routes.', width: 1536, height: 1024, caption: 'Profile which components actually re-render, and check what the first route genuinely needs to download.', }, 'Use Angular DevTools to profile the interaction that feels slow. Look for components being checked repeatedly during interactions unrelated to them.', { type: 'code', language: 'bash', caption: 'A source search can identify candidates, but profiling should decide which components actually matter.', code: `rg -L \ "ChangeDetectionStrategy.OnPush" \ src \ --type ts \ -g "*.component.ts" \ | wc -l`, }, 'Do not automatically convert an entire application based on the count. A component becomes a performance concern when profiling shows that its checks are contributing to the interaction cost.', { type: 'heading', text: '3. Analyze the Angular production bundle' }, 'The useful question is not only whether the bundle is large. Ask what is inside the initial bundle and whether the first route actually needs those dependencies.', { type: 'code', language: 'bash', caption: 'Generate production statistics and inspect what is contributing to the initial Angular bundle.', code: `ng build \ --configuration production \ --stats-json npx source-map-explorer \ dist/**/*.js`, }, 'Look for large libraries imported for small features, entire icon packages, charting libraries loaded before their route and lazy routes accidentally made eager through another import.', { type: 'heading', text: '4. Inspect Angular rendering work' }, 'Once network, change detection and bundle cost have been investigated, inspect rendering. Large lists, expensive template expressions, unnecessary DOM nodes, missing identity tracking and layout instability can all increase interaction cost.', { type: 'aside', text: 'A function called directly from a template may execute repeatedly during change detection. Prefer derived state, pure pipes or precomputed values when the calculation is non-trivial or repeated across many rows.', }, { type: 'heading', text: '5. Prevent the Angular performance regression' }, { type: 'image', src: media('insights/angular-performance-checklist/rendering-profile-and-regression-guard.webp'), alt: 'Angular rendering profile with a long task, the targeted fix, the verified result and the guards that prevent regression.', width: 1536, height: 1024, caption: 'Measure, fix the actual cause, verify the change, then add the guard that keeps it fixed.', }, 'A performance fix without a guard can disappear several releases later. Add the relevant protection after the cause is known: bundle budgets, automated performance checks, request-count expectations or field monitoring.', 'The guard should match the failure. A bundle budget will not protect against duplicate API calls, and a Lighthouse score alone will not explain a slow interaction inside a dense authenticated application.', { type: 'heading', text: 'Sometimes Angular is not the bottleneck' }, 'Profiling may show that the browser is mostly waiting for the backend. That is still a useful performance finding because it prevents a frontend team from spending weeks optimizing code that is not responsible for the delay.', 'The purpose of the checklist is not to perform every optimization. It is to eliminate possibilities in an order that reaches the actual bottleneck with the least wasted work.',], }, { id: 'ux-problem-approach', cover: { src: media('insights/ux-problem-approach/cover.webp'), alt: 'UX process moving from user friction through understand, define, simplify, explore and validate to a clear experience.', width: 1731, height: 909, }, takeaways: ['Define the user problem before opening Figma or choosing a visual solution.', 'Map the complete user journey to find friction that individual screen reviews miss.', 'Simplify unnecessary decisions before adding new features or interface elements.', 'Explore multiple solutions and validate the assumption behind the design.',], topic: 'Design', seoTitle: 'UX Problem-Solving Process: My Product Design Approach', seoDescription: 'My UX problem-solving process as a product designer: define the problem, map journey friction, simplify flows, explore solutions, validate assumptions and iterate.', datePublished: '2026-08-27', number: '10', title: 'How I Approach UX Problems as a Product Designer', pullQuote: 'A better-looking interface is not automatically a better experience.', dek: 'A better-looking interface is not automatically a better experience. My UX process starts by understanding why something is difficult before deciding what should be designed.', related: [{ label: 'Enterprise UI design principles', href: '/insights/enterprise-ui-design-restraint', }, { label: 'Accessible Angular forms', href: '/insights/accessible-angular-forms', }, { label: 'Frontend architecture', href: '/services/frontend-architecture', }, { label: 'InsureMet — decisions made under time pressure', href: '/work/insuremet', },], cta: 'If users can technically complete your product flow but hesitate, abandon steps or repeatedly ask what to do next, the friction is usually identifiable. I run scoped UX reviews that map those problems and prioritize the changes with the highest practical impact.', body: ['When I encounter a frustrating product experience, my first instinct is not to redesign the screen. I start by asking why the task is difficult for the user.', 'The problem may be visual, but it may also be an unnecessary step, unclear information, too many decisions, weak hierarchy or a workflow asking the user to understand something the product could have handled for them.', 'That question — what can I make easier? — is the starting point for how I approach UX problems.', { type: 'heading', text: '1. Define the UX problem before opening Figma' }, 'Jumping directly into interface design makes it easy to improve the appearance of the wrong problem.', 'Consider a user searching for a 2BHK property. Hundreds of listings, overlapping filters, inconsistent pricing and several contact actions may initially look like a listing-card design problem.', 'The deeper problem could instead be helping someone confidently narrow hundreds of properties into a small set worth visiting. That framing changes the solution completely.', { type: 'heading', text: '2. Review the experience like a first-time user' }, 'Product teams gradually learn how their own interface works. New users do not have that context.', 'I look for moments where a person has to stop and interpret what the product expects. In a cab-booking flow, questions such as whether the pickup location is exact, whether the fare is final or whether the destination can still be changed all create small amounts of uncertainty.', 'When users repeatedly have to ask “what happens next?”, the interface is transferring work from the product to the person.', { type: 'heading', text: '3. Map the user journey and identify friction' }, 'Individual screens rarely explain the complete experience. I map the journey and pay particular attention to transitions between stages.', { type: 'image', src: media('insights/ux-problem-approach/journey-friction.webp'), alt: 'E-commerce user journey from discovery to payment with friction points identified at each stage.', width: 1774, height: 887, caption: 'Looking at transitions reveals friction that is easy to miss when reviewing each screen independently.', }, 'For an e-commerce journey, that might mean discover → compare → select → add to cart → checkout → pay. The important questions live between those stages: whether the user has enough information to continue, whether costs appear too late and whether the next action is obvious.', { type: 'aside', text: 'UX friction compounds. A single small problem may not cause abandonment, but several small uncertainties across one journey can produce a measurable drop-off.', }, { type: 'heading', text: '4. Simplify the UX before adding features' }, 'Adding another feature is not always the best response to a usability problem. Sometimes the strongest design decision is removing a decision the user should not have needed to make.', { type: 'image', src: media('insights/ux-problem-approach/simplify-signup.webp'), alt: 'Before-and-after signup flow showing a complex eight-field form simplified to essential account information.', width: 1536, height: 1024, caption: 'Ask for information when the product has a visible reason to need it, rather than collecting everything at the first step.', }, 'If account creation only requires an email and password, asking for phone number, company, job title, location and date of birth creates decisions before the user has received enough value to understand why those questions matter.', 'Before asking what should be added, I ask what can be removed, delayed or inferred.', { type: 'heading', text: '5. Use familiar UX patterns intentionally' }, 'Established interaction patterns reduce learning cost. A heart icon already communicates save or wishlist in many consumer products. Replacing it simply to make an interface feel unique gives users another convention to learn.', 'The goal is not to copy competitors. It is to understand which conventions already carry meaning and decide whether breaking them creates enough value to justify the learning cost.', { type: 'heading', text: '6. Explore multiple UX solutions' }, 'The first design idea is still an assumption. I prefer to explore several plausible approaches before investing heavily in one.', { type: 'image', src: media('insights/ux-problem-approach/explore-solutions.webp'), alt: 'Three UX solutions for property comparison: improved cards, side-by-side comparison and a smarter shortlist.', width: 1536, height: 1024, caption: 'Compare solutions by how well they solve the user problem and how much complexity they introduce.', }, 'If users struggle to compare properties, possible solutions include improving card hierarchy, adding direct side-by-side comparison or making the shortlist more useful.', 'The decision should come from the problem, expected impact and implementation complexity rather than which mockup looks most impressive.', { type: 'heading', text: '7. Validate the assumption and iterate' }, 'A polished prototype can still solve the wrong problem. If a team assumes users cannot find relevant properties, it may improve filters. Research may instead reveal that users find listings easily but do not trust the information inside them.', 'Validation can come from usability testing, user conversations, analytics, support feedback or controlled experiments. The method changes by project; the purpose does not.', 'The process is closer to understand → explore → design → validate → learn → iterate than design → polish → finish.', { type: 'heading', text: 'Product design is a sequence of decisions' }, 'The longer I work on products, the more I see product design as decisions rather than screens: what information appears first, what can be removed, where someone is likely to hesitate, what they need before committing and what the product can decide on their behalf.', 'When I open Figma, I do not want the first question to be what can I design. I want it to be what can I make easier.',], },];

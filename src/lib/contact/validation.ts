@@ -48,13 +48,10 @@ export const contactSchema = z
     website: z.string().optional(),
   })
   .superRefine((value, ctx) => {
-    if (!value.inquiryType && !value.projectType) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["inquiryType"],
-        message: "Please choose what this is about.",
-      });
-    }
+    /* Inquiry type used to be mandatory. A first contact should cost a name,
+       an email and a sentence; anything the sender has to classify before I
+       have even replied is a form filtering out the enquiries it exists to
+       collect. `asInquiryType` falls back to "Other" when it is absent. */
     for (const [field, allowed] of [
       ["budget", BUDGET_RANGES],
       ["timeline", TIMELINES],

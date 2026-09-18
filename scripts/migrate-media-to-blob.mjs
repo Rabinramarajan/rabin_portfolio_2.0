@@ -109,14 +109,24 @@ async function main() {
       continue;
     }
 
-    const blob = await put(pathname, createReadStream(file), {
+    /* A stream can only be read once, so it cannot survive the SDK's internal
+       retry: undici throws "Response body object should not be disturbed or
+       locked" the second time it tries to send the same consumed stream, and
+       the migration dies partway through. Anything small enough to go up in a
+       single request is therefore read into a buffer, which is replayable.
+       Above the multipart threshold the upload is chunked and restartable on
+       its own terms, and buffering it would be the wrong trade. */
+    const multipart = size > 8 * 1024 * 1024;
+    const body = multipart ? createReadStream(file) : await readFile(file);
+
+    const blob = await put(pathname, body, {
       token,
       access: "public",
       contentType,
       addRandomSuffix: false,
       allowOverwrite: true,
       cacheControlMaxAge: 60 * 60 * 24 * 365,
-      multipart: size > 8 * 1024 * 1024,
+      multipart,
     });
 
     console.log(`+ uploaded ${pathname}\n           ${blob.url}`);

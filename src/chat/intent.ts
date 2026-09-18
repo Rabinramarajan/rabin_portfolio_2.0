@@ -24,7 +24,9 @@ export interface IntentResult {
   usedContext: boolean;
 }
 
-const normalize = (value: string) =>
+/** Lowercase, strip punctuation, collapse whitespace — the comparison form
+    used by both intent detection and the knowledge retriever. */
+export const normalizeText = (value: string) =>
   value
     .toLowerCase()
     .replace(/[’']/g, "")
@@ -263,11 +265,11 @@ const PROJECT_ALIASES: Record<string, string> = {
 };
 
 export function detectEntities(question: string): DetectedEntities {
-  const text = normalize(question);
+  const text = normalizeText(question);
 
   const projectSlugs = new Set<string>();
   for (const project of projects) {
-    const title = normalize(project.title);
+    const title = normalizeText(project.title);
     const slugWords = project.slug.replace(/-/g, " ");
     if (text.includes(title) || text.includes(slugWords) || text.includes(project.slug)) {
       projectSlugs.add(project.slug);
@@ -279,13 +281,13 @@ export function detectEntities(question: string): DetectedEntities {
   }
 
   const matchedTech = technologies().filter((tech) => {
-    const t = normalize(tech);
+    const t = normalizeText(tech);
     if (t.length < 2) return false;
     return new RegExp(`(^|[^a-z0-9])${escapeRegExp(t)}([^a-z0-9]|$)`).test(text);
   });
 
   const serviceIds = services
-    .filter((service) => text.includes(normalize(service.title)) || text.includes(normalize(service.id)))
+    .filter((service) => text.includes(normalizeText(service.title)) || text.includes(normalizeText(service.id)))
     .map((service) => service.id);
 
   return {
@@ -300,7 +302,7 @@ function escapeRegExp(value: string) {
 }
 
 export function isInjectionAttempt(question: string): boolean {
-  const text = normalize(question);
+  const text = normalizeText(question);
   return INJECTION_PATTERNS.some((pattern) => pattern.test(text));
 }
 
@@ -323,7 +325,7 @@ function hasPortfolioSignal(text: string, entities: DetectedEntities): boolean {
  * turn before it.
  */
 export function detectIntent(question: string, history: string[] = []): IntentResult {
-  const text = normalize(question);
+  const text = normalizeText(question);
 
   if (isInjectionAttempt(question)) {
     return { intent: "INJECTION", entities: emptyEntities(), usedContext: false };

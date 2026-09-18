@@ -26,7 +26,7 @@ export interface LegalDocument {
 }
 
 /** Single source of truth for the "last reviewed" stamp on both documents. */
-export const LEGAL_EFFECTIVE = '2026-09-12';
+const LEGAL_EFFECTIVE = '2026-09-12';
 
 export const privacy: LegalDocument = {
   title: 'Privacy Policy',
@@ -176,5 +176,3 @@ export const terms: LegalDocument = {
     },
   ],
 };
-
-export const legalDocuments = [privacy, terms];

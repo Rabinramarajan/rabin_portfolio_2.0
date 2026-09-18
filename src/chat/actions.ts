@@ -13,7 +13,7 @@ import type { ChatAction, ChatIntent, ChatSource, KnowledgeRecord, ProjectCard }
 const link = (label: string, href: string): ChatAction => ({ label, type: "internal-link", href });
 
 const VIEW_WORK = link("View Work", "/work");
-const VIEW_SKILLS = link("View Skills", "/skills");
+const VIEW_SKILLS = link("View Skills", "/#skills");
 const VIEW_EXPERIENCE = link("View Experience", "/experience");
 const VIEW_SERVICES = link("View Services", "/services");
 const VIEW_RESUME = link("View Resume", profile.resumePath);

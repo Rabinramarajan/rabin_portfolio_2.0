@@ -3,6 +3,10 @@ import { ProjectCover } from "@/components/ProjectCover";
 import type { Project } from "@/content/types";
 import { cn } from "@/lib/cn";
 
+/* Route-scoped stylesheet. Imported here, not from globals.css, so only
+   the routes that render this file download it. */
+import "@/app/css/components/project-card.css";
+
 function LaunchIcon() {
   return (
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
@@ -71,10 +75,10 @@ export function ProjectCard({
 
         <span className="pcard__body">
           <Heading className="pcard__title">{p.title}</Heading>
-          <span className="pcard__cat">{p.category}</span>
+          <span className="pcard__cat">{p.category} · {p.year}</span>
           <span className="pcard__tagline">{p.overview}</span>
-          <span className="pcard__cta" aria-hidden>
-            View Case Study
+          <span className="pcard__cta">
+            See the {p.title} case study
             <ArrowIcon />
           </span>
         </span>

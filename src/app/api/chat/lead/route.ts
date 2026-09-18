@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit, clientKey } from "@/lib/rate-limit";
 import { submitContact } from "@/lib/contact/contact-service";
 import { createEmailProvider } from "@/lib/contact/email-service";
 import { logChatEvent } from "@/chat/analytics";
@@ -18,14 +18,6 @@ export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 16 * 1024;
 
-function clientKey(req: NextRequest): string {
-  const ip =
-    req.headers.get("cf-connecting-ip") ??
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "anon";
-  return `chat-lead:${ip}`;
-}
-
 export async function POST(req: NextRequest) {
   if (!chatConfig.enabled || !chatConfig.allowLeadCapture) {
     return NextResponse.json({ error: "Enquiries are not available right now." }, { status: 503 });
@@ -35,7 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Request is too large." }, { status: 413 });
   }
 
-  if (!rateLimit(clientKey(req), 3, 10 * 60 * 1000)) {
+  if (!rateLimit(clientKey(req, "chat-lead"), 3, 10 * 60 * 1000)) {
     return NextResponse.json(
       { error: "Too many enquiries. Please wait a few minutes and try again." },
       { status: 429 },

@@ -18,10 +18,11 @@ const relatedProjects = projects.filter((p) =>
 const page = servicePages.angular;
 
 export const metadata = pageMetadata({
-  title: "Angular Development Services",
+  title: "Angular Development Consultant",
   description:
     "Enterprise Angular development — signals, standalone APIs and Angular 17–22 architecture for government, insurance and pension platforms.",
   path: "/services/angular-development",
+  inheritOgImage: false,
   keywords: [
     "Angular development services",
     "Angular developer",
@@ -56,6 +57,7 @@ export default function Page() {
       />
 
       <div className="shell" style={{ marginTop: "2rem" }}>
+        <p className="svc-answer" style={{ maxWidth: "44rem", marginBottom: "1.25rem", fontSize: "1.05rem", lineHeight: 1.65 }}>{page.answer}</p>
         {page.intro.map((p, i) => (
           <p className="muted" key={i} style={{ maxWidth: "42rem", marginBottom: "1rem" }}>
             {p}
@@ -92,6 +94,7 @@ export default function Page() {
       </div>
 
       <PageCta
+        location="service"
         kicker="02 / ANGULAR"
         headline={["NEED ANGULAR", "DONE RIGHT?"]}
         lede="Whether it's a new application, a legacy migration, or a stalled Angular codebase, let's talk about where it stands and where it needs to go."

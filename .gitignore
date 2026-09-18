@@ -43,6 +43,7 @@ next-env.d.ts
 /.claude/
 
 # local audit / screenshot artifacts
+lighthouse-local.report.*
 /screenshots/
 /responsive-screenshots/
 /final-audit-screenshots/
@@ -59,3 +60,12 @@ next-env.d.ts
 
 # playwright-mcp session artifacts
 /.playwright-mcp/
+
+# The build log is the release record: scripts/release.mjs picks the next
+# version from it and scripts/generate-version.mjs rebuilds
+# src/generated/version.json purely from it, with no merge against the
+# committed copy. Ignoring it meant `npm run release` could not stage the file
+# it had just written, and a fresh clone would regenerate version.json from an
+# empty log and wipe the whole /version timeline. Tracked for that reason.
+# Other publish/ artefacts stay ignored.
+/publish/build-log-*.tmp
