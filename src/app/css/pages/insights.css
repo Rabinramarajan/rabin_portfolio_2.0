@@ -23,7 +23,16 @@
 
 /* --- reading progress ------------------------------------------------
    A 2px line under the fixed header. Transformed rather than animated on
-   width so the update is a composite, not a layout pass. */
+   width so the update is a composite, not a layout pass.
+
+   An article carries its own bar, so the global one from ProgressSync would
+   draw the same scroll twice — hide it wherever this bar is on the page.
+   ProgressSync itself stays mounted: it is also the only writer for the
+   navbar scroll-spy and the footer percent readout. */
+
+body:has(.insd-progress) .scroll-progress {
+  display: none;
+}
 
 .insd-progress {
   position: fixed;
