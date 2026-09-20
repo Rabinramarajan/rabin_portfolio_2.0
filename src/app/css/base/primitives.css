@@ -207,17 +207,6 @@
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
-.btn--pill-solid {
-  padding: 0.75rem 1.5rem;
-  min-height: 48px;
-  background: var(--color-accent);
-  border: none;
-  border-radius: var(--radius-full);
-  color: var(--color-accent-contrast);
-}
-.btn--pill-solid:hover {
-  background: var(--color-accent-dim);
-}
 .btn__label {
   display: inline-flex;
   align-items: center;

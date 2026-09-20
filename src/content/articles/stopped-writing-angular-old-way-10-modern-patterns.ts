@@ -26,6 +26,10 @@ export const modernAngularPatterns: Insight = {
   ],
   "related": [
     {
+      "label": "Angular Signal Forms: Building Custom Controls",
+      "href": "/insights/angular-signal-forms-custom-controls"
+    },
+    {
       "label": "Angular Signals for State Management",
       "href": "/insights/angular-signals-state-management"
     },

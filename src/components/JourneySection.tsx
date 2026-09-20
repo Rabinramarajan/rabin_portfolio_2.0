@@ -4,10 +4,11 @@ import { motion, useReducedMotion } from "motion/react";
 import { SectionKicker } from "@/components/ui";
 import { TextReveal } from "@/components/motion";
 import { duration, ease } from "@/lib/motion";
-import { SmartImage } from "@/components/SmartImage";
+// import { SmartImage } from "@/components/SmartImage"; // with the artwork below
+import { JourneyBackdrop } from "@/components/JourneyBackdrop";
 import { CareerTimeline } from "@/components/experience/CareerTimeline";
 import { StatPills } from "@/components/experience/StatPills";
-import { accentIndex, journeyArt, sections, titleLines } from "@/content/sections";
+import { accentIndex, sections, titleLines } from "@/content/sections";
 import { profile } from "@/content/profile";
 import { trackCtaClick } from "@/lib/analytics";
 
@@ -25,6 +26,8 @@ export function JourneySection() {
 
   return (
     <section id="journey" className="section jsec" aria-labelledby="journey-heading">
+      <JourneyBackdrop />
+
       <div className="shell">
         <div className="jsec__intro xhero__grid">
           <motion.div
@@ -47,7 +50,11 @@ export function JourneySection() {
             <StatPills className="xhero__stats--section" />
           </motion.div>
 
-          <motion.div
+          {/* Ascent artwork — commented out: the cinematic reel now carries this
+              section, and the two pictures competed for the same eye. Kept
+              rather than deleted so the two-column layout can be restored
+              without rebuilding it. */}
+          {/* <motion.div
             className="xhero__art jsec__art"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -59,7 +66,7 @@ export function JourneySection() {
               sizes="(max-width: 899px) 100vw, 48vw"
               className="xhero__img"
             />
-          </motion.div>
+          </motion.div> */}
         </div>
 
         <CareerTimeline limit={4} />

@@ -642,62 +642,72 @@
   color: var(--color-text-muted);
 }
 
+/* The two facts that answer "how well, and where". Previously a pair of
+   split rows with the value flush right, which set a two-line value like
+   "Every production system I have shipped" ragged against the panel's right
+   edge and made the eye jump the gap. Label over value, both on the same left
+   margin as everything else in the panel, reads in one pass. */
 .tec__facts {
   display: grid;
-  gap: var(--space-12);
+  gap: var(--space-16);
   margin: var(--space-20) 0 0;
-  padding: var(--space-16) 0;
+  padding: var(--space-16) 0 0;
   border-top: 1px solid var(--tec-line);
-  border-bottom: 1px solid var(--tec-line);
 }
 .tec__fact {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-16);
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
 }
 .tec__fact dt {
-  font-family: var(--font-mono);
   font-size: var(--text-xs);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: var(--color-text-faint);
-  flex: none;
 }
 .tec__fact dd {
   display: flex;
   align-items: center;
   gap: var(--space-12);
   margin: 0;
-  text-align: right;
+  min-width: 0;
 }
 .tec__fact-value {
   font-size: var(--text-sm);
+  line-height: var(--leading-snug);
   color: var(--color-text);
+  text-wrap: pretty;
 }
 
+/* Depth reads as one continuous measure rather than four loose dots: four
+   segments of a single bar, the lit ones in the accent. It sits after the
+   wording, so the wording — not the bar — is what carries the meaning for
+   anyone who cannot separate the two greens. */
 .tec__depth {
   display: inline-flex;
-  gap: 0.28rem;
+  gap: 0.2rem;
   flex: none;
+  margin-left: auto;
+  padding-left: var(--space-12);
 }
 .tec__depth-dot {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background: rgb(255 255 255 / 14%);
+  width: 0.9rem;
+  height: 0.3rem;
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 12%);
 }
 .tec__depth-dot--on {
   background: var(--color-accent);
-  box-shadow: 0 0 8px rgb(201 242 77 / 60%);
+  box-shadow: 0 0 10px rgb(201 242 77 / 45%);
 }
 
+.tec__related {
+  margin-top: var(--space-20);
+  padding-top: var(--space-20);
+  border-top: 1px solid var(--tec-line);
+}
 .tec__related-label {
   margin: 0 0 var(--space-8);
-  font-family: var(--font-mono);
   font-size: var(--text-xs);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--color-text-faint);
 }
 .tec__related-list {
@@ -707,28 +717,66 @@
   padding: 0;
   list-style: none;
 }
+/* A row, not a line of text: the whole strip is the hit area, which gets the
+   target past 44px, and the tagline tells the two projects apart. The arrow
+   is the only thing that moves on hover — the row tints, so nothing reflows. */
 .tec__related-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-12);
-  padding: var(--space-8) 0;
-  font-size: var(--text-sm);
+  min-height: 2.75rem;
+  padding: var(--space-8) var(--space-12);
+  margin-inline: calc(var(--space-12) * -1);
+  border-radius: var(--radius-md);
   color: var(--color-text-muted);
-  transition: color var(--duration-micro) var(--ease-out-quart);
+  transition:
+    color var(--duration-micro) var(--ease-out-quart),
+    background var(--duration-micro) var(--ease-out-quart);
+}
+.tec__related-text {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.tec__related-title {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+.tec__related-tag {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tec__related-link svg {
+  flex: none;
+  transition: transform var(--duration-micro) var(--ease-out-quart);
 }
 .tec__related-link:hover {
+  background: rgb(255 255 255 / 4%);
+  color: var(--color-accent);
+}
+.tec__related-link:hover svg {
+  transform: translate(2px, -2px);
+}
+.tec__related-link:hover .tec__related-title {
   color: var(--color-accent);
 }
 
+/* The panel's exit. Its own text is left-aligned with the panel's content and
+   the arrow is parked at the right edge in a disc, so the button has a start
+   and an end instead of a centred label floating in a wide pill. */
 .tec__panel-cta {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1rem;
+  justify-content: space-between;
+  gap: var(--space-12);
+  min-height: 2.75rem;
+  padding: 0.7rem 0.7rem 0.7rem 1rem;
   border: 1px solid var(--tec-line-strong);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--color-text);
@@ -737,10 +785,26 @@
     border-color var(--duration-micro) var(--ease-out-quart),
     color var(--duration-micro) var(--ease-out-quart);
 }
+.tec__panel-cta svg {
+  flex: none;
+  display: block;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0.45rem;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 6%);
+  transition:
+    background var(--duration-micro) var(--ease-out-quart),
+    transform var(--duration-micro) var(--ease-out-quart);
+}
 .tec__panel-cta:hover {
   background: var(--color-accent);
   border-color: var(--color-accent);
   color: var(--color-accent-contrast);
+}
+.tec__panel-cta:hover svg {
+  background: rgb(0 0 0 / 14%);
+  transform: translateX(2px);
 }
 
 .tec__footnote {

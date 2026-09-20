@@ -357,8 +357,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .abt-btn:active {
-    transform: none;
-  }
-}

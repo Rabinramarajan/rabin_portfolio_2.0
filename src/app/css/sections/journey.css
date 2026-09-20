@@ -3,6 +3,92 @@
    ============================================================ */
 .jsec {
   position: relative;
+  /* The backdrop bleeds to the section's own box, so it must be clipped here
+     rather than leaking over the sections either side. "clip" instead of
+     "hidden" so it never creates a scroll container. */
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* ---------- cinematic backdrop ----------
+   Scoped to this section, not fixed to the viewport: it scrolls with the
+   timeline and stops at its edges. */
+.jbg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* The track is the stage plus its travel: 100vh of stage, then 100vh of
+     scroll distance for it to stay pinned through. When the track ends the
+     sticky stage unsticks and scrolls away with the timeline.
+     Capped at the section's own height so a short viewport cannot push the
+     track past the section and reintroduce the bleed `overflow: clip`
+     exists to prevent. */
+  height: min(200vh, 100%);
+  z-index: -1;
+  /* Deliberately NOT overflow: hidden. That would make this a scroll
+     container, and a sticky child of a scroll container that cannot scroll
+     never moves — the stage below would sit at the top of the section and
+     stay there. The section's own `overflow: clip` does the clipping
+     instead, without creating a scrollport. */
+  pointer-events: none;
+}
+
+/* One viewport tall, pinned to the top of the section's box: the reel holds
+   still while the headline, the stat pills and the timeline scroll up over
+   it, and it releases at the section's bottom edge instead of following the
+   reader down the page. */
+.jbg__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.jbg__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Biased up and slightly right, toward where the subject actually stands in
+     the 1140x720 frame (head at roughly 58% across, 15% down). `cover` on a
+     viewport taller than 16:9 crops top and bottom first, and a centred
+     position is exactly what cuts the head off — this keeps the face whole at
+     every aspect ratio the stage takes. */
+  object-position: 58% 18%;
+  /* Unblurred, so the footage reads as footage. Only the saturation is
+     pulled back, and only far enough that the reel's red key light stops
+     fighting the accent green — the picture itself is left sharp. */
+  filter: saturate(0.85);
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+.jbg__video.is-painted {
+  /* The reel is the point of the section, so it is mixed high enough to be
+     legible as a picture. The contrast the copy needs is bought by the scrim
+     below and by the cards' own backgrounds, not by erasing the video. */
+  opacity: 0.62;
+}
+.jbg__scrim {
+  position: absolute;
+  inset: 0;
+  /* Two layers. The radial keeps the centre — where the headline and the
+     timeline rail sit — darkest, so the copy never lands on a bright frame.
+     The linear feathers the top and bottom edges into the flat page
+     background, so the section has no hard horizontal seams. */
+  background:
+    radial-gradient(
+      70% 60% at 50% 45%,
+      rgb(10 10 12 / 34%),
+      rgb(10 10 12 / 76%) 100%
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-bg) 0%,
+      transparent 14%,
+      transparent 86%,
+      var(--color-bg) 100%
+    );
 }
 .jsec__intro {
   margin-bottom: 0;

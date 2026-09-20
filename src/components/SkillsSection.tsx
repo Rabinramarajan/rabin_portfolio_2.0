@@ -214,7 +214,13 @@ function DetailPanel({
                       className="tec__related-link"
                       data-cursor="explore"
                     >
-                      <span>{project.title}</span>
+                      <span className="tec__related-text">
+                        <span className="tec__related-title">{project.title}</span>
+                        {/* The tagline is what makes this a decision rather than a
+                            guess — two project titles alone do not say which one is
+                            worth the click. */}
+                        <span className="tec__related-tag">{project.tagline}</span>
+                      </span>
                       <ArrowUpRight size={14} aria-hidden />
                     </Link>
                   </li>

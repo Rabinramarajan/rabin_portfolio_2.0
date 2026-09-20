@@ -168,6 +168,7 @@ export const MEDIA_MANIFEST = {
   "other/contact/conversation.webp": "/media/contact/intelligent.webp",
   "other/contact/globe.webp": "/media/contact/contact_h.webp",
   "other/experience/journey.webp": "/media/experience/banner_img.webp",
+  "other/experience/hero-reel-v2.mp4": "/media/experience/Isolated_cinematic_hero_backgr.mp4",
   "other/faq/orbit.webp": "/media/faq/banner_h.webp",
   "other/maintenance/cover.webp": "/media/under-maintain/1.webp",
   "other/chatbot/mark.webp": "/media/chatbot/1.webp",
