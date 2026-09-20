@@ -17,7 +17,6 @@ import { CustomCursorMount } from "@/components/custom-cursor/CustomCursorMount"
 import { ConsentManager } from "@/components/ConsentManager";
 import { defaultSeo, profile, SITE_URL } from "@/content/profile";
 import { media } from "@/lib/media";
-import "@/motion/motion.css";
 import "./globals.css";
 
 /* The weight set is matched to what the stylesheets actually ask for. It used

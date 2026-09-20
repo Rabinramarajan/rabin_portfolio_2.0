@@ -7,7 +7,7 @@ import type { ServiceOffering } from "@/content/types";
  * visitor who sees "Full-Stack Development" here and "Angular Engineering" on
  * /services cannot tell what I actually specialise in, and that ambiguity is
  * what costs the enquiry. Node, Postgres and DevOps are still real — they are
- * `supportingCapabilities` in services.ts, not headline offers.
+ * supporting work, not headline offers.
  */
 export const serviceOfferings: ServiceOffering[] = [
   {

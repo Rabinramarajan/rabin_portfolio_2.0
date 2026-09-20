@@ -155,14 +155,3 @@ export const services: Service[] = ["angular", "frontend", "performance", "ionic
 
 /** Named on service pages as capability, never marketed as a headline offer. */
 export const secondaryServices: Service[] = ["react", "ui", "design-systems"].map(fromCatalogue);
-
-/**
- * The rest of the stack — real, shipped, and deliberately listed as support
- * rather than as something to hire me as a specialist for.
- */
-export const supportingCapabilities: { title: string; items: string[] }[] = [
-  { title: "Secondary frontend", items: ["React", "Next.js", "TypeScript", "Tailwind CSS"] },
-  { title: "Backend & data", items: ["Node.js", "Express", "REST APIs", "PostgreSQL", "MongoDB"] },
-  { title: "Platform", items: ["Docker", "CI/CD", "Vercel", "Azure DevOps", "Git"] },
-  { title: "Quality", items: ["Vitest", "Playwright", "WCAG 2.1 AA", "Lighthouse budgets"] },
-];

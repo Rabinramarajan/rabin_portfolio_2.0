@@ -38,11 +38,6 @@ html {
   50% { opacity: 1 !important; }
 }
 
-@keyframes ecoAuraPulse {
-  0%, 100% { opacity: 0.3 !important; }
-  50% { opacity: 0.3 !important; }
-}
-
 @keyframes form-spin {
   from { transform: none !important; }
   to { transform: none !important; }
@@ -53,11 +48,30 @@ html {
   to { opacity: 1 !important; }
 }
 
-@keyframes chat-pulse {
-  0%, 100% { opacity: 1 !important; }
-  50% { opacity: 1 !important; }
+/* ------------------------------------------------------------
+   Absorbed from the former src/motion/motion.css, which was a
+   second, older copy of this kill-switch imported separately from
+   layout.tsx. Everything else in that file was either an exact
+   duplicate of the rules above or targeted the deleted ecosystem
+   component (.eco__*) and a [data-motion="work-image"] hook no
+   component renders any more.
+   ------------------------------------------------------------ */
+
+.tr__line {
+  overflow: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
-@keyframes chat-cursor-blink {
-  0%, 50%, 100% { opacity: 1 !important; }
+[data-motion] {
+  will-change: auto !important;
+  transition: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+[data-motion="work-card"] {
+  box-shadow: none;
 }

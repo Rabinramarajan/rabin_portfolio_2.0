@@ -9,7 +9,7 @@ import type { ServiceOfferingIcon } from "@/content/types";
  * further down: cloud, DevOps, UI/UX and backend presented at the same weight
  * as the Angular work. It read as an agency menu written by one person, and
  * it made the specialism invisible. The four here mirror `services` in
- * services.ts exactly; everything else is `supportingCapabilities`.
+ * services.ts exactly; everything else is supporting work, not a headline offer.
  */
 export type ServiceHighlight = {
   id: string;
