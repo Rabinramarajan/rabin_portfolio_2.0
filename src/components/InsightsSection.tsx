@@ -3,6 +3,7 @@ import { featuredInsight, publishedInsights } from "@/content/insights";
 import { sections } from "@/content/sections";
 import { SectionKicker } from "@/components/ui";
 import { InsightCard } from "@/components/insights/InsightCard";
+import { Reveal, TiltField } from "@/components/insights/InsightsCinema";
 import type { SectionHeadingLevel } from "@/components/ui";
 
 /**
@@ -31,8 +32,11 @@ export function InsightsSection({
 
   return (
     <section id="insights" className="section inh-teaser">
-      <div className="shell">
-        <div className="inh-teaser__head">
+      {/* The tilt field is the shell rather than the grid itself: one
+          delegated pointer listener covers every card, and the cards stay
+          server-rendered links with nothing wrapped around them. */}
+      <TiltField className="shell">
+        <Reveal className="inh-teaser__head">
           <div>
             <SectionKicker index={intro.index} label={intro.label} />
             <Heading className="sec-title">{intro.title[0].text}</Heading>
@@ -40,16 +44,15 @@ export function InsightsSection({
           </div>
           <Link className="inh-teaser__all" href="/insights">
             All insights
-            <span aria-hidden>→</span>
           </Link>
-        </div>
+        </Reveal>
 
-        <div className="inh-grid inh-grid--teaser">
+        <Reveal className="inh-grid inh-grid--teaser" stagger>
           {(featured ? [featured, ...rest] : rest).map((item, i) => (
             <InsightCard item={item} key={item.id} headingLevel={headingLevel} index={i} />
           ))}
-        </div>
-      </div>
+        </Reveal>
+      </TiltField>
     </section>
   );
 }

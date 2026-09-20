@@ -7,7 +7,6 @@ import Link from "next/link";
 import {
   featuredInsight,
   insightDate,
-  insightNumber,
   insightReadMinutes,
   insightStatCopy,
   insightTopics,
@@ -22,6 +21,21 @@ import { media } from "@/lib/media";
 import { SectionKicker } from "@/components/ui";
 import { InsightCard } from "@/components/insights/InsightCard";
 import { InsightCover } from "@/components/insights/InsightCover";
+import {
+  ChartDraw,
+  Constellation,
+  CountUp,
+  ExitFade,
+  HeroEntrance,
+  Magnetic,
+  ParallaxScene,
+  Reveal,
+  ScrollSpine,
+  ScrubText,
+  ScrubZoom,
+  TiltField,
+  WordReveal,
+} from "@/components/insights/InsightsCinema";
 
 const ALL = "All" as const;
 type Filter = typeof ALL | InsightTopic;
@@ -49,6 +63,11 @@ const subscribeToNothing = () => () => {};
 export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
   const [filter, setFilter] = useState<Filter>(ALL);
   const [query, setQuery] = useState("");
+  /* Which topic the reader is pointing at, for the constellation behind the
+     chips. Null means "not pointing at one", which is not the same as the
+     active filter — the panel falls back to the filter only when the pointer
+     has left it. */
+  const [litTopic, setLitTopic] = useState<number | null>(null);
   const searchId = useId();
 
   const items = useMemo(() => publishedInsights(), []);
@@ -87,17 +106,24 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
 
   return (
     <div className="inh">
-      <Hero />
+      {/* The hero eases back and dims as the listing takes over the screen —
+          the one cut on the route that is a cut rather than a scroll. */}
+      <ExitFade>
+        <Hero />
+      </ExitFade>
 
       <div className="shell">
         {/* --- filter + search ---------------------------------------- */}
-        <div className="inh-controls">
+        <Reveal className="inh-controls">
           <div className="inh-pills" role="group" aria-label="Filter insights by topic">
             {[ALL, ...topics].map((t) => (
               <button
                 key={t}
                 type="button"
                 className="inh-pill"
+                /* "All" is not a topic and has no hue; it falls back to the
+                   accent, which is what the active pill uses anyway. */
+                data-topic={t === ALL ? undefined : t}
                 aria-pressed={filter === t}
                 onClick={() => setFilter(t)}
               >
@@ -121,158 +147,213 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-        </div>
+        </Reveal>
 
         {/* --- figures ------------------------------------------------ */}
-        <ul className="inh-stats">
+        <Reveal as="ul" className="inh-stats" stagger>
           {stats.map((s) => (
             <li className="inh-stat" key={s.label}>
               <span className="inh-stat__icon" aria-hidden>
                 {s.icon}
               </span>
               <span className="inh-stat__text">
-                <span className="inh-stat__value">{s.value}</span>
+                <CountUp className="inh-stat__value" value={s.value} />
                 <span className="inh-stat__label">{s.label}</span>
                 <span className="inh-stat__note">{s.note}</span>
               </span>
             </li>
           ))}
-        </ul>
+        </Reveal>
 
         {/* --- featured + rail ---------------------------------------- */}
-        <div className="inh-lead">
-          {featured ? <Featured item={featured} /> : null}
-          <aside className="inh-rail" aria-label="Where to start">
-            <div className="inh-rail__head">
-              <h2 className="inh-panel__title">
-                <SparkIcon />
-                Start here
-              </h2>
-              <button
-                type="button"
-                className="inh-link inh-link--quiet"
-                onClick={() => {
-                  setFilter(ALL);
-                  setQuery("");
-                  document.getElementById("all-articles")?.scrollIntoView({ block: "start" });
-                }}
-              >
-                View all <span aria-hidden>→</span>
-              </button>
-            </div>
-            <ol className="inh-rail__list">
-              {rest.slice(0, 4).map((i, index) => (
-                <li key={i.id}>
-                  <Link href={"/insights/" + i.id} className="inh-rail__item">
-                    <span className="inh-rail__thumb">
-                      <InsightCover item={i} sizes="72px" />
-                      <span className="inh-rail__no" aria-hidden>
-                        {String(index + 1).padStart(2, "0")}
+        {/* The featured card tilts on its own selector: it is one card the
+            width of two, so the grid's rotation would be twice the movement at
+            its corners and read as a wobble. */}
+        <ScrubZoom className="inh-lead-zoom" selector=".inh-featured__img">
+          <TiltField
+            className="inh-lead"
+            selector=".inh-featured"
+            max={3}
+            /* The cover is already owned by the scrub zoom above, so the tilt
+               rotates the card and leaves the image alone. */
+            depthSelector={null}
+            lift={-4}
+          >
+            {featured ? <Featured item={featured} /> : null}
+            <aside className="inh-rail" aria-label="Where to start">
+              <div className="inh-rail__head">
+                <h2 className="inh-panel__title">
+                  <SparkIcon />
+                  Start here
+                </h2>
+                <button
+                  type="button"
+                  className="inh-link inh-link--quiet"
+                  onClick={() => {
+                    setFilter(ALL);
+                    setQuery("");
+                    document.getElementById("all-articles")?.scrollIntoView({ block: "start" });
+                  }}
+                >
+                  View all
+                </button>
+              </div>
+              <Reveal as="ol" className="inh-rail__list" stagger y={16}>
+                {rest.slice(0, 4).map((i, index) => (
+                  <li key={i.id}>
+                    <Link href={"/insights/" + i.id} className="inh-rail__item" data-topic={i.topic}>
+                      <span className="inh-rail__thumb">
+                        <InsightCover item={i} sizes="72px" />
+                        <span className="inh-rail__no" aria-hidden>
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
                       </span>
-                    </span>
-                    <span>
-                      <span className="inh-rail__title">{i.title}</span>
-                      <span className="inh-rail__meta">
-                        {i.topic} · {insightReadMinutes(i)} min read
+                      <span>
+                        <span className="inh-rail__title">{i.title}</span>
+                        {/* A phrase, not two fields joined by a middle dot.
+                            The rail is four lines of reading suggestion, and
+                            "Architecture, 13 min" is how a person would say
+                            it out loud. */}
+                        <span className="inh-rail__meta">
+                          {i.topic}, {insightReadMinutes(i)} min
+                        </span>
                       </span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </aside>
-        </div>
+                    </Link>
+                  </li>
+                ))}
+              </Reveal>
+            </aside>
+          </TiltField>
+        </ScrubZoom>
 
         {/* --- three panels ------------------------------------------- */}
-        <div className="inh-panels">
-          <section className="inh-panel">
-            <h2 className="inh-panel__title">
-              <TagIcon />
-              What I write about
-            </h2>
-            <div className="inh-panel__chips">
-              {topics.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  className="inh-chip inh-chip--button"
-                  aria-pressed={filter === t}
-                  onClick={() => setFilter(t)}
-                >
-                  {t}
-                  <span className="inh-chip__count">{count(items, t)}</span>
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              className="inh-link inh-link--quiet inh-panel__action"
-              onClick={() => setFilter(ALL)}
-            >
-              Show every topic <span aria-hidden>→</span>
-            </button>
-          </section>
-
-          <section className="inh-panel">
-            <div className="inh-panel__head">
+        <ExitFade>
+          <Reveal className="inh-panels" stagger>
+            <section className="inh-panel inh-panel--topics">
               <h2 className="inh-panel__title">
-                <ChartIcon />
-                Publishing cadence
+                <TagIcon />
+                What I write about
               </h2>
-              <span className="inh-panel__tag">Last 6 months</span>
-            </div>
-            <p className="inh-panel__note">Pieces published per month.</p>
-            <div className="inh-chart" role="img" aria-label={cadenceLabel(cadence)}>
-              {cadence.map((c) => (
-                <div className="inh-chart__col" key={c.key}>
-                  <div
-                    className="inh-chart__bar"
-                    data-empty={c.n === 0 ? "" : undefined}
-                    style={{ "--h": c.height + "%" } as React.CSSProperties}
-                  />
-                  <span className="inh-chart__tick">{c.label}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {quoted ? (
-            <section className="inh-panel inh-panel--quote">
-              <span className="inh-quote__mark" aria-hidden>
-                &ldquo;
-              </span>
-              <blockquote className="inh-quote" cite={"/insights/" + quoted.id}>
-                {quoted.pullQuote}
-              </blockquote>
-              <p className="inh-quote__by">
-                —{" "}
-                <Link className="inh-quote__source" href={"/insights/" + quoted.id}>
-                  {quoted.title}
-                </Link>
-              </p>
-              <span className="inh-quote__rule" aria-hidden />
+              {/* The constellation is the panel's ground, not an illustration
+                  beside it: each node is one topic, and the node lights with the
+                  chip the reader is on. It says nothing a chip does not already
+                  say, so it stays decorative and out of the accessibility tree. */}
+              <Constellation
+                topics={topics}
+                lit={litTopic === null ? (filter === ALL ? null : topics.indexOf(filter)) : litTopic}
+              />
+              <div className="inh-panel__chips" onPointerLeave={() => setLitTopic(null)}>
+                {topics.map((t, i) => (
+                  <button
+                    key={t}
+                    type="button"
+                    className="inh-chip inh-chip--button"
+                  data-topic={t}
+                    aria-pressed={filter === t}
+                    onPointerEnter={() => setLitTopic(i)}
+                    onFocus={() => setLitTopic(i)}
+                    onBlur={() => setLitTopic(null)}
+                    onClick={() => setFilter(t)}
+                  >
+                    {t}
+                    <span className="inh-chip__count">{count(items, t)}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="inh-link inh-link--quiet inh-panel__action"
+                onClick={() => setFilter(ALL)}
+              >
+                Show every topic
+              </button>
             </section>
-          ) : null}
-        </div>
+  
+            <section className="inh-panel">
+              <div className="inh-panel__head">
+                <h2 className="inh-panel__title">
+                  <ChartIcon />
+                  Publishing cadence
+                </h2>
+                <span className="inh-panel__tag">Last 6 months</span>
+              </div>
+              <p className="inh-panel__note">Pieces published per month.</p>
+              <ChartDraw
+              className="inh-chart"
+              role="img"
+              aria-label={cadenceLabel(cadence)}
+              delay={0.15}
+            >
+                {cadence.map((c) => (
+                  <div className="inh-chart__col" key={c.key}>
+                    <div
+                      className="inh-chart__bar"
+                      data-empty={c.n === 0 ? "" : undefined}
+                      style={{ "--h": c.height + "%" } as React.CSSProperties}
+                    />
+                    <span className="inh-chart__tick">{c.label}</span>
+                  </div>
+                ))}
+              </ChartDraw>
+            </section>
+  
+            {quoted ? (
+              <section className="inh-panel inh-panel--quote">
+                <span className="inh-quote__mark" aria-hidden>
+                  &ldquo;
+                </span>
+                <blockquote className="inh-quote" cite={"/insights/" + quoted.id}>
+                  {/* `quotableInsights` only returns pieces that have one, but
+                      the field is optional on the type. */}
+                  <WordReveal text={quoted.pullQuote ?? ""} delay={0.3} />
+                </blockquote>
+                <p className="inh-quote__by">
+                  —{" "}
+                  <Link className="inh-quote__source" href={"/insights/" + quoted.id}>
+                    {quoted.title}
+                  </Link>
+                </p>
+                <span className="inh-quote__rule" aria-hidden />
+              </section>
+            ) : null}
+          </Reveal>
+        </ExitFade>
 
         {/* --- the grid ----------------------------------------------- */}
-        <div className="inh-grid-head" id="all-articles">
+        <Reveal className="inh-grid-head" id="all-articles">
           <div>
-            <p className="inh-eyebrow">All articles</p>
+            {/* No "ALL ARTICLES" label above this heading. The heading already
+                says what the list is, and when a filter is on it says which
+                subject — a tracked-out eyebrow repeating it was a second label
+                for one thing. */}
             <h2 className="inh-grid-title">{filter === ALL ? "Every insight" : filter}</h2>
           </div>
           <p className="inh-count" aria-live="polite">
             {matches.length}{" "}
             {matches.length === 1 ? "article" : "articles"}
           </p>
-        </div>
+        </Reveal>
 
         {matches.length ? (
-          <div className="inh-grid">
-            {matches.map((i, n) => (
-              <InsightCard item={i} key={i.id} headingLevel="h1" index={n} />
-            ))}
-          </div>
+          <ScrollSpine>
+            <TiltField>
+              {/* Keyed on the filter so changing topic replays the stagger.
+                  The set on screen genuinely changed, and cards that swap their
+                  contents in place leave the reader with no idea whether the
+                  button did anything. The search box is deliberately not in the
+                  key: re-running the entrance on every keystroke would be a
+                  strobe. */}
+              {/* The scroll drift that used to wrap this grid is gone with the
+                  card numerals it moved: they were its only target, and a
+                  parallax with nothing decorative left to carry was an effect
+                  looking for a job. */}
+              <Reveal className="inh-grid" stagger key={filter}>
+                {matches.map((i, n) => (
+                  <InsightCard item={i} key={i.id} headingLevel="h1" index={n} />
+                ))}
+              </Reveal>
+            </TiltField>
+          </ScrollSpine>
         ) : (
           <p className="inh-empty">
             Nothing matches that yet.{" "}
@@ -291,31 +372,40 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
         )}
 
         {intro ? (
-          <section className="inh-intro">
+          <Reveal as="section" className="inh-intro">
             <h2 className="inh-intro__title">Why there are only ten of these</h2>
             <div className="inh-intro__body">{intro}</div>
-          </section>
+          </Reveal>
         ) : null}
 
         {/* --- closing ask -------------------------------------------- */}
-        <section className="inh-cta">
+        <Reveal as="section" className="inh-cta">
           <div>
             <h2 className="inh-cta__title">Recognise one of these problems?</h2>
-            <p className="inh-cta__text">
-              Every piece here came out of a production system that had to keep working. If
-              one of them describes the codebase you are looking at, I do scoped assessments
-              that say what is worth fixing, and in what order.
-            </p>
+            {/* Scrubbed rather than revealed: this is the last paragraph on the
+                route, the reader is arriving at it slowly, and the sweep pulls
+                the eye along the sentence at the speed they are already
+                scrolling. It is never hidden — the words start muted and end
+                at full contrast. */}
+            <ScrubText
+              as="p"
+              className="inh-cta__text"
+              text="Every piece here came out of a production system that had to keep working. If one of them describes the codebase you are looking at, I do scoped assessments that say what is worth fixing, and in what order."
+            />
           </div>
           <div className="inh-cta__actions">
-            <Link className="btn btn--solid" href="/contact?intent=insights">
-              <span className="btn__label">Start a conversation →</span>
-            </Link>
-            <Link className="btn btn--line" href="/work">
-              <span className="btn__label">See the work</span>
-            </Link>
+            <Magnetic>
+              <Link className="btn btn--solid" href="/contact?intent=insights">
+                <span className="btn__label">Start a conversation</span>
+              </Link>
+            </Magnetic>
+            <Magnetic>
+              <Link className="btn btn--line" href="/work">
+                <span className="btn__label">See the work</span>
+              </Link>
+            </Magnetic>
           </div>
-        </section>
+        </Reveal>
       </div>
     </div>
   );
@@ -325,29 +415,38 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
 
 function Hero() {
   return (
-    <header className="inh-hero">
-      <div className="shell inh-hero__inner">
-        <div className="inh-hero__copy">
-          <SectionKicker
-            index={sections.insights.index}
-            label="Thoughts · Ideas · Perspectives"
-          />
-          <h1 className="inh-hero__title">
+    /* Three depths on one scrub: the copy runs ahead of the page as it
+       leaves, the artwork lags behind it, and the rotule sits between the
+       two. What the reader sees is a camera pulling back off the headline
+       rather than a header scrolling away. */
+    <ParallaxScene as="header" className="inh-hero">
+      <HeroEntrance className="shell inh-hero__inner">
+        <div className="inh-hero__copy" data-speed="-0.18">
+          <div data-cue="0">
+            <SectionKicker
+              index={sections.insights.index}
+              label="Notes on shipped work"
+            />
+          </div>
+          <h1 className="inh-hero__title" data-cue="1">
             Notes from
             <br />
             <span className="acc">the real work.</span>
           </h1>
-          <p className="inh-hero__lede">
+          <p className="inh-hero__lede" data-cue="3">
             Engineering positions taken on shipped Angular and frontend systems — what each
             decision bought, and what it cost.
           </p>
         </div>
-        <div className="inh-hero__visual" aria-hidden>
+        <div className="inh-hero__visual" data-cue="2" aria-hidden>
           {/* Decorative, so no alt text, and the wrapper hides it from
               assistive tech. Deliberately not `priority`: the wrapper is
               display:none below 900px, and a preload would pull the file down
               on every phone that never shows it. The LCP element here is the
               headline, which is text. */}
+          {/* `data-spin` is 4 degrees over the whole scene, not a rotation you
+              would catch if you looked for it — just enough that the sphere
+              reads as an object being passed rather than a sticker. */}
           <Image
             className="inh-orb"
             src={media("insights/hub-orb.webp")}
@@ -355,8 +454,10 @@ function Hero() {
             width={1422}
             height={1106}
             sizes="(max-width: 900px) 1px, 70vw"
+            data-speed="0.22"
+            data-spin="4"
           />
-          <span className="inh-hero__rotule">
+          <span className="inh-hero__rotule" data-speed="0.08">
             Ideas
             <br />
             turn
@@ -366,8 +467,8 @@ function Hero() {
             impact
           </span>
         </div>
-      </div>
-    </header>
+      </HeroEntrance>
+    </ParallaxScene>
   );
 }
 
@@ -394,16 +495,13 @@ function Featured({ item }: { item: Insight }) {
         <br />
         theorised
       </span>
-      <span className="inh-featured__no" aria-hidden>
-        {insightNumber(item.id)}
-      </span>
       <span className="inh-featured__inner">
         <span className="inh-badge">Featured</span>
         <h2 className="inh-featured__title">{item.title}</h2>
         <p className="inh-featured__dek">{item.dek}</p>
         <span className="inh-featured__foot">
           <span className="btn btn--line inh-featured__btn">
-            <span className="btn__label">Read article →</span>
+            <span className="btn__label">Read article</span>
           </span>
           <span className="inh-featured__meta">
             <span className="inh-card__read">{insightReadMinutes(item)} min read</span>

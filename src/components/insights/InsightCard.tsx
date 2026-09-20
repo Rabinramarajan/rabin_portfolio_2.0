@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { insightDate, insightNumber, insightReadMinutes } from "@/content/insights";
+import { insightDate, insightReadMinutes } from "@/content/insights";
 import type { Insight } from "@/content/types";
 import type { SectionHeadingLevel } from "@/components/ui";
 import { itemHeadingLevel } from "@/components/ui";
@@ -41,9 +41,15 @@ export function InsightCard({
           item={item}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 22rem"
         />
-        <span className="inh-card__plate-no" aria-hidden>
-          {insightNumber(item.id)}
-        </span>
+        {/* No slot number here any more.
+
+            It was `insightNumber`, which is an article's index in the
+            date-sorted set — not a position in anything a reader follows. The
+            grid is a filterable catalogue, so the figure was at best inert and
+            at worst wrong: filtering to one topic left a single card labelled
+            "07" with nothing on screen for that 7 to count. The ordered rail
+            under "Start here" keeps its numbers, because that list really is a
+            reading order. */}
       </span>
       <span className="inh-card__body">
         <span className="inh-card__meta">

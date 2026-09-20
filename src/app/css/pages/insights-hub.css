@@ -95,6 +95,36 @@
      against the near-black page instead of leaving a visible rectangle, so no
      mask or pre-cropped cut-out is needed. */
   mix-blend-mode: screen;
+  /* Pulled into the site's palette.
+
+     The render arrives as a cold blue-white moon, which is the one object in
+     the hero that belongs to no part of this site: a near-black page with a
+     single lime accent, and then a photographic blue sphere sitting in the
+     middle of it. It read as stock art dropped behind the headline rather
+     than as something made for the page.
+
+     Flattened to grey first, so none of the original blue survives the
+     rotation, then re-tinted through sepia toward the accent's own hue. The
+     result keeps every crater and the rim light — it is still a photograph of
+     a surface — but it is lit in the page's colour instead of against it.
+     Kept under half saturation on purpose: the accent belongs to the CTA and
+     the figures, and a fully lime planet would outrank both.
+
+     Order matters in that chain. `contrast` comes before the tint because the
+     screen blend is what hides the file's black surround, and screen only
+     vanishes at true black — tinting first lifted the near-black edge pixels
+     just enough to draw the image's own bounding rectangle across the hero.
+     Crushing the darks first puts them back at zero, so the rectangle
+     disappears again and only the lit crescent is left. */
+  filter: grayscale(1) contrast(1.22) sepia(0.6) hue-rotate(28deg) saturate(1.45)
+    brightness(0.92);
+  /* The file's black surround is not quite black, so `screen` never fully
+     dissolved its left edge and a faint vertical seam ran down the hero at the
+     image's boundary — visible with or without the tint above. A short fade
+     across the first few per cent of the frame ends it. Kept at 5% because the
+     planet's lit crescent begins around a tenth of the way in, and a wider
+     fade would take the rim light with it. */
+  mask-image: linear-gradient(90deg, transparent 0, #000 5%);
   animation: inh-float 14s var(--ease-out-cubic) infinite alternate;
 }
 
@@ -376,20 +406,6 @@
 .inh-featured:hover .inh-featured__img {
   opacity: 0.7;
   scale: 1.04;
-}
-
-.inh-featured__no {
-  position: absolute;
-  top: 0.25rem;
-  right: 1.5rem;
-  font-family: var(--font-display);
-  font-size: clamp(5rem, 11vw, 9rem);
-  font-weight: 600;
-  letter-spacing: -0.06em;
-  line-height: 1;
-  color: rgb(255 255 255 / 4%);
-  pointer-events: none;
-  user-select: none;
 }
 
 .inh-featured__inner {
@@ -738,14 +754,6 @@
   border-bottom: 1px solid var(--color-line);
 }
 
-.inh-eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--type-xs);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-
 .inh-grid-title {
   margin-top: 0.4rem;
   font-family: var(--font-display);
@@ -864,23 +872,6 @@
   scale: 1.05;
 }
 
-/* Corner, not centre: the plate now carries artwork, and a 4rem numeral over
-   the middle of it obscured the one thing the image was there to show. */
-.inh-card__plate-no {
-  position: absolute;
-  top: 0.5rem;
-  left: 0.85rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  letter-spacing: 0.04em;
-  line-height: 1;
-  color: rgb(255 255 255 / 45%);
-  text-shadow: 0 1px 10px rgb(0 0 0 / 70%);
-  transition: color var(--duration-interaction) var(--ease-out-expo);
-}
-.inh-card:hover .inh-card__plate-no {
-  color: var(--color-accent);
-}
 
 .inh-card__body {
   display: flex;
@@ -1242,4 +1233,182 @@
     rgb(201 242 77 / 35%) 45%,
     transparent
   );
+}
+
+/* ============================================================
+   TOPIC COLOUR
+
+   This section revises an earlier decision recorded above — that
+   a topic is distinguished by where the accent light falls and
+   never by a second colour. One lime on near-black held together,
+   but across a listing of a dozen cards, four figures, three
+   panels and a filter row it read as one flat grey surface: every
+   card the same, with nothing to tell a performance piece from a
+   design one at a glance.
+
+   So each subject now gets a hue of its own. What keeps it from
+   turning into a bag of sweets:
+
+     - The ground never changes. Cards, panels and the page stay
+       near-black; the hue arrives as light — a glow on the plate,
+       a hairline at the top of the card, a lit border on hover —
+       rather than as a filled panel.
+     - Body copy is never tinted. Titles, deks and dates stay on
+       the neutral ramp, so the hue is a label, not a legibility
+       problem. The only tinted text is the topic's own name.
+     - Every hue is a light one on a dark ground, all of them well
+       past 4.5:1 as text, and all at roughly equal lightness so no
+       one subject shouts over the others.
+     - Lime stays the brand and stays on the CTA, the active filter
+       and the figures. A topic hue never appears on a control that
+       means something else.
+   ============================================================ */
+
+:root {
+  /* Kept on the accent so anything without a topic — a draft, a new
+     subject added to content before it is styled — degrades to the
+     site's own colour rather than to nothing. */
+  --topic: var(--color-accent);
+  --topic-architecture: #c9f24d; /* the brand lime: the default subject */
+  --topic-performance: #fbbf24; /* amber — speed, heat */
+  --topic-design: #c4b5fd; /* violet */
+  --topic-mobile: #67e8f9; /* cyan */
+  --topic-accessibility: #93c5fd; /* sky */
+  --topic-practice: #fda4af; /* rose */
+}
+
+[data-topic="Architecture"] {
+  --topic: var(--topic-architecture);
+}
+[data-topic="Performance"] {
+  --topic: var(--topic-performance);
+}
+[data-topic="Design"] {
+  --topic: var(--topic-design);
+}
+[data-topic="Mobile"] {
+  --topic: var(--topic-mobile);
+}
+[data-topic="Accessibility"] {
+  --topic: var(--topic-accessibility);
+}
+[data-topic="Practice"] {
+  --topic: var(--topic-practice);
+}
+
+/* --- the card ------------------------------------------------------- */
+
+/* The plate glow is the largest piece of colour on a card, and it is
+   light rather than fill: the gradient underneath is unchanged, so a
+   card with a cover image still shows the cover. */
+.inh-card__plate {
+  background:
+    radial-gradient(
+      18rem 11rem at var(--plate-x, 72%) var(--plate-y, 6%),
+      color-mix(in oklab, var(--topic) 26%, transparent),
+      transparent 68%
+    ),
+    linear-gradient(var(--plate-angle, 150deg), #1b1b22, #0d0d11);
+}
+
+/* A hairline of the subject's colour along the top edge. It is the
+   quickest read in the grid — you can sort a row of cards by subject
+   without reading a word of them. */
+.inh-card::before {
+  content: "";
+  display: block;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--topic),
+    color-mix(in oklab, var(--topic) 12%, transparent)
+  );
+  opacity: 0.75;
+}
+.inh-card:hover::before {
+  opacity: 1;
+}
+.inh-card:hover {
+  border-color: color-mix(in oklab, var(--topic) 40%, transparent);
+  box-shadow:
+    var(--shadow-depth-md),
+    0 0 0 1px color-mix(in oklab, var(--topic) 14%, transparent);
+}
+
+/* The topic's own name, in the topic's own colour — the one piece of
+   tinted text on the card. */
+.inh-card .inh-chip {
+  color: var(--topic);
+  border-color: color-mix(in oklab, var(--topic) 28%, transparent);
+  background: color-mix(in oklab, var(--topic) 7%, transparent);
+}
+/* --- the featured card ---------------------------------------------- */
+
+.inh-featured__wash {
+  background:
+    linear-gradient(
+      95deg,
+      var(--color-bg-elevated) 18%,
+      rgb(16 16 20 / 82%) 46%,
+      rgb(16 16 20 / 25%) 78%
+    ),
+    radial-gradient(
+      38rem 22rem at 88% 0%,
+      color-mix(in oklab, var(--topic) 15%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(30rem 20rem at 0% 100%, rgb(255 255 255 / 5%), transparent 62%);
+}
+.inh-featured:hover {
+  border-color: color-mix(in oklab, var(--topic) 40%, transparent);
+}
+/* The badge is a filled chip, not an outlined one, so the topic colour goes to
+   its background and the text keeps the dark pairing. Tinting the text instead
+   put lime on lime — the label was still there, at a contrast ratio of 1:1. */
+.inh-featured .inh-badge {
+  background: var(--topic);
+  color: var(--color-accent-contrast);
+  border-color: transparent;
+}
+
+/* --- the rail, the chips and the filter row -------------------------- */
+
+/* The rail is a list of four different subjects in a column, so the
+   number is what carries the colour: tinting four titles in four hues
+   would turn a reading list into a menu. */
+.inh-rail__item .inh-rail__no {
+  color: var(--topic);
+}
+.inh-rail__item:hover .inh-rail__title {
+  color: var(--topic);
+}
+
+.inh-chip--button[aria-pressed="true"] {
+  border-color: var(--topic);
+  color: var(--topic);
+}
+.inh-chip--button:hover {
+  border-color: color-mix(in oklab, var(--topic) 45%, transparent);
+  color: var(--topic);
+}
+
+/* The filter pills are the exception that proves the rule. An active
+   filter is a control, not a label, so it keeps the brand lime and its
+   own contrast pairing; the topic colour appears only as the border
+   while it is being considered. */
+.inh-pill:hover {
+  border-color: color-mix(in oklab, var(--topic) 55%, transparent);
+}
+
+/* --- the constellation ----------------------------------------------- */
+
+/* Each node already stands for one topic, so it takes that topic's hue
+   instead of the accent. The lit node keeps its glow — position, not
+   colour, is what says which one you are on. */
+.inh-const__node[data-lit] {
+  fill: var(--topic);
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--topic) 70%, transparent));
+}
+.inh-const__link[data-lit] {
+  stroke: color-mix(in oklab, var(--topic) 55%, transparent);
 }

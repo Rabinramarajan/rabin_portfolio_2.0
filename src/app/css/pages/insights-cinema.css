@@ -1,0 +1,165 @@
+/* ============================================================
+   INSIGHTS — CINEMATIC LAYER (static half)
+
+   The movement itself lives in components/insights/InsightsCinema.tsx,
+   because base/motion-off.css ends this cascade with a global
+   `transition: none !important` that no rule here can outrun.
+   What is left for CSS is the part that does not move: the ground
+   the 3D tilt needs, the constellation's ink, and the boxes the
+   word reveal and the magnetic wrapper put around existing text.
+
+   Nothing here hides anything. Every element is in its final
+   state at first paint, and GSAP sets the start of a tween on the
+   element itself — so a reader with no JavaScript sees the page,
+   not a set of empty frames.
+   ============================================================ */
+
+/* --- ground for the card tilt --------------------------------------
+   The tilt sets `transformPerspective` on each card as it takes the
+   pointer, so the perspective here is only the fallback that keeps a
+   card mid-tween from flattening if the tween is cleared between
+   frames. `transform-style` has to be declared on the card, not the
+   field, for the cover inside it to move on its own plane. */
+
+.inh-grid .inh-card,
+.inh-lead .inh-featured {
+  transform-style: preserve-3d;
+}
+
+/* The cover is moved against the card's tilt, so it needs room to move
+   inside its frame without uncovering an edge. The plate already clips;
+   this is the backstop for the featured card, whose image is the card's
+   own background rather than a plate. */
+.inh-featured__img,
+.inh-cover {
+  backface-visibility: hidden;
+}
+
+/* --- topic constellation --------------------------------------------
+   One node per topic, laid on the panel behind the chips. Drawn in the
+   line colour at rest so it reads as structure; the lit node is the
+   only accent on the panel, which is what makes "the one you are on"
+   legible without a second colour. */
+
+/* In flow, as a strip between the panel title and the chips, rather than as a
+   layer behind them. Sitting behind the chips it drew diagonals straight
+   through the topic names — with six pills on four wrapped rows there is no
+   clear ground back there, and what read as a constellation on its own read as
+   scribble under text. */
+.inh-const {
+  display: block;
+  width: 100%;
+  height: 2.5rem;
+  margin: var(--space-12) 0 var(--space-4);
+  pointer-events: none;
+  overflow: visible;
+}
+
+.inh-const__node {
+  fill: var(--color-line-strong);
+}
+.inh-const__node[data-lit] {
+  fill: var(--color-accent);
+  /* The glow is the illumination — without it a 2.6px dot reads as a
+     slightly larger dot rather than as a lit one. */
+  filter: drop-shadow(0 0 6px rgb(201 242 77 / 70%));
+}
+
+.inh-const__link {
+  stroke: var(--color-line);
+  stroke-width: 0.4;
+  /* preserveAspectRatio="none" stretches the viewBox, and with it the
+     stroke. This keeps the chain a hairline at any panel width. */
+  vector-effect: non-scaling-stroke;
+}
+.inh-const__link[data-lit] {
+  stroke: color-mix(in oklab, var(--color-accent) 55%, transparent);
+}
+
+
+/* --- the pull quote, word by word ----------------------------------
+   Each word is an inline-block so it can be translated on its own
+   baseline; the wrapper stays inline so the quote still wraps, selects
+   and copies as one sentence. */
+
+.inh-word {
+  display: inline;
+}
+.inh-word__w {
+  display: inline-block;
+  /* The words rise half an em into place, and a quote set in a panel
+     with its own padding has no room to clip them against. `will-change`
+     is deliberately absent: there are two dozen of these and the tween
+     is over in half a second. */
+  white-space: pre-wrap;
+}
+
+/* --- magnetic call to action ---------------------------------------
+   `.magnetic` already carries the site's wrapper rules in base/motion.css.
+   This is only what the insights CTA adds: the two buttons are laid out
+   by a flex row that the wrapper now sits inside, so the wrapper has to
+   stop being a plain inline box or the buttons lose their alignment. */
+
+.inh-cta__actions .magnetic {
+  display: inline-flex;
+}
+.inh-cta__actions .magnetic > .btn {
+  width: 100%;
+}
+
+/* --- scrubbed heading and paragraph sweeps --------------------------
+   The words are inline-block so each can carry its own colour without
+   breaking the line box. They are never hidden — the scrub moves them
+   between two text colours, so the sentence reads at full size and in a
+   legible colour even with no JavaScript, no scroll, or a browser that
+   ran none of the tweens. */
+
+.inh-scrub__w {
+  display: inline-block;
+  white-space: pre-wrap;
+}
+
+/* --- the listing spine ----------------------------------------------
+   A hairline down the left margin of the grid that fills with scroll
+   position. Decorative: it says where you are in the listing, which the
+   card count above the grid already says in words. */
+
+.inh-spine-wrap {
+  position: relative;
+}
+
+.inh-spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Out in the shell's gutter, clear of the first column of cards. */
+  left: calc(var(--space-20) * -1);
+  width: 1px;
+  background: var(--color-line);
+  display: none;
+  pointer-events: none;
+}
+
+/* Only where there is margin to spare. Below this the grid runs to the
+   shell edge, and a rule pressed against the first card reads as a
+   border that card was not given. */
+@media (min-width: 1280px) {
+  .inh-spine {
+    display: block;
+  }
+}
+
+.inh-spine__fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--color-accent),
+    color-mix(in oklab, var(--color-accent) 25%, transparent)
+  );
+  transform-origin: 50% 0%;
+}
+
+/* `.inh-lead-zoom` deliberately has no rules. It is a plain block wrapping
+   the lead, and it is what the scrubbed zoom measures — `display: contents`
+   would remove its box and leave ScrollTrigger measuring nothing. */

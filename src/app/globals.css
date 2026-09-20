@@ -35,6 +35,9 @@
 @import "./css/components/footer.css";
 
 @import "./css/pages/insights-hub.css";
+/* Sits next to the hub sheet for the same reason that one is global: the
+   homepage teaser shares the card, and with it the tilt and the reveals. */
+@import "./css/pages/insights-cinema.css";
 @import "./css/pages/misc.css";
 
 @import "./css/components/chat-widget.css";
