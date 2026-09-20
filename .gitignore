@@ -69,3 +69,6 @@ lighthouse-local.report.*
 # empty log and wipe the whole /version timeline. Tracked for that reason.
 # Other publish/ artefacts stay ignored.
 /publish/build-log-*.tmp
+
+.vercel
+.env*
