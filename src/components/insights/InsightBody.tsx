@@ -79,7 +79,12 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
               <span className="insd-quote__mark" aria-hidden>
                 &ldquo;
               </span>
-              <p className="insd-quote__text">{block.text}</p>
+              {/* The article pull quote assembles a word at a time — see
+                  components/motion/CinematicLayer. It is an <aside>, not a
+                  <blockquote>, so it asks for the treatment by hand. */}
+              <p className="insd-quote__text" data-cine-quote>
+                {block.text}
+              </p>
             </aside>
           );
         }

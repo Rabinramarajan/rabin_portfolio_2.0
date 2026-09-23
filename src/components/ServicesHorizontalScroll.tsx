@@ -165,6 +165,9 @@ export function ServicesHorizontalScroll({
       id={id}
       className={styles.pin}
       aria-labelledby={`${id}-rail-label`}
+      /* The rail pins itself and scrubs its own track; the site-wide layer
+         must not also fade or scale it. */
+      data-cine-skip
     >
       <header className={styles.head}>
         <SectionKicker index={intro.index} label={intro.label} className={styles.kicker} />

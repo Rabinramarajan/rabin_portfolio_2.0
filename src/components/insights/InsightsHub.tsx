@@ -105,7 +105,9 @@ export function InsightsHub({ intro }: { intro?: ReactNode } = {}) {
   const quoted = quotes[quoteIndex];
 
   return (
-    <div className="inh">
+    /* The whole hub is choreographed by InsightsCinema; the site-wide
+       CinematicLayer stays out of it. */
+    <div className="inh" data-cine-skip>
       {/* The hero eases back and dims as the listing takes over the screen —
           the one cut on the route that is a cut rather than a scroll. */}
       <ExitFade>

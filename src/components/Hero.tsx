@@ -96,7 +96,7 @@ export function Hero() {
       posterSizes={hero.reel?.posterSizes}
       loop
       as="section"
-      containerProps={{ id: "hero", "aria-labelledby": "hero-heading" }}
+      containerProps={{ id: "hero", "aria-labelledby": "hero-heading", "data-cine-skip": "" }}
       trackClassName="chero-track"
       /* Both classes, always. The pin used to be added and removed with
          `scrub`, which resolves only after hydration, so a phone rendered a

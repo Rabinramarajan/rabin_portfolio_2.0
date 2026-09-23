@@ -31,7 +31,8 @@ export function InsightsSection({
   const rest = items.filter((i) => i.id !== featured?.id).slice(0, 2);
 
   return (
-    <section id="insights" className="section inh-teaser">
+    /* The teaser shares /insights own cinema primitives — see InsightsCinema. */
+    <section id="insights" className="section inh-teaser" data-cine-skip>
       {/* The tilt field is the shell rather than the grid itself: one
           delegated pointer listener covers every card, and the cards stay
           server-rendered links with nothing wrapped around them. */}

@@ -1,0 +1,31 @@
+/* ============================================================
+   CINEMATIC LAYER — the markup the site-wide choreography needs
+
+   Only the pieces `components/motion/CinematicLayer.tsx` writes
+   into the DOM itself live here. The moves are all GSAP inline
+   style, because base/motion-off.css ends the cascade with
+   `* { animation: none !important; transition: none !important }`.
+   ============================================================ */
+
+/* A word inside a split quote. Inline-block so it can be moved on Y; the
+   wrapper stays inline so the quote is still one selectable sentence and the
+   line still wraps between words rather than inside them. */
+.cine-w {
+  display: inline;
+}
+.cine-w__i {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Depth is bought with overscale, so the frame has to clip. Sites that opt a
+   frame in by hand get the clipping with the hook. */
+[data-cine-depth-frame] {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cine-w__i {
+    will-change: auto;
+  }
+}
