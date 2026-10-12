@@ -281,7 +281,7 @@ html.intro-play .intro {
   place-items: center;
   pointer-events: none;
   background: var(--coral);
-  animation: intro-out 550ms var(--ease-out) 1350ms forwards;
+  animation: intro-out 700ms var(--ease-out) 4300ms forwards;
 }
 
 .intro__panel {
@@ -304,7 +304,7 @@ html.intro-play .intro {
   display: inline-block;
   transform: translateY(110%);
   animation: intro-letter 600ms var(--ease-out) forwards;
-  animation-delay: calc(120ms + var(--i) * 45ms);
+  animation-delay: calc(200ms + var(--i) * 110ms);
 }
 
 .intro__rule {
@@ -314,7 +314,7 @@ html.intro-play .intro {
   background: var(--color-text);
   transform: scaleX(0);
   transform-origin: left center;
-  animation: intro-rule 500ms var(--ease-out) 850ms forwards;
+  animation: intro-rule 900ms var(--ease-out) 1800ms forwards;
 }
 
 .intro__tag {
@@ -324,7 +324,7 @@ html.intro-play .intro {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0;
-  animation: intro-fade 450ms ease 1000ms forwards;
+  animation: intro-fade 700ms ease 2300ms forwards;
 }
 
 @keyframes intro-letter {
