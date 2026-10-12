@@ -123,10 +123,12 @@
   box-shadow: var(--shadow-offset-lg);
 }
 
+// Notepad sheets: light blue ruled paper with a dashed stitched border and a row of
+// spiral rings along the top edge. Each sheet tilts slightly, then straightens on hover.
 .hero__metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-6) var(--space-4);
   margin: var(--space-16) 0 0;
 
   @include desktop-up {
@@ -135,25 +137,81 @@
 }
 
 .metric {
+  --paper: var(--color-secondary);
+  --paper-rule: rgb(40 37 34 / 16%);
+
+  position: relative;
   display: flex;
   flex-direction: column;
-  padding: var(--space-4) var(--space-6);
-  background: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-12) var(--space-6) var(--space-6);
+  background-color: var(--paper);
+  // Blue ruled lines, drawn with a repeating gradient so no image is fetched
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 1.85rem,
+    var(--paper-rule) 1.85rem,
+    var(--paper-rule) calc(1.85rem + 2px)
+  );
+  background-position: 0 var(--space-12);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 20px -14px rgb(40 37 34 / 55%);
+  transform: rotate(-1deg);
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
 
-  &:nth-child(2) {
-    background: var(--color-secondary);
+  // Dashed stitching just inside the sheet edge
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0.6rem;
+    border: 1.5px dashed var(--color-border);
+    border-radius: 0.35rem;
+    opacity: 0.75;
+    pointer-events: none;
+  }
 
-    .metric__source {
-      color: var(--color-text);
-    }
+  // Spiral rings along the top edge, half over the sheet
+  &::after {
+    content: '';
+    position: absolute;
+    top: -0.75rem;
+    left: 0;
+    right: 0;
+    height: 1.5rem;
+    background-image: radial-gradient(
+      circle at center,
+      #fffaf2 0 0.16rem,
+      #7d7770 0.2rem 0.36rem,
+      transparent 0.4rem
+    );
+    background-size: 1.6rem 100%;
+    background-position: 0.8rem center;
+    background-repeat: repeat-x;
+    pointer-events: none;
+  }
+
+  &:nth-child(even) {
+    transform: rotate(0.8deg);
+  }
+
+  &:hover,
+  &:focus-within {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow: 0 20px 26px -16px rgb(40 37 34 / 60%);
   }
 }
 
 .metric__label {
   order: 2;
-  font-weight: 700;
+  margin-top: var(--space-1);
+  font: 700 var(--text-hand) / 1.1 var(--font-hand);
+
+  // Small black heart as the bullet accent
+  &::before {
+    content: '\2665';
+    margin-right: 0.35em;
+    color: var(--color-text);
+  }
 }
 
 .metric__value {
@@ -164,7 +222,7 @@
 
 .metric__source {
   order: 3;
-  margin: var(--space-1) 0 0;
+  margin: var(--space-2) 0 0;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
