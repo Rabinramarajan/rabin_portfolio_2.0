@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { hero, profile, proofMetrics } from '../../../../data/profile';
 import { useGsap } from '../../../../core/motion/gsap';
+import { IMAGE_BREAKPOINTS, mediaImageLoader } from '../../../../core/images/image-loader';
 import { Button } from '../../../../shared/components/button/button';
 import { SocialLinks } from '../../../../shared/components/social-links/social-links';
+
+const HERO_ART = '/media/hero/hero-illustration-v2.webp';
 
 /** The H1, split into words so the entrance can stagger them. */
 const HEADLINE: { text: string; highlight?: boolean }[] = [
@@ -17,7 +19,7 @@ const HEADLINE: { text: string; highlight?: boolean }[] = [
 
 @Component({
   selector: 'app-hero',
-  imports: [NgOptimizedImage, RouterLink, Button, SocialLinks],
+  imports: [RouterLink, Button, SocialLinks],
   host: {
     '(pointermove)': 'onPointerMove($event)',
     '(pointerleave)': 'onPointerMove(null)',
@@ -31,6 +33,15 @@ export class Hero {
   protected readonly profile = profile;
   protected readonly headline = HEADLINE;
   protected readonly metrics = proofMetrics;
+  /**
+   * A plain <img> (not NgOptimizedImage): it is the LCP image on desktop but sits
+   * below the buttons on phones, so it loads eagerly at normal priority rather than
+   * being preloaded, which slowed first paint on mobile.
+   */
+  protected readonly art = {
+    src: HERO_ART,
+    srcset: IMAGE_BREAKPOINTS.map((width) => `${mediaImageLoader({ src: HERO_ART, width })} ${width}w`).join(', '),
+  };
   protected readonly socials = profile.socials.filter((s) => s.id === 'github' || s.id === 'linkedin');
 
   /** Pointer parallax for the illustration; set up on desktop only. */

@@ -37,11 +37,13 @@
     <figure class="hero__visual">
       <img
         class="hero__art"
-        ngSrc="/media/hero/hero-illustration-v2.webp"
+        [src]="art.src"
+        [srcset]="art.srcset"
         alt="Illustration of Rabin coding at a warm-lit desk: Angular and TypeScript code on screen, sticky notes, a coffee mug, books and a sleeping cat"
         width="1536"
         height="1024"
         loading="eager"
+        decoding="async"
         sizes="(min-width: 1080px) 50vw, 100vw"
       />
       <!-- Animated details, drawn in the illustration's own 1536 x 1024 pixel space so they stay aligned at any size -->
