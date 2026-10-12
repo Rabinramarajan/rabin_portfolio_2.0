@@ -29,6 +29,14 @@
       </div>
     </dl>
 
+    <app-location-map
+      class="contact__map"
+      label="Map showing Madipakkam, Chennai, Tamil Nadu, India"
+      caption="Madipakkam, Chennai · neighbourhood level"
+      [center]="info.mapCenter"
+      [zoom]="12"
+    />
+
     <app-social-links [links]="socials" />
 
     <app-scene-art class="contact__art" [scene]="scene" [tilt]="-3" />

@@ -5,6 +5,7 @@ import { useGsap } from '../../../core/motion/gsap';
 import { SectionHeading } from '../../../shared/components/section-heading/section-heading';
 import { StickyNote } from '../../../shared/components/sticky-note/sticky-note';
 import { SocialLinks } from '../../../shared/components/social-links/social-links';
+import { LocationMap } from '../../../shared/components/location-map/location-map';
 import { SoftwareWindow } from '../../../shared/components/software-window/software-window';
 import { ContactForm } from '../contact-form/contact-form';
 import { SceneArtComponent, SCENES } from '../../../shared/components/scene-art/scene-art';
@@ -12,7 +13,7 @@ import { SceneArtComponent, SCENES } from '../../../shared/components/scene-art/
 /** Contact intro, direct details and the form. Used on the home page and /contact. */
 @Component({
   selector: 'app-contact-section',
-  imports: [SceneArtComponent, SectionHeading, StickyNote, SocialLinks, SoftwareWindow, ContactForm],
+  imports: [SceneArtComponent, SectionHeading, StickyNote, SocialLinks, SoftwareWindow, ContactForm, LocationMap],
   templateUrl: './contact-section.html',
   styleUrl: './contact-section.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

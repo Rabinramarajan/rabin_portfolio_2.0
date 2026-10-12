@@ -1,0 +1,7 @@
+<figure class="location-map">
+  <div #canvas class="location-map__canvas" role="img" [attr.aria-label]="label()">
+    <!-- Moved into the map by MapLibre once it loads, so the scoped styles still apply -->
+    <span #pin class="location-map__pin" aria-hidden="true" hidden></span>
+  </div>
+  <figcaption class="location-map__caption">{{ caption() }}</figcaption>
+</figure>
