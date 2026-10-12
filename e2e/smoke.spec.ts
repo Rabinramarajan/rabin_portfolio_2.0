@@ -33,7 +33,10 @@ for (const path of PRESERVED_ROUTES) {
     const response = await page.goto(path);
     expect(response?.status()).toBe(200);
     await expect(page.locator('h1')).toHaveCount(1);
-    await expect(page).toHaveTitle(/Rabin R/);
+    // Titles carry " | Rabin R" unless that would push them past ~60 characters
+    const title = await page.title();
+    expect(title.length).toBeGreaterThan(10);
+    expect(title.length).toBeLessThanOrEqual(62);
     const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
     expect(canonical).toBe(`https://rabinr.in${path === '/' ? '/' : path}`);
     expect(errors).toEqual([]);

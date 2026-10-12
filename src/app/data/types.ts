@@ -47,29 +47,12 @@ export interface HeroContent {
   disciplines?: string[];
   /** Pull quote rendered beside the headline, with a script signature. */
   quote?: { lines: string[]; signature: string };
-  /** Full-bleed background reel behind the hero. */
-  reel?: {
-    src: string;
-    poster?: string;
-    /** Small-viewport cut of the same reel. `src` is encoded all-intra so
-     *  the scroll scrub can seek any frame, which costs several megabytes;
-     *  below the scrub breakpoint nothing seeks, so Hero serves this instead.
-     *  Falls back to `src` when absent. */
-    mobileSrc?: string;
-    /** Candidate widths for `poster`. The hero poster is the LCP element, so
-     *  the home page also preloads it — both the <img> and that preload read
-     *  these fields, which is what keeps them from resolving different files. */
-    posterSrcSet?: string;
-    posterSizes?: string;
-  };
   description: string;
   primaryCta: Cta;
   secondaryCta: Cta;
   /** Recruiter escape hatch out of the client funnel. */
   recruiterCta?: Cta & { linkLabel: string };
   metadata: { label: string; value: string }[];
-  portrait: Required<MediaRef>;
-  midground: Required<MediaRef>;
 }
 
 export interface AboutContent {

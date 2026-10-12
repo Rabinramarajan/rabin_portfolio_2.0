@@ -38,11 +38,17 @@ const paths = Object.keys(routes)
   .filter((path) => !EXCLUDED.has(path))
   .sort();
 
-const lastmod = new Date().toISOString().slice(0, 10);
+const buildDate = new Date().toISOString().slice(0, 10);
+/** Articles report their real modified date; other pages the build date. */
+const lastmodFor = async (path) => {
+  const html = await readFile(join(BROWSER, path, 'index.html'), 'utf8');
+  return /<meta property="article:modified_time" content="(\d{4}-\d{2}-\d{2})/.exec(html)?.[1] ?? buildDate;
+};
+const lastmods = Object.fromEntries(await Promise.all(paths.map(async (p) => [p, await lastmodFor(p)])));
 const urls = paths
   .map((path) => {
     const loc = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
-    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <priority>${priorityFor(path)}</priority>\n  </url>`;
+    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmods[path]}</lastmod>\n    <priority>${priorityFor(path)}</priority>\n  </url>`;
   })
   .join('\n');
 

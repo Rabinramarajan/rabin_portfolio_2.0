@@ -20,8 +20,24 @@ export interface PageSeo {
 }
 
 const TITLE_SUFFIX = 'Rabin R';
+/** Search results truncate titles around 60 characters and descriptions around 160. */
+const MAX_TITLE = 60;
+const MAX_DESCRIPTION = 160;
 const DEFAULT_OG_IMAGE = '/brand/og-image.png';
 const JSON_LD_ID = 'page-jsonld';
+
+/** "Title | Rabin R", or just the title when the suffix would push it past the limit. */
+export function pageTitle(title: string): string {
+  const withBrand = `${title} | ${TITLE_SUFFIX}`;
+  return withBrand.length <= MAX_TITLE || title.includes(TITLE_SUFFIX) ? withBrand : title;
+}
+
+/** Trims meta descriptions at a word boundary; the visible page copy is never changed. */
+export function metaDescription(text: string): string {
+  if (text.length <= MAX_DESCRIPTION) return text;
+  const cut = text.slice(0, MAX_DESCRIPTION - 1);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[\s,;:—–-]+$/, '') + '…';
+}
 
 export function absoluteUrl(path = '/'): string {
   if (!path || path === '/') return SITE_URL + '/';
@@ -42,12 +58,13 @@ export class SeoService {
 
   update(seo: PageSeo): void {
     const url = absoluteUrl(seo.path);
-    const fullTitle = seo.path === '/' ? defaultSeo.title : `${seo.title} | ${TITLE_SUFFIX}`;
+    const fullTitle = seo.path === '/' ? defaultSeo.title : pageTitle(seo.title);
+    const description = metaDescription(seo.description);
     const image = absoluteUrl(seo.image ?? DEFAULT_OG_IMAGE);
     const type = seo.type ?? 'website';
 
     this.title.setTitle(fullTitle);
-    this.setName('description', seo.description);
+    this.setName('description', description);
     this.setName('robots', seo.noindex ? 'noindex, follow' : 'index, follow');
 
     this.setProperty('og:type', type);
@@ -55,7 +72,7 @@ export class SeoService {
     this.setProperty('og:site_name', profile.name);
     this.setProperty('og:locale', 'en_IN');
     this.setProperty('og:title', fullTitle);
-    this.setProperty('og:description', seo.description);
+    this.setProperty('og:description', description);
     this.setProperty('og:image', image);
     this.setProperty('og:image:alt', `${profile.name} — ${profile.role}`);
     this.setOptionalProperty('article:published_time', type === 'article' ? seo.publishedTime : undefined);
@@ -63,7 +80,7 @@ export class SeoService {
 
     this.setName('twitter:card', 'summary_large_image');
     this.setName('twitter:title', fullTitle);
-    this.setName('twitter:description', seo.description);
+    this.setName('twitter:description', description);
     this.setName('twitter:image', image);
 
     this.setCanonical(url);

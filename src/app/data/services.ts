@@ -18,11 +18,6 @@ const catalogue: Service[] = [
     technologies: ["TypeScript", "Angular", "React", "Next.js"],
     idealFor: "Product teams that need a senior frontend owner.",
     image: { src: media("services/frontend-engineering.webp"), alt: "Frontend engineering component architecture diagram" },
-    media: {
-      type: "image",
-      src: media("services/frontend-engineering.webp"),
-      alt: "Frontend engineering component architecture showcase",
-    },
   },
   {
     id: "angular",
@@ -36,12 +31,6 @@ const catalogue: Service[] = [
     technologies: ["Angular 17–22", "Signals", "Standalone APIs", "RxJS"],
     idealFor: "Government, insurance, and enterprise platforms.",
     image: { src: media("services/angular-development.webp"), alt: "Angular enterprise application architecture" },
-    media: {
-      type: "video",
-      src: media("services/angular-development.mp4"),
-      poster: media("services/angular-development.webp"),
-      alt: "Enterprise Angular portal workflow walkthrough",
-    },
   },
   {
     id: "react",
@@ -55,12 +44,6 @@ const catalogue: Service[] = [
     technologies: ["React 19", "Next.js", "TypeScript", "Tailwind CSS"],
     idealFor: "Marketing sites, product surfaces, and editorial web apps.",
     image: { src: media("services/react-nextjs.webp"), alt: "React Next.js server-first application preview" },
-    media: {
-      type: "video",
-      src: media("services/react-nextjs.mp4"),
-      poster: media("services/react-nextjs.webp"),
-      alt: "React Next.js digital experience preview",
-    },
   },
   {
     id: "ui",
@@ -74,11 +57,6 @@ const catalogue: Service[] = [
     technologies: ["SCSS", "Tailwind CSS", "WCAG 2.1 AA", "Motion"],
     idealFor: "Teams who care how the product feels after launch day.",
     image: { src: media("services/ui-engineering.webp"), alt: "UI engineering accessible interface showcase" },
-    media: {
-      type: "image",
-      src: media("services/ui-engineering.webp"),
-      alt: "UI engineering design system component card",
-    },
   },
   {
     id: "performance",
@@ -92,12 +70,6 @@ const catalogue: Service[] = [
     technologies: ["Lighthouse", "Code splitting", "SSR", "Image strategy"],
     idealFor: "Products that already work, but feel heavy.",
     image: { src: media("services/performance-optimization.webp"), alt: "Performance optimization analytics dashboard" },
-    media: {
-      type: "video",
-      src: media("services/performance-optimization.mp4"),
-      poster: media("services/performance-optimization.webp"),
-      alt: "Performance profiling and Core Web Vitals demonstration",
-    },
   },
   {
     id: "ionic",
@@ -124,11 +96,6 @@ const catalogue: Service[] = [
     technologies: ["TypeScript", "Tailwind CSS", "Storybook", "Angular", "React"],
     idealFor: "Growing teams building multiple products or platforms.",
     image: { src: media("services/design-systems.webp"), alt: "Design system component ecosystem" },
-    media: {
-      type: "image",
-      src: media("services/design-systems.webp"),
-      alt: "Design system component layout and documentation",
-    },
   },
 ];
 

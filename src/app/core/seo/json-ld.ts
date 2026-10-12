@@ -34,3 +34,70 @@ export function websiteJsonLd(): Record<string, unknown> {
     publisher: { '@id': `${SITE_URL}/#person` },
   };
 }
+
+/** BreadcrumbList for a page, e.g. Home › Work › PRIMS Member Portal. */
+export function breadcrumbJsonLd(trail: { name: string; path: string }[]): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Home', path: '/' }, ...trail].map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  };
+}
+
+/** /about as a ProfilePage whose main entity is the site's Person. */
+export function profilePageJsonLd(): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    url: absoluteUrl('/about'),
+    mainEntity: personJsonLd(),
+  };
+}
+
+/** One service landing page, offered by the site's Person. */
+export function serviceJsonLd(input: {
+  name: string;
+  description: string;
+  path: string;
+  image?: string;
+  serviceType: string;
+}): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: input.name,
+    serviceType: input.serviceType,
+    description: input.description,
+    url: absoluteUrl(input.path),
+    image: input.image ? absoluteUrl(input.image) : undefined,
+    areaServed: 'Worldwide',
+    provider: { '@id': `${SITE_URL}/#person` },
+  };
+}
+
+/** A case study page: the project as a CreativeWork Rabin built. */
+export function caseStudyJsonLd(input: {
+  name: string;
+  description: string;
+  path: string;
+  image?: string;
+  year: string;
+  technologies: string[];
+}): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: input.name,
+    description: input.description,
+    url: absoluteUrl(input.path),
+    image: input.image ? absoluteUrl(input.image) : undefined,
+    dateCreated: input.year,
+    keywords: input.technologies.join(', '),
+    creator: { '@id': `${SITE_URL}/#person` },
+  };
+}

@@ -1,7 +1,14 @@
 import { ResolveFn, Route, Routes } from '@angular/router';
 import { RouteSeoData } from './core/seo/route-seo';
 import { defaultSeo } from './data/profile';
-import { personJsonLd, websiteJsonLd } from './core/seo/json-ld';
+import {
+  breadcrumbJsonLd,
+  caseStudyJsonLd,
+  personJsonLd,
+  profilePageJsonLd,
+  serviceJsonLd,
+  websiteJsonLd,
+} from './core/seo/json-ld';
 
 const NOT_FOUND_SEO: RouteSeoData = {
   title: 'Page not found',
@@ -15,11 +22,23 @@ const projectSeo: ResolveFn<RouteSeoData> = async (route) => {
   const { getProject } = await import('./data/projects');
   const project = getProject(route.paramMap.get('slug') ?? '');
   if (!project) return NOT_FOUND_SEO;
+  const path = `/work/${project.slug}`;
   return {
     title: project.seo.title,
     description: project.seo.description,
     type: 'article',
     image: project.cover?.src,
+    jsonLd: [
+      caseStudyJsonLd({
+        name: project.title,
+        description: project.seo.description,
+        path,
+        image: project.cover?.src,
+        year: project.year,
+        technologies: project.technologies,
+      }),
+      breadcrumbJsonLd([{ name: 'Work', path: '/work' }, { name: project.title, path }]),
+    ],
   };
 };
 
@@ -27,7 +46,22 @@ const serviceSeo: ResolveFn<RouteSeoData> = async (route) => {
   const { getServiceRoute } = await import('./data/service-routes');
   const service = getServiceRoute(route.paramMap.get('slug') ?? '');
   if (!service) return NOT_FOUND_SEO;
-  return { title: service.title, description: service.description, image: service.service.image.src };
+  const path = `/services/${service.slug}`;
+  return {
+    title: service.title,
+    description: service.description,
+    image: service.service.image.src,
+    jsonLd: [
+      serviceJsonLd({
+        name: service.title,
+        description: service.description,
+        path,
+        image: service.service.image.src,
+        serviceType: service.service.title,
+      }),
+      breadcrumbJsonLd([{ name: 'Services', path: '/services' }, { name: service.title, path }]),
+    ],
+  };
 };
 
 const insightSeo: ResolveFn<RouteSeoData> = async (route) => {
@@ -41,7 +75,13 @@ const insightSeo: ResolveFn<RouteSeoData> = async (route) => {
     publishedTime: insight.datePublished,
     modifiedTime: insight.dateModified ?? insight.datePublished,
     image: insight.cover?.src,
-    jsonLd: insightJsonLd(insight),
+    jsonLd: [
+      insightJsonLd(insight),
+      breadcrumbJsonLd([
+        { name: 'Insights', path: '/insights' },
+        { name: insight.title ?? 'Insight', path: `/insights/${insight.id}` },
+      ]),
+    ],
   };
 };
 
@@ -86,6 +126,7 @@ export const routes: Routes = [
         title: 'Selected Work',
         description:
           'Angular and enterprise work by Rabin R — Fiji immigration platforms, the PRIMS pension portal, the VNPF mobile app and insurance consoles.',
+        jsonLd: breadcrumbJsonLd([{ name: 'Work', path: '/work' }]),
       } satisfies RouteSeoData,
     },
   },
@@ -102,6 +143,7 @@ export const routes: Routes = [
         title: 'Angular & Frontend Engineering Services',
         description:
           'Four services: Angular engineering, frontend architecture, performance optimization and Ionic cross-platform mobile — for enterprise and government products.',
+        jsonLd: breadcrumbJsonLd([{ name: 'Services', path: '/services' }]),
       } satisfies RouteSeoData,
     },
   },
@@ -118,6 +160,7 @@ export const routes: Routes = [
         title: 'Insights — Angular Engineering Notes',
         description:
           'Engineering notes from Rabin R on Angular architecture, Signals, rendering performance and quiet interfaces — positions taken from shipped production work.',
+        jsonLd: breadcrumbJsonLd([{ name: 'Insights', path: '/insights' }]),
       } satisfies RouteSeoData,
     },
   },
@@ -134,6 +177,7 @@ export const routes: Routes = [
         title: 'Experience — Angular & Frontend Roles',
         description:
           "Rabin R's frontend engineering experience — from 2021 to Angular architecture in 2026, across government, pension and insurance in three countries.",
+        jsonLd: breadcrumbJsonLd([{ name: 'Experience', path: '/experience' }]),
       } satisfies RouteSeoData,
     },
   },
@@ -142,10 +186,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/about/about-page').then((m) => m.AboutPage),
     data: {
       seo: {
-        title: 'About Rabin R',
+        title: 'About — Frontend Angular Consultant',
         description:
           'Frontend Angular consultant in Chennai — 4+ years across government, pension, insurance and healthcare platforms in three countries.',
-        jsonLd: personJsonLd(),
+        jsonLd: [profilePageJsonLd(), breadcrumbJsonLd([{ name: 'About', path: '/about' }])],
       } satisfies RouteSeoData,
     },
   },
@@ -157,6 +201,7 @@ export const routes: Routes = [
         title: 'Process — How an Engagement Runs',
         description:
           'How Rabin R runs an engagement — discover, define, design, build, test, launch and evolve — so frontend work stays predictable from first call to production.',
+        jsonLd: breadcrumbJsonLd([{ name: 'Process', path: '/process' }]),
       } satisfies RouteSeoData,
     },
   },
@@ -168,6 +213,7 @@ export const routes: Routes = [
         title: 'Engagement Models & Pricing',
         description:
           'Indicative INR engagement models for Angular and frontend work with Rabin R — project, retainer and consulting shapes, and what each one includes.',
+        jsonLd: breadcrumbJsonLd([{ name: 'Pricing', path: '/pricing' }]),
       } satisfies RouteSeoData,
     },
   },
@@ -179,6 +225,7 @@ export const routes: Routes = [
         title: 'Resume — Frontend Angular Consultant',
         description:
           'Resume of Rabin R — Frontend Angular Consultant in Chennai, India, with roles, responsibilities, delivered projects and the full technology stack.',
+        jsonLd: breadcrumbJsonLd([{ name: 'Résumé', path: '/resume' }]),
       } satisfies RouteSeoData,
     },
   },
@@ -190,6 +237,7 @@ export const routes: Routes = [
         title: 'Contact — Angular Consulting Enquiries',
         description:
           "Ready to collaborate? Reach out with your project ideas, challenges, or opportunities. Let's create something impactful together.",
+        jsonLd: breadcrumbJsonLd([{ name: 'Contact', path: '/contact' }]),
       } satisfies RouteSeoData,
     },
   },

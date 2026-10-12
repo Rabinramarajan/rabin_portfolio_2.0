@@ -91,7 +91,11 @@
             }
             @case ('link') {
               <p>
-                @if (isLive(block.href)) {
+                @if (isExternal(block.href)) {
+                  <a [href]="block.href" target="_blank" rel="noopener noreferrer">
+                    {{ block.text }}<span class="visually-hidden"> (opens in a new tab)</span>
+                  </a>
+                } @else if (isLive(block.href)) {
                   <a [routerLink]="block.href">{{ block.text }}</a>
                 } @else {
                   {{ block.text }}

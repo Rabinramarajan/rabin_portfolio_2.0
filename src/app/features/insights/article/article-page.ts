@@ -58,6 +58,10 @@ export class ArticlePage {
 
   protected readonly moreArticles = computed(() => latestInsights().filter((i) => i.id !== this.slug()).slice(0, 2));
 
+  protected isExternal(href: string): boolean {
+    return /^https?:\/\//.test(href);
+  }
+
   protected isLive(href: string): boolean {
     return isLinkLive(href);
   }

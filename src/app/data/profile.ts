@@ -1,5 +1,4 @@
 import type { Credentials, EducationEntry, HeroContent, NavItem, Profile, SeoContent } from './types';
-import { media } from './media';
 
 export const SITE_URL = "https://rabinr.in";
 
@@ -157,26 +156,6 @@ export const hero: HeroContent = {
     lines: ["Code is my craft.", "Impact is my goal."],
     signature: profile.shortName,
   },
-  reel: {
-    src: media("hero/home-reel-v6.mp4"),
-    /* The phone cut. Same five seconds, normal GOP, 720p — 263 KB against
-       the scrub encode's 4.7 MB. Hero picks between the two with the media
-       query that already decides scroll vs autoplay, so the file that can be
-       seeked is only ever fetched by the viewports that seek. */
-    mobileSrc: media("hero/home-reel-v6-mobile.mp4"),
-    poster: media("hero/home-poster-v6.webp"),
-    /* The poster is the LCP element. This srcset and the <link rel="preload">
-       on the home page are read from these same two fields precisely so they
-       cannot drift — a preload that does not match the srcset makes the
-       browser fetch one file for the preload and a different one for the img. */
-    posterSrcSet: [
-      `${media("hero/home-poster-v6-640.webp")} 640w`,
-      `${media("hero/home-poster-v6-960.webp")} 960w`,
-      `${media("hero/home-poster-v6.webp")} 1280w`,
-      `${media("hero/home-poster-v6-1920.webp")} 1920w`,
-    ].join(", "),
-    posterSizes: "100vw",
-  },
   description:
     "Remote Angular consultant building government and enterprise systems across 3 countries — from immigration workflows serving 10K+ users to pension member portals.",
   primaryCta: { label: "View Case Studies", href: "/work" },
@@ -191,13 +170,6 @@ export const hero: HeroContent = {
     { label: "Active Users", value: credentials.users },
     { label: "Countries", value: credentials.countries },
   ],
-  portrait: { src: media("profile/rabin-hero.webp"), alt: "Portrait of Rabin R", width: 640, height: 800 },
-  midground: {
-    src: media("projects/fiji-immigration-internal/hero.webp"),
-    alt: "Fiji Immigration officer workflow interface",
-    width: 1600,
-    height: 1000,
-  },
 };
 
 export const defaultSeo: SeoContent = {
