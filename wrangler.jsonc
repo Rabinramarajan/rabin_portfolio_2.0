@@ -5,6 +5,8 @@
   "compatibility_date": "2026-10-01",
   "observability": { "enabled": true },
 
+  "routes": [{ "pattern": "rabinr.in", "custom_domain": true }],
+
   // Every route is prerendered to its own index.html, so assets serve all pages.
   // Unknown paths get the prerendered 404.html with a real 404 status.
   // Only /api/* and /robots.txt run the Worker first.
