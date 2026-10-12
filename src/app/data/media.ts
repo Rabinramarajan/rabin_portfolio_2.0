@@ -4,6 +4,7 @@
  */
 export const MEDIA_MANIFEST = {
   "profile/rabin-about.webp": "/media/about/about-portrait.webp",
+  "profile/rabin-selfie.webp": "/media/about/about-selfie.webp",
   "services/frontend-engineering.webp": "/media/service/service_1.webp",
   "services/angular-development.webp": "/media/service/service_2.webp",
   "services/react-nextjs.webp": "/media/service/service_3.webp",

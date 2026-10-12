@@ -12,26 +12,32 @@
   <form class="form" novalidate (submit)="onSubmit($event)" aria-describedby="contact-form-note">
     <p id="contact-form-note" class="form__note">Fields marked * are required.</p>
 
-    <div class="form__row">
-      <app-form-control controlId="contact-name" label="Name" autocomplete="name" [field]="contactForm.name" />
+    <fieldset class="form__group">
+      <legend class="form__legend"><span class="form__step" aria-hidden="true">1</span> About you</legend>
+      <div class="form__row">
+        <app-form-control controlId="contact-name" label="Name" autocomplete="name" [field]="contactForm.name" />
+        <app-form-control
+          controlId="contact-email"
+          label="Email"
+          type="email"
+          autocomplete="email"
+          [field]="contactForm.email"
+        />
+      </div>
+    </fieldset>
+
+    <fieldset class="form__group">
+      <legend class="form__legend"><span class="form__step" aria-hidden="true">2</span> Your project</legend>
+      <app-form-control controlId="contact-subject" label="Subject" [field]="contactForm.subject" />
+
       <app-form-control
-        controlId="contact-email"
-        label="Email"
-        type="email"
-        autocomplete="email"
-        [field]="contactForm.email"
+        controlId="contact-message"
+        label="What are you working on?"
+        type="textarea"
+        [hint]="'At least ' + limits.message.min + ' characters — the problem, the product, or the opportunity.'"
+        [field]="contactForm.message"
       />
-    </div>
-
-    <app-form-control controlId="contact-subject" label="Subject" [field]="contactForm.subject" />
-
-    <app-form-control
-      controlId="contact-message"
-      label="What are you working on?"
-      type="textarea"
-      [hint]="'At least ' + limits.message.min + ' characters — the problem, the product, or the opportunity.'"
-      [field]="contactForm.message"
-    />
+    </fieldset>
 
     <!-- Honeypot: hidden from people and assistive tech. Bots that fill it are dropped server-side. -->
     <div class="form__trap" aria-hidden="true">

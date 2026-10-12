@@ -75,6 +75,7 @@
     <dl class="hero__metrics">
       @for (metric of metrics; track metric.label) {
         <div class="metric">
+          <span class="metric__icon" aria-hidden="true"></span>
           <dt class="metric__label">{{ metric.label }}</dt>
           <dd class="metric__value">{{ metric.value }}</dd>
           <dd class="metric__source">{{ metric.source }}</dd>

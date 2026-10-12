@@ -2,71 +2,100 @@
 
 $dot: 2.75rem;
 
-.stepper {
-  display: grid;
-  gap: var(--space-8);
-
+// Desktop with motion allowed: a tall track gives the scroll distance, and the stage
+// inside it is pinned with sticky. Everywhere else the track is just a normal block.
+.process__track {
   @include desktop-up {
-    gap: var(--space-12);
+    @media (prefers-reduced-motion: no-preference) {
+      height: calc(var(--steps, 7) * 75vh);
+    }
   }
 }
 
-// Mobile: a vertical rail beside a stacked list. Desktop: one horizontal row.
-.rail {
-  position: relative;
+// Pinned stage: step rail across the top, detail panel filling the rest of the viewport
+.process__stage {
+  @include desktop-up {
+    @media (prefers-reduced-motion: no-preference) {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+      height: calc(100vh - var(--header-height) - var(--space-12));
+    }
+  }
 }
 
+.rail {
+  position: relative;
+  flex: none;
+}
+
+// Phones and tablets: no line, the rail is a swipeable row of step chips
 .rail__line {
-  position: absolute;
-  top: calc($dot / 2);
-  bottom: calc($dot / 2);
-  left: calc($dot / 2);
-  width: 3px;
-  background: var(--color-border);
-  transform: translateX(-50%);
-  transform-origin: top center;
+  display: none;
 
   @include desktop-up {
+    display: block;
+    position: absolute;
     top: calc($dot / 2);
-    bottom: auto;
     left: 7%;
     right: 7%;
-    width: auto;
     height: 3px;
+    background: var(--color-border);
     transform: translateY(-50%);
+  }
+}
+
+// Filled from the left as the reader scrolls through the pinned track
+.rail__progress {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--coral);
+
+  @include desktop-up {
     transform-origin: left center;
+    transform: scaleX(var(--progress, 0));
   }
 }
 
 .rail__list {
   position: relative;
   display: flex;
-  flex-direction: column;
   gap: var(--space-3);
+  overflow-x: auto;
+  padding: var(--space-2) var(--space-1);
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
 
   @include desktop-up {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: var(--space-2);
+    overflow: visible;
+    padding: 0;
   }
 }
 
 .rail__item {
   display: flex;
+  flex: none;
+  flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
   padding: 0;
   font: inherit;
   color: var(--color-text);
-  text-align: left;
+  text-align: center;
   background: none;
   border: 0;
+  scroll-snap-align: center;
   cursor: pointer;
 
   @include desktop-up {
-    flex-direction: column;
-    gap: var(--space-2);
-    text-align: center;
+    flex: initial;
+    min-width: 0;
   }
 
   &:focus-visible {
@@ -110,7 +139,9 @@ $dot: 2.75rem;
 }
 
 .rail__label {
+  font-size: var(--text-sm);
   font-weight: 700;
+  white-space: nowrap;
 
   [aria-selected='true'] & {
     text-decoration: underline 3px var(--yellow);
@@ -128,6 +159,16 @@ $dot: 2.75rem;
   @include tablet-up {
     padding: var(--space-8) var(--space-12);
   }
+
+  // Pinned: fills the rest of the stage. Scrolls inside only if a small screen is very short.
+  @include desktop-up {
+    @media (prefers-reduced-motion: no-preference) {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+  }
 }
 
 .panel__content {
@@ -135,6 +176,20 @@ $dot: 2.75rem;
   flex-direction: column;
   gap: var(--space-6);
   animation: fade-up 400ms var(--ease-out);
+
+  // Desktop: intro on the left, the lists on the right, so the panel reads in one glance
+  @include desktop-up {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-12);
+    align-items: start;
+  }
+}
+
+.panel__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .panel__head {
@@ -166,6 +221,12 @@ $dot: 2.75rem;
 
   @include tablet-up {
     grid-template-columns: 1.3fr 1fr;
+  }
+
+  // Desktop: the two lists sit side by side so the panel fits the viewport without scrolling
+  @include desktop-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
   }
 }
 

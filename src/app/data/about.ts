@@ -49,9 +49,8 @@ export const about: AboutContent = {
     { value: credentials.users, label: 'Users served', icon: 'users', note: 'Across government and enterprise platforms' },
     { value: credentials.countries, label: 'Countries', icon: 'countries', note: 'Deployments running outside India' },
   ],
-  // Composed treatment: the cut-out portrait ships with its own glow rings,
-  // monogram badge and signature, so the section renders it as a single layer.
-  portrait: { src: media('profile/rabin-about.webp'), alt: 'Rabin R, Frontend Angular Consultant', width: 1100, height: 1202 },
+  // Framed sunset selfie. The About frame crops it to portrait, centred on the face.
+  portrait: { src: media('profile/rabin-selfie.webp'), alt: 'Rabin R, Frontend Angular Consultant', width: 1400, height: 933 },
   hero: {
     headline: ['THE ENGINEER', 'BEHIND THE', 'INTERFACE.'],
     statement:

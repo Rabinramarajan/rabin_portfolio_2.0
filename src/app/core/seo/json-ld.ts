@@ -11,7 +11,7 @@ export function personJsonLd(): Record<string, unknown> {
     name: profile.name,
     jobTitle: profile.role,
     url: SITE_URL + '/',
-    image: absoluteUrl('/media/about/about-portrait.webp'),
+    image: absoluteUrl('/media/about/about-selfie.webp'),
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Chennai',

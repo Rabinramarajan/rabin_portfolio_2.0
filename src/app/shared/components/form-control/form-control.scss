@@ -20,17 +20,29 @@
 
 .input {
   width: 100%;
-  min-height: 48px;
+  min-height: 3.25rem;
   padding: var(--space-3) var(--space-4);
+  // 1rem keeps iOS from zooming the page when a field is focused
   font: inherit;
+  font-size: var(--text-base);
   color: var(--color-text);
   background: var(--color-surface);
   border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-sm);
-  transition: box-shadow var(--duration-fast) var(--ease-out);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 transparent;
+  transition:
+    box-shadow var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 
+  &::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.8;
+  }
+
+  // Focus: the field lifts onto a hard coral offset, like a sticker being pressed down
   &:focus-visible {
     outline: none;
+    border-color: var(--color-primary-dark);
     box-shadow: var(--shadow-offset);
   }
 

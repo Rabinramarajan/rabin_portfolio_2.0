@@ -2,59 +2,77 @@
   <span class="timeline__track" aria-hidden="true"><span class="timeline__progress"></span></span>
 
   <ol class="timeline__list">
-    @for (role of roles; track role.id) {
-      <li class="timeline__item">
-        <span class="timeline__marker" [class.is-current]="role.current" aria-hidden="true">{{ role.initials }}</span>
+    @for (chapter of chapters; track chapter.id; let odd = $odd) {
+      <li
+        class="timeline__item"
+        [class.timeline__item--flip]="odd"
+        [class.timeline__item--next]="chapter.next"
+      >
+        <div class="timeline__meta">
+          <p class="timeline__index">{{ chapter.index }} / {{ total }}</p>
+          <time class="timeline__year">{{ chapter.year }}</time>
+          <p class="timeline__phase">{{ chapter.phase }}</p>
+        </div>
+
+        <span class="timeline__dot" [class.is-current]="chapter.live" aria-hidden="true"></span>
 
         <article class="role">
           <header class="role__header">
-            <div>
-              <p class="role__dates">
-                <time>{{ role.dates }}</time>
-                @if (role.current) {
-                  <span class="role__now">now</span>
-                }
-              </p>
-              @if (headingLevel() === 2) {
-                <h2 class="role__title">{{ role.role }}</h2>
-              } @else {
-                <h3 class="role__title">{{ role.role }}</h3>
+            <span class="role__logo" aria-hidden="true">
+              <span>{{ chapter.monogram }}</span>
+              @if (chapter.logo) {
+                <img [src]="chapter.logo" alt="" loading="lazy" />
               }
-              <p class="role__company">{{ role.company }} · {{ role.type }} · {{ role.location }}</p>
+            </span>
+            <div class="role__identity">
+              @if (headingLevel() === 2) {
+                <h2 class="role__title">{{ chapter.title }}</h2>
+              } @else {
+                <h3 class="role__title">{{ chapter.title }}</h3>
+              }
+              @if (chapter.role && chapter.org) {
+                <p class="role__company">{{ chapter.org }}</p>
+              }
+              @if (chapter.location) {
+                <p class="role__location">{{ chapter.location }}</p>
+              }
             </div>
-            @if (role.milestone) {
-              <p class="role__milestone hand">{{ role.milestone }}</p>
-            }
           </header>
 
-          <p class="role__description">{{ role.description }}</p>
+          <p class="role__headline">{{ chapter.headline }}</p>
 
-          <div class="role__columns">
-            <div>
-              <p class="role__label">Responsibilities</p>
+          <p class="role__description">{{ chapter.body }}</p>
+
+          @if (chapter.achievements?.length) {
+            <div class="role__outcomes">
+              <p class="role__label">What it produced</p>
               <ul class="role__list">
-                @for (item of role.responsibilities; track item) {
+                @for (item of chapter.achievements; track item) {
                   <li>{{ item }}</li>
                 }
               </ul>
             </div>
-            @if (role.impact.length) {
-              <div class="role__outcomes">
-                <p class="role__label">Key outcomes</p>
-                <ul class="role__list">
-                  @for (item of role.impact; track item) {
-                    <li>{{ item }}</li>
-                  }
-                </ul>
-              </div>
-            }
-          </div>
+          }
 
-          <ul class="tag-list" aria-label="Technologies">
-            @for (tech of role.technologies; track tech) {
-              <li><app-skill-badge [label]="tech" /></li>
-            }
-          </ul>
+          @if (chapter.statuses?.length) {
+            <ul class="role__statuses" aria-label="Status">
+              @for (status of chapter.statuses; track status) {
+                <li>{{ status }}</li>
+              }
+            </ul>
+          }
+
+          @if (chapter.tags.length) {
+            <ul class="tag-list" aria-label="Technologies">
+              @for (tech of chapter.tags; track tech) {
+                <li><app-skill-badge [label]="tech" /></li>
+              }
+            </ul>
+          }
+
+          @if (chapter.footer) {
+            <p class="role__footer hand">{{ chapter.footer }}</p>
+          }
         </article>
       </li>
     }

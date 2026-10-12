@@ -26,6 +26,8 @@
     width: 100%;
     aspect-ratio: 4 / 4.4;
     object-fit: cover;
+    // Centre the crop on the face in the landscape photo
+    object-position: 45% 50%;
     border: var(--border-width) solid var(--color-border);
     border-radius: 4px;
   }

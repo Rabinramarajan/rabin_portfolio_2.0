@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { experience, formatRoleDates } from '../../../data/experience';
+import { careerHorizon } from '../../../data/experience';
 import { useGsap } from '../../../core/motion/gsap';
 import { SkillBadge } from '../../../shared/components/skill-badge/skill-badge';
 
-function initials(company: string): string {
-  return company
+function initials(text: string): string {
+  return text
     .split(/\s+/)
     .slice(0, 2)
     .map((word) => word[0])
@@ -21,15 +21,22 @@ function initials(company: string): string {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExperienceTimeline {
-  /** Heading level for each role title, so the timeline nests under any page heading. */
+  /** Heading level for each chapter title, so the timeline nests under any page heading. */
   readonly headingLevel = input<2 | 3>(3);
 
-  protected readonly roles = experience.map((role) => ({
-    ...role,
-    dates: formatRoleDates(role),
-    initials: initials(role.company),
-    current: role.end === null,
-  }));
+  protected readonly total = careerHorizon.length;
+
+  protected readonly chapters = careerHorizon.map((chapter, index) => {
+    const title = chapter.role ?? chapter.org ?? chapter.headline;
+    return {
+      ...chapter,
+      index: String(index + 1).padStart(2, '0'),
+      title,
+      monogram: chapter.monogram ?? initials(chapter.org ?? ''),
+      live: chapter.tone === 'live',
+      next: chapter.tone === 'next',
+    };
+  });
 
   constructor() {
     useGsap(({ gsap, root }) => {
