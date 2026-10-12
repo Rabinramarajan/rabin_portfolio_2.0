@@ -81,7 +81,6 @@
    that only that route requests:
 
      insights.css ............ app/insights/[slug]/page.tsx
-     version.css ............. app/version/page.tsx
      legal.css ............... app/privacy + app/terms
      about-story.css ......... app/about/page.tsx
      process-cinematic.css ... app/process/page.tsx

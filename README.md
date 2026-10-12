@@ -6,7 +6,7 @@ Premium freelancer portfolio rebuilt with Next.js 16, React 19, TypeScript and T
 
 ```bash
 npm install
-vercel env pull .env.local   # or create .env.local by hand
+# Create .env.local from .env.example and fill in the values you need.
 npm run dev
 ```
 
@@ -32,8 +32,7 @@ CONTACT_TO_EMAIL=hello@rabinr.in
 Generate the app password in Zoho (Security → App Passwords); it is shown once.
 Mail is always sent **from** the authenticated Zoho mailbox with the visitor's
 address as `Reply-To` — spoofing the visitor as sender breaks SPF/DKIM and gets
-the message rejected. Set the same variables in Vercel under
-Project → Settings → Environment Variables.
+the message rejected.
 
 SMTP credentials and `NVIDIA_API_KEY` stay on the server.
 Never expose them as NEXT_PUBLIC_ vars.
@@ -45,14 +44,13 @@ reel and portraits — is served from Vercel Blob. `/public` keeps only the smal
 static assets (favicons, PWA logos).
 
 ```bash
-vercel env pull .env.local     # BLOB_READ_WRITE_TOKEN
 npm run blob:migrate:dry       # preview the upload
 npm run blob:migrate           # upload everything in the manifest
 ```
 
-Then set `NEXT_PUBLIC_BLOB_BASE_URL` (the store's public origin) locally and on
-Vercel. Until it is set the app falls back to the legacy `/public/media` paths,
-so a fresh clone still renders.
+Then set `NEXT_PUBLIC_BLOB_BASE_URL` (the store's public origin) in the runtime
+environment. Until it is set the app falls back to the legacy `/public/media`
+paths, so a fresh clone still renders.
 
 Assets are addressed through the type-safe manifest in `src/lib/media.ts` —
 `media("projects/galaxy-sofas/gallery-02.webp")` — never by a literal URL.

@@ -7,8 +7,8 @@
 # every release commit. `eol=lf` keeps the working copy matching the index, so
 # the conversion (and the warning) never happens.
 #
-# This also keeps Linux CI and the Dockerfile.vercel build byte-identical to a
-# Windows checkout, which matters for anything that hashes or diffs a file.
+# This also keeps Linux CI byte-identical to a Windows checkout, which matters
+# for anything that hashes or diffs a file.
 * text=auto eol=lf
 
 # Binaries: never inspected for line endings, never diffed as text. `text=auto`
