@@ -83,7 +83,10 @@
               "buildTarget": "rabin-portfolio:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "hmr": false
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"
