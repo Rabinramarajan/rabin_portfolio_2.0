@@ -55,3 +55,6 @@ Thumbs.db
 
 # Wrangler local secrets/flags
 .dev.vars
+
+# Production secrets for `npm run deploy:production:secrets` (never commit)
+.secrets.env

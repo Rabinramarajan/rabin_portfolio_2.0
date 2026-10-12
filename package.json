@@ -11,7 +11,8 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p worker/tsconfig.json",
     "preview": "npm run build && wrangler dev",
-    "deploy:production": "npm run build && wrangler deploy"
+    "deploy:production": "npm run build && wrangler deploy",
+    "deploy:production:secrets": "npm run build && wrangler deploy --secrets-file .secrets.env"
   },
   "private": true,
   "packageManager": "npm@11.19.0",
