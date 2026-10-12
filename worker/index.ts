@@ -243,16 +243,60 @@ function toText({ name, email, subject, message }: ContactMessage): string {
   return `New message from the portfolio contact form\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\n${message}\n`;
 }
 
+/**
+ * The notification email, laid out for mail clients: tables and inline styles only (no
+ * external CSS, images or fonts), in the site's Warm Creative palette. Every visitor value
+ * is escaped; the reply button is a mailto link to the visitor's own address.
+ */
 function toHtml({ name, email, subject, message }: ContactMessage): string {
-  const paragraphs = escapeHtml(message)
+  const body = escapeHtml(message)
     .split(/\n{2,}/)
-    .map((block) => `<p>${block.replace(/\n/g, '<br>')}</p>`)
+    .map((block) => `<p style="margin:0 0 14px;font-size:16px;line-height:1.6;color:#282522">${block.replace(/\n/g, '<br>')}</p>`)
     .join('');
+  const replyHref = escapeHtml(`mailto:${email}?subject=${encodeURIComponent(`Re: ${subject}`)}`);
+  const preheader = escapeHtml(`${name}: ${subject}`);
 
-  return `<div style="font-family:system-ui,sans-serif;line-height:1.6;color:#282522">
-<h2 style="margin:0 0 12px">New portfolio enquiry</h2>
-<p><strong>Name:</strong> ${escapeHtml(name)}<br><strong>Email:</strong> ${escapeHtml(email)}<br><strong>Subject:</strong> ${escapeHtml(subject)}</p>
-<hr style="border:0;border-top:1px solid #e0d6c6">${paragraphs}</div>`;
+  return `<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>New portfolio enquiry</title></head>
+<body style="margin:0;padding:0;background:#f8f1e5;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f8f1e5;">${preheader}</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8f1e5;">
+  <tr><td align="center" style="padding:24px 12px;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;font-family:Arial,Helvetica,sans-serif;">
+      <tr><td style="padding:0 0 12px;">
+        <span style="display:inline-block;padding:6px 14px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#282522;background:#a7bfa3;border:2px solid #282522;border-radius:999px;">New enquiry</span>
+      </td></tr>
+      <tr><td style="background:#fffaf2;border:2px solid #282522;border-radius:16px;box-shadow:6px 6px 0 #282522;padding:28px;">
+        <h1 style="margin:0 0 6px;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.2;color:#282522;">${escapeHtml(subject)}</h1>
+        <p style="margin:0 0 20px;font-size:14px;color:#5f5850;">From <strong style="color:#282522;">${escapeHtml(name)}</strong></p>
+
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 22px;">
+          <tr>
+            <td style="padding:12px 14px;background:#f8f1e5;border:1.5px solid #282522;border-radius:10px;">
+              <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4a6244;">Email</p>
+              <p style="margin:0;font-size:15px;font-weight:700;color:#282522;word-break:break-all;">${escapeHtml(email)}</p>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4a6244;">Message</p>
+        ${body}
+
+        <table role="presentation" cellspacing="0" cellpadding="0" style="margin:24px 0 0;">
+          <tr><td style="background:#e76f51;border:2px solid #282522;border-radius:999px;box-shadow:3px 3px 0 #282522;">
+            <a href="${replyHref}" style="display:inline-block;padding:12px 22px;font-size:15px;font-weight:700;color:#282522;text-decoration:none;">Reply to ${escapeHtml(name)} &rarr;</a>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:16px 4px 0;font-size:12px;line-height:1.5;color:#5f5850;">
+        Sent from the contact form on rabinr.in. Replying goes straight to ${escapeHtml(email)}.
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
 }
 
 function escapeHtml(value: string): string {
