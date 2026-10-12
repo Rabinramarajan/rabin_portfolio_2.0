@@ -35,7 +35,7 @@ for (const path of PRESERVED_ROUTES) {
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page).toHaveTitle(/Rabin R/);
     const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
-    expect(canonical).toBe(`https://www.rabinr.in${path === '/' ? '/' : path}`);
+    expect(canonical).toBe(`https://rabinr.in${path === '/' ? '/' : path}`);
     expect(errors).toEqual([]);
   });
 }
@@ -113,4 +113,30 @@ test('reduced motion leaves content visible', async ({ page }) => {
     els.filter((el) => getComputedStyle(el).opacity === '0').length,
   );
   expect(hidden).toBe(0);
+});
+
+test.describe('agent discovery', () => {
+  test('pages advertise discovery links and vary on Accept', async ({ request }) => {
+    const response = await request.get('/work');
+    expect(response.headers()['vary']).toContain('Accept');
+    const link = response.headers()['link'];
+    for (const rel of ['rel="sitemap"', 'rel="describedby"', 'rel="api-catalog"', 'type="text/markdown"']) {
+      expect(link).toContain(rel);
+    }
+  });
+
+  test('Accept: text/markdown returns the Markdown twin on the same URL', async ({ request }) => {
+    const response = await request.get('/work/prims-member-portal', { headers: { Accept: 'text/markdown' } });
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('text/markdown');
+    expect(await response.text()).toContain('# PRIMS Member Portal');
+  });
+
+  test('llms.txt, robots.txt and the API catalog are published', async ({ request }) => {
+    expect(await (await request.get('/llms.txt')).text()).toMatch(/^# Rabin R/);
+    expect(await (await request.get('/robots.txt')).text()).toContain('Content-Signal: search=yes, ai-input=yes, ai-train=yes');
+    const catalog = await request.get('/.well-known/api-catalog');
+    expect(catalog.headers()['content-type']).toContain('application/linkset+json');
+    expect((await catalog.json()).linkset[0].anchor).toMatch(/\/api\/contact$/);
+  });
 });

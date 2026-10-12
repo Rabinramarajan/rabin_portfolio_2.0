@@ -61,7 +61,7 @@ export const resumeContact = {
 /** Web presence line. Display text is what prints; href is what a click follows. */
 export const resumeLinks = [
   { label: "linkedin.com/in/rabinr", href: "https://www.linkedin.com/in/rabinr" },
-  { label: "rabinr.in", href: "https://www.rabinr.in" },
+  { label: "rabinr.in", href: "https://rabinr.in" },
   { label: "github.com/Rabinramarajan", href: "https://github.com/Rabinramarajan" },
 ];
 

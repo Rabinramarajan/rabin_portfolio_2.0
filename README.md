@@ -1,6 +1,6 @@
 # Rabin R — Portfolio
 
-Angular 22 portfolio for [rabinr.in](https://www.rabinr.in): standalone components, Signals, zoneless change
+Angular 22 portfolio for [rabinr.in](https://rabinr.in): standalone components, Signals, zoneless change
 detection, Signal Forms, GSAP + ScrollTrigger, and every route prerendered to static HTML. Hosted on
 Cloudflare (static assets + one Worker for the contact form).
 
@@ -48,3 +48,17 @@ Locally, `wrangler dev` simulates delivery; nothing is sent.
 `public/images/logo.webp` and `public/logo-*.png` are the approved raster logo and are what the site uses.
 `public/brand/*.svg` is a hand-built vector recreation **pending approval**; the favicon SVG is the monogram
 only so it stays legible at 16–32px.
+
+## SEO and agent discovery
+
+- Canonical domain: `https://rabinr.in` (set in `src/app/data/profile.ts` and `scripts/postbuild.mjs`).
+  `www.rabinr.in` should 301 to it (Cloudflare redirect rule).
+- `robots.txt` (`public/`): everything allowed except `/api/`, with
+  `Content-Signal: search=yes, ai-input=yes, ai-train=yes`. Non-canonical hosts get `Disallow: /` from the Worker.
+- Built by `scripts/postbuild.mjs` from the prerendered pages: `sitemap.xml`, `llms.txt`, and a Markdown twin
+  of every page (`/work/index.md`). The Worker serves the twin on the page URL for `Accept: text/markdown`.
+- Every HTML page carries `Link` headers (sitemap, llms.txt, API catalog, Markdown alternate) and `Vary: Accept`.
+- `/.well-known/api-catalog` (RFC 9727) points to `public/openapi.json`, the description of `/api/contact`.
+- The contact form registers a WebMCP tool, `draft_contact_message`, for in-browser agents. It only fills the form;
+  the visitor still presses Send.
+- Local audits: `.dev.vars` (git-ignored) sets `LOCAL_INDEXABLE=true` so `wrangler dev` serves the real robots.txt.

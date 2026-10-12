@@ -1,7 +1,7 @@
 import type { Credentials, EducationEntry, HeroContent, NavItem, Profile, SeoContent } from './types';
 import { media } from './media';
 
-export const SITE_URL = "https://www.rabinr.in";
+export const SITE_URL = "https://rabinr.in";
 
 export const profile: Profile = {
   name: "Rabin R",

@@ -19,8 +19,8 @@ import {
 } from '../src/app/core/contact/contact.model';
 
 const MAX_BODY_BYTES = 16 * 1024;
-/** The only host that gets the real robots.txt; previews, workers.dev and the bare apex are blocked. */
-const INDEXABLE_HOSTS = new Set(['www.rabinr.in']);
+/** The only host that gets the real robots.txt; previews, workers.dev and www (which should redirect here) are blocked. */
+const INDEXABLE_HOSTS = new Set(['rabinr.in']);
 
 export default {
   async fetch(request, env): Promise<Response> {
@@ -46,9 +46,76 @@ export default {
       return json({ ok: false, error: 'Not found.' }, 404);
     }
 
-    return env.ASSETS.fetch(request);
+    if (url.pathname === '/.well-known/api-catalog') {
+      return apiCatalog(url.origin);
+    }
+
+    return servePage(request, env, url);
   },
 } satisfies ExportedHandler<Env>;
+
+/** Discovery links sent with every HTML page (RFC 8288). */
+const SITE_LINKS = [
+  '</sitemap.xml>; rel="sitemap"; type="application/xml"',
+  '</llms.txt>; rel="describedby"; type="text/plain"',
+  '</.well-known/api-catalog>; rel="api-catalog"',
+];
+
+/** "/work/prims" -> "/work/prims/index.md"; "/" -> "/index.md" (written by scripts/postbuild.mjs). */
+function markdownPath(pathname: string): string {
+  const base = pathname.replace(/\/+$/, '');
+  return `${base}/index.md`;
+}
+
+/**
+ * Pages are prerendered HTML with a Markdown twin. A request that asks for
+ * `Accept: text/markdown` gets the twin on the same URL; everyone else gets
+ * the HTML, with `Vary: Accept` so caches keep the two apart.
+ */
+async function servePage(request: Request, env: Env, url: URL): Promise<Response> {
+  const wantsMarkdown = request.method === 'GET' && (request.headers.get('Accept') ?? '').includes('text/markdown');
+
+  if (wantsMarkdown) {
+    const md = await env.ASSETS.fetch(new Request(new URL(markdownPath(url.pathname), url.origin), request));
+    if (md.ok) {
+      const headers = new Headers(md.headers);
+      headers.set('Content-Type', 'text/markdown; charset=utf-8');
+      headers.set('Vary', 'Accept');
+      headers.append('Link', `<${url.pathname}>; rel="canonical"`);
+      return new Response(md.body, { status: 200, headers });
+    }
+  }
+
+  const response = await env.ASSETS.fetch(request);
+  if (!(response.headers.get('Content-Type') ?? '').includes('text/html')) return response;
+
+  const headers = new Headers(response.headers);
+  headers.set('Vary', 'Accept');
+  for (const link of SITE_LINKS) headers.append('Link', link);
+  if (response.status === 200) {
+    headers.append('Link', `<${markdownPath(url.pathname)}>; rel="alternate"; type="text/markdown"`);
+  }
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
+/** RFC 9727 API catalog: the one public API, the contact endpoint, and its OpenAPI description. */
+function apiCatalog(origin: string): Response {
+  const body = {
+    linkset: [
+      {
+        anchor: `${origin}/api/contact`,
+        'service-desc': [{ href: `${origin}/openapi.json`, type: 'application/vnd.oai.openapi+json' }],
+        'service-doc': [{ href: `${origin}/contact`, type: 'text/html' }],
+      },
+    ],
+  };
+  return new Response(JSON.stringify(body, null, 2), {
+    headers: {
+      'Content-Type': 'application/linkset+json; profile="https://www.rfc-editor.org/info/rfc9727"',
+      'Cache-Control': 'public, max-age=3600',
+    },
+  });
+}
 
 async function handleContact(request: Request, env: Env): Promise<Response> {
   if (!isSameOrigin(request)) {

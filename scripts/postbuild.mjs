@@ -11,8 +11,9 @@
 import { copyFile, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
+import TurndownService from 'turndown';
 
-const SITE_URL = 'https://www.rabinr.in';
+const SITE_URL = 'https://rabinr.in';
 const DIST = 'dist/rabin-portfolio';
 const BROWSER = join(DIST, 'browser');
 
@@ -70,6 +71,53 @@ for (const file of htmlFiles) {
   inlined++;
 }
 
+// Markdown twins and llms.txt, built from the prerendered pages so they can never drift from the HTML
+const turndown = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced', bulletListMarker: '-' });
+turndown.remove(['script', 'style', 'svg', 'noscript', 'form', 'button', 'img']);
+turndown.addRule('decorative', {
+  filter: (node) => node.getAttribute?.('aria-hidden') === 'true' || node.classList?.contains('visually-hidden'),
+  replacement: () => '',
+});
+
+const decode = (text) =>
+  text.replace(/&amp;/g, '&').replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+const pages = [];
+for (const path of paths) {
+  const html = await readFile(join(BROWSER, path, 'index.html'), 'utf8');
+  const title = decode(/<title>([^<]*)<\/title>/.exec(html)?.[1] ?? path);
+  const description = decode(/<meta name="description" content="([^"]*)"/.exec(html)?.[1] ?? '');
+  const main = /<main[^>]*>([\s\S]*)<\/main>/.exec(html)?.[1] ?? '';
+  const url = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
+  const body = turndown.turndown(main).replace(/\n{3,}/g, '\n\n').trim();
+  const markdown = `---\ntitle: ${JSON.stringify(title)}\ndescription: ${JSON.stringify(description)}\nurl: ${url}\n---\n\n${body}\n`;
+  await writeFile(join(BROWSER, path, 'index.md'), markdown);
+  pages.push({ path, title: title.replace(/ \| Rabin R$/, ''), description, url });
+}
+
+const section = (heading, test) => {
+  const list = pages.filter((p) => test(p.path));
+  return list.length ? `## ${heading}\n\n${list.map((p) => `- [${p.title}](${p.url})${p.description ? `: ${p.description}` : ''}`).join('\n')}\n` : '';
+};
+const core = new Set(['/', '/about', '/experience', '/work', '/services', '/insights', '/process', '/pricing', '/resume', '/contact']);
+const llms = [
+  '# Rabin R — Frontend Angular Engineer',
+  '',
+  '> Portfolio of Rabin R, a Frontend Angular consultant in Chennai, India: case studies of government, pension and insurance platforms, four engineering services, and articles on Angular architecture, Signals and performance.',
+  '',
+  'Every page below is also available as Markdown: request it with `Accept: text/markdown`, or append `/index.md` to the path.',
+  '',
+  section('Main pages', (p) => core.has(p)),
+  section('Case studies', (p) => p.startsWith('/work/')),
+  section('Services', (p) => p.startsWith('/services/')),
+  section('Articles', (p) => p.startsWith('/insights/')),
+  section('Optional', (p) => p === '/privacy' || p === '/terms'),
+  '## API',
+  '',
+  `- [Contact API (OpenAPI)](${SITE_URL}/openapi.json): send a message to Rabin; the same endpoint the contact form uses.`,
+  '',
+].join('\n');
+await writeFile(join(BROWSER, 'llms.txt'), llms);
+
 const IMAGE_BREAKPOINTS = [480, 768, 1080, 1600];
 const mediaFiles = (await readdir(join(BROWSER, 'media'), { recursive: true })).filter(
   (file) => file.endsWith('.webp') && !/\.w\d+\.webp$/.test(file),
@@ -87,4 +135,4 @@ for (const file of mediaFiles) {
   }
 }
 
-console.log(`postbuild: ${variants} image variants, sitemap.xml with ${paths.length} URLs, 404.html written, global CSS inlined in ${inlined} pages`);
+console.log(`postbuild: ${pages.length} Markdown pages + llms.txt, ${variants} image variants, sitemap.xml with ${paths.length} URLs, 404.html written, global CSS inlined in ${inlined} pages`);

@@ -7,15 +7,15 @@
 
   "routes": [{ "pattern": "rabinr.in", "custom_domain": true }],
 
-  // Every route is prerendered to its own index.html, so assets serve all pages.
-  // Unknown paths get the prerendered 404.html with a real 404 status.
-  // Only /api/* and /robots.txt run the Worker first.
+  // Every route is prerendered to its own index.html; unknown paths get 404.html
+  // with a real 404 status. Pages run the Worker first (Markdown negotiation and
+  // discovery Link headers); static files (JS, CSS, images, fonts) never do.
   "assets": {
     "directory": "./dist/rabin-portfolio/browser",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
     "html_handling": "drop-trailing-slash",
-    "run_worker_first": ["/api/*", "/robots.txt"]
+    "run_worker_first": ["/*", "!/*.js", "!/*.css", "!/media/*", "!/fonts/*", "!/brand/*", "!/images/*", "!/*.png", "!/*.ico", "!/*.xml", "!/*.webmanifest"]
   },
 
   // Contact form delivery. The sender domain must be onboarded to Cloudflare

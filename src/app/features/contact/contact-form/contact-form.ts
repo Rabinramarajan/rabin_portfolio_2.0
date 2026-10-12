@@ -6,6 +6,7 @@ import { ContactService } from '../../../core/contact/contact.service';
 import { profile } from '../../../data/profile';
 import { FormControl } from '../../../shared/components/form-control/form-control';
 import { Button } from '../../../shared/components/button/button';
+import { registerContactDraftTool } from './webmcp';
 
 export type ContactStatus = 'idle' | 'sent' | 'error';
 
@@ -53,6 +54,14 @@ export class ContactForm {
     });
     maxLength(path.message, message.max, { message: `Please keep it under ${message.max} characters.` });
   });
+
+  constructor() {
+    // In-browser AI agents can fill the form; only the visitor can send it
+    registerContactDraftTool((draft) => {
+      this.status.set('idle');
+      this.model.set(draft);
+    });
+  }
 
   protected async onSubmit(event: Event): Promise<void> {
     event.preventDefault();

@@ -1,0 +1,117 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Rabin R — contact API",
+    "version": "1.0.0",
+    "description": "Send a message to Rabin R. The same endpoint the contact form at https://rabinr.in/contact uses. Rate limited per IP; submissions faster than a person could type are discarded."
+  },
+  "servers": [
+    {
+      "url": "https://rabinr.in"
+    }
+  ],
+  "paths": {
+    "/api/contact": {
+      "post": {
+        "operationId": "sendContactMessage",
+        "summary": "Send a contact message",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "subject",
+                  "message",
+                  "website",
+                  "startedAt"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 120
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "subject": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 160
+                  },
+                  "message": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 5000
+                  },
+                  "website": {
+                    "type": "string",
+                    "description": "Honeypot. Must be an empty string.",
+                    "maxLength": 0
+                  },
+                  "startedAt": {
+                    "type": "integer",
+                    "description": "Epoch milliseconds when the form was opened; must be at least 3 seconds before submission."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "403": {
+            "description": "Cross-origin request"
+          },
+          "422": {
+            "description": "Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "const": false
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many messages"
+          },
+          "502": {
+            "description": "Delivery failed"
+          }
+        }
+      }
+    }
+  }
+}

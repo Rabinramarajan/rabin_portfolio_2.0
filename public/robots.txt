@@ -1,5 +1,8 @@
+# Search, AI answers and model training are all welcome.
+# Content-Signal: https://contentsignals.org (stated preference, not access control)
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Disallow: /api/
 
-Sitemap: https://www.rabinr.in/sitemap.xml
+Sitemap: https://rabinr.in/sitemap.xml
