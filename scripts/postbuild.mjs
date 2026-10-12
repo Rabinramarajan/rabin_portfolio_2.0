@@ -8,6 +8,7 @@
 //     srcset that src/app/core/images/image-loader.ts builds. Keep widths in sync.
 //  4. Generate sitemap.xml from the routes Angular actually prerendered, so the
 //     sitemap can never list a page that does not exist.
+import { execFileSync } from 'node:child_process';
 import { copyFile, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
@@ -20,35 +21,46 @@ const BROWSER = join(DIST, 'browser');
 /** Not indexable: the 404 page, and paths that 301 elsewhere (see public/_redirects). */
 const EXCLUDED = new Set(['/404', '/projects', '/skills']);
 
-const PRIORITY = [
-  [/^\/$/, '1.0'],
-  [/^\/(work|services)$/, '0.9'],
-  [/^\/(work|services)\//, '0.8'],
-  [/^\/(about|experience|contact)$/, '0.8'],
-  [/^\/insights\//, '0.6'],
-  [/^\/(privacy|terms)$/, '0.3'],
-];
-
-function priorityFor(path) {
-  return PRIORITY.find(([pattern]) => pattern.test(path))?.[1] ?? '0.6';
-}
-
 const { routes } = JSON.parse(await readFile(join(DIST, 'prerendered-routes.json'), 'utf8'));
 const paths = Object.keys(routes)
   .filter((path) => !EXCLUDED.has(path))
   .sort();
 
 const buildDate = new Date().toISOString().slice(0, 10);
-/** Articles report their real modified date; other pages the build date. */
+
+/** Route segment → feature folder and content module, where the name differs from the URL. */
+const FEATURE_FOLDER = { work: 'projects', privacy: 'legal', terms: 'legal' };
+const CONTENT_MODULE = { '': 'profile', work: 'projects', privacy: 'legal', terms: 'legal' };
+
+/**
+ * Date of the last commit that changed a page's feature folder or its own content module.
+ * Each page only moves when its own code or copy does. Falls back to the build date when
+ * git history is unavailable.
+ */
+function gitChangeDate(path) {
+  const first = path.split('/').filter(Boolean)[0] ?? '';
+  const folder = FEATURE_FOLDER[first] ?? first ?? 'home';
+  const content = CONTENT_MODULE[first] ?? first;
+  try {
+    const date = execFileSync('git', ['log', '-1', '--format=%cs', '--', `src/app/features/${folder || 'home'}`, `src/app/data/${content}.ts`], {
+      encoding: 'utf8',
+    }).trim();
+    return date || buildDate;
+  } catch {
+    return buildDate;
+  }
+}
+
+/** Articles report their real modified date; other pages their last real change. */
 const lastmodFor = async (path) => {
   const html = await readFile(join(BROWSER, path, 'index.html'), 'utf8');
-  return /<meta property="article:modified_time" content="(\d{4}-\d{2}-\d{2})/.exec(html)?.[1] ?? buildDate;
+  return /<meta property="article:modified_time" content="(\d{4}-\d{2}-\d{2})/.exec(html)?.[1] ?? gitChangeDate(path);
 };
 const lastmods = Object.fromEntries(await Promise.all(paths.map(async (p) => [p, await lastmodFor(p)])));
 const urls = paths
   .map((path) => {
     const loc = path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`;
-    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmods[path]}</lastmod>\n    <priority>${priorityFor(path)}</priority>\n  </url>`;
+    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmods[path]}</lastmod>\n  </url>`;
   })
   .join('\n');
 

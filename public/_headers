@@ -1,0 +1,11 @@
+# Security headers for every page and asset (Cloudflare Pages reads this file from the build output).
+# Content-Security-Policy is deliberately not set here: Angular's inline styles need a
+# nonce or hash-based policy, which should be tested on its own before it ships.
+# HSTS omits includeSubDomains and preload so no subdomain is locked into HTTPS by accident.
+
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()

@@ -4,6 +4,7 @@ import { defaultSeo } from './data/profile';
 import {
   breadcrumbJsonLd,
   caseStudyJsonLd,
+  contactPageJsonLd,
   personJsonLd,
   profilePageJsonLd,
   serviceJsonLd,
@@ -123,7 +124,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/projects/work-page').then((m) => m.WorkPage),
     data: {
       seo: {
-        title: 'Selected Work',
+        title: 'Angular Case Studies — Enterprise Work',
         description:
           'Angular and enterprise work by Rabin R — Fiji immigration platforms, the PRIMS pension portal, the VNPF mobile app and insurance consoles.',
         jsonLd: breadcrumbJsonLd([{ name: 'Work', path: '/work' }]),
@@ -237,7 +238,7 @@ export const routes: Routes = [
         title: 'Contact — Angular Consulting Enquiries',
         description:
           "Ready to collaborate? Reach out with your project ideas, challenges, or opportunities. Let's create something impactful together.",
-        jsonLd: breadcrumbJsonLd([{ name: 'Contact', path: '/contact' }]),
+        jsonLd: [contactPageJsonLd(), breadcrumbJsonLd([{ name: 'Contact', path: '/contact' }])],
       } satisfies RouteSeoData,
     },
   },

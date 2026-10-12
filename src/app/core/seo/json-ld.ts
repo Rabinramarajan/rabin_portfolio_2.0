@@ -1,3 +1,4 @@
+import { contactInfo } from '../../data/contact';
 import { SITE_URL, profile } from '../../data/profile';
 import { absoluteUrl } from './seo.service';
 
@@ -99,5 +100,23 @@ export function caseStudyJsonLd(input: {
     dateCreated: input.year,
     keywords: input.technologies.join(', '),
     creator: { '@id': `${SITE_URL}/#person` },
+  };
+}
+
+/** /contact as a ContactPage: the public email, and the Person it reaches. */
+export function contactPageJsonLd(): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    url: absoluteUrl('/contact'),
+    name: 'Contact',
+    mainEntity: personJsonLd(),
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: contactInfo.email,
+      contactType: 'professional enquiries',
+      areaServed: 'Worldwide',
+      availableLanguage: 'English',
+    },
   };
 }
