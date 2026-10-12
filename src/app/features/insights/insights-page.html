@@ -1,0 +1,26 @@
+<section class="page-section container">
+  <app-section-heading
+    [level]="1"
+    eyebrow="Insights"
+    title="Angular engineering notes"
+    description="Positions taken from shipped production work — on Angular architecture, Signals, rendering performance and quiet interfaces."
+    annotation="the argument, then the code"
+  />
+
+  <div class="topics" role="group" aria-label="Filter articles by topic">
+    @for (topic of topics; track topic) {
+      <button type="button" class="topic" [attr.aria-pressed]="activeTopic() === topic" (click)="selectTopic(topic)">
+        {{ topic }}
+      </button>
+    }
+  </div>
+  <p class="visually-hidden" aria-live="polite">{{ summary() }}</p>
+
+  <ul class="grid">
+    @for (insight of visible(); track insight.id; let first = $first) {
+      <li [class.is-lead]="first && activeTopic() === 'All'">
+        <app-article-card [insight]="insight" [headingLevel]="2" />
+      </li>
+    }
+  </ul>
+</section>

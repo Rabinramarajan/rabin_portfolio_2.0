@@ -1,35 +1,133 @@
 <app-hero />
-<app-introduction />
 
-<section class="page-section featured">
-  <div class="container">
-    <app-section-heading
-      eyebrow="Selected work"
-      title="Projects I'm proud of"
-      description="Government platforms, citizen portals and product launches — all built with Angular."
-    />
+<!--
+  Below-the-fold sections are prerendered in full (crawlers and no-JS readers
+  get the content) but their JavaScript is split out and hydrated as each one approaches the viewport.
+-->
+@defer (hydrate on viewport) {
+  <app-about-section />
+}
 
-    @defer (on viewport) {
-      <ul class="project-grid">
-        @for (project of featuredProjects; track project.id) {
-          <li><app-project-card [project]="project" /></li>
+@defer (hydrate on viewport) {
+  <section class="page-section page-section--band" id="experience" aria-labelledby="experience-title">
+    <div class="container">
+      <app-section-heading
+        headingId="experience-title"
+        eyebrow="Experience"
+        title="Where I've worked"
+        description="Four years of production Angular across government, pensions, insurance and healthcare."
+        annotation="the short version"
+      />
+      <app-experience-timeline />
+      <div class="section-more">
+        <app-button label="Full experience" link="/experience" variant="ghost" icon="arrow-right" />
+      </div>
+    </div>
+  </section>
+}
+
+@defer (hydrate on viewport) {
+  <section class="page-section" id="services" aria-labelledby="services-title">
+    <div class="container">
+      <app-section-heading
+        headingId="services-title"
+        eyebrow="Services"
+        title="How I can help"
+        description="Four focused services for enterprise and government products — each one backed by shipped work."
+      />
+      <app-services-grid />
+    </div>
+  </section>
+}
+
+@defer (hydrate on viewport) {
+  <section class="page-section page-section--band" id="work" aria-labelledby="work-title">
+    <div class="container">
+      <app-section-heading
+        headingId="work-title"
+        eyebrow="Selected work"
+        title="An interactive software gallery"
+        description="Government platforms, citizen portals, pension systems and product launches — filter by the kind of software."
+        annotation="real projects, real users"
+      />
+      <app-project-gallery [limit]="projectLimit" />
+      <div class="section-more">
+        <app-button label="View all case studies" link="/work" icon="arrow-right" />
+      </div>
+    </div>
+  </section>
+}
+
+@defer (hydrate on viewport) {
+  <section class="page-section" id="skills" aria-labelledby="skills-title">
+    <div class="container">
+      <app-section-heading
+        headingId="skills-title"
+        eyebrow="Skills"
+        title="The developer's toolkit"
+        description="Seven drawers of tools, from the framework I use every day to the ones I reach for when a project needs them."
+      />
+      <app-skills-toolkit />
+    </div>
+  </section>
+}
+
+@defer (hydrate on viewport) {
+  <section class="page-section page-section--band" id="process" aria-labelledby="process-title">
+    <div class="container">
+      <app-section-heading
+        headingId="process-title"
+        eyebrow="Process"
+        title="From problem to production"
+        description="I don't start with code. I start by understanding the problem, the people using the product, and what success needs to look like."
+      />
+      <app-process-stepper />
+      <div class="section-more">
+        <app-button label="How an engagement runs" link="/process" variant="ghost" icon="arrow-right" />
+      </div>
+    </div>
+  </section>
+}
+
+@defer (hydrate on viewport) {
+  <section class="page-section" id="insights" aria-labelledby="insights-title">
+    <div class="container">
+      <app-section-heading
+        headingId="insights-title"
+        eyebrow="Insights"
+        title="Engineering notes"
+        description="Positions taken from shipped production work — on Angular architecture, Signals, performance and quiet interfaces."
+      />
+      <ul class="insight-grid">
+        @for (insight of insights; track insight.id) {
+          <li><app-article-card [insight]="insight" /></li>
         }
       </ul>
-    } @placeholder {
-      <div class="project-grid__placeholder" aria-hidden="true"></div>
-    }
-
-    <div class="featured__more">
-      <app-button label="View all projects" link="/projects" variant="ghost" />
+      <div class="section-more">
+        <app-button label="Read all insights" link="/insights" variant="ghost" icon="arrow-right" />
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+}
 
-<section class="page-section container" aria-labelledby="cta-heading">
-  <div class="cta">
-    <app-illustration class="cta__shape" shape="circle" color="yellow" />
-    <h2 id="cta-heading" class="cta__title">Have a project in mind?</h2>
-    <p class="cta__text">I'm taking on a few Angular consulting and contract projects. Tell me about yours.</p>
-    <app-button label="Start a conversation" link="/contact" variant="secondary" size="lg" />
-  </div>
-</section>
+@defer (hydrate on viewport) {
+  <section class="page-section page-section--band" id="faq" aria-labelledby="faq-title">
+    <div class="container faq-layout">
+      <app-section-heading
+        headingId="faq-title"
+        eyebrow="FAQ"
+        title="Questions people ask first"
+        description="Straight answers about how I work, what I build and how to start."
+      />
+      <app-faq-section />
+    </div>
+  </section>
+}
+
+@defer (hydrate on viewport) {
+  <section class="page-section" id="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <app-contact-section />
+    </div>
+  </section>
+}

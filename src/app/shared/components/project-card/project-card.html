@@ -1,31 +1,67 @@
-<article class="card">
+@let p = project();
+
+<article class="card__frame">
   <div class="card__media">
-    @if (project().imageUrl; as imageUrl) {
-      <img [ngSrc]="imageUrl" [alt]="project().imageAlt ?? ''" fill sizes="(min-width: 768px) 33vw, 100vw" />
+    <div class="card__bar" aria-hidden="true">
+      <span class="card__dots"><i></i><i></i><i></i></span>
+      <span class="card__url">rabinr.in/work/{{ p.slug }}</span>
+    </div>
+
+    @if (p.cover; as cover) {
+      <img
+        class="card__image"
+        [ngSrc]="cover.src"
+        [alt]="cover.alt"
+        [width]="cover.width"
+        [height]="cover.height"
+        [priority]="priority()"
+        sizes="(min-width: 1080px) 50vw, 100vw"
+      />
     } @else {
-      <!-- Illustrated cover for projects without a screenshot -->
-      <div class="card__placeholder">
-        <app-illustration class="card__shape" shape="blob" color="yellow" />
-        <span class="card__initial">{{ project().title.charAt(0) }}</span>
+      <div class="card__poster" aria-hidden="true">
+        <span class="card__poster-number">{{ p.number }}</span>
+        <span class="card__poster-title">{{ p.title }}</span>
       </div>
     }
   </div>
 
   <div class="card__body">
-    <p class="card__meta">{{ project().category }} · {{ project().year }}</p>
-    <h3 class="card__title">{{ project().title }}</h3>
-    <p class="card__description">{{ project().description }}</p>
+    <p class="card__meta">
+      <span>{{ p.category }}</span>
+      <span aria-hidden="true">·</span>
+      <span>{{ p.year }}</span>
+    </p>
 
-    <ul class="card__tags" aria-label="Technologies">
-      @for (tech of project().technologies; track tech) {
+    @if (headingLevel() === 2) {
+      <h2 class="card__title">
+        <a class="card__link" [routerLink]="['/work', p.slug]">{{ p.title }}</a>
+      </h2>
+    } @else {
+      <h3 class="card__title">
+        <a class="card__link" [routerLink]="['/work', p.slug]">{{ p.title }}</a>
+      </h3>
+    }
+
+    <p class="card__tagline">{{ p.tagline }}</p>
+
+    @if (variant() === 'feature') {
+      <p class="card__role"><span class="hand">my part —</span> {{ p.role }}</p>
+    }
+
+    <ul class="tag-list card__tags" aria-label="Technologies">
+      @for (tech of p.technologies.slice(0, variant() === 'feature' ? 6 : 4); track tech) {
         <li><app-skill-badge [label]="tech" /></li>
       }
     </ul>
 
-    @if (project().liveUrl; as liveUrl) {
-      <a class="card__link" [href]="liveUrl" target="_blank" rel="noopener noreferrer">
-        View live project<span class="visually-hidden">: {{ project().title }}</span> →
-      </a>
-    }
+    <div class="card__actions">
+      <span class="card__cta" aria-hidden="true">Read case study <app-icon name="arrow-right" /></span>
+      @if (p.liveUrl; as url) {
+        <a class="card__live" [href]="url" target="_blank" rel="noopener noreferrer">
+          Live site <app-icon name="arrow-up-right" />
+          <span class="visually-hidden">for {{ p.title }} (opens in a new tab)</span>
+        </a>
+      }
+    </div>
   </div>
 </article>

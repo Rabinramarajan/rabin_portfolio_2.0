@@ -1,0 +1,131 @@
+@use 'mixins' as *;
+
+.intro {
+  display: grid;
+  align-items: start;
+  gap: var(--space-12);
+
+  @include desktop-up {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+.intro__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-size: var(--text-lg);
+
+  app-section-heading {
+    margin-bottom: var(--space-2);
+  }
+}
+
+.intro__statement {
+  font: 600 var(--text-xl) / 1.4 var(--font-display);
+}
+
+.intro__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.intro__photo {
+  position: relative;
+  max-width: 26rem;
+  margin: 0 auto var(--space-12);
+
+  img {
+    width: 100%;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-offset-lg);
+    transform: rotate(1.5deg);
+  }
+}
+
+.intro__note {
+  position: absolute;
+  bottom: calc(var(--space-12) * -1);
+  left: calc(var(--space-6) * -1);
+  max-width: 15rem;
+}
+
+.capabilities {
+  display: grid;
+  gap: var(--space-6);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.capability {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  h3 {
+    font-size: var(--text-xl);
+  }
+
+  p {
+    color: var(--color-text-muted);
+  }
+}
+
+.capability__number {
+  font: 700 var(--text-2xl) / 1 var(--font-display);
+  color: var(--color-primary-dark);
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.story__chapter h2 {
+  margin-top: 0;
+}
+
+.values {
+  display: grid;
+  gap: var(--space-4);
+
+  @include tablet-up {
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+}
+
+.value {
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-lg);
+  }
+}
+
+.about-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-16);
+  text-align: center;
+}
+
+.about-cta__text {
+  font: 600 var(--text-2xl) / 1.2 var(--font-display);
+}

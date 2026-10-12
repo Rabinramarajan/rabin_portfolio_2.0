@@ -1,0 +1,80 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.gallery__filters {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: thin;
+
+  @include tablet-up {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+.filter {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  font-weight: 700;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--color-secondary);
+    box-shadow: var(--shadow-offset);
+  }
+}
+
+.filter__count {
+  min-width: 1.5rem;
+  padding: 0 var(--space-1);
+  font-size: var(--text-xs);
+  text-align: center;
+  color: var(--cream);
+  background: var(--ink);
+  border-radius: var(--radius-pill);
+}
+
+.gallery__grid {
+  display: grid;
+  gap: var(--space-8) var(--space-6);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// New cards (after a filter change) settle in rather than popping
+.has-filtered .gallery__item {
+  animation: fade-up 450ms var(--ease-out);
+}
+
+.gallery__item {
+  min-width: 0;
+}
+
+.gallery__item--feature {
+  @include tablet-up {
+    grid-column: 1 / -1;
+  }
+}

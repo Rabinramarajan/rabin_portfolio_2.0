@@ -1,0 +1,204 @@
+@use 'mixins' as *;
+
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: thin;
+
+  @include desktop-up {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+.tab {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-6);
+  font-weight: 700;
+  color: var(--color-text);
+  background: transparent;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--color-surface);
+  }
+
+  &[aria-selected='true'] {
+    color: var(--cream);
+    background: var(--ink);
+  }
+}
+
+.toolkit {
+  display: grid;
+  gap: var(--space-8);
+
+  @include desktop-up {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: start;
+  }
+}
+
+// The desk mat the stickers are scattered over
+.desk {
+  position: relative;
+  min-height: 18rem;
+  padding: var(--space-6);
+  background:
+    linear-gradient(rgb(40 37 34 / 6%) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgb(40 37 34 / 6%) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--sage) var(--paper-grain);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 0 8px rgb(255 250 242 / 35%);
+
+  @include tablet-up {
+    padding: var(--space-8);
+  }
+}
+
+.desk__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-6);
+
+  .hand {
+    color: var(--ink);
+  }
+}
+
+.desk__hint {
+  font-size: var(--text-sm);
+}
+
+.desk__stickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-3);
+}
+
+.has-interacted .desk__stickers li {
+  animation: pop 380ms var(--ease-out);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+.sticker {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  font-weight: 700;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 3px 3px 0 var(--color-border);
+  transform: rotate(var(--tilt, 0deg));
+  cursor: pointer;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+
+  &.is-featured {
+    background: var(--color-surface) linear-gradient(transparent 70%, var(--yellow) 70%);
+  }
+
+  &:hover {
+    transform: rotate(0deg) translateY(-3px) scale(1.04);
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--color-primary);
+    transform: rotate(0deg) scale(1.08);
+  }
+}
+
+.detail {
+  @include desktop-up {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+  }
+}
+
+.detail__body {
+  min-height: 20rem;
+  padding: var(--space-6);
+}
+
+.detail__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  animation: fade-up 350ms var(--ease-out);
+}
+
+.detail__tier {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-sage-dark);
+}
+
+.detail__title {
+  font-size: var(--text-2xl);
+}
+
+.depth {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.depth__label {
+  font-weight: 700;
+}
+
+.depth__meter {
+  display: inline-flex;
+  gap: 4px;
+
+  i {
+    width: 1.75rem;
+    height: 0.6rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-pill);
+
+    &.is-on {
+      background: var(--coral);
+    }
+  }
+}
+
+.depth__value {
+  color: var(--color-text-muted);
+}
+
+.trait {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  background: var(--color-surface-sunk);
+  border-radius: var(--radius-pill);
+}
+
+.detail__used {
+  .hand {
+    font-size: 1.35rem;
+  }
+}

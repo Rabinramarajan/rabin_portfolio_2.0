@@ -1,64 +1,35 @@
 @use 'mixins' as *;
 
-.featured {
-  background: var(--color-surface);
-  border-block: var(--border-width) solid var(--color-border);
-}
-
-.project-grid {
-  display: grid;
-  gap: var(--space-8);
-
-  @include tablet-up {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include desktop-up {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.project-grid__placeholder {
-  min-height: 28rem;
-}
-
-.featured__more {
+.section-more {
   display: flex;
   justify-content: center;
   margin-top: var(--space-12);
 }
 
-.cta {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.insight-grid {
+  display: grid;
   gap: var(--space-6);
-  overflow: hidden;
-  padding: var(--space-16) var(--space-6);
-  text-align: center;
-  color: var(--color-on-primary);
-  background: var(--color-primary);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-offset-lg);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include desktop-up {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-.cta__shape {
-  position: absolute;
-  top: -3rem;
-  right: -3rem;
-  width: 10rem;
-  opacity: 0.9;
-}
+.faq-layout {
+  display: grid;
+  gap: var(--space-8);
 
-.cta__title {
-  position: relative;
-  font-size: var(--text-3xl);
-}
+  @include desktop-up {
+    grid-template-columns: 0.8fr 1.2fr;
+    align-items: start;
 
-.cta__text {
-  position: relative;
-  max-width: 32rem;
-  font-size: var(--text-lg);
+    app-section-heading {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-8));
+    }
+  }
 }

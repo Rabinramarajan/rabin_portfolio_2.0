@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.article {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+
+  &:hover,
+  &:focus-within {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--shadow-offset);
+  }
+}
+
+.article__media {
+  position: relative;
+  overflow: hidden;
+  border-bottom: var(--border-width) solid var(--color-border);
+
+  img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+
+    .article:hover & {
+      transform: scale(1.04);
+    }
+  }
+}
+
+.article__plate {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  font: 700 var(--text-2xl) / 1 var(--font-display);
+  background: var(--sage) var(--paper-grain);
+}
+
+.article__topic {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--color-secondary);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.article__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+}
+
+.article__title {
+  font-size: var(--text-xl);
+  text-wrap: balance;
+}
+
+.article__link {
+  text-decoration: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    &::after {
+      outline: 3px solid var(--color-primary);
+      outline-offset: -6px;
+      border-radius: var(--radius-md);
+    }
+  }
+}
+
+.article__dek {
+  color: var(--color-text-muted);
+}
+
+.article__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.article__arrow {
+  margin-left: auto;
+  color: var(--color-primary-dark);
+  transition: transform var(--duration-fast) var(--ease-out);
+
+  .article:hover & {
+    transform: translateX(4px);
+  }
+}

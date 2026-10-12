@@ -1,13 +1,22 @@
-<label class="label" [for]="controlId()">{{ label() }}</label>
+<label class="label" [for]="controlId()">
+  {{ label() }}
+  @if (state().required()) {
+    <span class="label__required" aria-hidden="true">*</span>
+  }
+</label>
+
+@if (hint(); as text) {
+  <p class="hint" [id]="hintId()">{{ text }}</p>
+}
 
 @if (type() === 'textarea') {
   <textarea
     class="input input--textarea"
-    rows="5"
+    rows="6"
     [id]="controlId()"
     [formField]="field()"
     [attr.aria-invalid]="hasErrors()"
-    [attr.aria-describedby]="hasErrors() ? errorId() : null"
+    [attr.aria-describedby]="describedBy()"
   ></textarea>
 } @else {
   <input
@@ -17,12 +26,12 @@
     [formField]="field()"
     [attr.autocomplete]="autocomplete() ?? null"
     [attr.aria-invalid]="hasErrors()"
-    [attr.aria-describedby]="hasErrors() ? errorId() : null"
+    [attr.aria-describedby]="describedBy()"
   />
 }
 
 @if (hasErrors()) {
-  <ul class="errors" [id]="errorId()" role="alert">
+  <ul class="errors" [id]="errorId()">
     @for (error of visibleErrors(); track error.kind) {
       <li>{{ error.message }}</li>
     }

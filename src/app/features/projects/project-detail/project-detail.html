@@ -1,0 +1,240 @@
+@if (project(); as p) {
+  <article class="case">
+    <header class="page-section case__hero">
+      <div class="container case__hero-grid">
+        <div class="case__intro">
+          <a class="case__back" routerLink="/work"><app-icon name="arrow-right" class="case__back-icon" /> All work</a>
+          <p class="case__meta">{{ p.category }} · {{ p.year }}</p>
+          <h1 class="case__title">{{ p.title }}</h1>
+          <p class="case__tagline">{{ p.tagline }}</p>
+          <ul class="tag-list" aria-label="Technologies">
+            @for (tech of p.technologies; track tech) {
+              <li><app-skill-badge [label]="tech" /></li>
+            }
+          </ul>
+          @if (p.liveUrl; as url) {
+            <app-button label="Visit live site" [href]="url" icon="arrow-up-right" />
+          }
+        </div>
+
+        <app-software-window class="case__cover" [title]="'rabinr.in/work/' + p.slug">
+          @if (p.cover; as cover) {
+            <img
+              [ngSrc]="cover.src"
+              [alt]="cover.alt"
+              [width]="cover.width"
+              [height]="cover.height"
+              priority
+              sizes="(min-width: 1080px) 50vw, 100vw"
+            />
+          } @else {
+            <div class="case__poster" aria-hidden="true">
+              <span>{{ p.number }}</span>
+            </div>
+          }
+        </app-software-window>
+      </div>
+
+      @if (facts().length) {
+        <div class="container">
+          <dl class="case__facts">
+            @for (fact of facts(); track fact.label) {
+              <div>
+                <dt>{{ fact.label }}</dt>
+                <dd>{{ fact.value }}</dd>
+              </div>
+            }
+          </dl>
+        </div>
+      }
+    </header>
+
+    <div class="container case__body">
+      <section class="case__section" aria-labelledby="overview-title">
+        <h2 id="overview-title">Overview</h2>
+        <div class="prose"><p>{{ p.overview }}</p></div>
+      </section>
+
+      <section class="case__section" aria-labelledby="challenge-title">
+        <h2 id="challenge-title">The challenge</h2>
+        <div class="prose"><p>{{ p.problem }}</p></div>
+        @if (p.challenges?.length) {
+          <ol class="case__cards">
+            @for (challenge of p.challenges; track challenge.title; let i = $index) {
+              <li class="case__card" appReveal>
+                <span class="case__card-number" aria-hidden="true">0{{ i + 1 }}</span>
+                <h3>{{ challenge.title }}</h3>
+                <p>{{ challenge.description }}</p>
+              </li>
+            }
+          </ol>
+        } @else if (p.challenge) {
+          <p class="case__callout">{{ p.challenge }}</p>
+        }
+      </section>
+
+      <section class="case__section" aria-labelledby="solution-title">
+        <h2 id="solution-title">The solution</h2>
+        <div class="prose">
+          <p>{{ p.solution }}</p>
+          @if (p.architecture) {
+            <p>{{ p.architecture }}</p>
+          }
+        </div>
+      </section>
+
+      @if (p.responsibilities?.length) {
+        <section class="case__section" aria-labelledby="contribution-title">
+          <h2 id="contribution-title">My contribution</h2>
+          <ul class="case__checklist">
+            @for (item of p.responsibilities; track item) {
+              <li><app-icon name="check" /> {{ item }}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (features().length) {
+        <section class="case__section" aria-labelledby="features-title">
+          <h2 id="features-title">Key features</h2>
+          <ul class="case__features">
+            @for (feature of features(); track feature.title) {
+              <li class="case__feature" appReveal>
+                <h3>{{ feature.title }}</h3>
+                @if (feature.description) {
+                  <p>{{ feature.description }}</p>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (p.decisions?.length) {
+        <section class="case__section" aria-labelledby="decisions-title">
+          <h2 id="decisions-title">Engineering decisions</h2>
+          <div class="case__decisions">
+            @for (decision of p.decisions; track decision.decision) {
+              <app-software-window class="case__decision" variant="editor" title="decision.md" appReveal>
+                <dl class="decision">
+                  <dt>Problem</dt>
+                  <dd>{{ decision.problem }}</dd>
+                  <dt>Decision</dt>
+                  <dd>{{ decision.decision }}</dd>
+                  <dt>Why</dt>
+                  <dd>{{ decision.why }}</dd>
+                  @if (decision.tradeoff) {
+                    <dt>Trade-off</dt>
+                    <dd>{{ decision.tradeoff }}</dd>
+                  }
+                  @if (decision.result) {
+                    <dt>Result</dt>
+                    <dd>{{ decision.result }}</dd>
+                  }
+                </dl>
+              </app-software-window>
+            }
+          </div>
+        </section>
+      }
+
+      @if (p.stack?.length) {
+        <section class="case__section" aria-labelledby="stack-title">
+          <h2 id="stack-title">Stack</h2>
+          <table class="case__stack">
+            <tbody>
+              @for (layer of p.stack; track layer.layer) {
+                <tr>
+                  <th scope="row">{{ layer.layer }}</th>
+                  <td>{{ layer.value }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+      }
+
+      <section class="case__section" aria-labelledby="results-title">
+        <h2 id="results-title">Results</h2>
+        @if (p.metrics?.length) {
+          <dl class="case__metrics">
+            @for (metric of p.metrics; track metric.label) {
+              <div class="case__metric">
+                <dt>{{ metric.label }}</dt>
+                <dd class="case__metric-value">{{ metric.value }}</dd>
+                @if (metric.note) {
+                  <dd class="case__metric-note">{{ metric.note }}</dd>
+                }
+              </div>
+            }
+          </dl>
+        }
+        <ul class="case__checklist">
+          @for (result of p.results; track result) {
+            <li><app-icon name="check" /> {{ result }}</li>
+          }
+        </ul>
+      </section>
+
+      @if (gallery().length) {
+        <section class="case__section case__section--wide" aria-labelledby="gallery-title">
+          <h2 id="gallery-title">Gallery</h2>
+          <ul class="case__gallery">
+            @for (frame of gallery(); track frame.src) {
+              <li>
+                <img
+                  [ngSrc]="frame.src"
+                  [alt]="frame.alt"
+                  [width]="frame.width"
+                  [height]="frame.height"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (p.related?.length || p.service) {
+        <section class="case__section" aria-labelledby="next-title">
+          <h2 id="next-title">Where to go next</h2>
+          <ul class="case__links">
+            @if (p.service; as service) {
+              <li>
+                <a class="text-link" [routerLink]="service.href">{{ service.label }}</a>
+                <span> — the service this project is evidence for.</span>
+              </li>
+            }
+            @for (link of p.related; track link.href) {
+              <li>
+                <a class="text-link" [routerLink]="link.href">{{ link.label }}</a>
+                <span> — {{ link.note }}</span>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+
+    @if (related().length) {
+      <section class="page-section page-section--band" aria-labelledby="related-title">
+        <div class="container">
+          <h2 id="related-title" class="case__related-title">Related case studies</h2>
+          <ul class="case__related">
+            @for (item of related(); track item.slug) {
+              <li><app-project-card [project]="item" /></li>
+            }
+          </ul>
+          @if (next(); as n) {
+            <p class="case__next">
+              <span class="hand">next up →</span>
+              <a class="text-link" [routerLink]="['/work', n.slug]">{{ n.title }}</a>
+            </p>
+          }
+        </div>
+      </section>
+    }
+  </article>
+} @else {
+  <app-not-found />
+}

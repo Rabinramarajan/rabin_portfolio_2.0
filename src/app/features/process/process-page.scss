@@ -1,0 +1,149 @@
+@use 'mixins' as *;
+
+.stages {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1.75rem;
+    width: 3px;
+    background: repeating-linear-gradient(to bottom, var(--color-border) 0 8px, transparent 8px 14px);
+  }
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--space-4);
+
+  @include tablet-up {
+    gap: var(--space-8);
+  }
+}
+
+.stage__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) 0;
+  background: var(--color-background);
+}
+
+.stage__number {
+  font-weight: 700;
+}
+
+.stage__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-offset);
+
+  @include tablet-up {
+    padding: var(--space-8);
+  }
+}
+
+.stage__label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-sage-dark);
+}
+
+.stage__title {
+  font-size: var(--text-2xl);
+}
+
+.stage__purpose {
+  font-weight: 700;
+}
+
+.stage__columns {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-2);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.stage__heading {
+  margin-bottom: var(--space-2);
+  font: 700 var(--text-sm) / 1.2 var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stage__list {
+  padding-left: var(--space-6);
+  list-style: disc;
+
+  li + li {
+    margin-top: var(--space-1);
+  }
+}
+
+.stage__output {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.stage__outcome {
+  padding: var(--space-3) var(--space-4);
+  background: color-mix(in srgb, var(--yellow) 40%, var(--color-surface));
+  border-radius: var(--radius-sm);
+
+  .hand {
+    font-size: 1.35rem;
+  }
+}
+
+.principles {
+  display: grid;
+  gap: var(--space-4);
+
+  @include tablet-up {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+}
+
+.principle {
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-lg);
+  }
+}
+
+.process-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-16);
+  text-align: center;
+}
+
+.process-cta__title {
+  font: 600 var(--text-2xl) / 1.2 var(--font-display);
+}

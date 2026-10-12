@@ -1,0 +1,89 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.form__note {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.form__row {
+  display: grid;
+  gap: var(--space-6);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.form__trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__error {
+  padding: var(--space-4);
+  font-weight: 500;
+  color: var(--color-error);
+  background: color-mix(in srgb, var(--color-error) 8%, var(--color-surface));
+  border: var(--border-width) solid var(--color-error);
+  border-radius: var(--radius-sm);
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.form__privacy {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  animation: fade-up 400ms var(--ease-out);
+}
+
+.success__mark {
+  width: 4rem;
+  height: 4rem;
+  fill: var(--sage);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  path {
+    fill: none;
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: draw 500ms 200ms var(--ease-out) forwards;
+  }
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.success__title {
+  font-size: var(--text-2xl);
+}

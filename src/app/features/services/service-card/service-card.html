@@ -1,0 +1,31 @@
+@let s = service();
+
+<article class="service">
+  <div class="service__top">
+    <span class="service__icon" aria-hidden="true"><app-icon [name]="icon()" /></span>
+    <span class="service__number" aria-hidden="true">{{ s.number }}</span>
+  </div>
+
+  <h3 class="service__title">
+    <a class="service__link" [routerLink]="href()">{{ s.title }}</a>
+  </h3>
+
+  <p class="service__text">{{ detailed() ? s.proposition : s.summary }}</p>
+
+  @if (detailed()) {
+    <ul class="service__deliverables" aria-label="Deliverables">
+      @for (item of s.deliverables; track item) {
+        <li><app-icon name="check" /> {{ item }}</li>
+      }
+    </ul>
+    <p class="service__ideal"><span class="hand">ideal for —</span> {{ s.idealFor }}</p>
+  }
+
+  <ul class="tag-list service__tags" aria-label="Technologies">
+    @for (tech of s.technologies; track tech) {
+      <li><app-skill-badge [label]="tech" /></li>
+    }
+  </ul>
+
+  <span class="service__cta" aria-hidden="true">Explore service <app-icon name="arrow-right" /></span>
+</article>

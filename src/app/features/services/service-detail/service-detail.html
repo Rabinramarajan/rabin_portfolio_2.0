@@ -1,0 +1,105 @@
+@if (route(); as r) {
+  <article>
+    <header class="page-section">
+      <div class="container svc__hero">
+        <div class="svc__intro">
+          <a class="svc__back" routerLink="/services"><app-icon class="svc__back-icon" name="arrow-right" /> All services</a>
+          <p class="svc__eyebrow">Service {{ r.service.number }}</p>
+          <h1 class="svc__title">{{ r.title }}</h1>
+          <p class="svc__proposition">{{ r.service.proposition }}</p>
+          <div class="svc__actions">
+            <app-button label="Discuss a project" link="/contact" icon="arrow-right" />
+            <app-button label="See related work" link="/work" variant="ghost" />
+          </div>
+        </div>
+        <figure class="svc__figure">
+          <img
+            [ngSrc]="r.service.image.src"
+            [alt]="r.service.image.alt"
+            width="1200"
+            height="900"
+            sizes="(min-width: 1080px) 40vw, 100vw"
+          />
+        </figure>
+      </div>
+    </header>
+
+    <div class="container svc__body">
+      <aside class="svc__answer" aria-label="In short">
+        <p class="hand">in short —</p>
+        <p>{{ r.page.answer }}</p>
+      </aside>
+
+      <div class="prose">
+        @for (paragraph of r.page.intro; track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      </div>
+
+      <section class="svc__offer" aria-labelledby="offer-title">
+        <h2 id="offer-title">What you get</h2>
+        <ul class="svc__deliverables">
+          @for (item of r.service.deliverables; track item) {
+            <li><app-icon name="check" /> {{ item }}</li>
+          }
+        </ul>
+        <ul class="tag-list" aria-label="Technologies">
+          @for (tech of r.service.technologies; track tech) {
+            <li><app-skill-badge [label]="tech" /></li>
+          }
+        </ul>
+        <p class="svc__ideal"><strong>Ideal for:</strong> {{ r.service.idealFor }}</p>
+      </section>
+
+      @for (section of narrative(); track section.title) {
+        <section class="prose">
+          <h2>{{ section.title }}</h2>
+          @for (paragraph of section.paragraphs; track $index) {
+            <p>{{ paragraph }}</p>
+          }
+        </section>
+      }
+
+      @if (r.related; as related) {
+        <section class="svc__related" aria-labelledby="related-title">
+          <h2 id="related-title">Alongside it: {{ related.title }}</h2>
+          <p>{{ related.proposition }}</p>
+        </section>
+      }
+
+      @if (faqs().length) {
+        <section class="svc__faq" aria-labelledby="svc-faq-title">
+          <h2 id="svc-faq-title">Questions before we start</h2>
+          <app-faq-section [items]="faqs()" />
+        </section>
+      }
+
+      @if (reading().length) {
+        <section aria-labelledby="reading-title">
+          <h2 id="reading-title" class="svc__subtitle">Further reading</h2>
+          <ul class="svc__links">
+            @for (link of reading(); track link.href) {
+              <li>
+                <a class="text-link" [routerLink]="link.href">{{ link.label }}</a>
+                <p>{{ link.note }}</p>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      <nav class="svc__others" aria-label="Other services">
+        <h2 class="svc__subtitle">Other services</h2>
+        <ul class="svc__links">
+          @for (other of otherServices(); track other.slug) {
+            <li>
+              <a class="text-link" [routerLink]="['/services', other.slug]">{{ other.title }}</a>
+            </li>
+          }
+        </ul>
+      </nav>
+    </div>
+  </article>
+} @else {
+  <app-not-found />
+}

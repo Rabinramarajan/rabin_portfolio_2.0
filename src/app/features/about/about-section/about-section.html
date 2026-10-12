@@ -1,0 +1,42 @@
+<section class="page-section about" id="about" aria-labelledby="about-title">
+  <div class="container">
+    <div class="about__grid">
+      <figure class="about__photo" appReveal>
+        <img
+          [ngSrc]="about.portrait.src"
+          [alt]="about.portrait.alt"
+          [width]="about.portrait.width"
+          [height]="about.portrait.height"
+          sizes="(min-width: 1080px) 26rem, 80vw"
+        />
+        <figcaption class="hand">that's me — usually with coffee</figcaption>
+      </figure>
+
+      <div class="about__copy">
+        <app-section-heading
+          headingId="about-title"
+          eyebrow="About"
+          title="The engineer behind the interface"
+          [description]="about.positioning"
+          annotation="who's behind the code"
+        />
+        @for (paragraph of about.paragraphs.slice(0, 2); track $index) {
+          <p class="about__text">{{ paragraph }}</p>
+        }
+        <app-button label="More about me" link="/about" variant="ghost" icon="arrow-right" />
+      </div>
+    </div>
+
+    <h3 class="about__subhead">How I approach the work</h3>
+    <ul class="about__principles">
+      @for (principle of principles; track principle.id) {
+        <li appReveal>
+          <app-sticky-note [color]="principle.color" [rotation]="principle.rotation">
+            <h4 class="principle__title">{{ principle.title }}</h4>
+            <p>{{ principle.body }}</p>
+          </app-sticky-note>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

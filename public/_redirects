@@ -1,0 +1,3 @@
+# Paths that only existed on the Angular rewrite branch, never on the indexed site
+/projects /work 301
+/skills /#skills 301

@@ -1,0 +1,48 @@
+<div class="contact">
+  <div class="contact__intro">
+    <app-section-heading
+      eyebrow="Contact"
+      headingId="contact-title"
+      [level]="headingLevel()"
+      title="Let's build something useful."
+      description="Have a product, platform, or frontend challenge in mind? Tell me what you're building and I'll help you figure out the next step."
+      annotation="say hello!"
+    />
+
+    <app-sticky-note class="contact__note" color="yellow" [rotation]="-2">
+      <p class="contact__note-label">Prefer email?</p>
+      <a class="contact__email" [href]="'mailto:' + info.email">{{ info.email }}</a>
+    </app-sticky-note>
+
+    <dl class="contact__facts">
+      <div>
+        <dt>Availability</dt>
+        <dd>{{ info.availability }}</dd>
+      </div>
+      <div>
+        <dt>Response time</dt>
+        <dd>{{ info.responseTime }}</dd>
+      </div>
+      <div>
+        <dt>Based in</dt>
+        <dd>{{ info.location }} · working remotely</dd>
+      </div>
+    </dl>
+
+    <app-social-links [links]="socials" />
+
+    <svg class="contact__envelope" viewBox="0 0 120 90" aria-hidden="true" focusable="false">
+      <rect x="6" y="18" width="100" height="64" rx="6" fill="#FFFAF2" />
+      <path d="M6 24l50 34 50-34" fill="#F2C66D" />
+      <rect x="6" y="18" width="100" height="64" rx="6" fill="none" />
+      <path d="M6 24l50 34 50-34" fill="none" />
+      <path class="contact__trail" d="M110 12c4-6 8-6 8 0" fill="none" />
+    </svg>
+  </div>
+
+  <app-software-window class="contact__panel" title="new-message.txt">
+    <div class="contact__form">
+      <app-contact-form />
+    </div>
+  </app-software-window>
+</div>

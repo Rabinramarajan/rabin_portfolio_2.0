@@ -1,37 +1,211 @@
-import { Routes } from '@angular/router';
+import { ResolveFn, Route, Routes } from '@angular/router';
+import { RouteSeoData } from './core/seo/route-seo';
+import { defaultSeo } from './data/profile';
+import { personJsonLd, websiteJsonLd } from './core/seo/json-ld';
 
-const SITE_NAME = 'Rabin R';
+const NOT_FOUND_SEO: RouteSeoData = {
+  title: 'Page not found',
+  description: 'This page does not exist. Browse selected work, services and engineering insights instead.',
+  noindex: true,
+};
 
+// Resolvers import content lazily so case studies, articles and legal copy stay out of the initial bundle.
+
+const projectSeo: ResolveFn<RouteSeoData> = async (route) => {
+  const { getProject } = await import('./data/projects');
+  const project = getProject(route.paramMap.get('slug') ?? '');
+  if (!project) return NOT_FOUND_SEO;
+  return {
+    title: project.seo.title,
+    description: project.seo.description,
+    type: 'article',
+    image: project.cover?.src,
+  };
+};
+
+const serviceSeo: ResolveFn<RouteSeoData> = async (route) => {
+  const { getServiceRoute } = await import('./data/service-routes');
+  const service = getServiceRoute(route.paramMap.get('slug') ?? '');
+  if (!service) return NOT_FOUND_SEO;
+  return { title: service.title, description: service.description, image: service.service.image.src };
+};
+
+const insightSeo: ResolveFn<RouteSeoData> = async (route) => {
+  const { getInsight, insightJsonLd } = await import('./features/insights/insight-utils');
+  const insight = getInsight(route.paramMap.get('slug') ?? '');
+  if (!insight) return NOT_FOUND_SEO;
+  return {
+    title: insight.seoTitle ?? insight.title ?? 'Insight',
+    description: insight.seoDescription ?? insight.dek ?? '',
+    type: 'article',
+    publishedTime: insight.datePublished,
+    modifiedTime: insight.dateModified ?? insight.datePublished,
+    image: insight.cover?.src,
+    jsonLd: insightJsonLd(insight),
+  };
+};
+
+type LegalId = 'privacy' | 'terms';
+
+function legalRoute(id: LegalId): Route {
+  const load = () => import('./data/legal').then((m) => m[id]);
+  return {
+    path: id,
+    loadComponent: () => import('./features/legal/legal-page').then((m) => m.LegalPage),
+    resolve: {
+      document: load,
+      seo: async (): Promise<RouteSeoData> => {
+        const doc = await load();
+        return { title: doc.title, description: doc.description };
+      },
+    },
+  };
+}
+
+/**
+ * Every path the live site has indexed is kept exactly, so rankings and inbound
+ * links survive the rewrite. All routes are prerendered (see app.routes.server.ts).
+ */
 export const routes: Routes = [
   {
     path: '',
-    title: `${SITE_NAME} — Frontend Angular Engineer`,
     loadComponent: () => import('./features/home/home').then((m) => m.Home),
+    data: {
+      seo: {
+        title: defaultSeo.title,
+        description: defaultSeo.description,
+        jsonLd: [personJsonLd(), websiteJsonLd()],
+      } satisfies RouteSeoData,
+    },
   },
   {
-    path: 'projects',
-    title: `Projects · ${SITE_NAME}`,
-    loadComponent: () => import('./features/projects/projects').then((m) => m.Projects),
+    path: 'work',
+    loadComponent: () => import('./features/projects/work-page').then((m) => m.WorkPage),
+    data: {
+      seo: {
+        title: 'Selected Work',
+        description:
+          'Angular and enterprise work by Rabin R — Fiji immigration platforms, the PRIMS pension portal, the VNPF mobile app and insurance consoles.',
+      } satisfies RouteSeoData,
+    },
+  },
+  {
+    path: 'work/:slug',
+    loadComponent: () => import('./features/projects/project-detail/project-detail').then((m) => m.ProjectDetail),
+    resolve: { seo: projectSeo },
+  },
+  {
+    path: 'services',
+    loadComponent: () => import('./features/services/services-page').then((m) => m.ServicesPage),
+    data: {
+      seo: {
+        title: 'Angular & Frontend Engineering Services',
+        description:
+          'Four services: Angular engineering, frontend architecture, performance optimization and Ionic cross-platform mobile — for enterprise and government products.',
+      } satisfies RouteSeoData,
+    },
+  },
+  {
+    path: 'services/:slug',
+    loadComponent: () => import('./features/services/service-detail/service-detail').then((m) => m.ServiceDetail),
+    resolve: { seo: serviceSeo },
+  },
+  {
+    path: 'insights',
+    loadComponent: () => import('./features/insights/insights-page').then((m) => m.InsightsPage),
+    data: {
+      seo: {
+        title: 'Insights — Angular Engineering Notes',
+        description:
+          'Engineering notes from Rabin R on Angular architecture, Signals, rendering performance and quiet interfaces — positions taken from shipped production work.',
+      } satisfies RouteSeoData,
+    },
+  },
+  {
+    path: 'insights/:slug',
+    loadComponent: () => import('./features/insights/article/article-page').then((m) => m.ArticlePage),
+    resolve: { seo: insightSeo },
   },
   {
     path: 'experience',
-    title: `Experience · ${SITE_NAME}`,
-    loadComponent: () => import('./features/experience/experience').then((m) => m.Experience),
-  },
-  {
-    path: 'skills',
-    title: `Skills · ${SITE_NAME}`,
-    loadComponent: () => import('./features/skills/skills').then((m) => m.Skills),
+    loadComponent: () => import('./features/experience/experience-page').then((m) => m.ExperiencePage),
+    data: {
+      seo: {
+        title: 'Experience — Angular & Frontend Roles',
+        description:
+          "Rabin R's frontend engineering experience — from 2021 to Angular architecture in 2026, across government, pension and insurance in three countries.",
+      } satisfies RouteSeoData,
+    },
   },
   {
     path: 'about',
-    title: `About · ${SITE_NAME}`,
-    loadComponent: () => import('./features/about/about').then((m) => m.About),
+    loadComponent: () => import('./features/about/about-page').then((m) => m.AboutPage),
+    data: {
+      seo: {
+        title: 'About Rabin R',
+        description:
+          'Frontend Angular consultant in Chennai — 4+ years across government, pension, insurance and healthcare platforms in three countries.',
+        jsonLd: personJsonLd(),
+      } satisfies RouteSeoData,
+    },
+  },
+  {
+    path: 'process',
+    loadComponent: () => import('./features/process/process-page').then((m) => m.ProcessPage),
+    data: {
+      seo: {
+        title: 'Process — How an Engagement Runs',
+        description:
+          'How Rabin R runs an engagement — discover, define, design, build, test, launch and evolve — so frontend work stays predictable from first call to production.',
+      } satisfies RouteSeoData,
+    },
+  },
+  {
+    path: 'pricing',
+    loadComponent: () => import('./features/pricing/pricing-page').then((m) => m.PricingPage),
+    data: {
+      seo: {
+        title: 'Engagement Models & Pricing',
+        description:
+          'Indicative INR engagement models for Angular and frontend work with Rabin R — project, retainer and consulting shapes, and what each one includes.',
+      } satisfies RouteSeoData,
+    },
+  },
+  {
+    path: 'resume',
+    loadComponent: () => import('./features/resume/resume-page').then((m) => m.ResumePage),
+    data: {
+      seo: {
+        title: 'Resume — Frontend Angular Consultant',
+        description:
+          'Resume of Rabin R — Frontend Angular Consultant in Chennai, India, with roles, responsibilities, delivered projects and the full technology stack.',
+      } satisfies RouteSeoData,
+    },
   },
   {
     path: 'contact',
-    title: `Contact · ${SITE_NAME}`,
-    loadComponent: () => import('./features/contact/contact').then((m) => m.Contact),
+    loadComponent: () => import('./features/contact/contact-page').then((m) => m.ContactPage),
+    data: {
+      seo: {
+        title: 'Contact — Angular Consulting Enquiries',
+        description:
+          "Ready to collaborate? Reach out with your project ideas, challenges, or opportunities. Let's create something impactful together.",
+      } satisfies RouteSeoData,
+    },
   },
-  { path: '**', redirectTo: '' },
+  legalRoute('privacy'),
+  legalRoute('terms'),
+  // Paths that only ever existed on this Angular branch, never on the indexed site
+  { path: 'projects', redirectTo: 'work', pathMatch: 'full' },
+  { path: 'skills', redirectTo: '/', pathMatch: 'full' },
+  {
+    path: '404',
+    loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
+    data: { seo: NOT_FOUND_SEO },
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./features/not-found/not-found').then((m) => m.NotFound),
+    data: { seo: NOT_FOUND_SEO },
+  },
 ];

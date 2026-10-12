@@ -1,0 +1,82 @@
+// Design tokens — "Warm Creative" palette.
+// CSS custom properties are used at runtime; SCSS variables only where
+// Sass needs a compile-time value (media queries).
+
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1080px;
+
+:root {
+  // Brand palette — the five approved colours, used exactly
+  --cream: #f8f1e5;
+  --coral: #e76f51;
+  --yellow: #f2c66d;
+  --sage: #a7bfa3;
+  --ink: #282522;
+
+  // Semantic roles. Roughly 70% cream surfaces, 20% coral/sage, 10% yellow.
+  --color-background: var(--cream);
+  --color-surface: #fffaf2;
+  --color-surface-sunk: #f1e7d6;
+  --color-primary: var(--coral);
+  // Coral on cream is 3.1:1 — fine for large text and shapes, not body text.
+  // This darker coral (4.7:1 or better on every surface) carries small coral text and links.
+  --color-primary-dark: #a8412a;
+  --color-secondary: var(--yellow);
+  --color-sage: var(--sage);
+  --color-sage-dark: #4a6244;
+  --color-text: var(--ink);
+  --color-text-muted: #5f5850;
+  --color-border: var(--ink);
+  --color-on-primary: var(--ink);
+  --color-error: #b3261e;
+  --color-success: #3d6b38;
+
+  // Typography
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
+  --font-mono: ui-monospace, 'Cascadia Code', 'SFMono-Regular', Consolas, monospace;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --text-3xl: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+  --text-4xl: clamp(2.6rem, 1.6rem + 4.4vw, 5.25rem);
+  --text-hand: clamp(1.35rem, 1.2rem + 0.6vw, 1.75rem);
+
+  // Spacing
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  // Shape & depth — a hard offset shadow gives the illustrated, sticker-like feel.
+  // Three radii only: small controls, cards, large panels.
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.75rem;
+  --radius-pill: 999px;
+  --border-width: 2px;
+  --shadow-offset: 4px 4px 0 var(--color-border);
+  --shadow-offset-lg: 6px 6px 0 var(--color-border);
+  --shadow-soft: 0 12px 30px -18px rgb(40 37 34 / 45%);
+
+  // Paper grain for surfaces: a tiny inline SVG noise, no network request
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.14 0 0 0 0 0.13 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  // Layout & motion
+  --container-width: 76rem;
+  --prose-width: 42rem;
+  --header-height: 4.5rem;
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

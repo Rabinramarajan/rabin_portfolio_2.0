@@ -1,0 +1,94 @@
+@use 'mixins' as *;
+
+.contact {
+  display: grid;
+  gap: var(--space-12);
+
+  @include desktop-up {
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: start;
+  }
+}
+
+.contact__intro {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6);
+
+  app-section-heading {
+    margin-bottom: 0;
+  }
+}
+
+.contact__note {
+  max-width: 22rem;
+}
+
+.contact__note-label {
+  font-family: var(--font-hand);
+  font-size: var(--text-hand);
+  font-weight: 600;
+}
+
+.contact__email {
+  font-weight: 700;
+  font-size: var(--text-lg);
+  word-break: break-all;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.contact__facts {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+
+  div {
+    display: grid;
+    gap: 0 var(--space-4);
+
+    @include tablet-up {
+      grid-template-columns: 9rem 1fr;
+    }
+  }
+
+  dt {
+    font-weight: 700;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+}
+
+.contact__envelope {
+  display: none;
+  width: 8rem;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  transform: rotate(-8deg);
+
+  @include desktop-up {
+    display: block;
+  }
+}
+
+.contact__panel {
+  @include desktop-up {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+  }
+}
+
+.contact__form {
+  padding: var(--space-6);
+
+  @include tablet-up {
+    padding: var(--space-8);
+  }
+}

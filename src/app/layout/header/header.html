@@ -1,36 +1,35 @@
 <header class="header">
   <div class="container header__inner">
-    <a class="logo" routerLink="/" (click)="closeMenu()">
-      <img class="logo__mark" src="/images/logo.webp" alt="" width="40" height="40" />
-      {{ name }}
-    </a>
+    <app-logo (navigate)="closeMenu()" />
 
     <button
+      #toggle
       class="menu-toggle"
       type="button"
       aria-controls="primary-nav"
       [attr.aria-expanded]="menuOpen()"
       (click)="toggleMenu()"
     >
-      {{ menuOpen() ? 'Close' : 'Menu' }}
+      <app-icon [name]="menuOpen() ? 'close' : 'menu'" />
+      <span>{{ menuOpen() ? 'Close' : 'Menu' }}</span>
     </button>
 
     <nav id="primary-nav" class="nav" [class.is-open]="menuOpen()" aria-label="Primary">
       <ul class="nav__list">
-        @for (item of navItems; track item.path) {
+        @for (item of navItems; track item.href) {
           <li>
-            <a
-              class="nav__link"
-              [routerLink]="item.path"
-              routerLinkActive="is-active"
-              ariaCurrentWhenActive="page"
-              (click)="closeMenu()"
-            >
+            <a #navLink class="nav__link" [routerLink]="item.href" routerLinkActive="is-active" ariaCurrentWhenActive="page">
               {{ item.label }}
             </a>
           </li>
         }
+        <li class="nav__cta-item">
+          <a class="nav__cta" routerLink="/contact" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+            Let's work together
+          </a>
+        </li>
       </ul>
     </nav>
   </div>
+  <app-scroll-progress />
 </header>

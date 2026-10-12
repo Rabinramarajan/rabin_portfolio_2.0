@@ -1,0 +1,116 @@
+import { expect, test } from '@playwright/test';
+
+const SHOTS = process.env['SHOTS_DIR'];
+
+/** Every indexed path from the live site must still resolve. */
+const PRESERVED_ROUTES = [
+  '/',
+  '/work',
+  '/work/fiji-immigration-internal',
+  '/services',
+  '/services/angular-development',
+  '/services/frontend-architecture',
+  '/services/ionic-development',
+  '/services/angular-performance-optimization',
+  '/insights',
+  '/insights/rxjs-reduce-api-calls',
+  '/experience',
+  '/about',
+  '/process',
+  '/pricing',
+  '/resume',
+  '/contact',
+  '/privacy',
+  '/terms',
+];
+
+for (const path of PRESERVED_ROUTES) {
+  test(`${path} renders with its own title and canonical`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()));
+
+    const response = await page.goto(path);
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('h1')).toHaveCount(1);
+    await expect(page).toHaveTitle(/Rabin R/);
+    const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
+    expect(canonical).toBe(`https://www.rabinr.in${path === '/' ? '/' : path}`);
+    expect(errors).toEqual([]);
+  });
+}
+
+test('unknown paths return the 404 page with a 404 status', async ({ page }) => {
+  const response = await page.goto('/definitely-not-a-page');
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('wandered off');
+});
+
+for (const width of [320, 375, 768, 1024, 1440]) {
+  test(`home has no horizontal overflow at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+    if (SHOTS) await page.screenshot({ path: `${SHOTS}/home-${width}.png`, fullPage: true });
+  });
+}
+
+test('mobile menu opens, focuses the first link and closes on Escape', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('/');
+  const toggle = page.locator('button[aria-controls="primary-nav"]');
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#primary-nav a').first()).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(toggle).toBeFocused();
+});
+
+test('project filter narrows the gallery', async ({ page }) => {
+  await page.goto('/work');
+  await page.waitForLoadState('networkidle');
+  const cards = page.locator('app-project-card');
+  const total = await cards.count();
+  await page.getByRole('button', { name: /^Marketplaces/ }).click();
+  await expect(cards).toHaveCount(1);
+  expect(total).toBeGreaterThan(1);
+});
+
+test('skills toolkit supports keyboard tab navigation', async ({ page }) => {
+  await page.goto('/#skills');
+  await page.waitForLoadState('networkidle');
+  const first = page.getByRole('tab', { name: 'Frontend' });
+  await first.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('tab', { name: 'Backend' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: 'Backend' })).toBeFocused();
+});
+
+test('contact form validates, then sends', async ({ page }) => {
+  await page.goto('/contact');
+  await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: 'Send message' }).click();
+  await expect(page.getByText('Please tell me your name.')).toBeVisible();
+
+  await page.getByLabel('Name').fill('Playwright Test');
+  await page.getByLabel('Email').fill('test@example.com');
+  await page.getByLabel('Subject').fill('Smoke test');
+  await page.getByLabel('What are you working on?').fill('Checking the contact form end to end works.');
+  await page.waitForTimeout(3100); // the server rejects submissions faster than a person could type
+  await page.getByRole('button', { name: 'Send message' }).click();
+  await expect(page.getByRole('status')).toContainText('Message sent');
+});
+
+test('reduced motion leaves content visible', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('#hero-title')).toBeVisible();
+  const hidden = await page.locator('.reveal').evaluateAll((els) =>
+    els.filter((el) => getComputedStyle(el).opacity === '0').length,
+  );
+  expect(hidden).toBe(0);
+});

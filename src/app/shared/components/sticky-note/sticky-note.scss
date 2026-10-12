@@ -1,6 +1,5 @@
-@use 'mixins' as *;
-
 :host {
+  position: relative;
   display: block;
   padding: var(--space-4) var(--space-6);
   border: var(--border-width) solid var(--color-border);
@@ -9,9 +8,29 @@
   transform: rotate(var(--note-rotation, 0deg));
   transition: transform var(--duration-base) var(--ease-out);
 
+  // A strip of tape holding the note to the page
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    width: 56px;
+    height: 18px;
+    background: rgb(255 250 242 / 70%);
+    border: 1px solid rgb(40 37 34 / 15%);
+    transform: translateX(-50%) rotate(-3deg);
+  }
+
   &:hover {
     transform: rotate(0deg) scale(1.02);
   }
+}
+
+.note__text {
+  font-family: var(--font-hand);
+  font-size: var(--text-hand);
+  font-weight: 600;
+  line-height: 1.15;
 }
 
 :host(.note--yellow) {

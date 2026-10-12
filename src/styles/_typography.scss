@@ -1,3 +1,32 @@
+// Self-hosted Latin subsets (no third-party font requests). Fraunces and DM Sans use
+// `optional`: if they miss the first paint the fallback stays for that view, so a late
+// font can never re-wrap the hero (CLS), and the next view uses the cached font.
+// They are deliberately not preloaded: on slow connections they would compete with
+// the HTML for bandwidth and delay first paint.
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: optional;
+  src: url('/fonts/fraunces-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: optional;
+  src: url('/fonts/dm-sans-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Caveat';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/caveat-latin.woff2') format('woff2');
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--text-base);

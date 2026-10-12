@@ -8,8 +8,19 @@
   font-weight: 700;
 }
 
+.label__required {
+  margin-left: 0.15em;
+  color: var(--color-primary-dark);
+}
+
+.hint {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
 .input {
   width: 100%;
+  min-height: 48px;
   padding: var(--space-3) var(--space-4);
   font: inherit;
   color: var(--color-text);
@@ -21,6 +32,11 @@
   &:focus-visible {
     outline: none;
     box-shadow: var(--shadow-offset);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   &[aria-invalid='true'] {

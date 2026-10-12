@@ -1,10 +1,40 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "rabin-portfolio",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-10-01",
-  // Static Angular build; unknown paths fall back to index.html so client-side routes work.
+  "observability": { "enabled": true },
+
+  // Every route is prerendered to its own index.html, so assets serve all pages.
+  // Unknown paths get the prerendered 404.html with a real 404 status.
+  // Only /api/* and /robots.txt run the Worker first.
   "assets": {
     "directory": "./dist/rabin-portfolio/browser",
-    "not_found_handling": "single-page-application"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "html_handling": "drop-trailing-slash",
+    "run_worker_first": ["/api/*", "/robots.txt"]
+  },
+
+  // Contact form delivery. The sender domain must be onboarded to Cloudflare
+  // Email Service (`npx wrangler email sending enable rabinr.in`).
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_destination_addresses": ["rabinr.dev@gmail.com"]
+    }
+  ],
+
+  "ratelimits": [
+    {
+      "name": "CONTACT_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ],
+
+  "vars": {
+    "CONTACT_TO_EMAIL": "rabinr.dev@gmail.com",
+    "CONTACT_FROM_EMAIL": "contact@rabinr.in"
   }
 }

@@ -9,4 +9,15 @@ import { Footer } from './layout/footer/footer';
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {}
+export class App {
+  /**
+   * With <base href="/">, "#main-content" resolves to "/#main-content" and would
+   * navigate home from any inner page. Move focus in place instead.
+   */
+  protected skipToContent(event: Event): void {
+    event.preventDefault();
+    const main = document.getElementById('main-content');
+    main?.focus();
+    main?.scrollIntoView();
+  }
+}

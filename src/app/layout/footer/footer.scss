@@ -2,8 +2,17 @@
 
 .footer {
   padding-block: var(--space-16) var(--space-8);
-  color: var(--color-background);
-  background: var(--color-text);
+  color: var(--cream);
+  background: var(--ink);
+  border-top: var(--border-width) solid var(--color-border);
+
+  ::ng-deep .logo {
+    color: var(--cream);
+  }
+
+  ::ng-deep .social {
+    color: var(--ink);
+  }
 }
 
 .footer__inner {
@@ -11,7 +20,7 @@
   gap: var(--space-12);
 
   @include tablet-up {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1.4fr 1fr;
   }
 }
 
@@ -23,23 +32,49 @@
 }
 
 .footer__title {
-  font: 600 var(--text-2xl) var(--font-display);
+  max-width: 18ch;
+  font: 600 var(--text-2xl) / 1.15 var(--font-display);
+}
+
+.footer__note {
+  color: var(--yellow);
+  transform: rotate(-2deg);
 }
 
 .footer__email {
   font-size: var(--text-lg);
-  color: var(--color-secondary);
+  font-weight: 700;
+  color: var(--yellow);
+  text-underline-offset: 4px;
 }
 
 .footer__nav {
   display: grid;
-  gap: var(--space-2);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8);
+}
+
+.footer__heading {
+  margin-bottom: var(--space-3);
+  font: 700 var(--text-sm) / 1 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 
   a {
+    display: inline-block;
+    padding-block: var(--space-2);
     text-decoration: none;
 
     &:hover {
-      color: var(--color-secondary);
+      color: var(--yellow);
+      text-decoration: underline;
     }
   }
 }
@@ -48,6 +83,6 @@
   margin-top: var(--space-12);
   padding-top: var(--space-6);
   font-size: var(--text-sm);
-  opacity: 0.75;
-  border-top: 1px solid color-mix(in srgb, var(--color-background) 25%, transparent);
+  color: #cfc5b5;
+  border-top: 1px solid #4a4540;
 }

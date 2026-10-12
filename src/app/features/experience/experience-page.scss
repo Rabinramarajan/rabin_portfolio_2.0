@@ -1,0 +1,96 @@
+@use 'mixins' as *;
+
+.milestones {
+  display: grid;
+  gap: var(--space-6);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include desktop-up {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.milestone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.milestone__year {
+  font: 700 var(--text-2xl) / 1 var(--font-display);
+  color: var(--color-primary-dark);
+}
+
+.milestone__event {
+  font-size: var(--text-lg);
+}
+
+.milestone__why {
+  color: var(--color-text-muted);
+}
+
+.growth {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: 52rem;
+}
+
+.growth__item {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: var(--space-4);
+
+  h3 {
+    font-size: var(--text-xl);
+  }
+
+  p {
+    margin-top: var(--space-2);
+  }
+}
+
+.growth__number {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-weight: 700;
+  background: var(--sage);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 50%;
+}
+
+.growth__evidence {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.education__title {
+  margin: var(--space-16) 0 var(--space-4);
+  font-size: var(--text-2xl);
+}
+
+.education {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.education__period {
+  color: var(--color-text-muted);
+}
+
+.experience-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-12);
+}

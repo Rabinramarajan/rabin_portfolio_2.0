@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="t">
+  <title id="t">Rabin R</title>
+  <!-- Vector recreation of the approved R monogram (public/logo-512.png) — pending approval -->
+  <path d="M100 216 46 268l54 52" fill="none" stroke="#A7BFA3" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M430 230 472 270l-42 40" fill="none" stroke="#E76F51" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M384 156c-4-52 32-86 86-98 6 54-28 94-86 98Z" fill="#A7BFA3"/>
+  <path d="M396 144c14-24 32-42 54-56" fill="none" stroke="#282522" stroke-width="7" stroke-linecap="round"/>
+  <path d="M180 192h128c30 0 46 30 30 56l-34 40 6 8-56 30 20 22-54 96h-34c-22 0-32-14-30-36l18-200c2-12 4-16 6-16Z" fill="#282522"/>
+  <path d="M232 300 302 290l160 154H330Z" fill="#282522"/>
+  <path d="M106 100h222c58 0 96 40 96 92 0 52-40 94-96 94h-38l26-52c22-2 38-20 38-42 0-24-18-40-40-40H190c-40 0-70-22-84-52Z" fill="#E76F51"/>
+  <path d="M140 258c6-44 50-66 92-46 12 6 22 14 30 24l140 158c18 20 36 34 58 50-56 10-110-4-150-46L176 268c-12-12-24-16-36-10Z" fill="#F2C66D"/>
+  <path d="M140 258c18-16 46-12 58 10 6 12 6 26 4 40l-14 104c-4 22-22 32-46 32h-8c-8 0-12-6-12-14Z" fill="#A7BFA3"/>
+</svg>

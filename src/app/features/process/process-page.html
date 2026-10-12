@@ -1,0 +1,65 @@
+<section class="page-section container">
+  <app-section-heading
+    [level]="1"
+    eyebrow="Process"
+    title="From problem to production"
+    [description]="intro.lede"
+    annotation="seven stages, no theatre"
+  />
+
+  <ol class="stages">
+    @for (step of steps; track step.id) {
+      <li class="stage" appReveal>
+        <div class="stage__marker">
+          <app-process-glyph [stage]="step.visual" />
+          <span class="stage__number">{{ step.number }}</span>
+        </div>
+        <article class="stage__card">
+          <p class="stage__label">{{ step.label }}</p>
+          <h2 class="stage__title">{{ step.title }}</h2>
+          <p class="stage__purpose">{{ step.purpose }}</p>
+          <p>{{ step.description }}</p>
+          <div class="stage__columns">
+            <div>
+              <h3 class="stage__heading">Activities</h3>
+              <ul class="stage__list">
+                @for (item of step.happens; track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+            <div>
+              <h3 class="stage__heading">Deliverables</h3>
+              <ul class="stage__list">
+                @for (item of step.deliverables; track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+          <p class="stage__output">{{ step.output }}</p>
+          <p class="stage__outcome"><span class="hand">outcome →</span> {{ step.outcome }}</p>
+        </article>
+      </li>
+    }
+  </ol>
+</section>
+
+<section class="page-section page-section--band" aria-labelledby="principles-title">
+  <div class="container">
+    <app-section-heading headingId="principles-title" eyebrow="Principles" title="What stays true at every stage" />
+    <ul class="principles">
+      @for (principle of principles; track principle.title) {
+        <li class="principle" appReveal>
+          <h3>{{ principle.title }}</h3>
+          <p>{{ principle.body }}</p>
+        </li>
+      }
+    </ul>
+    <div class="process-cta">
+      <p class="process-cta__title">{{ intro.ctaHeading }}</p>
+      <p>{{ intro.ctaLede }}</p>
+      <app-button label="Start a conversation" link="/contact" icon="arrow-right" />
+    </div>
+  </div>
+</section>

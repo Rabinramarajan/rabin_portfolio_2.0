@@ -1,36 +1,82 @@
-<section class="hero container" aria-labelledby="hero-title">
-  <div class="hero__copy">
-    <p class="hero__status">
-      <span class="hero__dot" aria-hidden="true"></span>
-      {{ profile.availability }}
-    </p>
+<section class="hero" id="hero" aria-labelledby="hero-title">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="hero__status">
+        <span class="hero__dot" aria-hidden="true"></span>
+        {{ hero.availability }}
+      </p>
 
-    <h1 id="hero-title" class="hero__title">
-      Hi, I'm Rabin. I build <span class="highlight">Angular apps</span> people enjoy using.
-    </h1>
+      <p class="hero__kicker">{{ profile.name }} — {{ hero.headline }}</p>
 
-    <p class="hero__summary">{{ profile.summary }}</p>
+      <h1 id="hero-title" class="hero__title">
+        @for (word of headline; track word.text) {
+          <span class="hero__mask"
+            ><span class="hero__word" [class.highlight]="word.highlight">{{ word.text }}</span></span
+          >{{ ' ' }}
+        }
+      </h1>
 
-    <div class="hero__actions">
-      <app-button label="See my work" link="/projects" size="lg" />
-      <app-button label="Get in touch" link="/contact" variant="secondary" size="lg" />
+      <p class="hero__summary">{{ hero.description }}</p>
+
+      <div class="hero__actions">
+        <app-button [label]="hero.primaryCta.label" [link]="hero.primaryCta.href" size="lg" icon="arrow-right" />
+        <app-button [label]="hero.secondaryCta.label" [link]="hero.secondaryCta.href" variant="secondary" size="lg" />
+      </div>
+
+      <div class="hero__aside">
+        <app-social-links [links]="socials" />
+        @if (hero.recruiterCta; as recruiter) {
+          <p class="hero__recruiter">
+            {{ recruiter.label }}
+            <a class="text-link" [routerLink]="recruiter.href">{{ recruiter.linkLabel }}</a>
+          </p>
+        }
+      </div>
     </div>
+
+    <figure class="hero__visual">
+      <img
+        class="hero__art"
+        ngSrc="/media/hero/hero-illustration.webp"
+        alt="Illustration of Rabin at his desk coding in Angular and TypeScript, surrounded by sticky notes, a coffee mug and a sleeping cat"
+        width="1536"
+        height="1024"
+        loading="eager"
+        sizes="(min-width: 1080px) 50vw, 100vw"
+      />
+      <!-- Animated details, drawn in the illustration's own 1536 x 1024 pixel space so they stay aligned at any size -->
+      <svg class="hero__fx" viewBox="0 0 1536 1024" aria-hidden="true" focusable="false">
+        <g class="fx-steam" fill="none" stroke="#fffaf2" stroke-width="7" stroke-linecap="round">
+          <path d="M1150 700c-14-18 14-30 0-50s14-32 0-52" />
+          <path d="M1178 700c-14-18 14-30 0-50s14-32 0-52" />
+          <path d="M1206 700c-14-18 14-30 0-50s14-32 0-52" />
+        </g>
+        <g class="fx-zzz" fill="#282522" font-family="Caveat, cursive" font-weight="600">
+          <text x="210" y="660" font-size="30">z</text>
+          <text x="232" y="632" font-size="36">z</text>
+          <text x="258" y="600" font-size="42">z</text>
+        </g>
+        <rect class="fx-cursor" x="958" y="318" width="10" height="24" rx="2" fill="#f2c66d" transform="rotate(5 963 330)" />
+        <circle class="fx-glow" cx="1173" cy="104" r="34" fill="#f2c66d" />
+        <g class="fx-sparkles" fill="#e76f51">
+          <path class="fx-spark" d="M75 62l5 18 18 5-18 5-5 18-5-18-18-5 18-5z" />
+          <path class="fx-spark" d="M761 433l4 15 15 4-15 4-4 15-4-15-15-4 15-4z" />
+          <path class="fx-spark" d="M366 254l4 15 15 4-15 4-4 15-4-15-15-4 15-4z" />
+          <path class="fx-spark" d="M1400 230l4 14 14 4-14 4-4 14-4-14-14-4 14-4z" />
+        </g>
+      </svg>
+    </figure>
   </div>
 
-  <div class="hero__visual">
-    <app-illustration class="hero__blob" shape="blob" color="sage" />
-    <app-illustration class="hero__star" shape="star" color="yellow" />
-    <app-illustration class="hero__squiggle" shape="squiggle" color="coral" />
-
-    <div class="hero__portrait">
-      <img [ngSrc]="profile.portraitUrl" alt="Portrait of Rabin R" width="480" height="560" priority />
-    </div>
-
-    <app-sticky-note class="hero__note hero__note--top" color="yellow" [rotation]="-4">
-      <strong>10K+</strong> users on apps I've shipped
-    </app-sticky-note>
-    <app-sticky-note class="hero__note hero__note--bottom" color="coral" [rotation]="3">
-      Signals · Zoneless · TypeScript
-    </app-sticky-note>
+  <div class="container">
+    <dl class="hero__metrics">
+      @for (metric of metrics; track metric.label) {
+        <div class="metric">
+          <dt class="metric__label">{{ metric.label }}</dt>
+          <dd class="metric__value">{{ metric.value }}</dd>
+          <dd class="metric__source">{{ metric.source }}</dd>
+        </div>
+      }
+    </dl>
   </div>
 </section>

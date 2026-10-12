@@ -1,59 +1,50 @@
-# RabinPortfolio
+# Rabin R — Portfolio
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.2.
+Angular 22 portfolio for [rabinr.in](https://www.rabinr.in): standalone components, Signals, zoneless change
+detection, Signal Forms, GSAP + ScrollTrigger, and every route prerendered to static HTML. Hosted on
+Cloudflare (static assets + one Worker for the contact form).
 
-## Development server
+## Commands
 
-To start a local development server, run:
+| Command | What it does |
+|---|---|
+| `npm start` | Dev server at `http://localhost:4200` (no Worker, so the contact form cannot send) |
+| `npm run build` | Production build + prerender (40 routes), then `scripts/postbuild.mjs` writes `404.html` and `sitemap.xml` |
+| `npm run preview` | Build, then serve the real Worker + assets with `wrangler dev` at `http://localhost:8787` |
+| `npm test` | Vitest unit tests |
+| `npm run test:e2e` | Playwright smoke tests against `wrangler dev` (routes, 404, overflow at 320–1440px, menu, filters, keyboard, form, reduced motion) |
+| `npm run typecheck` | Strict type check of the app and the Worker |
+| `npm run deploy` | Build and upload a **preview version** (`wrangler versions upload`) — production is untouched |
+| `npm run deploy:production` | Build and deploy to production. Only after the preview is approved |
 
-```bash
-ng serve
+## Layout
+
+```text
+src/app/
+  core/        seo (meta, canonical, JSON-LD), motion (useGsap), contact (shared rules + HTTP service)
+  data/        all site content, typed (ported from the previous site — edit copy here)
+  shared/      button, icon, logo, section-heading, sticky-note, software-window, project-card,
+               form-control, social-links, skill-badge, scroll-progress, reveal directive
+  layout/      header, footer
+  features/    home, about, experience, services, projects, skills, process, insights, faq,
+               contact, pricing, resume, legal, not-found
+worker/        Cloudflare Worker: POST /api/contact, host-aware /robots.txt
+public/        media, self-hosted fonts, brand assets, _redirects, robots.txt
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Contact form setup (Cloudflare)
 
-## Code scaffolding
+The Worker sends mail with the Email Service `send_email` binding, restricted to `rabinr.dev@gmail.com`.
+Before the first deploy:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Onboard the sender domain: `npx wrangler email sending enable rabinr.in`.
+2. `CONTACT_FROM_EMAIL` in `wrangler.jsonc` must be an address on that domain.
+3. After changing bindings, run `npx wrangler types worker/worker-configuration.d.ts`.
 
-```bash
-ng generate component component-name
-```
+Locally, `wrangler dev` simulates delivery; nothing is sent.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Brand
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+`public/images/logo.webp` and `public/logo-*.png` are the approved raster logo and are what the site uses.
+`public/brand/*.svg` is a hand-built vector recreation **pending approval**; the favicon SVG is the monogram
+only so it stays legible at 16–32px.

@@ -1,0 +1,40 @@
+<section class="page-section container">
+  <app-section-heading
+    [level]="1"
+    eyebrow="Pricing"
+    title="Engagement models & pricing"
+    description="Indicative INR pricing for Angular and frontend work — project, retainer and dedicated-engineering shapes, and what each one includes."
+    annotation="a starting point, not a quote"
+  />
+
+  @for (group of groups; track group.id) {
+    <section class="group" [attr.aria-labelledby]="'group-' + group.id">
+      <h2 class="group__title" [id]="'group-' + group.id">{{ group.title }}</h2>
+      <ul class="plans">
+        @for (plan of group.plans; track plan.id) {
+          <li class="plan" [class.is-featured]="plan.featured">
+            @if (plan.featured) {
+              <span class="plan__badge hand">most chosen</span>
+            }
+            <h3 class="plan__name">{{ plan.name }}</h3>
+            <p class="plan__price">{{ plan.startingLabel }}</p>
+            <p class="plan__scope">{{ plan.scope }}</p>
+            <p class="plan__timeline"><strong>Timeline:</strong> {{ plan.timeline }}</p>
+            <ul class="plan__list">
+              @for (item of plan.deliverables; track item) {
+                <li><app-icon name="check" /> {{ item }}</li>
+              }
+            </ul>
+            <p class="plan__ideal">{{ plan.idealClient }}</p>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  <p class="disclaimer">{{ disclaimer }}</p>
+
+  <div class="pricing-cta">
+    <app-button label="Discuss your project" link="/contact" icon="arrow-right" size="lg" />
+  </div>
+</section>

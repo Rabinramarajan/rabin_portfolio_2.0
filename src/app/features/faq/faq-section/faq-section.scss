@@ -1,0 +1,82 @@
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 52rem;
+}
+
+.faq__item {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: box-shadow var(--duration-base) var(--ease-out);
+
+  &.is-open {
+    box-shadow: var(--shadow-offset);
+  }
+}
+
+.faq__question {
+  font: inherit;
+}
+
+.faq__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-4) var(--space-6);
+  font: 600 var(--text-lg) / 1.35 var(--font-display);
+  color: var(--color-text);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.faq__icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.3rem;
+  background: var(--color-secondary);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 50%;
+  transition: transform var(--duration-base) var(--ease-out);
+
+  .is-open & {
+    background: var(--color-primary);
+    transform: rotate(45deg);
+  }
+}
+
+// Height animates via grid rows, so no JavaScript measures anything
+.faq__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--duration-base) var(--ease-out),
+    visibility 0s linear var(--duration-base);
+
+  .is-open & {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows var(--duration-base) var(--ease-out),
+      visibility 0s;
+  }
+}
+
+.faq__inner {
+  overflow: hidden;
+}
+
+.faq__answer {
+  padding: 0 var(--space-6) var(--space-6);
+  color: var(--color-text-muted);
+}

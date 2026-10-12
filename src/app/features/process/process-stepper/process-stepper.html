@@ -1,0 +1,63 @@
+<div class="stepper">
+  <div class="rail">
+    <span class="rail__line" aria-hidden="true"></span>
+    <div class="rail__list" role="tablist" aria-label="Process stages">
+      @for (step of steps; track step.id; let i = $index) {
+        @let active = i === selectedIndex();
+        <button
+          #step
+          type="button"
+          role="tab"
+          class="rail__item"
+          [class.is-done]="i < selectedIndex()"
+          [id]="'process-tab-' + step.id"
+          [attr.aria-selected]="active"
+          aria-controls="process-panel"
+          [tabindex]="active ? 0 : -1"
+          (click)="select(i)"
+          (keydown)="onKeydown($event, i)"
+        >
+          <span class="rail__dot">{{ step.number }}</span>
+          <span class="rail__label">{{ step.label }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div id="process-panel" class="panel" role="tabpanel" [attr.aria-labelledby]="'process-tab-' + selected().id">
+    @for (step of [selected()]; track step.id) {
+      <div class="panel__content">
+        <div class="panel__head">
+          <app-process-glyph [stage]="step.visual" />
+          <div>
+            <p class="panel__stage">{{ step.number }} · {{ step.label }}</p>
+            <h3 class="panel__title">{{ step.title }}</h3>
+          </div>
+        </div>
+
+        <p class="panel__description">{{ step.description }}</p>
+
+        <div class="panel__columns">
+          <div>
+            <p class="panel__label">Activities</p>
+            <ul class="panel__list">
+              @for (item of step.happens; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          </div>
+          <div>
+            <p class="panel__label">Deliverables</p>
+            <ul class="panel__list panel__list--deliverables">
+              @for (item of step.deliverables; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <p class="panel__outcome"><span class="hand">outcome →</span> {{ step.outcome }}</p>
+      </div>
+    }
+  </div>
+</div>

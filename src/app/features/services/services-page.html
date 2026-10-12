@@ -1,0 +1,70 @@
+<section class="page-section container">
+  <app-section-heading
+    [level]="1"
+    eyebrow="Services"
+    title="Angular & frontend engineering services"
+    description="Four services for enterprise and government products: Angular engineering, frontend architecture, performance optimization and Ionic cross-platform mobile."
+    annotation="each one backed by shipped work"
+  />
+  <app-services-grid [detailed]="true" />
+</section>
+
+<section class="page-section page-section--band" aria-labelledby="also-title">
+  <div class="container also">
+    <div>
+      <h2 id="also-title" class="also__title">Also in the toolbox</h2>
+      <p class="also__text">
+        Real capabilities, named here rather than sold as headline offers — they usually come along inside one of the four
+        services above.
+      </p>
+    </div>
+    <ul class="also__list">
+      @for (service of secondary; track service.id) {
+        <li class="also__item">
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.summary }}</p>
+          <ul class="tag-list" aria-label="Technologies">
+            @for (tech of service.technologies; track tech) {
+              <li><app-skill-badge [label]="tech" /></li>
+            }
+          </ul>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="page-section container" aria-labelledby="engage-title">
+  <app-section-heading
+    headingId="engage-title"
+    eyebrow="Engagement"
+    title="Ways to work together"
+    description="Pick the shape that fits the work. Indicative pricing lives on the pricing page."
+  />
+  <ul class="engage">
+    @for (model of engagements; track model.id) {
+      <li class="engage__item" [class.is-featured]="model.featured">
+        <h3>{{ model.title }}</h3>
+        <p class="engage__summary">{{ model.summary }}</p>
+        <dl class="engage__facts">
+          @if (model.scope) {
+            <dt>Scope</dt>
+            <dd>{{ model.scope }}</dd>
+          }
+          @if (model.timeline) {
+            <dt>Timeline</dt>
+            <dd>{{ model.timeline }}</dd>
+          }
+          @if (model.idealFor) {
+            <dt>Ideal for</dt>
+            <dd>{{ model.idealFor }}</dd>
+          }
+        </dl>
+      </li>
+    }
+  </ul>
+  <div class="engage__actions">
+    <app-button label="See pricing" link="/pricing" variant="secondary" />
+    <app-button label="Discuss a project" link="/contact" icon="arrow-right" />
+  </div>
+</section>

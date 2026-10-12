@@ -1,0 +1,13 @@
+{
+  "name": "Rabin R — Frontend Angular Engineer",
+  "short_name": "Rabin R",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#F8F1E5",
+  "theme_color": "#F8F1E5",
+  "icons": [
+    { "src": "/logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/brand/logo-icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

@@ -1,0 +1,29 @@
+<div class="gallery__filters" role="group" aria-label="Filter projects by type">
+  @for (filter of filters; track filter.id) {
+    <button
+      type="button"
+      class="filter"
+      [attr.aria-pressed]="activeFilter() === filter.id"
+      (click)="selectFilter(filter.id)"
+    >
+      {{ filter.label }}
+      <span class="filter__count" aria-hidden="true">{{ filter.count }}</span>
+    </button>
+  }
+</div>
+
+<p class="visually-hidden" aria-live="polite">{{ summary() }}</p>
+
+<ul class="gallery__grid" [class.has-filtered]="hasFiltered()">
+  @for (project of visibleProjects(); track project.slug; let first = $first) {
+    @let feature = first && leadFeature();
+    <li class="gallery__item" [class.gallery__item--feature]="feature">
+      <app-project-card
+        [project]="project"
+        [variant]="feature ? 'feature' : 'compact'"
+        [priority]="first && prioritizeLead()"
+        [headingLevel]="cardHeadingLevel()"
+      />
+    </li>
+  }
+</ul>

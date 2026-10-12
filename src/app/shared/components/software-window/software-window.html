@@ -1,0 +1,7 @@
+<div class="bar">
+  <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+  @if (title(); as text) {
+    <span class="title">{{ text }}</span>
+  }
+</div>
+<div class="body"><ng-content /></div>

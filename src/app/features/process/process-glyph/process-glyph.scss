@@ -1,0 +1,38 @@
+:host {
+  display: inline-flex;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fill-yellow,
+.fill-sage,
+.fill-coral {
+  stroke: none;
+}
+
+.fill-yellow {
+  fill: var(--yellow);
+}
+
+.fill-sage {
+  fill: var(--sage);
+}
+
+.fill-coral {
+  fill: var(--coral);
+}
+
+.accent {
+  stroke: var(--coral);
+  stroke-width: 3.5;
+}

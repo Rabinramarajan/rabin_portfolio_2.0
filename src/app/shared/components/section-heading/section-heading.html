@@ -3,9 +3,18 @@
 }
 
 @if (level() === 1) {
-  <h1 class="title">{{ title() }}</h1>
+  <h1 class="title" [attr.id]="headingId() ?? null">{{ title() }}</h1>
 } @else {
-  <h2 class="title">{{ title() }}</h2>
+  <h2 class="title" [attr.id]="headingId() ?? null">{{ title() }}</h2>
+}
+
+@if (annotation(); as text) {
+  <p class="annotation hand" aria-hidden="true">
+    <svg class="annotation__arrow" viewBox="0 0 60 40" focusable="false">
+      <path d="M4 34c14-2 30-10 40-26M36 6l9 2-2 9" />
+    </svg>
+    {{ text }}
+  </p>
 }
 
 @if (description(); as text) {

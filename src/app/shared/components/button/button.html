@@ -1,13 +1,30 @@
-@if (link(); as path) {
-  <a [class]="classes()" [routerLink]="path">{{ label() }}</a>
+@if (link()) {
+  <a
+    [class]="classes()"
+    [routerLink]="route().path"
+    [fragment]="route().fragment"
+    [attr.aria-label]="ariaLabel() ?? null"
+  >
+    {{ label() }}
+    @if (icon(); as name) {
+      <app-icon class="btn__icon" [name]="name" />
+    }
+  </a>
 } @else if (href(); as url) {
   <a
     [class]="classes()"
     [href]="url"
+    [attr.aria-label]="ariaLabel() ?? null"
     [attr.target]="isExternal() ? '_blank' : null"
     [attr.rel]="isExternal() ? 'noopener noreferrer' : null"
   >
     {{ label() }}
+    @if (icon(); as name) {
+      <app-icon class="btn__icon" [name]="name" />
+    }
+    @if (isExternal()) {
+      <span class="visually-hidden">(opens in a new tab)</span>
+    }
   </a>
 } @else {
   <button
@@ -15,10 +32,14 @@
     [type]="type()"
     [disabled]="disabled() || loading()"
     [attr.aria-busy]="loading()"
+    [attr.aria-label]="ariaLabel() ?? null"
   >
     @if (loading()) {
       <span class="btn__spinner" aria-hidden="true"></span>
     }
     {{ label() }}
+    @if (icon(); as name) {
+      <app-icon class="btn__icon" [name]="name" />
+    }
   </button>
 }

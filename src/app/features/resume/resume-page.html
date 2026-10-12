@@ -1,0 +1,98 @@
+<section class="page-section container">
+  <div class="toolbar">
+    <p class="hand">a one-page version for hiring teams</p>
+    <app-button label="Print / save as PDF" variant="secondary" (click)="print()" />
+  </div>
+
+  <article class="sheet">
+    <header class="sheet__header">
+      <h1 class="sheet__name">{{ name }}</h1>
+      <p class="sheet__titles">{{ titles }}</p>
+      <p class="sheet__contact">
+        <span>{{ contact.location }}</span>
+        <span aria-hidden="true">·</span>
+        <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+        <span aria-hidden="true">·</span>
+        <a [href]="tel">{{ contact.phone }}</a>
+      </p>
+      <p class="sheet__links">
+        @for (link of links; track link.href) {
+          <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+        }
+      </p>
+    </header>
+
+    <section class="sheet__section" aria-labelledby="r-summary">
+      <h2 id="r-summary">Summary</h2>
+      <p>{{ summary }}</p>
+    </section>
+
+    <section class="sheet__section" aria-labelledby="r-skills">
+      <h2 id="r-skills">Technical skills</h2>
+      <dl class="sheet__skills">
+        @for (group of skills; track group.id) {
+          <div>
+            <dt>{{ group.label }}</dt>
+            <dd>{{ group.items }}</dd>
+          </div>
+        }
+      </dl>
+    </section>
+
+    <section class="sheet__section" aria-labelledby="r-experience">
+      <h2 id="r-experience">Experience</h2>
+      @for (role of experience; track role.id) {
+        <div class="sheet__role">
+          <div class="sheet__role-head">
+            <h3>{{ role.role }} — {{ role.employer }}</h3>
+            <p>{{ role.period }} · {{ role.location }}</p>
+          </div>
+          <ul>
+            @for (bullet of role.bullets; track bullet) {
+              <li>{{ bullet }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </section>
+
+    <section class="sheet__section" aria-labelledby="r-projects">
+      <h2 id="r-projects">Key projects</h2>
+      @for (project of projects; track project.id) {
+        <div class="sheet__project">
+          <h3>{{ project.name }}</h3>
+          <p class="sheet__stack">{{ project.stack }}</p>
+          <p>{{ project.description }}</p>
+        </div>
+      }
+    </section>
+
+    <section class="sheet__section" aria-labelledby="r-achievements">
+      <h2 id="r-achievements">Achievements</h2>
+      <ul>
+        @for (item of achievements; track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    </section>
+
+    <section class="sheet__section" aria-labelledby="r-education">
+      <h2 id="r-education">Education</h2>
+      @for (entry of education; track entry.id) {
+        <p><strong>{{ entry.qualification }}</strong> — {{ entry.detail }}</p>
+      }
+    </section>
+
+    <section class="sheet__section" aria-labelledby="r-additional">
+      <h2 id="r-additional">Additional</h2>
+      <dl class="sheet__skills">
+        @for (item of additional; track item.label) {
+          <div>
+            <dt>{{ item.label }}</dt>
+            <dd>{{ item.value }}</dd>
+          </div>
+        }
+      </dl>
+    </section>
+  </article>
+</section>

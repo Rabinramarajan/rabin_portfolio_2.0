@@ -1,0 +1,82 @@
+<div class="tabs" role="tablist" aria-label="Skill categories">
+  @for (cat of categories; track cat.id; let i = $index) {
+    @let selected = cat.id === selectedCategoryId();
+    <button
+      #tab
+      type="button"
+      role="tab"
+      class="tab"
+      [id]="'skills-tab-' + cat.id"
+      [attr.aria-selected]="selected"
+      aria-controls="skills-panel"
+      [tabindex]="selected ? 0 : -1"
+      (click)="selectCategory(cat.id)"
+      (keydown)="onTabKeydown($event, i)"
+    >
+      {{ cat.label }}
+    </button>
+  }
+</div>
+
+<div
+  id="skills-panel"
+  class="toolkit"
+  role="tabpanel"
+  [attr.aria-labelledby]="'skills-tab-' + selectedCategoryId()"
+>
+  <div class="desk" [class.has-interacted]="interacted()">
+    <p class="desk__caption">
+      <span class="hand">{{ category().subtitle }}</span>
+      <span class="desk__hint">Pick a sticker to see how I use it.</span>
+    </p>
+
+    <ul class="desk__stickers" aria-label="{{ category().label }} technologies">
+      @for (tech of techs(); track tech.id) {
+        <li>
+          <button
+            type="button"
+            class="sticker"
+            [class.is-featured]="tech.featured"
+            [style.--tilt.deg]="tech.tilt"
+            [attr.aria-pressed]="tech.id === selectedTech().id"
+            aria-controls="skill-detail"
+            (click)="selectTech(tech.id)"
+          >
+            {{ tech.label }}
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <app-software-window class="detail" [title]="'toolkit/' + category().id + '/' + selectedTech().id + '.md'">
+    <div id="skill-detail" class="detail__body" aria-live="polite">
+      @for (tech of [selectedTech()]; track tech.id) {
+        <div class="detail__content">
+          <p class="detail__tier">{{ tech.tier }}</p>
+          <h3 class="detail__title">{{ tech.label }}</h3>
+
+          <div class="depth">
+            <span class="depth__label">Depth</span>
+            <span class="depth__meter" aria-hidden="true">
+              @for (step of depthSteps; track step) {
+                <i [class.is-on]="step <= tech.depth"></i>
+              }
+            </span>
+            <span class="depth__value">{{ depthLabels[tech.depth] }}</span>
+          </div>
+
+          <p class="detail__summary">{{ tech.summary }}</p>
+
+          <ul class="tag-list detail__traits" aria-label="Highlights">
+            @for (trait of tech.traits; track trait) {
+              <li class="trait">{{ trait }}</li>
+            }
+          </ul>
+
+          <p class="detail__used"><span class="hand">used in →</span> {{ tech.usedIn }}</p>
+        </div>
+      }
+    </div>
+  </app-software-window>
+</div>

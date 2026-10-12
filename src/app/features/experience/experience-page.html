@@ -1,0 +1,61 @@
+<section class="page-section container">
+  <app-section-heading
+    [level]="1"
+    eyebrow="Experience"
+    title="Where I've worked"
+    description="From 2021 to Angular architecture in 2026 — government, pension, insurance and healthcare platforms across three countries."
+    annotation="four years, two companies, a lot of forms"
+  />
+  <app-experience-timeline [headingLevel]="2" />
+</section>
+
+<section class="page-section page-section--band" aria-labelledby="milestones-title">
+  <div class="container">
+    <app-section-heading headingId="milestones-title" eyebrow="Milestones" title="Turning points" />
+    <ol class="milestones">
+      @for (milestone of milestones; track milestone.id) {
+        <li class="milestone" appReveal>
+          <p class="milestone__year">{{ milestone.year }}</p>
+          <h3 class="milestone__event">{{ milestone.event }}</h3>
+          <p class="milestone__why">{{ milestone.why }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="page-section container" aria-labelledby="growth-title">
+  <app-section-heading headingId="growth-title" eyebrow="Growth" title="How the work itself changed" />
+  <ol class="growth">
+    @for (step of capabilities; track step.key) {
+      <li class="growth__item" appReveal>
+        <span class="growth__number" aria-hidden="true">{{ step.number }}</span>
+        <div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+          <p class="growth__evidence">{{ step.evidence }}</p>
+        </div>
+      </li>
+    }
+  </ol>
+
+  <h2 class="education__title">Education</h2>
+  <ul class="education">
+    @for (entry of education; track entry.id) {
+      <li>
+        <strong>{{ entry.qualification }}</strong> — {{ entry.institution }}
+        @if (entry.location) {
+          , {{ entry.location }}
+        }
+        @if (entry.period) {
+          <span class="education__period">({{ entry.period }})</span>
+        }
+      </li>
+    }
+  </ul>
+
+  <div class="experience-cta">
+    <app-button label="View résumé" link="/resume" variant="secondary" />
+    <app-button label="Discuss a project" link="/contact" icon="arrow-right" />
+  </div>
+</section>

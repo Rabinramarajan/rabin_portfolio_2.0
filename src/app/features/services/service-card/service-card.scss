@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.service {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-offset);
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+
+  &:hover,
+  &:focus-within {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--shadow-offset-lg);
+  }
+}
+
+.service__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.service__icon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  font-size: 1.4rem;
+  background: var(--color-sage);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transform: rotate(-4deg);
+  transition: transform var(--duration-base) var(--ease-out);
+
+  .service:hover & {
+    transform: rotate(4deg) scale(1.05);
+  }
+}
+
+.service__number {
+  font: 700 var(--text-2xl) / 1 var(--font-display);
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-border);
+}
+
+.service__title {
+  font-size: var(--text-xl);
+}
+
+.service__link {
+  text-decoration: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    &::after {
+      outline: 3px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+  }
+}
+
+.service__text {
+  color: var(--color-text-muted);
+}
+
+.service__deliverables {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  app-icon {
+    color: var(--color-sage-dark);
+  }
+}
+
+.service__ideal {
+  font-size: var(--text-sm);
+
+  .hand {
+    font-size: 1.35rem;
+  }
+}
+
+.service__tags {
+  margin-top: auto;
+}
+
+.service__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}

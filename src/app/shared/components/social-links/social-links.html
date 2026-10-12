@@ -1,12 +1,18 @@
 <ul class="socials">
-  @for (link of links(); track link.platform) {
+  @for (link of links(); track link.id) {
+    @let external = link.href.startsWith('http');
     <li>
       <a
-        [href]="link.url"
-        [attr.target]="link.platform === 'email' ? null : '_blank'"
-        [attr.rel]="link.platform === 'email' ? null : 'noopener noreferrer'"
+        class="social"
+        [href]="link.href"
+        [attr.target]="external ? '_blank' : null"
+        [attr.rel]="external ? 'noopener noreferrer' : null"
       >
-        {{ link.label }}
+        <app-icon [name]="icons[link.id]" />
+        <span>{{ link.label }}</span>
+        @if (external) {
+          <span class="visually-hidden">(opens in a new tab)</span>
+        }
       </a>
     </li>
   }

@@ -1,0 +1,163 @@
+@if (insight(); as item) {
+  <article class="post">
+    <header class="page-section container post__header">
+      <a class="post__back" routerLink="/insights"><app-icon class="post__back-icon" name="arrow-right" /> All insights</a>
+      @if (item.topic) {
+        <p class="post__topic">{{ item.topic }}</p>
+      }
+      <h1 class="post__title">{{ item.title }}</h1>
+      @if (item.dek) {
+        <p class="post__dek">{{ item.dek }}</p>
+      }
+      @if (meta(); as m) {
+        <p class="post__byline">
+          <span>By {{ author.name }}</span>
+          @if (m.published; as d) {
+            <span aria-hidden="true">·</span>
+            <time [attr.datetime]="d.iso">{{ d.label }}</time>
+          }
+          @if (m.modified; as d) {
+            <span aria-hidden="true">·</span>
+            <span>Updated <time [attr.datetime]="d.iso">{{ d.label }}</time></span>
+          }
+          <span aria-hidden="true">·</span>
+          <span>{{ m.minutes }} min read</span>
+        </p>
+      }
+      @if (item.cover; as cover) {
+        <figure class="post__cover">
+          <img
+            [ngSrc]="cover.src"
+            [alt]="cover.alt"
+            [width]="cover.width"
+            [height]="cover.height"
+            priority
+            sizes="(min-width: 1216px) 95vw, 100vw"
+          />
+        </figure>
+      }
+    </header>
+
+    <div class="container post__layout">
+      <aside class="post__aside">
+        @if (item.takeaways?.length) {
+          <section class="post__takeaways" aria-labelledby="takeaways-title">
+            <h2 id="takeaways-title" class="hand">key takeaways</h2>
+            <ul>
+              @for (point of item.takeaways; track point) {
+                <li>{{ point }}</li>
+              }
+            </ul>
+          </section>
+        }
+        @if (toc().length > 2) {
+          <nav class="post__toc" aria-label="On this page">
+            <p class="post__toc-title">On this page</p>
+            <ol>
+              @for (entry of toc(); track entry.id) {
+                <li><a [routerLink]="[]" [fragment]="entry.id">{{ entry.text }}</a></li>
+              }
+            </ol>
+          </nav>
+        }
+      </aside>
+
+      <div class="post__body prose">
+        @for (block of blocks(); track $index) {
+          @switch (block.kind) {
+            @case ('paragraph') {
+              <p>{{ block.text }}</p>
+            }
+            @case ('heading') {
+              <h2 [id]="block.id">{{ block.text }}</h2>
+            }
+            @case ('subheading') {
+              <h3>{{ block.text }}</h3>
+            }
+            @case ('list') {
+              @if (block.ordered) {
+                <ol>
+                  @for (entry of block.items; track $index) {
+                    <li>{{ entry }}</li>
+                  }
+                </ol>
+              } @else {
+                <ul>
+                  @for (entry of block.items; track $index) {
+                    <li>{{ entry }}</li>
+                  }
+                </ul>
+              }
+            }
+            @case ('link') {
+              <p>
+                @if (isLive(block.href)) {
+                  <a [routerLink]="block.href">{{ block.text }}</a>
+                } @else {
+                  {{ block.text }}
+                }
+              </p>
+            }
+            @case ('code') {
+              <figure class="post__code">
+                <app-software-window variant="terminal" [title]="block.caption ?? block.language">
+                  <pre><code>{{ block.code }}</code></pre>
+                </app-software-window>
+              </figure>
+            }
+            @case ('aside') {
+              <aside class="post__quote">
+                <p>{{ block.text }}</p>
+              </aside>
+            }
+            @case ('image') {
+              <figure class="post__figure">
+                <img
+                  [ngSrc]="block.src"
+                  [alt]="block.alt"
+                  [width]="block.width"
+                  [height]="block.height"
+                  sizes="(min-width: 1080px) 60vw, 100vw"
+                />
+                @if (block.caption) {
+                  <figcaption>{{ block.caption }}</figcaption>
+                }
+              </figure>
+            }
+          }
+        }
+
+        @if (related().length) {
+          <section class="post__related" aria-labelledby="applied-title">
+            <h2 id="applied-title">Where this is applied</h2>
+            <ul>
+              @for (link of related(); track link.href) {
+                <li><a [routerLink]="link.href">{{ link.label }}</a></li>
+              }
+            </ul>
+          </section>
+        }
+
+        <aside class="post__cta">
+          <p>{{ item.cta ?? 'Working on an Angular codebase with a similar problem? I can help.' }}</p>
+          <app-button label="Start a conversation" link="/contact" icon="arrow-right" />
+        </aside>
+      </div>
+    </div>
+
+    @if (moreArticles().length) {
+      <section class="page-section page-section--band" aria-labelledby="more-title">
+        <div class="container">
+          <h2 id="more-title" class="post__more-title">Keep reading</h2>
+          <ul class="post__more">
+            @for (next of moreArticles(); track next.id) {
+              <li><app-article-card [insight]="next" /></li>
+            }
+          </ul>
+        </div>
+      </section>
+    }
+  </article>
+} @else {
+  <app-not-found />
+}

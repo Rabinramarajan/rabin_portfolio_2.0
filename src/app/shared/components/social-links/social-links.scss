@@ -1,21 +1,26 @@
 .socials {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
-a {
-  display: inline-block;
+.social {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
   padding: var(--space-2) var(--space-4);
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
-  border: var(--border-width) solid currentColor;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-pill);
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 
   &:hover {
-    background: var(--color-secondary);
-    color: var(--color-text);
-    border-color: var(--color-border);
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-offset);
   }
 }

@@ -1,0 +1,45 @@
+@let item = insight();
+
+<article class="article">
+  <div class="article__media">
+    @if (item.cover; as cover) {
+      <img
+        [ngSrc]="cover.src"
+        [alt]="cover.alt"
+        [width]="cover.width"
+        [height]="cover.height"
+        sizes="(min-width: 1080px) 33vw, (min-width: 768px) 50vw, 100vw"
+      />
+    } @else {
+      <div class="article__plate" aria-hidden="true">{{ item.topic }}</div>
+    }
+    @if (item.topic) {
+      <span class="article__topic">{{ item.topic }}</span>
+    }
+  </div>
+
+  <div class="article__body">
+    @if (headingLevel() === 2) {
+      <h2 class="article__title">
+        <a class="article__link" [routerLink]="['/insights', item.id]">{{ item.title }}</a>
+      </h2>
+    } @else {
+      <h3 class="article__title">
+        <a class="article__link" [routerLink]="['/insights', item.id]">{{ item.title }}</a>
+      </h3>
+    }
+
+    @if (item.dek) {
+      <p class="article__dek">{{ item.dek }}</p>
+    }
+
+    <p class="article__meta">
+      @if (date(); as d) {
+        <time [attr.datetime]="d.iso">{{ d.label }}</time>
+        <span aria-hidden="true">·</span>
+      }
+      <span>{{ minutes() }} min read</span>
+      <app-icon class="article__arrow" name="arrow-right" />
+    </p>
+  </div>
+</article>

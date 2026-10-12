@@ -5,8 +5,11 @@
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
-  font: 700 var(--text-base) / 1 var(--font-body);
+  min-height: 44px;
+  font: 700 var(--text-base) / 1.1 var(--font-body);
+  text-align: center;
   text-decoration: none;
   color: var(--color-text);
   border: var(--border-width) solid var(--color-border);
@@ -15,7 +18,8 @@
   cursor: pointer;
   transition:
     transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
+    box-shadow var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
 
   &:hover {
     transform: translate(-2px, -2px);
@@ -32,6 +36,14 @@
     cursor: not-allowed;
     transform: none;
     box-shadow: var(--shadow-offset);
+  }
+}
+
+.btn__icon {
+  transition: transform var(--duration-fast) var(--ease-out);
+
+  .btn:hover & {
+    transform: translateX(3px);
   }
 }
 

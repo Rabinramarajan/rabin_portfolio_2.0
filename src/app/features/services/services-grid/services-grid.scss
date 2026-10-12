@@ -1,0 +1,21 @@
+@use 'mixins' as *;
+
+.services-grid {
+  display: grid;
+  gap: var(--space-6);
+
+  @include tablet-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include desktop-up {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+}
+
+:host(.is-detailed) .services-grid {
+  @include desktop-up {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

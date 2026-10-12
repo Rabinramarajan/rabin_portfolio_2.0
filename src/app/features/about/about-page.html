@@ -1,0 +1,69 @@
+<section class="page-section container intro">
+  <div class="intro__copy">
+    <app-section-heading [level]="1" eyebrow="About" title="The engineer behind the interface" />
+    <p class="intro__statement">{{ about.hero.statement }}</p>
+    @for (paragraph of about.paragraphs; track $index) {
+      <p>{{ paragraph }}</p>
+    }
+    <div class="intro__actions">
+      <app-button label="Work with me" link="/contact" icon="arrow-right" />
+      <app-social-links [links]="socials" />
+    </div>
+  </div>
+
+  <figure class="intro__photo">
+    <img
+      [ngSrc]="about.portrait.src"
+      [alt]="about.portrait.alt"
+      [width]="about.portrait.width"
+      [height]="about.portrait.height"
+      priority
+      sizes="(min-width: 1080px) 28rem, 90vw"
+    />
+    <app-sticky-note class="intro__note" color="yellow" [rotation]="-4" [text]="about.philosophy + ' ' + (about.philosophyLines ?? []).join('')" />
+  </figure>
+</section>
+
+<section class="page-section page-section--band" aria-labelledby="build-title">
+  <div class="container">
+    <app-section-heading headingId="build-title" eyebrow="What I build" title="Four kinds of work" />
+    <ol class="capabilities">
+      @for (item of about.capabilities; track item.number) {
+        <li class="capability" appReveal>
+          <span class="capability__number" aria-hidden="true">{{ item.number }}</span>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="page-section container story" aria-label="My story">
+  @for (chapter of about.story ?? []; track chapter.title) {
+    <section class="prose story__chapter">
+      <h2>{{ chapter.title }}</h2>
+      @for (paragraph of chapter.paragraphs; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    </section>
+  }
+</section>
+
+<section class="page-section page-section--band" aria-labelledby="values-title">
+  <div class="container">
+    <app-section-heading headingId="values-title" eyebrow="Values" title="How I show up" />
+    <ul class="values">
+      @for (value of about.values; track value.title) {
+        <li class="value" appReveal>
+          <h3>{{ value.title }}</h3>
+          <p>{{ value.body }}</p>
+        </li>
+      }
+    </ul>
+    <div class="about-cta">
+      <p class="about-cta__text">Let's build something worth shipping.</p>
+      <app-button [label]="about.cta.label" [link]="about.cta.href" icon="arrow-right" size="lg" />
+    </div>
+  </div>
+</section>
