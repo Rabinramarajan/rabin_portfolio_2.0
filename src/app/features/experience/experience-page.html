@@ -14,7 +14,7 @@
     <app-section-heading headingId="milestones-title" eyebrow="Milestones" title="Turning points" />
     <ol class="milestones">
       @for (milestone of milestones; track milestone.id) {
-        <li class="milestone" appReveal>
+        <li class="milestone" appReveal="stamp">
           <p class="milestone__year">{{ milestone.year }}</p>
           <h3 class="milestone__event">{{ milestone.event }}</h3>
           <p class="milestone__why">{{ milestone.why }}</p>

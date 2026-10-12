@@ -1,17 +1,31 @@
-import { DestroyRef, Directive, ElementRef, afterNextRender, inject, signal } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, afterNextRender, inject, input, signal } from '@angular/core';
 
 /**
- * Fades an element up the first time it scrolls into view.
- * The animation itself lives in CSS, so reduced-motion settings apply automatically.
+ * up (default): fades up. peel: lifts off the page like a sticky note.
+ * stamp: lands with a small overshoot. mask: wipes in from the left.
+ */
+export type RevealVariant = 'up' | 'peel' | 'stamp' | 'mask';
+
+/**
+ * Reveals an element the first time it scrolls into view. Use `appReveal` for the default
+ * fade-up, or `appReveal="peel"` (or stamp, mask) for a named effect. The animations live
+ * in CSS, so reduced-motion settings apply automatically.
  */
 @Directive({
   selector: '[appReveal]',
   host: {
     class: 'reveal',
+    '[attr.data-reveal]': 'variant()',
     '[class.is-visible]': 'isVisible()',
   },
 })
 export class Reveal {
+  /** Bare `appReveal` gives an empty string, which falls back to the default effect. */
+  readonly variant = input<RevealVariant, RevealVariant | ''>('up', {
+    alias: 'appReveal',
+    transform: (value) => value || 'up',
+  });
+
   protected readonly isVisible = signal(false);
 
   constructor() {

@@ -12,7 +12,7 @@
 
   <ol class="stages">
     @for (step of steps; track step.id) {
-      <li class="stage" appReveal>
+      <li class="stage" appReveal="mask">
         <div class="stage__marker">
           <app-process-glyph [stage]="step.visual" />
           <span class="stage__number">{{ step.number }}</span>

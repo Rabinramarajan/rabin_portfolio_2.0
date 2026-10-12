@@ -1,3 +1,15 @@
+<div class="intro" aria-hidden="true">
+  <div class="intro__panel">
+    <p class="intro__name">
+      @for (letter of letters; track $index; let i = $index) {
+        <span class="intro__letter" [style.--i]="i">{{ letter }}</span>
+      }
+    </p>
+    <span class="intro__rule"></span>
+    <p class="intro__tag">Frontend Angular Consultant</p>
+  </div>
+</div>
+
 <a class="skip-link" href="#main-content" (click)="skipToContent($event)">Skip to content</a>
 <app-header />
 <main id="main-content" tabindex="-1">

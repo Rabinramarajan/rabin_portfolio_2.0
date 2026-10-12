@@ -15,6 +15,20 @@
     <link rel="icon" type="image/png" sizes="192x192" href="logo-192.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
+    <script>
+      // Runs before first paint. The brand intro plays once per browser session and never
+      // for reduced-motion users. Without JavaScript the intro markup stays hidden.
+      (function () {
+        try {
+          if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          if (sessionStorage.getItem('intro-seen')) return;
+          sessionStorage.setItem('intro-seen', '1');
+          document.documentElement.classList.add('intro-play');
+        } catch (error) {
+          // Storage can be blocked (private modes): skip the intro rather than break the page
+        }
+      })();
+    </script>
   </head>
   <body>
     <app-root></app-root>
