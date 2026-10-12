@@ -25,14 +25,13 @@
 }
 
 .logo__mark {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  color: var(--color-on-primary);
-  background: var(--color-primary);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  transition: transform var(--duration-base) var(--ease-out);
+
+  .logo:hover & {
+    transform: rotate(-8deg);
+  }
 }
 
 .menu-toggle {
