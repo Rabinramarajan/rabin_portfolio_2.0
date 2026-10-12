@@ -32,16 +32,19 @@ worker/        Cloudflare Worker: POST /api/contact, host-aware /robots.txt
 public/        media, self-hosted fonts, brand assets, _redirects, robots.txt
 ```
 
-## Contact form setup (Cloudflare)
+## Contact form setup (SMTP)
 
-The Worker sends mail with the Email Service `send_email` binding, restricted to `rabinr.dev@gmail.com`.
-Before the first deploy:
+The Worker delivers contact messages to `rabinr.dev@gmail.com` through your own mailbox's SMTP server
+(`worker-mailer`, TLS). Host, port and addresses are vars in `wrangler.jsonc`; credentials are secrets:
 
-1. Onboard the sender domain: `npx wrangler email sending enable rabinr.in`.
-2. `CONTACT_FROM_EMAIL` in `wrangler.jsonc` must be an address on that domain.
-3. After changing bindings, run `npx wrangler types worker/worker-configuration.d.ts`.
+```bash
+npx wrangler secret put SMTP_USER       # e.g. hello@rabinr.in
+npx wrangler secret put SMTP_PASSWORD   # for Zoho with 2FA: an application-specific password
+```
 
-Locally, `wrangler dev` simulates delivery; nothing is sent.
+`CONTACT_FROM_EMAIL` must be the mailbox `SMTP_USER` signs in as (or an alias it may send from).
+Zoho custom-domain mailboxes use `smtppro.zoho.in` (India data centre). Port 465 uses TLS; 587 uses STARTTLS.
+Locally, `.dev.vars` sets `CONTACT_DRY_RUN=true`, so `wrangler dev` logs messages instead of sending them.
 
 ## Brand
 

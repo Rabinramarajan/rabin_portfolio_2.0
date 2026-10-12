@@ -3,6 +3,8 @@
   "name": "rabin-portfolio",
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-01",
+  // worker-mailer (SMTP for the contact form) needs Node.js compatibility
+  "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
 
   "routes": [{ "pattern": "rabinr.in", "custom_domain": true }],
@@ -18,15 +20,6 @@
     "run_worker_first": ["/*", "!/*.js", "!/*.css", "!/media/*", "!/fonts/*", "!/brand/*", "!/images/*", "!/*.png", "!/*.ico", "!/*.xml", "!/*.webmanifest"]
   },
 
-  // Contact form delivery. The sender domain must be onboarded to Cloudflare
-  // Email Service (`npx wrangler email sending enable rabinr.in`).
-  "send_email": [
-    {
-      "name": "EMAIL",
-      "allowed_destination_addresses": ["rabinr.dev@gmail.com"]
-    }
-  ],
-
   "ratelimits": [
     {
       "name": "CONTACT_LIMITER",
@@ -35,8 +28,13 @@
     }
   ],
 
+  // Contact form delivery over your own SMTP mailbox.
+  // Secrets (never in this file): npx wrangler secret put SMTP_USER / SMTP_PASSWORD
+  // CONTACT_FROM_EMAIL must be the mailbox SMTP_USER signs in as (or an alias it may send from).
   "vars": {
     "CONTACT_TO_EMAIL": "rabinr.dev@gmail.com",
-    "CONTACT_FROM_EMAIL": "contact@rabinr.in"
+    "CONTACT_FROM_EMAIL": "hello@rabinr.in",
+    "SMTP_HOST": "smtppro.zoho.in",
+    "SMTP_PORT": "465"
   }
 }

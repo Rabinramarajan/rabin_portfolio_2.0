@@ -8,8 +8,9 @@
  *
  * POST /api/contact validates the message with the same rules as the form,
  * drops obvious bots, rate-limits per IP and emails it to CONTACT_TO_EMAIL via
- * the Email Service binding. The recipient address never reaches the browser.
+ * your SMTP mailbox. The recipient address never reaches the browser.
  */
+import { WorkerMailer } from 'worker-mailer';
 import {
   ContactMessage,
   ContactRequest,
@@ -152,21 +153,50 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   };
 
   try {
-    await env.EMAIL.send({
-      from: { email: env.CONTACT_FROM_EMAIL, name: 'Portfolio contact form' },
-      to: env.CONTACT_TO_EMAIL,
-      replyTo: { email: message.email, name: message.name },
-      subject: `[Portfolio] ${message.subject}`,
-      text: toText(message),
-      html: toHtml(message),
-    });
+    await sendMail(env, message);
   } catch (error) {
-    const code = (error as { code?: string }).code ?? 'unknown';
-    console.error('[contact] send failed', code, error instanceof Error ? error.message : String(error));
+    console.error('[contact] send failed', error instanceof Error ? error.message : String(error));
     return json({ ok: false, error: 'Your message could not be sent right now. Please email me directly.' }, 502);
   }
 
   return json({ ok: true }, 200);
+}
+
+/**
+ * Delivers the message through your own SMTP mailbox (e.g. Zoho) over TLS.
+ * Credentials are Worker secrets (SMTP_USER, SMTP_PASSWORD); host, port and
+ * addresses are plain vars in wrangler.jsonc.
+ */
+async function sendMail(env: Env, message: ContactMessage): Promise<void> {
+  // Local wrangler dev only (.dev.vars): log instead of sending. Never set in production.
+  if (env.CONTACT_DRY_RUN === 'true') {
+    console.log('[contact] dry run, not sent:', message.subject, 'from', message.email);
+    return;
+  }
+  if (!env.SMTP_USER || !env.SMTP_PASSWORD) throw new Error('SMTP credentials are not configured');
+  const port = Number(env.SMTP_PORT);
+
+  await WorkerMailer.send(
+    {
+      host: env.SMTP_HOST,
+      port,
+      // 465 is implicit TLS; 587 starts plain and upgrades with STARTTLS
+      secure: port === 465,
+      startTls: port !== 465,
+      credentials: { username: env.SMTP_USER, password: env.SMTP_PASSWORD },
+      authType: ['plain', 'login'],
+      socketTimeoutMs: 15_000,
+      responseTimeoutMs: 15_000,
+    },
+    {
+      from: { name: 'Portfolio contact form', email: env.CONTACT_FROM_EMAIL },
+      to: env.CONTACT_TO_EMAIL,
+      reply: { name: message.name, email: message.email },
+      subject: `[Portfolio] ${message.subject}`,
+      text: toText(message),
+      html: toHtml(message),
+    },
+  );
 }
 
 /** Browsers always send Origin on a cross-site POST; reject ones from other sites. */
