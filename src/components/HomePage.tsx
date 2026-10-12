@@ -3,7 +3,6 @@ import { ProofBar, HomeCaseStudy } from "@/components/ProofBar";
 import { ServicesHorizontalScroll } from "@/components/ServicesHorizontalScroll";
 import { WorkSection } from "@/components/WorkSection";
 import { PrinciplesSection } from "@/components/PrinciplesSection";
-import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { InsightsSection } from "@/components/InsightsSection";
 import { FaqSection } from "@/components/FaqSection";
 import { FaqJsonLd } from "@/components/JsonLd";
@@ -37,8 +36,6 @@ export function HomePage() {
       <Hero />
       <ProofBar />
       <WorkSection id="work" limit={3} />
-      {/* Renders nothing until content/testimonials.ts has real quotes in it. */}
-      <TestimonialsSection />
       <HomeCaseStudy />
       <ServicesHorizontalScroll id="services" />
       <PrinciplesSection />
