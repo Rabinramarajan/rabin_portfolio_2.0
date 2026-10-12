@@ -33,13 +33,16 @@
   margin-top: var(--space-4);
 }
 
+// Framed photo with the note sitting just below it, so it never covers the face.
 .intro__photo {
   position: relative;
   max-width: 26rem;
-  margin: 0 auto var(--space-12);
+  margin: 0 auto;
 
   img {
+    display: block;
     width: 100%;
+    height: auto;
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-offset-lg);
@@ -47,11 +50,17 @@
   }
 }
 
+// Tucked under the photo's left edge, offset so it reads as pinned to the frame
 .intro__note {
-  position: absolute;
-  bottom: calc(var(--space-12) * -1);
-  left: calc(var(--space-6) * -1);
-  max-width: 15rem;
+  display: block;
+  max-width: 18rem;
+  margin: var(--space-8) 0 0 calc(var(--space-4) * -1);
+
+  // Phones: keep the note inside the page gutter
+  @media (max-width: 479px) {
+    max-width: 100%;
+    margin-left: 0;
+  }
 }
 
 .capabilities {
