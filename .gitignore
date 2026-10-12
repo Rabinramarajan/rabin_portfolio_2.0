@@ -52,3 +52,6 @@ Thumbs.db
 # Playwright
 /test-results/
 /playwright-report/
+
+# Wrangler local secrets/flags
+.dev.vars

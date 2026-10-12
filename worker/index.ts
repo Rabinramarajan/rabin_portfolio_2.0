@@ -19,8 +19,8 @@ import {
 } from '../src/app/core/contact/contact.model';
 
 const MAX_BODY_BYTES = 16 * 1024;
-/** Hosts that get the real robots.txt. Local hosts are never crawled, so they mirror production for audits. */
-const INDEXABLE_HOSTS = new Set(['www.rabinr.in', 'localhost', '127.0.0.1']);
+/** The only host that gets the real robots.txt; previews, workers.dev and the bare apex are blocked. */
+const INDEXABLE_HOSTS = new Set(['www.rabinr.in']);
 
 export default {
   async fetch(request, env): Promise<Response> {
@@ -34,7 +34,9 @@ export default {
     }
 
     // Preview and *.workers.dev hosts serve identical HTML; keep crawlers on the canonical domain
-    if (url.pathname === '/robots.txt' && !INDEXABLE_HOSTS.has(url.hostname)) {
+    // Local dev (.dev.vars) mirrors production so audits measure the real robots.txt
+    const indexable = INDEXABLE_HOSTS.has(url.hostname) || env.LOCAL_INDEXABLE === 'true';
+    if (url.pathname === '/robots.txt' && !indexable) {
       return new Response('User-agent: *\nDisallow: /\n', {
         headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       });
