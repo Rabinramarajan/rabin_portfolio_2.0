@@ -79,13 +79,8 @@
   flex-direction: column;
   gap: var(--space-8);
 
-  @include desktop-up {
-    position: sticky;
-    top: calc(var(--header-height) + var(--space-6));
-    align-self: start;
-    max-height: calc(100dvh - var(--header-height) - var(--space-12));
-    overflow-y: auto;
-  }
+  // On desktop only the short contents list stays in view (see .post__toc);
+  // the takeaways scroll away with the page, so the sidebar never needs its own scrollbar.
 }
 
 .post__takeaways {
@@ -112,18 +107,61 @@
 .post__toc {
   font-size: var(--text-sm);
 
-  ol {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding-left: var(--space-4);
+  @include desktop-up {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+  }
+}
+
+// No automatic numbers: several articles already number their own headings
+.post__toc-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-surface-sunk);
+
+  // Long lists get their own (thin) scroll area so the active entry can stay in view
+  @include desktop-up {
+    max-height: calc(100dvh - var(--header-height) - 7rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+
+.post__toc-link {
+  position: relative;
+  display: block;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-text);
+    background: var(--color-surface);
   }
 
-  a {
-    text-decoration: none;
+  // Active section: bold, tinted, with a coral bar over the rail
+  &.is-active {
+    font-weight: 700;
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--yellow) 35%, transparent);
 
-    &:hover {
-      text-decoration: underline;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: calc(var(--space-3) * -1 - 2px);
+      width: 3px;
+      background: var(--coral);
+      border-radius: 2px;
     }
   }
 }

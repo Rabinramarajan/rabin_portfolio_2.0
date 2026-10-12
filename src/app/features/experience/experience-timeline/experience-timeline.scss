@@ -9,8 +9,10 @@ $marker: 3rem;
 
 .timeline__track {
   position: absolute;
-  top: var(--space-4);
-  bottom: var(--space-4);
+  top: calc(#{$marker} / 2);
+  bottom: 0;
+  // Fade out below the last role instead of running into the next section
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 8rem), transparent);
   left: var(--rail);
   width: 4px;
   background: repeating-linear-gradient(to bottom, var(--color-border) 0 8px, transparent 8px 14px);

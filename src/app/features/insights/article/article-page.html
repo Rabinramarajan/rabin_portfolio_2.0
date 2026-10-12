@@ -53,9 +53,19 @@
         @if (toc().length > 2) {
           <nav class="post__toc" aria-label="On this page">
             <p class="post__toc-title">On this page</p>
-            <ol>
+            <ol #tocList class="post__toc-list">
               @for (entry of toc(); track entry.id) {
-                <li><a [routerLink]="[]" [fragment]="entry.id">{{ entry.text }}</a></li>
+                @let current = entry.id === activeSection();
+                <li>
+                  <a
+                    class="post__toc-link"
+                    [class.is-active]="current"
+                    [attr.aria-current]="current ? 'location' : null"
+                    [routerLink]="[]"
+                    [fragment]="entry.id"
+                    >{{ entry.text }}</a
+                  >
+                </li>
               }
             </ol>
           </nav>

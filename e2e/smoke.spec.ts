@@ -143,3 +143,18 @@ test.describe('agent discovery', () => {
     expect((await catalog.json()).linkset[0].anchor).toMatch(/\/api\/contact$/);
   });
 });
+
+test('article contents highlights the section being read', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/insights/stopped-writing-angular-old-way-10-modern-patterns');
+  await page.waitForLoadState('networkidle');
+  const links = page.locator('.post__toc-link');
+  const target = (await links.nth(3).getAttribute('href'))!.split('#')[1];
+  await page.evaluate((id) => {
+    const heading = document.getElementById(id)!;
+    scrollTo({ top: heading.getBoundingClientRect().top + scrollY - 150, behavior: 'instant' });
+  }, target);
+  const active = page.locator('.post__toc-link[aria-current="location"]');
+  await expect(active).toHaveCount(1);
+  await expect(active).toHaveAttribute('href', new RegExp(`#${target}$`));
+});

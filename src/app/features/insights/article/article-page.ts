@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  computed,
+  input,
+  viewChild,
+} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { insightDate, insightReadMinutes, isLinkLive } from '../../../data/insights';
@@ -9,6 +17,7 @@ import { SoftwareWindow } from '../../../shared/components/software-window/softw
 import { NotFound } from '../../not-found/not-found';
 import { ArticleCard } from '../article-card/article-card';
 import { getInsight, latestInsights, toArticleBlocks } from '../insight-utils';
+import { useScrollSpy } from './scroll-spy';
 
 function slugify(text: string): string {
   return text
@@ -41,6 +50,27 @@ export class ArticlePage {
   protected readonly toc = computed(() =>
     this.blocks().flatMap((block) => (block.kind === 'heading' && 'id' in block ? [{ id: block.id, text: block.text }] : [])),
   );
+
+  /** The section heading currently being read, highlighted in "On this page". */
+  protected readonly activeSection = useScrollSpy(() => this.toc().map((entry) => entry.id));
+
+  private readonly tocList = viewChild<ElementRef<HTMLElement>>('tocList');
+
+  constructor() {
+    // Long contents lists scroll on their own; keep the active entry visible inside it
+    afterRenderEffect(() => {
+      const id = this.activeSection();
+      const list = this.tocList()?.nativeElement;
+      const link = id ? list?.querySelector<HTMLElement>('.post__toc-link.is-active') : null;
+      if (!list || !link) return;
+      // The list is the link's positioned parent, so offsetTop is already relative to it
+      const top = link.offsetTop;
+      if (top < list.scrollTop || top + link.offsetHeight > list.scrollTop + list.clientHeight) {
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        list.scrollTo({ top: top - list.clientHeight / 3, behavior: reduce ? 'auto' : 'smooth' });
+      }
+    });
+  }
 
   protected readonly meta = computed(() => {
     const insight = this.insight();

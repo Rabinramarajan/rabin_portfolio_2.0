@@ -37,7 +37,9 @@ img {
   height: auto;
 }
 
-ul {
+// Lists are layout by default; prose and the article contents opt back into markers
+ul,
+ol {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -174,6 +176,10 @@ app-home > app-about-section {
 
   ul {
     list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
   }
 
   li + li {
