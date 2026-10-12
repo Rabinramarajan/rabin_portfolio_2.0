@@ -1,12 +1,41 @@
 <div class="intro" aria-hidden="true">
-  <div class="intro__panel">
-    <p class="intro__name">
-      @for (letter of letters; track $index; let i = $index) {
-        <span class="intro__letter" [style.--i]="i">{{ letter }}</span>
-      }
+  <div class="intro__stage">
+    <div class="intro__portrait"><img src="media/about/about-selfie.webp" alt="" width="1400" height="933" /></div>
+    <p class="intro__brand">
+      <img src="logo-192.png" alt="" width="44" height="44" />
+      <span>
+        <strong>Rabin R</strong>
+        <small>Frontend Developer</small>
+      </span>
     </p>
-    <span class="intro__rule"></span>
-    <p class="intro__tag">Frontend Angular Consultant</p>
+
+    <pre class="intro__code"><code>import &#123; Component &#125; from '@angular/core';
+
+@Component(&#123;
+  standalone: true,
+  selector: 'app-portfolio',
+  templateUrl: './portfolio.html'
+&#125;)
+export class PortfolioComponent &#123;&#125;</code></pre>
+
+    <ul class="intro__stack">
+      <li class="intro__tech" style="--i: 0"><span class="intro__badge intro__badge--ng">A</span>Angular</li>
+      <li class="intro__tech" style="--i: 1"><span class="intro__badge intro__badge--ts">TS</span>TypeScript</li>
+      <li class="intro__tech" style="--i: 2"><span class="intro__badge intro__badge--rx">Rx</span>RxJS</li>
+      <li class="intro__tech" style="--i: 3"><span class="intro__badge intro__badge--ux">UI</span>UI / UX</li>
+      <li class="intro__tech" style="--i: 4"><span class="intro__badge intro__badge--perf">P</span>Performance</li>
+    </ul>
+
+    <div class="intro__center">
+      <p class="intro__title">Building Something <span class="intro__accent">Awesome…</span></p>
+      <div class="intro__progress">
+        <span class="intro__track"><span class="intro__fill"></span></span>
+        <span class="intro__pct"></span>
+      </div>
+      <p class="intro__meta">Frontend · UI/UX · Performance</p>
+    </div>
+
+    <span class="intro__dots"><i></i><i></i><i></i></span>
   </div>
 </div>
 

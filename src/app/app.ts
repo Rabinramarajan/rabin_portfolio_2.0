@@ -10,8 +10,6 @@ import { Footer } from './layout/footer/footer';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  /** Letters of the brand name, staggered in by the intro. A no-break space keeps the gap. */
-  protected readonly letters = 'Rabin R'.split('');
 
   /**
    * With <base href="/">, "#main-content" resolves to "/#main-content" and would
