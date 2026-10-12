@@ -156,13 +156,6 @@ export const MEDIA_MANIFEST = {
 
   // ---- other (page art that belongs to no single case study) ------------
   "other/process/hero.webp": "/media/process/process_hero.webp",
-  "other/process/discover.webp": "/media/process/discover.webp",
-  "other/process/define.webp": "/media/process/Define.webp",
-  "other/process/design.webp": "/media/process/Design.webp",
-  "other/process/engineer.webp": "/media/process/Engineer.webp",
-  "other/process/validate.webp": "/media/process/Validate.webp",
-  "other/process/launch.webp": "/media/process/Launch.webp",
-  "other/process/evolve.webp": "/media/process/Evolve.webp",
   "other/contact/hero-loop.mp4": "/media/contact/hero.mp4",
   "other/contact/hero.webp": "/media/contact/hero_b.webp",
   "other/contact/conversation.webp": "/media/contact/intelligent.webp",
@@ -171,7 +164,6 @@ export const MEDIA_MANIFEST = {
   "other/experience/hero-reel-v2.mp4": "/media/experience/Isolated_cinematic_hero_backgr.mp4",
   "other/faq/orbit.webp": "/media/faq/banner_h.webp",
   "other/maintenance/cover.webp": "/media/under-maintain/1.webp",
-  "other/chatbot/mark.webp": "/media/chatbot/1.webp",
   /* The 128px cut BotMark actually renders. The 1254px source above is kept
      as the regeneration master; this is the file that ships. */
   "other/chatbot/mark-128.webp": "/media/chatbot/mark-128.webp",
@@ -207,7 +199,6 @@ export const MEDIA_MANIFEST = {
   "insights/angular-performance-core-web-vitals/interaction-responsiveness-inp.webp": "/media/insights/angular-performance-core-web-vitals/interaction-responsiveness-inp.webp",
   "insights/angular-performance-core-web-vitals/layout-stability-cls.webp": "/media/insights/angular-performance-core-web-vitals/layout-stability-cls.webp",
   // angular-signals-state-management
-  "insights/angular-signals-state-management/cover.webp": "/media/insights/angular-signals-state-management/cover.webp",
   "insights/angular-signals-state-management/observable-vs-signal-state.webp": "/media/insights/angular-signals-state-management/observable-vs-signal-state.webp",
   "insights/angular-signals-state-management/signals-precise-updates.webp": "/media/insights/angular-signals-state-management/signals-precise-updates.webp",
   "insights/angular-signals-state-management/state-promotion-rule.webp": "/media/insights/angular-signals-state-management/state-promotion-rule.webp",

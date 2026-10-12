@@ -60,7 +60,6 @@ export const processSteps: ProcessStep[] = [
     ],
     output: 'Research notes · Initial scope · Success criteria',
     outcome: 'A shared understanding of what we are actually trying to solve.',
-    visual: 'discover',
   },
   {
     id: 'define',
@@ -91,7 +90,6 @@ export const processSteps: ProcessStep[] = [
     ],
     output: 'Feature scope · Delivery roadmap · Technical assumptions',
     outcome: 'Everyone knows what needs to be built, why it matters, and what "done" means.',
-    visual: 'define',
   },
   {
     id: 'design',
@@ -122,7 +120,6 @@ export const processSteps: ProcessStep[] = [
     ],
     output: 'UI direction · Reusable patterns · Responsive layouts',
     outcome: 'A clear interface direction that engineering can build confidently.',
-    visual: 'design',
   },
   {
     id: 'build',
@@ -156,7 +153,6 @@ export const processSteps: ProcessStep[] = [
     ],
     output: 'Type-safe code · Component library · Integrated APIs',
     outcome: 'A working product built for real users — not just a working prototype.',
-    visual: 'build',
   },
   {
     id: 'test',
@@ -191,7 +187,6 @@ export const processSteps: ProcessStep[] = [
     ],
     output: 'Playwright E2E · Unit/Integration tests · Accessibility audits',
     outcome: 'Confidence before production.',
-    visual: 'test',
   },
   {
     id: 'launch',
@@ -223,7 +218,6 @@ export const processSteps: ProcessStep[] = [
     ],
     output: 'Deployment pipeline · Production config · Monitoring stack',
     outcome: 'A stable production release that is ready for users.',
-    visual: 'launch',
   },
   {
     id: 'evolve',
@@ -254,6 +248,5 @@ export const processSteps: ProcessStep[] = [
     ],
     output: 'Refined UX · Dependency upgrades · Iterative releases',
     outcome: 'A product that continues to become more useful, reliable, and maintainable.',
-    visual: 'evolve',
   },
 ];

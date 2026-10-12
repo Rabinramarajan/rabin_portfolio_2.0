@@ -376,7 +376,7 @@ export interface SkillGroup {
   note?: string;
 }
 
-export type ProcessVisualId =
+export type ProcessId =
   | "discover"
   | "define"
   | "design"
@@ -386,7 +386,7 @@ export type ProcessVisualId =
   | "evolve";
 
 export interface ProcessStep {
-  id: ProcessVisualId;
+  id: ProcessId;
   number: string;
   label: string;
   title: string;
@@ -402,8 +402,6 @@ export interface ProcessStep {
   output: string;
   /** The client-facing result of the stage. */
   outcome: string;
-  /** Which generated visual system renders for this stage. */
-  visual: ProcessVisualId;
 }
 
 export interface PricingPlan {
