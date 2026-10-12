@@ -590,6 +590,7 @@ export const projects: Project[] = [
     featured: true,
     layout: 'medium',
     filter: 'web',
+    cover: img(media('covers/zellavora-ai-resume-builder.webp'), 'Illustrated cover: a guided form beside the AI-generated resume it produces'),
     gallery: [],
     problem:
       'Traditional resume builders either start users with a blank page or lock them into rigid templates without helping them structure their experience effectively.',
@@ -677,6 +678,7 @@ export const projects: Project[] = [
     featured: true,
     layout: 'large',
     filter: 'dashboards',
+    cover: img(media('covers/zellavora-control-center.webp'), 'Illustrated cover: an admin console with product, user and role counts and a usage chart'),
     gallery: [],
     problem:
       'Multiple products and applications need a common operational layer for managing content, users, permissions, projects, configuration and system activity.',
@@ -752,6 +754,7 @@ export const projects: Project[] = [
     featured: true,
     layout: 'medium',
     filter: 'systems',
+    cover: img(media('covers/ui-component-architecture.webp'), 'Illustrated cover: a component library of buttons, input, toggle, checkbox and table'),
     gallery: [],
     problem:
       'Large applications often develop duplicated UI patterns, inconsistent interactions and difficult-to-maintain components as multiple teams build features independently.',

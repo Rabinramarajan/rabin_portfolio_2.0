@@ -1,5 +1,14 @@
 @use 'mixins' as *;
 
+.resume-art {
+  max-width: 30rem;
+  margin-bottom: var(--space-12);
+
+  @media print {
+    display: none;
+  }
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;

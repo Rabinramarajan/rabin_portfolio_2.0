@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Button } from '../../shared/components/button/button';
 import { StickyNote } from '../../shared/components/sticky-note/sticky-note';
+import { SceneArtComponent, SCENES } from '../../shared/components/scene-art/scene-art';
 
 /** Shown for unknown URLs (served as /404.html with a 404 status) and unknown slugs. */
 @Component({
   selector: 'app-not-found',
-  imports: [Button, StickyNote],
+  imports: [Button, StickyNote, SceneArtComponent],
   template: `
     <section class="page-section container not-found">
+      <app-scene-art class="not-found__art" [scene]="cat" [tilt]="-2" />
       <p class="not-found__code" aria-hidden="true">404</p>
       <h1 class="not-found__title">This page wandered off.</h1>
       <p class="not-found__text">The link may be old, or the page may have moved. These are good places to pick things up again.</p>
@@ -16,7 +18,7 @@ import { StickyNote } from '../../shared/components/sticky-note/sticky-note';
         <app-button label="Selected work" link="/work" variant="secondary" />
         <app-button label="Insights" link="/insights" variant="ghost" />
       </div>
-      <app-sticky-note class="not-found__note" color="sage" [rotation]="3" text="even good routers get lost sometimes" />
+      <app-sticky-note class="not-found__note" color="sage" [rotation]="3" text="shh — the router is napping" />
     </section>
   `,
   styles: `
@@ -26,6 +28,11 @@ import { StickyNote } from '../../shared/components/sticky-note/sticky-note';
       align-items: center;
       gap: var(--space-6);
       text-align: center;
+    }
+
+    .not-found__art {
+      width: 100%;
+      max-width: 18rem;
     }
 
     .not-found__code {
@@ -56,4 +63,6 @@ import { StickyNote } from '../../shared/components/sticky-note/sticky-note';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotFound {}
+export class NotFound {
+  protected readonly cat = SCENES.cat;
+}

@@ -64,18 +64,10 @@
   }
 }
 
-.contact__envelope {
-  display: none;
-  width: 8rem;
-  stroke: var(--ink);
-  stroke-width: 3;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  transform: rotate(-8deg);
-
-  @include desktop-up {
-    display: block;
-  }
+.contact__art {
+  width: 100%;
+  max-width: 20rem;
+  margin: var(--space-4) 0 0;
 }
 
 .contact__panel {

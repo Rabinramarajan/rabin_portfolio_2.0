@@ -231,3 +231,20 @@ app-home > app-about-section {
     background: #fff;
   }
 }
+
+// Page intro: heading beside a scene from the illustration (stacked on phones)
+.page-intro {
+  display: grid;
+  align-items: center;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+
+  @include desktop-up {
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-12);
+  }
+
+  app-section-heading {
+    margin-bottom: 0;
+  }
+}

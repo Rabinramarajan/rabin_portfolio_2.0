@@ -1,11 +1,14 @@
 <section class="page-section container">
-  <app-section-heading
+  <div class="page-intro">
+    <app-section-heading
     [level]="1"
     eyebrow="Services"
     title="Angular & frontend engineering services"
     description="Four services for enterprise and government products: Angular engineering, frontend architecture, performance optimization and Ionic cross-platform mobile."
     annotation="each one backed by shipped work"
   />
+    <app-scene-art [scene]="scenes.services" [tilt]="2" [priority]="true" />
+  </div>
   <app-services-grid [detailed]="true" />
 </section>
 

@@ -4,6 +4,7 @@ import type { PricingPlan } from '../../data/types';
 import { SectionHeading } from '../../shared/components/section-heading/section-heading';
 import { Button } from '../../shared/components/button/button';
 import { Icon } from '../../shared/components/icon/icon';
+import { SceneArtComponent, SCENES } from '../../shared/components/scene-art/scene-art';
 
 interface PlanGroup {
   id: PricingPlan['model'];
@@ -19,12 +20,13 @@ const GROUPS: Omit<PlanGroup, 'plans'>[] = [
 
 @Component({
   selector: 'app-pricing-page',
-  imports: [SectionHeading, Button, Icon],
+  imports: [SceneArtComponent, SectionHeading, Button, Icon],
   templateUrl: './pricing-page.html',
   styleUrl: './pricing-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PricingPage {
+  protected readonly scenes = SCENES;
   protected readonly disclaimer = pricingDisclaimer;
   protected readonly groups: PlanGroup[] = GROUPS.map((group) => ({
     ...group,

@@ -99,6 +99,9 @@ export const MEDIA_MANIFEST = {
   "insights/ux-problem-approach/explore-solutions.webp": "/media/insights/ux-problem-approach/explore-solutions.webp",
   "insights/ux-problem-approach/journey-friction.webp": "/media/insights/ux-problem-approach/journey-friction.webp",
   "insights/ux-problem-approach/simplify-signup.webp": "/media/insights/ux-problem-approach/simplify-signup.webp",
+  "covers/zellavora-ai-resume-builder.webp": "/media/covers/zellavora-ai-resume-builder.webp",
+  "covers/zellavora-control-center.webp": "/media/covers/zellavora-control-center.webp",
+  "covers/ui-component-architecture.webp": "/media/covers/ui-component-architecture.webp",
 } as const;
 
 export type MediaKey = keyof typeof MEDIA_MANIFEST;

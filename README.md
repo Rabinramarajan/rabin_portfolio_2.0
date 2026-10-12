@@ -48,20 +48,6 @@ Locally, `.dev.vars` sets `CONTACT_DRY_RUN=true`, so `wrangler dev` logs message
 
 ## Brand
 
-`public/images/logo.webp` and `public/logo-*.png` are the approved raster logo and are what the site uses.
-`public/brand/*.svg` is a hand-built vector recreation **pending approval**; the favicon SVG is the monogram
-only so it stays legible at 16–32px.
-
-## SEO and agent discovery
-
-- Canonical domain: `https://rabinr.in` (set in `src/app/data/profile.ts` and `scripts/postbuild.mjs`).
-  `www.rabinr.in` should 301 to it (Cloudflare redirect rule).
-- `robots.txt` (`public/`): everything allowed except `/api/`, with
-  `Content-Signal: search=yes, ai-input=yes, ai-train=yes`. Non-canonical hosts get `Disallow: /` from the Worker.
-- Built by `scripts/postbuild.mjs` from the prerendered pages: `sitemap.xml`, `llms.txt`, and a Markdown twin
-  of every page (`/work/index.md`). The Worker serves the twin on the page URL for `Accept: text/markdown`.
-- Every HTML page carries `Link` headers (sitemap, llms.txt, API catalog, Markdown alternate) and `Vary: Accept`.
-- `/.well-known/api-catalog` (RFC 9727) points to `public/openapi.json`, the description of `/api/contact`.
-- The contact form registers a WebMCP tool, `draft_contact_message`, for in-browser agents. It only fills the form;
-  the visitor still presses Send.
-- Local audits: `.dev.vars` (git-ignored) sets `LOCAL_INDEXABLE=true` so `wrangler dev` serves the real robots.txt.
+The logo is the glossy R monogram (`public/brand/logo-mark.png`, 1024px, transparent). Sizes are derived from it:
+`images/logo.webp` (header/footer), `logo-192.png` / `logo-512.png` (manifest), `apple-touch-icon.png`,
+`favicon.ico` (16/32/48), `brand/logo-horizontal.png` (lockup) and `brand/og-image.png` (social preview).

@@ -1,11 +1,14 @@
 <section class="page-section container">
-  <app-section-heading
+  <div class="page-intro">
+    <app-section-heading
     [level]="1"
     eyebrow="Process"
     title="From problem to production"
     [description]="intro.lede"
     annotation="seven stages, no theatre"
   />
+    <app-scene-art [scene]="scenes.process" [tilt]="-2" [priority]="true" />
+  </div>
 
   <ol class="stages">
     @for (step of steps; track step.id) {

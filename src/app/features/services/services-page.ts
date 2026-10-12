@@ -5,15 +5,17 @@ import { SectionHeading } from '../../shared/components/section-heading/section-
 import { Button } from '../../shared/components/button/button';
 import { SkillBadge } from '../../shared/components/skill-badge/skill-badge';
 import { ServicesGrid } from './services-grid/services-grid';
+import { SceneArtComponent, SCENES } from '../../shared/components/scene-art/scene-art';
 
 @Component({
   selector: 'app-services-page',
-  imports: [SectionHeading, Button, SkillBadge, ServicesGrid],
+  imports: [SceneArtComponent, SectionHeading, Button, SkillBadge, ServicesGrid],
   templateUrl: './services-page.html',
   styleUrl: './services-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicesPage {
+  protected readonly scenes = SCENES;
   protected readonly secondary = secondaryServices;
   protected readonly engagements = engagementModels;
 }

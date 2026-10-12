@@ -1,11 +1,14 @@
 <section class="page-section container">
-  <app-section-heading
+  <div class="page-intro">
+    <app-section-heading
     [level]="1"
     eyebrow="Pricing"
     title="Engagement models & pricing"
     description="Indicative INR pricing for Angular and frontend work — project, retainer and dedicated-engineering shapes, and what each one includes."
     annotation="a starting point, not a quote"
   />
+    <app-scene-art [scene]="scenes.pricing" [tilt]="3" [priority]="true" />
+  </div>
 
   @for (group of groups; track group.id) {
     <section class="group" [attr.aria-labelledby]="'group-' + group.id">

@@ -13,16 +13,18 @@ import {
 } from '../../data/resume';
 import { profile } from '../../data/profile';
 import { Button } from '../../shared/components/button/button';
+import { SceneArtComponent, SCENES } from '../../shared/components/scene-art/scene-art';
 
 /** A printable résumé. Print styles strip the site chrome. */
 @Component({
   selector: 'app-resume-page',
-  imports: [Button],
+  imports: [SceneArtComponent, Button],
   templateUrl: './resume-page.html',
   styleUrl: './resume-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResumePage {
+  protected readonly scenes = SCENES;
   protected readonly name = profile.name;
   protected readonly titles = resumeTitles.join(' | ');
   protected readonly contact = resumeContact;
