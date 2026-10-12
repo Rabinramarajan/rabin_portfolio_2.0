@@ -1,0 +1,24 @@
+@if (link(); as path) {
+  <a [class]="classes()" [routerLink]="path">{{ label() }}</a>
+} @else if (href(); as url) {
+  <a
+    [class]="classes()"
+    [href]="url"
+    [attr.target]="isExternal() ? '_blank' : null"
+    [attr.rel]="isExternal() ? 'noopener noreferrer' : null"
+  >
+    {{ label() }}
+  </a>
+} @else {
+  <button
+    [class]="classes()"
+    [type]="type()"
+    [disabled]="disabled() || loading()"
+    [attr.aria-busy]="loading()"
+  >
+    @if (loading()) {
+      <span class="btn__spinner" aria-hidden="true"></span>
+    }
+    {{ label() }}
+  </button>
+}

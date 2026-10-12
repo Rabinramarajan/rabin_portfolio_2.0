@@ -1,0 +1,45 @@
+<section class="page-section container contact">
+  <div class="contact__intro">
+    <app-section-heading
+      [level]="1"
+      eyebrow="Contact"
+      title="Let's talk about your project"
+      description="Tell me what you're building. I usually reply within one business day."
+    />
+
+    <app-sticky-note color="yellow" [rotation]="-2">
+      <p>Prefer email? Write to</p>
+      <a class="contact__email" [href]="'mailto:' + profile.email">{{ profile.email }}</a>
+    </app-sticky-note>
+
+    <app-social-links [links]="profile.socials" />
+  </div>
+
+  <div class="contact__panel">
+    @if (sent()) {
+      <div class="contact__success" role="status">
+        <h2>Your email app should be open now</h2>
+        <p>Your message is ready to send from there. Thanks for reaching out — I'll be in touch soon.</p>
+        <app-button label="Write another message" variant="ghost" (click)="startOver()" />
+      </div>
+    } @else {
+      <form class="contact__form" novalidate (submit)="onSubmit($event)">
+        <app-form-control controlId="contact-name" label="Name" autocomplete="name" [field]="contactForm.name" />
+        <app-form-control
+          controlId="contact-email"
+          label="Email"
+          type="email"
+          autocomplete="email"
+          [field]="contactForm.email"
+        />
+        <app-form-control
+          controlId="contact-message"
+          label="What are you working on?"
+          type="textarea"
+          [field]="contactForm.message"
+        />
+        <app-button label="Send message" type="submit" [loading]="contactForm().submitting()" />
+      </form>
+    }
+  </div>
+</section>

@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  pointer-events: none;
+}
+
+:host(.shape--coral) {
+  --shape-color: var(--color-primary);
+}
+
+:host(.shape--yellow) {
+  --shape-color: var(--color-secondary);
+}
+
+:host(.shape--sage) {
+  --shape-color: var(--color-sage);
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.fill {
+  fill: var(--shape-color);
+  stroke: var(--color-border);
+  stroke-width: 2;
+}
+
+.stroke {
+  fill: none;
+  stroke: var(--shape-color);
+  stroke-width: 6;
+  stroke-linecap: round;
+}

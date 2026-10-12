@@ -1,0 +1,19 @@
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__intro">
+      <p class="footer__title">Let's build something good together.</p>
+      <a class="footer__email" [href]="'mailto:' + profile.email">{{ profile.email }}</a>
+      <app-social-links [links]="profile.socials" />
+    </div>
+
+    <nav aria-label="Footer">
+      <ul class="footer__nav">
+        @for (item of navItems; track item.path) {
+          <li><a [routerLink]="item.path">{{ item.label }}</a></li>
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <p class="container footer__legal">© {{ year }} {{ profile.name }} · {{ profile.location }}</p>
+</footer>

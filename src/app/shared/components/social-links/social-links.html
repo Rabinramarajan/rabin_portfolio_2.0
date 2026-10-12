@@ -1,0 +1,13 @@
+<ul class="socials">
+  @for (link of links(); track link.platform) {
+    <li>
+      <a
+        [href]="link.url"
+        [attr.target]="link.platform === 'email' ? null : '_blank'"
+        [attr.rel]="link.platform === 'email' ? null : 'noopener noreferrer'"
+      >
+        {{ link.label }}
+      </a>
+    </li>
+  }
+</ul>

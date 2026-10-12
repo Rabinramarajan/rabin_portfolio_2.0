@@ -1,0 +1,28 @@
+@use 'mixins' as *;
+
+:host {
+  display: block;
+  padding: var(--space-4) var(--space-6);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-offset);
+  transform: rotate(var(--note-rotation, 0deg));
+  transition: transform var(--duration-base) var(--ease-out);
+
+  &:hover {
+    transform: rotate(0deg) scale(1.02);
+  }
+}
+
+:host(.note--yellow) {
+  background: var(--color-secondary);
+}
+
+:host(.note--coral) {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+:host(.note--sage) {
+  background: var(--color-sage);
+}

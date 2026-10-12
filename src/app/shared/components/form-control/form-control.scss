@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: box-shadow var(--duration-fast) var(--ease-out);
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-offset);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--color-error);
+  }
+}
+
+.input--textarea {
+  resize: vertical;
+}
+
+.errors {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-error);
+}

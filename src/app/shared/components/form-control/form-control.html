@@ -1,0 +1,30 @@
+<label class="label" [for]="controlId()">{{ label() }}</label>
+
+@if (type() === 'textarea') {
+  <textarea
+    class="input input--textarea"
+    rows="5"
+    [id]="controlId()"
+    [formField]="field()"
+    [attr.aria-invalid]="hasErrors()"
+    [attr.aria-describedby]="hasErrors() ? errorId() : null"
+  ></textarea>
+} @else {
+  <input
+    class="input"
+    [id]="controlId()"
+    [type]="type()"
+    [formField]="field()"
+    [attr.autocomplete]="autocomplete() ?? null"
+    [attr.aria-invalid]="hasErrors()"
+    [attr.aria-describedby]="hasErrors() ? errorId() : null"
+  />
+}
+
+@if (hasErrors()) {
+  <ul class="errors" [id]="errorId()" role="alert">
+    @for (error of visibleErrors(); track error.kind) {
+      <li>{{ error.message }}</li>
+    }
+  </ul>
+}

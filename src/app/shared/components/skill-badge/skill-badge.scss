@@ -1,0 +1,13 @@
+:host {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+:host(.is-highlighted) {
+  background: var(--color-secondary);
+}

@@ -1,0 +1,29 @@
+<section class="page-section container">
+  <app-section-heading
+    [level]="1"
+    eyebrow="Projects"
+    title="Things I've built"
+    description="From immigration systems for the Fiji Government to AI products — a selection of the work I've shipped."
+  />
+
+  <div class="filters" role="group" aria-label="Filter projects by category">
+    @for (filter of filters; track filter) {
+      <button
+        type="button"
+        class="filter"
+        [attr.aria-pressed]="activeFilter() === filter"
+        (click)="selectFilter(filter)"
+      >
+        {{ filter }}
+      </button>
+    }
+  </div>
+
+  <p class="visually-hidden" aria-live="polite">Showing {{ visibleProjects().length }} projects</p>
+
+  <ul class="project-grid">
+    @for (project of visibleProjects(); track project.id) {
+      <li><app-project-card [project]="project" /></li>
+    }
+  </ul>
+</section>

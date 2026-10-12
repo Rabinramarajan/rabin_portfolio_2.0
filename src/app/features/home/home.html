@@ -1,0 +1,35 @@
+<app-hero />
+<app-introduction />
+
+<section class="page-section featured">
+  <div class="container">
+    <app-section-heading
+      eyebrow="Selected work"
+      title="Projects I'm proud of"
+      description="Government platforms, citizen portals and product launches — all built with Angular."
+    />
+
+    @defer (on viewport) {
+      <ul class="project-grid">
+        @for (project of featuredProjects; track project.id) {
+          <li><app-project-card [project]="project" /></li>
+        }
+      </ul>
+    } @placeholder {
+      <div class="project-grid__placeholder" aria-hidden="true"></div>
+    }
+
+    <div class="featured__more">
+      <app-button label="View all projects" link="/projects" variant="ghost" />
+    </div>
+  </div>
+</section>
+
+<section class="page-section container" aria-labelledby="cta-heading">
+  <div class="cta">
+    <app-illustration class="cta__shape" shape="circle" color="yellow" />
+    <h2 id="cta-heading" class="cta__title">Have a project in mind?</h2>
+    <p class="cta__text">I'm taking on a few Angular consulting and contract projects. Tell me about yours.</p>
+    <app-button label="Start a conversation" link="/contact" variant="secondary" size="lg" />
+  </div>
+</section>

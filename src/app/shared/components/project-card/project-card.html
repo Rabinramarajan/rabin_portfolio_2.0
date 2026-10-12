@@ -1,0 +1,31 @@
+<article class="card">
+  <div class="card__media">
+    @if (project().imageUrl; as imageUrl) {
+      <img [ngSrc]="imageUrl" [alt]="project().imageAlt ?? ''" fill sizes="(min-width: 768px) 33vw, 100vw" />
+    } @else {
+      <!-- Illustrated cover for projects without a screenshot -->
+      <div class="card__placeholder">
+        <app-illustration class="card__shape" shape="blob" color="yellow" />
+        <span class="card__initial">{{ project().title.charAt(0) }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="card__body">
+    <p class="card__meta">{{ project().category }} · {{ project().year }}</p>
+    <h3 class="card__title">{{ project().title }}</h3>
+    <p class="card__description">{{ project().description }}</p>
+
+    <ul class="card__tags" aria-label="Technologies">
+      @for (tech of project().technologies; track tech) {
+        <li><app-skill-badge [label]="tech" /></li>
+      }
+    </ul>
+
+    @if (project().liveUrl; as liveUrl) {
+      <a class="card__link" [href]="liveUrl" target="_blank" rel="noopener noreferrer">
+        View live project<span class="visually-hidden">: {{ project().title }}</span> →
+      </a>
+    }
+  </div>
+</article>

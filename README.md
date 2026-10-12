@@ -1,70 +1,59 @@
-# Rabin R Portfolio 2.0
+# RabinPortfolio
 
-Premium freelancer portfolio rebuilt with Next.js 16, React 19, TypeScript and Tailwind CSS.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.2.
 
-## Develop
+## Development server
 
-```bash
-npm install
-# Create .env.local from .env.example and fill in the values you need.
-npm run dev
-```
-
-`.env.local` is the only env file this project uses. It holds the mail
-settings for the contact form, the envelope (`CONTACT_FROM_EMAIL`,
-`CONTACT_TO_EMAIL`, `CONTACT_FROM_NAME`, plus the optional
-`CONTACT_ACK_EMAIL` and `CONTACT_ALLOW_UNCONFIGURED`
-flags) and the assistant keys (`NVIDIA_API_KEY`, `DEBUG_ASSISTANT`).
-
-### Contact mail transport
-
-Zoho SMTP is the only mail transport. Without these variables the contact
-endpoint returns 503 rather than silently dropping an enquiry.
+To start a local development server, run:
 
 ```bash
-ZOHO_SMTP_HOST=smtp.zoho.in
-ZOHO_SMTP_PORT=465          # 465 = implicit TLS, 587 = STARTTLS
-ZOHO_SMTP_USER=hello@rabinr.in
-ZOHO_SMTP_PASSWORD=         # Zoho *app password*, never the account password
-CONTACT_TO_EMAIL=hello@rabinr.in
+ng serve
 ```
 
-Generate the app password in Zoho (Security → App Passwords); it is shown once.
-Mail is always sent **from** the authenticated Zoho mailbox with the visitor's
-address as `Reply-To` — spoofing the visitor as sender breaks SPF/DKIM and gets
-the message rejected.
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-SMTP credentials and `NVIDIA_API_KEY` stay on the server.
-Never expose them as NEXT_PUBLIC_ vars.
+## Code scaffolding
 
-## Media (Vercel Blob)
-
-Production media — project frames, case-study galleries, service art, the hero
-reel and portraits — is served from Vercel Blob. `/public` keeps only the small
-static assets (favicons, PWA logos).
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
 ```bash
-npm run blob:migrate:dry       # preview the upload
-npm run blob:migrate           # upload everything in the manifest
+ng generate component component-name
 ```
 
-Then set `NEXT_PUBLIC_BLOB_BASE_URL` (the store's public origin) in the runtime
-environment. Until it is set the app falls back to the legacy `/public/media`
-paths, so a fresh clone still renders.
-
-Assets are addressed through the type-safe manifest in `src/lib/media.ts` —
-`media("projects/galaxy-sofas/gallery-02.webp")` — never by a literal URL.
-`BLOB_READ_WRITE_TOKEN` is server-only (`src/lib/blob-server.ts` is marked
-`server-only`). Uploads go through `POST /api/blob/upload`, which requires an
-`Authorization: Bearer $BLOB_UPLOAD_SECRET` header and is disabled entirely
-while that secret is unset.
-
-Full guide: [docs/vercel-blob.md](docs/vercel-blob.md).
-
-## Quality
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
 ```bash
-npm run lint
-npm run test
-npm run build
+ng generate --help
 ```
+
+## Building
+
+To build the project run:
+
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Running unit tests
+
+To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

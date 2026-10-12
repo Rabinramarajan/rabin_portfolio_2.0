@@ -1,0 +1,27 @@
+<section class="page-section container">
+  <dl class="stats" appReveal>
+    @for (stat of stats; track stat.label) {
+      <div class="stat">
+        <dt class="stat__label">{{ stat.label }}</dt>
+        <dd class="stat__value">{{ stat.value }}</dd>
+      </div>
+    }
+  </dl>
+
+  <app-section-heading
+    eyebrow="How I work"
+    title="Four things I won't compromise on"
+    description="Government platforms and product launches have taught me the same lessons. These are the ones I bring to every project."
+  />
+
+  <ul class="principles">
+    @for (principle of principles; track principle.title) {
+      <li appReveal>
+        <app-sticky-note [color]="principle.color" [rotation]="principle.rotation">
+          <h3 class="principle__title">{{ principle.title }}</h3>
+          <p>{{ principle.description }}</p>
+        </app-sticky-note>
+      </li>
+    }
+  </ul>
+</section>

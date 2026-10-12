@@ -1,0 +1,36 @@
+<section class="hero container" aria-labelledby="hero-title">
+  <div class="hero__copy">
+    <p class="hero__status">
+      <span class="hero__dot" aria-hidden="true"></span>
+      {{ profile.availability }}
+    </p>
+
+    <h1 id="hero-title" class="hero__title">
+      Hi, I'm Rabin. I build <span class="highlight">Angular apps</span> people enjoy using.
+    </h1>
+
+    <p class="hero__summary">{{ profile.summary }}</p>
+
+    <div class="hero__actions">
+      <app-button label="See my work" link="/projects" size="lg" />
+      <app-button label="Get in touch" link="/contact" variant="secondary" size="lg" />
+    </div>
+  </div>
+
+  <div class="hero__visual">
+    <app-illustration class="hero__blob" shape="blob" color="sage" />
+    <app-illustration class="hero__star" shape="star" color="yellow" />
+    <app-illustration class="hero__squiggle" shape="squiggle" color="coral" />
+
+    <div class="hero__portrait">
+      <img [ngSrc]="profile.portraitUrl" alt="Portrait of Rabin R" width="480" height="560" priority />
+    </div>
+
+    <app-sticky-note class="hero__note hero__note--top" color="yellow" [rotation]="-4">
+      <strong>10K+</strong> users on apps I've shipped
+    </app-sticky-note>
+    <app-sticky-note class="hero__note hero__note--bottom" color="coral" [rotation]="3">
+      Signals · Zoneless · TypeScript
+    </app-sticky-note>
+  </div>
+</section>

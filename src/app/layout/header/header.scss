@@ -1,0 +1,102 @@
+@use 'mixins' as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--color-background) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--header-height);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: 700 var(--text-lg) var(--font-display);
+  text-decoration: none;
+}
+
+.logo__mark {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 50%;
+}
+
+.menu-toggle {
+  padding: var(--space-2) var(--space-4);
+  font: 700 var(--text-sm) var(--font-body);
+  color: var(--color-text);
+  background: var(--color-secondary);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+
+  @include tablet-up {
+    display: none;
+  }
+}
+
+// Mobile: a dropdown panel below the header. Tablet and up: an inline row.
+.nav {
+  display: none;
+  position: absolute;
+  inset: 100% 0 auto;
+  padding: var(--space-4);
+  background: var(--color-background);
+  border-bottom: var(--border-width) solid var(--color-border);
+
+  &.is-open {
+    display: block;
+  }
+
+  @include tablet-up {
+    display: block;
+    position: static;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  @include tablet-up {
+    flex-direction: row;
+    gap: var(--space-1);
+  }
+}
+
+.nav__link {
+  display: block;
+  padding: var(--space-2) var(--space-4);
+  font-weight: 500;
+  text-decoration: none;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--color-surface);
+  }
+
+  &.is-active {
+    background: var(--color-secondary);
+    border-color: var(--color-border);
+  }
+}

@@ -1,0 +1,53 @@
+@use 'mixins' as *;
+
+.footer {
+  padding-block: var(--space-16) var(--space-8);
+  color: var(--color-background);
+  background: var(--color-text);
+}
+
+.footer__inner {
+  display: grid;
+  gap: var(--space-12);
+
+  @include tablet-up {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.footer__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.footer__title {
+  font: 600 var(--text-2xl) var(--font-display);
+}
+
+.footer__email {
+  font-size: var(--text-lg);
+  color: var(--color-secondary);
+}
+
+.footer__nav {
+  display: grid;
+  gap: var(--space-2);
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-secondary);
+    }
+  }
+}
+
+.footer__legal {
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  font-size: var(--text-sm);
+  opacity: 0.75;
+  border-top: 1px solid color-mix(in srgb, var(--color-background) 25%, transparent);
+}

@@ -1,65 +1,47 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# dependencies
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
 /node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+npm-debug.log
+yarn-error.log
 
-# testing
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
 /coverage
-/test-results/
-/playwright-report/
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# System files
 .DS_Store
-*.pem
+Thumbs.db
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-dev-server.log
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# local agent + runtime state (never commit)
-/.claude-flow/
-/.contact-messages/
-/.claude/
-
-# local audit / screenshot artifacts
-lighthouse-local.report.*
-/screenshots/
-/responsive-screenshots/
-/final-audit-screenshots/
-*.log
-
-
-.env*
-# The template carries variable NAMES ONLY and must be committed — without
-# this negation the blanket .env* rule silently swallows it.
-!.env.example
-.vercel
-
-
-
-# playwright-mcp session artifacts
-/.playwright-mcp/
-
-.vercel
-.env*
+# Playwright MCP screenshots
+/.playwright-mcp

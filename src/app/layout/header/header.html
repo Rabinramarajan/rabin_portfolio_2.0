@@ -1,0 +1,36 @@
+<header class="header">
+  <div class="container header__inner">
+    <a class="logo" routerLink="/" (click)="closeMenu()">
+      <span class="logo__mark" aria-hidden="true">R</span>
+      {{ name }}
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-controls="primary-nav"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      {{ menuOpen() ? 'Close' : 'Menu' }}
+    </button>
+
+    <nav id="primary-nav" class="nav" [class.is-open]="menuOpen()" aria-label="Primary">
+      <ul class="nav__list">
+        @for (item of navItems; track item.path) {
+          <li>
+            <a
+              class="nav__link"
+              [routerLink]="item.path"
+              routerLinkActive="is-active"
+              ariaCurrentWhenActive="page"
+              (click)="closeMenu()"
+            >
+              {{ item.label }}
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

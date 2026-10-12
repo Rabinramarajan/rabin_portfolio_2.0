@@ -1,0 +1,21 @@
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+a {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  font-weight: 700;
+  text-decoration: none;
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--color-secondary);
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
+}

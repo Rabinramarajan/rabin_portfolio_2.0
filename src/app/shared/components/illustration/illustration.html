@@ -1,0 +1,22 @@
+<svg viewBox="0 0 100 100" focusable="false">
+  @switch (shape()) {
+    @case ('blob') {
+      <path
+        class="fill"
+        d="M74 13c11 8 19 22 17 36s-11 28-24 35-30 6-42-2S6 59 9 44 22 16 36 10s27-5 38 3Z"
+      />
+    }
+    @case ('star') {
+      <path
+        class="fill"
+        d="M50 4l9 30 31 2-25 19 9 31-24-18-24 18 9-31L10 36l31-2 9-30Z"
+      />
+    }
+    @case ('squiggle') {
+      <path class="stroke" d="M5 60c10-20 20-20 30 0s20 20 30 0 20-20 30 0" />
+    }
+    @case ('circle') {
+      <circle class="fill" cx="50" cy="50" r="44" />
+    }
+  }
+</svg>
